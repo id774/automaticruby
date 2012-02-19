@@ -44,7 +44,13 @@ post する。
 |    SQLite3 データベース
 |    存在しない場合は自動生成される
 |
++- util
+|   |
+|   +- opml_parser.rb
+|        OPML からフィードの URL を抽出する
+|
 +- doc
+    |
     +- COPYING
     |    本ソフトウェアのライセンス
     |
@@ -67,6 +73,18 @@ feeds.txt に購読したいフィードを記述する。
 ========
 
 bookmarker.rb を自動または手動で実行する。
+cron で実行する場合はログをリダイレクトで出力すると良い。
+
+
+====
+追記
+====
+
+opml_parser.rb
+
+既存の RSS Reader から登録済みフィードを抽出するのに使う。
+$ ruby opml_parser.rb > feeds.txt
+で feeds.txt を生成できる。
 
 
 ========
