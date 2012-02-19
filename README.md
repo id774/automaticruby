@@ -1,7 +1,7 @@
-Bookmarker
-==========
+Automatic Ruby
+==============
 
-**Automatic Social Bookmark**
+**Ruby General Automation Framework**
 
 See doc/README.ja file.
 (document written in Japanese.)
