@@ -1,13 +1,15 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 $:.unshift File.join(File.dirname(__FILE__))
+$:.unshift File.join(File.dirname(__FILE__), 'lib')
+$:.unshift File.join(File.dirname(__FILE__), 'plugins')
 
 require "feed_parser"
 require "hb"
 require 'active_record'
 
 user = []
-IO.foreach(File.join(File.dirname(__FILE__), "user.txt")) {|u|
+IO.foreach(File.join(File.dirname(__FILE__), 'config', 'user.txt')) {|u|
   user << u
 }
 
@@ -19,7 +21,7 @@ hb.user = {
 
 ActiveRecord::Base.establish_connection(
   :adapter  => "sqlite3",
-  :database => "./bookmark.db"
+  :database => "./db/bookmark.db"
 )
 
 class Bookmark < ActiveRecord::Base
@@ -33,7 +35,7 @@ unless Bookmark.table_exists?()
 end
 
 bookmark = Bookmark.find(:all)
-IO.foreach(File.join(File.dirname(__FILE__), "feeds.txt")) {|feed|
+IO.foreach(File.join(File.dirname(__FILE__), 'config', 'feeds.txt')) {|feed|
   begin
     t = Time.now.strftime("%Y/%m/%d %X")
     puts "#{t} [info] Parsing #{feed}"
