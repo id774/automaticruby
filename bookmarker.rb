@@ -1,12 +1,13 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
+$:.unshift File.join(File.dirname(__FILE__))
 
 require "feed_parser"
 require "hb"
 require 'active_record'
 
 user = []
-IO.foreach("./user.txt") {|u|
+IO.foreach(File.join(File.dirname(__FILE__), "user.txt")) {|u|
   user << u
 }
 
@@ -32,7 +33,7 @@ unless Bookmark.table_exists?()
 end
 
 bookmark = Bookmark.find(:all)
-IO.foreach("./feeds.txt") {|feed|
+IO.foreach(File.join(File.dirname(__FILE__), "feeds.txt")) {|feed|
   begin
     t = Time.now.strftime("%Y/%m/%d %X")
     puts "#{t} [info] Parsing #{feed}"
@@ -43,7 +44,7 @@ IO.foreach("./feeds.txt") {|feed|
         print "#{t} [info] Bookmarking #{link}\n"
         new_bookmark = Bookmark.new(:url => link, :created_at => t)
         new_bookmark.save
-        hb.postBookmark(link, nil)
+        hb.post(link, nil)
         sleep 5
       end
     }
