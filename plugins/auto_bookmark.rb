@@ -27,6 +27,11 @@ class AutoBookmark
     IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'feeds.txt')) {|feed|
       @feeds << feed
     }
+
+    @exclude = []
+    IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'exclude.txt')) {|e|
+      @exclude << e
+    }
   end
 
   def create_db
@@ -34,6 +39,18 @@ class AutoBookmark
       t.column :url, :string
       t.column :created_at, :string
     end
+  end
+
+  def filtering_url(link)
+    detection = false
+    @exclude.each {|e|
+      detection = true if link.include?(e.chomp)
+    }
+    if detection
+      t = Time.now.strftime("%Y/%m/%d %X")
+      puts "#{t} [info] Excluded: #{link}"
+    end
+    return detection
   end
 
   def bookmark
@@ -44,20 +61,22 @@ class AutoBookmark
 
     create_db unless Bookmark.table_exists?()
 
-    bookmark = Bookmark.find(:all)
+    bookmarks = Bookmark.find(:all)
     @feeds.each {|feed|
       begin
         t = Time.now.strftime("%Y/%m/%d %X")
         puts "#{t} [info] Parsing: #{feed}"
         links = FeedParser.get_rss(feed)
         links.each {|link|
-          unless bookmark.detect {|b|b.url == link}
-            t = Time.now.strftime("%Y/%m/%d %X")
-            print "#{t} [info] Bookmarking: #{link}\n"
-            new_bookmark = Bookmark.new(:url => link, :created_at => t)
-            new_bookmark.save
-            hb.post(link, nil)
-            sleep 5
+          unless filtering_url(link)
+            unless bookmarks.detect {|b|b.url == link}
+              t = Time.now.strftime("%Y/%m/%d %X")
+              print "#{t} [info] Bookmarking: #{link}\n"
+              new_bookmark = Bookmark.new(:url => link, :created_at => t)
+              new_bookmark.save
+              hb.post(link, nil)
+              sleep 5
+            end
           end
         }
       rescue
