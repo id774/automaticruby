@@ -13,7 +13,7 @@ class AutoBookmark
 
   def initialize
     user = []
-      IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'user.txt')) {|u|
+    IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'user.txt')) {|u|
       user << u
     }
 
@@ -21,6 +21,11 @@ class AutoBookmark
     @hb.user = {
       "hatena_id" => user[0].chomp,
       "password"  => user[1].chomp
+    }
+
+    @feeds = []
+    IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'feeds.txt')) {|feed|
+      @feeds << feed
     }
   end
 
@@ -40,7 +45,7 @@ class AutoBookmark
     create_db unless Bookmark.table_exists?()
 
     bookmark = Bookmark.find(:all)
-    IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'feeds.txt')) {|feed|
+    @feeds.each {|feed|
       begin
         t = Time.now.strftime("%Y/%m/%d %X")
         puts "#{t} [info] Parsing: #{feed}"
