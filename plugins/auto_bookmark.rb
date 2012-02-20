@@ -24,18 +24,20 @@ class AutoBookmark
     }
   end
 
+  def create_db
+    ActiveRecord::Migration.create_table :bookmarks do |t|
+      t.column :url, :string
+      t.column :created_at, :string
+    end
+  end
+
   def bookmark
     ActiveRecord::Base.establish_connection(
       :adapter  => "sqlite3",
       :database => (File.join(File.dirname(__FILE__), '..', 'db', 'bookmark.db'))
     )
 
-    unless Bookmark.table_exists?()
-      ActiveRecord::Migration.create_table :bookmarks do |t|
-        t.column :url, :string
-        t.column :created_at, :string
-      end
-    end
+    create_db unless Bookmark.table_exists?()
 
     bookmark = Bookmark.find(:all)
     IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'feeds.txt')) {|feed|
