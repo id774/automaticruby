@@ -11,12 +11,15 @@ plugins:
       feeds:
         - http://id774.net/blog/feed/
 
+  - module: FilterIgnore
+    config:
+      exclude:
+        - hoge
+        - fuga
+
   - module: PublishHatenaBookmark
     config:
       username: your_hatena_id
       password: your_password
       db: bookmark.db
-      exclude:
-        - hoge
-        - fuga
 

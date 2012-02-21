@@ -27,16 +27,6 @@ class PublishHatenaBookmark
     end
   end
 
-  def filtering_url(link)
-    detection = false
-    @config['exclude'].each {|e|
-      detection = true if link.include?(e.chomp)
-    }
-    if detection
-      Log.puts("info", "Excluded: #{link}")
-    end
-    return detection
-  end
 
   def bookmark
     ActiveRecord::Base.establish_connection(
@@ -50,15 +40,13 @@ class PublishHatenaBookmark
     bookmarks = Bookmark.find(:all)
     @pipeline.each {|links|
       links.each {|link|
-        unless filtering_url(link)
-          unless bookmarks.detect {|b|b.url == link}
-            Log.puts("info", "Bookmarking: #{link}")
-            new_bookmark = Bookmark.new(:url => link,
-              :created_at => Time.now.strftime("%Y/%m/%d %X"))
-            new_bookmark.save
-            hb.post(link, nil)
-            sleep 5
-          end
+        unless bookmarks.detect {|b|b.url == link}
+          Log.puts("info", "Bookmarking: #{link}")
+          new_bookmark = Bookmark.new(:url => link,
+            :created_at => Time.now.strftime("%Y/%m/%d %X"))
+          new_bookmark.save
+          hb.post(link, nil)
+          sleep 5
         end
       }
     }

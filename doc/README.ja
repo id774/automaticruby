@@ -141,6 +141,7 @@ def initialize(config, pipeline=[])
 定義された次のプラグインに引き渡される。
 
 
+
 ================
 プラグインの説明
 ================
@@ -159,6 +160,22 @@ SubscriptionFeed
       feeds:
         - フィード名
         - フィード名 ...
+
+
+FilterIgnore
+------------
+[パス]
+ /plugins/filter/ignore.rb
+
+[概要]
+ NG ワードを除外する
+
+[レシピ記法]
+  - module: FilterIgnore
+    config:
+      exclude:
+        - 無視キーワード
+        - 無視キーワード ...
 
 
 PublishHatenaBookmark
@@ -187,9 +204,10 @@ PublishHatenaBookmark
  この文字列が含まれる URL は無視される。
 
 
-============
-ツールの説明
-============
+
+====================
+その他のツールの説明
+====================
 
 名前
  utils/opml_parser.rb
