@@ -42,5 +42,9 @@ else
   print "Loading #{filename}\n"
   config = YAML.load(File.open(filename))
 end
-loader = eval(config['plugins']['module']).new(config)
-loader.run
+config['plugins'].each{|k,v|
+  if k == "module"
+    loader = eval(v).new(config)
+    loader.run
+  end
+}
