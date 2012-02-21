@@ -149,6 +149,7 @@ plugins:
   config:
     username: はてな ID
     passowrd: パスワード
+    db: ブックマークを格納する SQLite3 DB 名
     feeds:
       - aaa
       - bbb
