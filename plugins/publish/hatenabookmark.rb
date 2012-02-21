@@ -32,5 +32,6 @@ class PublishHatenaBookmark
         sleep 5
       }
     }
+    @pipeline
   end
 end
