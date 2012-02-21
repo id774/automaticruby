@@ -10,7 +10,7 @@ plugins:
   config:
     username: username
     passowrd: password
-    db: bookmark.rb
+    db: bookmark.db
     feeds:
       - aaa
       - bbb
