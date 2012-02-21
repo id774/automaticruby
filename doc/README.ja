@@ -27,8 +27,9 @@ automaticruby
 |   +- default.yml
 |        デフォルトでロードされるレシピ
 |        YAML 形式でプラグインの情報を記述する
-|        レシピは -c オプションの引数で
-|        任意のファイル名を指定できる。
+|
+|        automatic.rb の -c オプションの引数で
+|        任意のファイル名をレシピに指定できる
 |
 +- db データベースを置くディレクトリ
 |   |
@@ -52,7 +53,7 @@ automaticruby
 |   +- auto_bookmark.rb
 |        自動ではてなブックマークをおこなう
 |
-+- util 補助的なツールを置くディレクトリ
++- utils 補助的なツールを置くディレクトリ
 |   |
 |   +- opml_parser.rb
 |        OPML からフィードの URL を抽出する
@@ -79,6 +80,9 @@ automaticruby
  automatic.rb 起動時に -c オプションの引数にレシピの
 ファイル名を指定することができる。オプションが省略
 された場合は config/default.yml が呼ばれる。
+
+[起動例]
+$ automatic.rb -c ~/recipes/your_recipe.yml
 
 
 ================
