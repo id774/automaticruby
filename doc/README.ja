@@ -22,7 +22,7 @@ automaticruby
 +- automatic.rb
 |    実行ファイル本体
 |
-+- config 設定情報を置くディレクトリ
++- config
 |   |
 |   +- default.yml
 |        デフォルトでロードされるレシピ
@@ -31,27 +31,29 @@ automaticruby
 |        automatic.rb の -c オプションの引数で
 |        任意のファイル名をレシピに指定できる
 |
-+- db データベースを置くディレクトリ
++- db
 |   |
 |   +- bookmark.db
 |        ブックマーク済みの URL を格納する
 |        SQLite3 データベース
 |        存在しない場合は自動生成される
 |
-+- lib ライブラリを置くディレクトリ
++- lib
 |   |
 |   +- core.rb
 |   |    パイプラインと呼ばれるオブジェクトを利用し
-|   |    レシピに書かれたプラグインを順次呼び出す
+|   |    レシピに書かれたプラグインに処理を順次受け渡す
 |   |
 |   +- feed_parser.rb
 |   |    ターゲットとなるフィードを解析し
 |   |    エントリのリンクを抽出する
 |   |
+|   +- log.rb
+|   |    ログを出力する
+|   |
 |   +- hb.rb
 |        はてなブックマークの API に対し
 |        投稿用 XML を生成して post する
-|
 |
 +- plugins
 |   |
@@ -61,13 +63,12 @@ automaticruby
 |   |
 |   +- publish 外部に情報を送信するプラグイン
 |
-|
-+- utils 補助的なツールを置くディレクトリ
++- utils
 |   |
 |   +- opml_parser.rb
 |        OPML からフィードの URL を抽出する
 |
-+- doc ドキュメントを置くディレクトリ
++- doc
     |
     +- COPYING
     |    本ソフトウェアのライセンス
@@ -114,14 +115,17 @@ plugins:
       feeds:
         - http://id774.net/blog/feed/
 
+  - module: FilterIgnore
+    config:
+      exclude:
+        - hoge
+        - fuga
+
   - module: PublishHatenaBookmark
     config:
       username: your_hatena_id
       password: your_password
       db: bookmark.db
-      exclude:
-        - hoge
-        - fuga
 
 このように plugins module にプラグインのクラス名を記述し
 config にプラグインで利用する情報を記述する。
