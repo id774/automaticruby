@@ -145,7 +145,6 @@ plugins:
     config:
       username: your_hatena_id
       password: your_password
-      db: bookmark.db
 
 このレシピの例では
 1. フィードを購読し
