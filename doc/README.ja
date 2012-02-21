@@ -169,7 +169,7 @@ plugins:
 ============
 
 名前
- util/opml_parser.rb
+ utils/opml_parser.rb
 
 説明
  既存の RSS Reader から登録済みフィードを抽出するのに使う。

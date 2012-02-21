@@ -1,12 +1,13 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-$:.unshift File.join(File.dirname(__FILE__), 'lib')
-$:.unshift File.join(File.dirname(__FILE__), 'plugins')
+basedir = File.dirname(__FILE__)
+$:.unshift File.join(basedir, 'lib')
+$:.unshift File.join(basedir, 'plugins')
 
-Dir.glob(File.dirname(__FILE__) + '/lib/*.rb').each {|r|
+Dir.glob(basedir + '/lib/*.rb').each {|r|
   require(File.basename(r, '.rb'))
 }
-Dir.glob(File.dirname(__FILE__) + '/plugins/*.rb').each {|r|
+Dir.glob(basedir + '/plugins/*.rb').each {|r|
   require(File.basename(r, '.rb'))
 }
 
@@ -18,7 +19,7 @@ parser = OptionParser.new do |parser|
   Usage: #{File.basename($0,".*")} [options] arg"
   parser.separator "options:"
   parser.on('-c', '--config FILE', String,
-            "read data from FILENAME"){|f| filename = f }
+            "read data from FILENAME"){|f| filename = f}
   parser.on('-h', '--help', "show this message"){
     puts parser
     exit
@@ -35,7 +36,8 @@ end
 
 require 'yaml'
 if filename == ""
-  config = YAML.load(File.open(File.dirname(__FILE__) + '/config/default.yml'))
+  config = YAML.load(File.open(basedir +
+                               '/config/default.yml'))
 else
   print "Loading #{filename}\n"
   config = YAML.load(File.open(filename))
