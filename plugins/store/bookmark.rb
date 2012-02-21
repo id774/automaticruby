@@ -51,4 +51,4 @@ class StoreBookmark
     }
     targets
   end
-eFilter::Ignorend
+end
