@@ -131,24 +131,36 @@ def initialize(config)
 しか存在しない。今後、さまざまなプラグインを追加して
 任意の処理を自動実行可能にできるようにする。
 
-名前
+[名前]
  plugins/auto_bookmark.rb
 
-概要
+[概要]
  自動的にソーシャルブックマークする
 
-説明
+[説明]
  この Ruby スクリプトはフィードを加工してソーシャル
 ブックマーク API への投稿用 XML を生成し、機械的に
 post する。
 
-利用方法
- user.txt にソーシャルブックマークへのログイン用
-アカウントの情報を記述する。
+[レシピ記法]
+plugins:
+  module: AutoBookmark
+  config:
+    username: はてな ID
+    passowrd: パスワード
+    feeds:
+      - aaa
+      - bbb
+      - ccc
+    exclude:
+      - ddd
+      - eee
+      - fff
 
- feeds.txt に購読したいフィードを記述する。
+ feeds に購読したいフィードを記述する。
 
- automatic.rb を自動または手動で実行する。
+ exclude には処理対象外とする文字列を指定する。
+ この文字列が含まれる URL は無視される。
 
 
 ============

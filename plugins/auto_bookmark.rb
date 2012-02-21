@@ -16,16 +16,6 @@ class AutoBookmark
       "hatena_id" => @config['plugins']['config']['username'],
       "password"  => @config['plugins']['config']['passowrd']
     }
-
-    @feeds = []
-    IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'feeds.txt')) {|feed|
-      @feeds << feed
-    }
-
-    @exclude = []
-    IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'exclude.txt')) {|e|
-      @exclude << e
-    }
   end
 
   def create_db
@@ -37,7 +27,7 @@ class AutoBookmark
 
   def filtering_url(link)
     detection = false
-    @exclude.each {|e|
+    @config['plugins']['config']['exclude'].each {|e|
       detection = true if link.include?(e.chomp)
     }
     if detection
@@ -56,7 +46,7 @@ class AutoBookmark
     create_db unless Bookmark.table_exists?()
 
     bookmarks = Bookmark.find(:all)
-    @feeds.each {|feed|
+    @config['plugins']['config']['feeds'].each {|feed|
       begin
         t = Time.now.strftime("%Y/%m/%d %X")
         puts "#{t} [info] Parsing: #{feed}"

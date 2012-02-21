@@ -10,4 +10,12 @@ plugins:
   config:
     username: username
     passowrd: password
+    feeds:
+      - aaa
+      - bbb
+      - ccc
+    exclude:
+      - ddd
+      - eee
+      - fff
 
