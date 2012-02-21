@@ -13,8 +13,8 @@ class AutoBookmark
     @config = config
     @hb = HatenaBookmark.new
     @hb.user = {
-      "hatena_id" => @config['plugins']['config']['username'],
-      "password"  => @config['plugins']['config']['password']
+      "hatena_id" => @config['username'],
+      "password"  => @config['password']
     }
   end
 
@@ -27,7 +27,7 @@ class AutoBookmark
 
   def filtering_url(link)
     detection = false
-    @config['plugins']['config']['exclude'].each {|e|
+    @config['exclude'].each {|e|
       detection = true if link.include?(e.chomp)
     }
     if detection
@@ -40,13 +40,13 @@ class AutoBookmark
     ActiveRecord::Base.establish_connection(
       :adapter  => "sqlite3",
       :database => (File.join(File.dirname(__FILE__), '..', 'db',
-                              @config['plugins']['config']['db']))
+                              @config['db']))
     )
 
     create_db unless Bookmark.table_exists?()
 
     bookmarks = Bookmark.find(:all)
-    @config['plugins']['config']['feeds'].each {|feed|
+    @config['feeds'].each {|feed|
       begin
         Log.puts("info", "Parsing: #{feed}")
         links = FeedParser.get_rss(feed)

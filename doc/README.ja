@@ -100,13 +100,21 @@ global:
     level: info
 
 plugins:
-  module: AutoBookmark
-  config:
-    username: username
-    passowrd: password
+  - module: Plugin1
+    config:
+      username: username
+      passowrd: password
+      option:   aaa
 
-上記のうち plugins module で定義された名称が
-呼び出すプラグインの名称になる。
+  - module: Plugin2
+    config:
+      username: username
+      passowrd: password
+      option:   bbb
+
+このように plugins module にプラグインのクラス名を記述し
+config にプラグインで利用する情報を記述する。
+複数のプラグインの組み合わせで自由な処理を実現できる。
 
 
 ======================
@@ -144,20 +152,19 @@ def initialize(config)
 post する。
 
 [レシピ記法]
-plugins:
-  module: AutoBookmark
-  config:
-    username: はてな ID
-    passowrd: パスワード
-    db: ブックマークを格納する SQLite3 DB 名
-    feeds:
-      - aaa
-      - bbb
-      - ccc
-    exclude:
-      - ddd
-      - eee
-      - fff
+  - module: AutoBookmark
+    config:
+      username: はてな ID
+      passowrd: パスワード
+      db: ブックマークを格納する SQLite3 DB 名
+      feeds:
+        - aaa
+        - bbb
+        - ccc
+      exclude:
+        - ddd
+        - eee
+        - fff
 
  feeds に購読したいフィードを記述する。
 
@@ -173,8 +180,8 @@ plugins:
  utils/opml_parser.rb
 
 説明
- 既存の RSS Reader から登録済みフィードを抽出するのに使う。
-以下の方法で feeds.txt を生成できる。
+ 既存の RSS Reader の OPML から登録済みフィードの
+URL リストを抽出するのに使う。
 
 $ ruby opml_parser.rb > feeds.txt
 

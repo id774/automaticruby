@@ -35,16 +35,17 @@ rescue OptionParser::ParseError => err
 end
 
 require 'yaml'
+require 'pp'
 if filename == ""
-  config = YAML.load(File.open(basedir +
-                               '/config/default.yml'))
-else
-  print "Loading #{filename}\n"
-  config = YAML.load(File.open(filename))
+  filename = basedir + '/config/default.yml'
 end
-config['plugins'].each{|k,v|
-  if k == "module"
-    loader = eval(v).new(config)
-    loader.run
-  end
+
+print "Loading #{filename}\n"
+File.open(filename) {|io|
+  YAML.load_documents(io) {|yaml|
+    yaml['plugins'].each {|plugin|
+      loader = eval(plugin['module']).new(plugin['config'])
+      loader.run
+    }
+  }
 }
