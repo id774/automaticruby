@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
-require "feed_parser"
-require "hb"
 require 'active_record'
 
 class Bookmark < ActiveRecord::Base
@@ -84,5 +82,9 @@ class AutoBookmark
         puts "#{t} [error] Fault in parsing: #{feed}"
       end
     }
+  end
+
+  def run
+    bookmark
   end
 end
