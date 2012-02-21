@@ -44,7 +44,7 @@ class HatenaBookmark
 
   def post(b_url, b_comment)
     url = "http://b.hatena.ne.jp/atom/post"
-    header = wsse(user["hatena_id"], user["password"])
+    header = wsse(@user["hatena_id"], @user["password"])
     uri = URI.parse(url)
     proxy_class = Net::HTTP::Proxy(ENV["PROXY"], 8080)
     http = proxy_class.new(uri.host)

@@ -14,7 +14,7 @@ class AutoBookmark
     @hb = HatenaBookmark.new
     @hb.user = {
       "hatena_id" => @config['plugins']['config']['username'],
-      "password"  => @config['plugins']['config']['passowrd']
+      "password"  => @config['plugins']['config']['password']
     }
   end
 
@@ -54,7 +54,8 @@ class AutoBookmark
           unless filtering_url(link)
             unless bookmarks.detect {|b|b.url == link}
               Log.puts("info", "Bookmarking: #{link}")
-              new_bookmark = Bookmark.new(:url => link, :created_at => t)
+              new_bookmark = Bookmark.new(:url => link,
+                :created_at => Time.now.strftime("%Y/%m/%d %X"))
               new_bookmark.save
               hb.post(link, nil)
               sleep 5
