@@ -28,14 +28,7 @@ automaticruby
 |        デフォルトでロードされるレシピ
 |        YAML 形式でプラグインの情報を記述する
 |        automatic.rb の -c オプションの引数で
-|        任意のファイル名をレシピに指定できる
-|
-+- db
-|   |
-|   +- bookmark.db
-|        ブックマーク済みの URL を格納する
-|        SQLite3 データベース
-|        存在しない場合は自動生成される
+|        任意のファイル名をレシピとして指定できる
 |
 +- lib
 |   |
@@ -60,7 +53,15 @@ automaticruby
 |   |
 |   +- filter 情報をフィルタリングするプラグイン
 |   |
+|   +- store 情報を内部に保存するプラグイン
+|   |
 |   +- publish 外部に情報を送信するプラグイン
+|
++- db
+|   |
+|   +- bookmark.db
+|        StoreBookmark プラグインで収集された
+|        ブックマークが保存される
 |
 +- utils
 |   |
@@ -112,13 +113,18 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://id774.net/blog/feed/
+        - http://example.com/rss2
+        - http://hogefuga.com/feed
 
   - module: FilterIgnore
     config:
       exclude:
         - hoge
         - fuga
+
+  - module: StoreBookmark
+    config:
+      db: bookmark.db
 
   - module: PublishHatenaBookmark
     config:
@@ -129,11 +135,12 @@ plugins:
 このレシピの例では
 1. フィードを購読し
 2. 無視キーワードを含む URL を除外し
-3. はてなブックマークをする
-という処理をプラグインの組み合わせで実現している。
+3. 情報をデータベースに保存し
+4. はてなブックマークをする
+という一連の処理をプラグインの組み合わせで実現している。
 
-このように、レシピにプラグインと設定情報を記述するだけで
-複数のプラグインの組み合わせで自由な処理を実現できる。
+このように、プラグインと設定情報をレシピに記述するだけで
+複数のプラグインの組み合わせにより自由な処理を実現できる。
 
 
 ======================
@@ -192,6 +199,21 @@ FilterIgnore
         - 無視キーワード ...
 
 
+StoreBookmark
+-------------
+[パス]
+ /plugins/store/bookmark.rb
+
+[概要]
+ ブックマークを保存する
+ DB を参照し重複したブックマークは破棄する
+
+[レシピ記法]
+  - module: StoreBookmark
+    config:
+      db: ブックマークを保存する SQLite3 DB 名
+
+
 PublishHatenaBookmark
 ---------------------
 [パス]
@@ -209,7 +231,6 @@ PublishHatenaBookmark
     config:
       username: はてな ID
       passowrd: パスワード
-      db: ブックマークを格納する SQLite3 DB 名
 
 
 

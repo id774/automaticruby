@@ -6,6 +6,7 @@ class Automatic
     basedir = File.dirname(__FILE__)
     $:.unshift File.join(basedir, '..', 'plugins', 'subscription')
     $:.unshift File.join(basedir, '..', 'plugins', 'filter')
+    $:.unshift File.join(basedir, '..', 'plugins', 'store')
     $:.unshift File.join(basedir, '..', 'plugins', 'publish')
 
     Dir.glob(basedir + '/../plugins/**/*.rb').each {|r|

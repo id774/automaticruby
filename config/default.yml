@@ -17,9 +17,12 @@ plugins:
         - hoge
         - fuga
 
+  - module: StoreBookmark
+    config:
+      db: bookmark.db
+
   - module: PublishHatenaBookmark
     config:
       username: your_hatena_id
       password: your_password
-      db: bookmark.db
 
