@@ -1,0 +1,13 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  module: AutoBookmark
+  config:
+    username: username
+    passowrd: password
+

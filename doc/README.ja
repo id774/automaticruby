@@ -24,8 +24,9 @@ automaticruby
 |
 +- config 設定情報を置くディレクトリ
 |   |
-|   +- user.txt
-|   |    ログイン情報を記述するテキストファイル
+|   +- default.yml
+|   |    デフォルトでロードされるレシピ
+|   |    YAML 形式でプラグインの情報を記述する
 |   |
 |   +- feeds.txt
 |   |    解析対象となるフィード
@@ -70,6 +71,56 @@ automaticruby
     |
     +- README.ja
          本ドキュメント
+
+
+==========
+レシピとは
+==========
+
+ Automatic Ruby では YAML 形式で書かれた設定ファイル
+を解析し、呼び出すプラグインの情報とそれに伴う様々な
+情報を読み込む。
+ この YAML ファイルをレシピと呼ぶ。
+
+
+==========
+レシピとは
+==========
+
+ レシピには暗黙的な命名規則がある。
+ 以下はレシピのサンプルとなる YAML ファイルである。
+
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  module: AutoBookmark
+  config:
+    username: username
+    passowrd: password
+
+上記のうち plugins module で定義された名称が
+呼び出すプラグインの名称になる。
+
+
+======================
+プラグインの実装ルール
+======================
+
+プラグインのコンストラクタは YAML.load によってロード
+された配列を引数に取る。
+
+def initialize(config)
+  @config = config
+
+として、インスタンス変数に代入するのを推奨する。
+
+インスタンスメソッド run が自動的に呼ばれる。
+処理内容は run メソッドから呼ぶ。
 
 
 ================

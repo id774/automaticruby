@@ -10,6 +10,6 @@ Dir.glob(File.dirname(__FILE__) + '/plugins/*.rb').each {|r|
   require(File.basename(r, '.rb'))
 }
 
-loader = "AutoBookmark"
-a = eval(loader).new
-a.run
+config = YAML.load(File.open(File.dirname(__FILE__) + '/config/default.yml'))
+loader = eval(config['plugins']['module']).new(config)
+loader.run

@@ -9,16 +9,12 @@ end
 class AutoBookmark
   attr_accessor :hb
 
-  def initialize
-    user = []
-    IO.foreach(File.join(File.dirname(__FILE__), '..', 'config', 'user.txt')) {|u|
-      user << u
-    }
-
+  def initialize(config)
+    @config = config
     @hb = HatenaBookmark.new
     @hb.user = {
-      "hatena_id" => user[0].chomp,
-      "password"  => user[1].chomp
+      "hatena_id" => @config['plugins']['config']['username'],
+      "password"  => @config['plugins']['config']['passowrd']
     }
 
     @feeds = []
