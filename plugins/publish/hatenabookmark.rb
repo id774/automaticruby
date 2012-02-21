@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Publish::HatenaBookmark
+# Author::    774 <http://id774.net>
+# Created::   Feb 22, 2012
+# Updated::   Feb 22, 2012
+# Copyright:: 774 Copyright (c) 2012
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 class PublishHatenaBookmark
   attr_accessor :hb
@@ -15,7 +21,7 @@ class PublishHatenaBookmark
     }
   end
 
-  def bookmark
+  def run
     @pipeline.each {|links|
       links.each {|link|
         Log.puts("info", "Bookmarking: #{link}")
@@ -26,9 +32,5 @@ class PublishHatenaBookmark
         sleep 5
       }
     }
-  end
-
-  def run
-    bookmark
   end
 end

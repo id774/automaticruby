@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Subscription::Feed
+# Author::    774 <http://id774.net>
+# Created::   Feb 22, 2012
+# Updated::   Feb 22, 2012
+# Copyright:: 774 Copyright (c) 2012
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 class SubscriptionFeed
   def initialize(config, pipeline=[])
@@ -7,7 +13,7 @@ class SubscriptionFeed
     @pipeline = pipeline
   end
 
-  def subscription
+  def run
     @config['feeds'].each {|feed|
       begin
         Log.puts("info", "Parsing: #{feed}")
@@ -22,9 +28,5 @@ class SubscriptionFeed
       end
     }
     @pipeline
-  end
-
-  def run
-    subscription
   end
 end
