@@ -31,8 +31,7 @@ class AutoBookmark
       detection = true if link.include?(e.chomp)
     }
     if detection
-      t = Time.now.strftime("%Y/%m/%d %X")
-      puts "#{t} [info] Excluded: #{link}"
+      Log.puts("info", "Excluded: #{link}")
     end
     return detection
   end
@@ -48,14 +47,12 @@ class AutoBookmark
     bookmarks = Bookmark.find(:all)
     @config['plugins']['config']['feeds'].each {|feed|
       begin
-        t = Time.now.strftime("%Y/%m/%d %X")
-        puts "#{t} [info] Parsing: #{feed}"
+        Log.puts("info", "Parsing: #{feed}")
         links = FeedParser.get_rss(feed)
         links.each {|link|
           unless filtering_url(link)
             unless bookmarks.detect {|b|b.url == link}
-              t = Time.now.strftime("%Y/%m/%d %X")
-              print "#{t} [info] Bookmarking: #{link}\n"
+              Log.puts("info", "Bookmarking: #{link}")
               new_bookmark = Bookmark.new(:url => link, :created_at => t)
               new_bookmark.save
               hb.post(link, nil)
@@ -64,8 +61,7 @@ class AutoBookmark
           end
         }
       rescue
-        t = Time.now.strftime("%Y/%m/%d %X")
-        puts "#{t} [error] Fault in parsing: #{feed}"
+        Log.puts("error", "Fault in parsing: #{feed}")
       end
     }
   end
