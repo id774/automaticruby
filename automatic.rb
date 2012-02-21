@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 basedir = File.dirname(__FILE__)
 $:.unshift File.join(basedir, 'lib')
-$:.unshift File.join(basedir, 'plugins')
+$:.unshift File.join(basedir, 'plugins', 'subscription')
+$:.unshift File.join(basedir, 'plugins', 'filter')
+$:.unshift File.join(basedir, 'plugins', 'publish')
 
 Dir.glob(basedir + '/lib/*.rb').each {|r|
   require(File.basename(r, '.rb'))
 }
-Dir.glob(basedir + '/plugins/*.rb').each {|r|
+Dir.glob(basedir + '/plugins/**/*.rb').each {|r|
   require(File.basename(r, '.rb'))
 }
 
@@ -35,7 +37,6 @@ rescue OptionParser::ParseError => err
 end
 
 require 'yaml'
-require 'pp'
 if filename == ""
   filename = basedir + '/config/default.yml'
 end
@@ -43,9 +44,10 @@ end
 print "Loading #{filename}\n"
 File.open(filename) {|io|
   YAML.load_documents(io) {|yaml|
+    @pipeline = []
     yaml['plugins'].each {|plugin|
-      loader = eval(plugin['module']).new(plugin['config'])
-      loader.run
+      loader = eval(plugin['module']).new(plugin['config'], @pipeline)
+      @pipeline = loader.run
     }
   }
 }

@@ -50,8 +50,11 @@ automaticruby
 |
 +- plugins プラグインを置くディレクトリ
 |   |
-|   +- auto_bookmark.rb
-|        自動ではてなブックマークをおこなう
+|   +- subscription フィードを購読するプラグインを置くディレクトリ
+|   |
+|   +- filter 情報をフィルタリングするプラグインを置くディレクトリ
+|   |
+|   +- publish 外部に情報を送信するプラグインを置くディレクトリ
 |
 +- utils 補助的なツールを置くディレクトリ
 |   |
@@ -100,17 +103,19 @@ global:
     level: info
 
 plugins:
-  - module: Plugin1
+  - module: SubscriptionFeed
     config:
-      username: username
-      passowrd: password
-      option:   aaa
+      feeds:
+        - http://id774.net/blog/feed/
 
-  - module: Plugin2
+  - module: PublishHatenaBookmark
     config:
-      username: username
-      passowrd: password
-      option:   bbb
+      username: your_hatena_id
+      password: your_password
+      db: bookmark.db
+      exclude:
+        - hoge
+        - fuga
 
 このように plugins module にプラグインのクラス名を記述し
 config にプラグインで利用する情報を記述する。
@@ -122,34 +127,51 @@ config にプラグインで利用する情報を記述する。
 ======================
 
 プラグインのコンストラクタは YAML.load によってロード
-されたハッシュの配列を引数に取る。
+されたハッシュの配列、及びパイプラインと呼ばれる
+インスタンス変数のオブジェクトを引数に取る。
 
-def initialize(config)
+推奨されるコンストラクタの実装例は以下の通りである。
+
+def initialize(config, pipeline=[])
   @config = config
-
-として、インスタンス変数に代入するのを推奨する。
+  @pipeline = pipeline
 
 インスタンスメソッド run が自動的に呼ばれる。
+また戻り値はインスタンス変数 @pipeline に渡り、レシピで
+定義された次のプラグインに引き渡される。
 
 
 ================
 プラグインの説明
 ================
 
- 現在は、はてなブックマークを自動的におこなうプラグイン
-しか存在しない。今後、さまざまなプラグインを追加して
-任意の処理を自動実行可能にできるようにする。
-
-[名前]
- plugins/auto_bookmark.rb
+SubscriptionFeed
+----------------
+[パス]
+ /plugins/subscription/feed.rb
 
 [概要]
- 自動的にソーシャルブックマークする
+ フィードを購読する
+
+[レシピ記法]
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - フィード名
+        - フィード名 ...
+
+
+PublishHatenaBookmark
+---------------------
+[パス]
+ /plugins/publish/hatenabookmark.rb
+
+[概要]
+ はてなブックマークをする
 
 [説明]
- この Ruby スクリプトはフィードを加工してソーシャル
-ブックマーク API への投稿用 XML を生成し、機械的に
-post する。
+ はてなブックマーク API への投稿用 XML を生成し
+送信する
 
 [レシピ記法]
   - module: AutoBookmark
@@ -157,16 +179,9 @@ post する。
       username: はてな ID
       passowrd: パスワード
       db: ブックマークを格納する SQLite3 DB 名
-      feeds:
-        - aaa
-        - bbb
-        - ccc
       exclude:
-        - ddd
-        - eee
-        - fff
-
- feeds に購読したいフィードを記述する。
+        - 除外対象キーワード
+        - 除外対象キーワード ...
 
  exclude には処理対象外とする文字列を指定する。
  この文字列が含まれる URL は無視される。

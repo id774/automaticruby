@@ -6,17 +6,17 @@ global:
     level: info
 
 plugins:
-  - module: AutoBookmark
+  - module: SubscriptionFeed
     config:
-      username: username
-      passowrd: password
-      db: bookmark.db
       feeds:
-        - aaa
-        - bbb
-        - ccc
+        - http://id774.net/blog/feed/
+
+  - module: PublishHatenaBookmark
+    config:
+      username: your_hatena_id
+      password: your_password
+      db: bookmark.db
       exclude:
-        - ddd
-        - eee
-        - fff
+        - hoge
+        - fuga
 

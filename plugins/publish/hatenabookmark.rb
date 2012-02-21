@@ -6,11 +6,13 @@ require 'active_record'
 class Bookmark < ActiveRecord::Base
 end
 
-class AutoBookmark
+class PublishHatenaBookmark
   attr_accessor :hb
 
-  def initialize(config)
+  def initialize(config, pipeline=[])
     @config = config
+    @pipeline = pipeline
+
     @hb = HatenaBookmark.new
     @hb.user = {
       "hatena_id" => @config['username'],
@@ -39,32 +41,26 @@ class AutoBookmark
   def bookmark
     ActiveRecord::Base.establish_connection(
       :adapter  => "sqlite3",
-      :database => (File.join(File.dirname(__FILE__), '..', 'db',
-                              @config['db']))
+      :database => (File.join(File.dirname(__FILE__),
+                    '..', '..', 'db', @config['db']))
     )
 
     create_db unless Bookmark.table_exists?()
 
     bookmarks = Bookmark.find(:all)
-    @config['feeds'].each {|feed|
-      begin
-        Log.puts("info", "Parsing: #{feed}")
-        links = FeedParser.get_rss(feed)
-        links.each {|link|
-          unless filtering_url(link)
-            unless bookmarks.detect {|b|b.url == link}
-              Log.puts("info", "Bookmarking: #{link}")
-              new_bookmark = Bookmark.new(:url => link,
-                :created_at => Time.now.strftime("%Y/%m/%d %X"))
-              new_bookmark.save
-              hb.post(link, nil)
-              sleep 5
-            end
+    @pipeline.each {|links|
+      links.each {|link|
+        unless filtering_url(link)
+          unless bookmarks.detect {|b|b.url == link}
+            Log.puts("info", "Bookmarking: #{link}")
+            new_bookmark = Bookmark.new(:url => link,
+              :created_at => Time.now.strftime("%Y/%m/%d %X"))
+            new_bookmark.save
+            hb.post(link, nil)
+            sleep 5
           end
-        }
-      rescue
-        Log.puts("error", "Fault in parsing: #{feed}")
-      end
+        end
+      }
     }
   end
 
