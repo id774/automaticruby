@@ -152,7 +152,7 @@ plugins:
       username: your_hatena_id
       password: your_password
 
-このレシピの例では
+このサンプルレシピの例では
 1. フィードを購読し
 2. 無視キーワードを含む URL を除外し
 3. 情報をデータベースに保存し
@@ -161,6 +161,20 @@ plugins:
 
 このように、プラグインと設定情報をレシピに記述するだけで
 複数のプラグインの組み合わせにより自由な処理を実現できる。
+
+たとえば Twitter に投稿する Publish::Twitter プラグインを
+作成し上記のレシピに記述すれば、自動的に記事を Twitter に
+投稿する自動処理が完成する。
+
+Gmail に送信する Publish::Gmail プラグインを作成しレシピ
+に追加すれば、フィードの記事を Gmail で読めるようになる。
+
+他にもリンクを元にブログ記事全文を取得したり、電子書籍の
+形式にして Kindle で読めるようにしたり、データベースに
+ブログ記事全文を保存してローカルのアプリで読めるように
+したりなど、プラグインの組み合わせ次第で無限の可能性を
+実現することができる。
+
 
 
 ==================
@@ -181,8 +195,36 @@ plugins:
       username: your_mail_address
       password: your_password
 
- あとは規約に従ってファイルを plugins/publish 配下に置き
-クラス名を PublishTwitter とすれば自動的に処理される。
+ この場合、ファイルを plugins/publish 配下に置き、クラス名
+はレシピで指定した PublishTwitter とする。あとは後述する
+Automatic::Pipeline の機能により自動的に処理される。
+
+
+
+========================
+Automatic::Pipeline とは
+========================
+
+ 本フレームワークはレシピを YAML で解析し、プラグインを
+順次読み込む。このとき @pipeline がインスタンス生成時の
+引数として渡され、戻り値は @pipeline に戻る。
+
+ コードは以下の通りである。
+
+  YAML.load_documents(io) {|yaml|
+    @pipeline = []
+    yaml['plugins'].each {|plugin|
+      loader = eval(plugin['module']).new(plugin['config'], @pipeline)
+      @pipeline = loader.run
+    }
+  }
+
+ プラグイン間での連続した @pipeline の受け渡しにより
+処理要素を直列に連結し、あるプラグインの出力が次の
+プラグインの入力となるパイプライン処理を実現する。
+
+ この機構を本フレームワークでは Automatic::Pipeline と呼ぶ。
+
 
 
 ======================
@@ -198,6 +240,7 @@ plugins:
 def initialize(config, pipeline=[])
   @config = config
   @pipeline = pipeline
+end
 
  インスタンスメソッド run が自動的に呼ばれる。
  戻り値はインスタンス変数 @pipeline に渡り、レシピで
