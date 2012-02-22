@@ -25,14 +25,12 @@ class FilterIgnore
   end
 
   def run
-    targets = []
-    @pipeline.each {|links|
-      target = []
-      links.each {|link|
-        target << link unless exclude(link)
+    return_feeds = []
+    @pipeline.each {|feeds|
+      feeds.items.each {|feed|
+        return_feeds << feeds unless exclude(feed.link)
       }
-      targets << target
     }
-    targets
+    return_feeds
   end
 end

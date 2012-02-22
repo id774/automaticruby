@@ -17,12 +17,8 @@ class SubscriptionFeed
     @config['feeds'].each {|feed|
       begin
         Log.puts("info", "Parsing: #{feed}")
-        rss_results = FeedParser.get_rss(feed)
-        links = []
-        rss_results.items.each do |item|
-          links  << item.link
-        end
-        @pipeline << links
+        rss = FeedParser.get_rss(feed)
+        @pipeline << rss
       rescue
         Log.puts("error", "Fault in parsing: #{feed}")
       end

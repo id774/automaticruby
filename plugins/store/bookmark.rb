@@ -36,19 +36,17 @@ class StoreBookmark
     create_table unless Bookmark.table_exists?()
 
     bookmarks = Bookmark.find(:all)
-    targets = []
-    @pipeline.each {|links|
-      target = []
-      links.each {|link|
-        unless bookmarks.detect {|b|b.url == link}
-          new_bookmark = Bookmark.new(:url => link,
+    return_feeds = []
+    @pipeline.each {|feeds|
+      feeds.items.each {|feed|
+        unless bookmarks.detect {|b|b.url == feed.link}
+          new_bookmark = Bookmark.new(:url => feed.link,
             :created_at => Time.now.strftime("%Y/%m/%d %X"))
           new_bookmark.save
-          target << link
+          return_feeds << feeds
         end
       }
-      targets << target
     }
-    targets
+    return_feeds
   end
 end

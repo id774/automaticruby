@@ -22,13 +22,13 @@ class PublishHatenaBookmark
   end
 
   def run
-    @pipeline.each {|links|
-      links.each {|link|
-        Log.puts("info", "Bookmarking: #{link}")
-        new_bookmark = Bookmark.new(:url => link,
+    @pipeline.each {|feeds|
+      feeds.items.each {|feed|
+        Log.puts("info", "Bookmarking: #{feed.link}")
+        new_bookmark = Bookmark.new(:url => feed.link,
           :created_at => Time.now.strftime("%Y/%m/%d %X"))
         new_bookmark.save
-        hb.post(link, nil)
+        hb.post(feed.link, nil)
         sleep 5
       }
     }
