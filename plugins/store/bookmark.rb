@@ -39,16 +39,16 @@ class StoreBookmark
     return_feeds = []
     @pipeline.each {|feeds|
       unless feeds.nil?
+        new_feed = false
         feeds.items.each {|feed|
-          new_feed = false
           unless bookmarks.detect {|b|b.url == feed.link}
             new_bookmark = Bookmark.new(:url => feed.link,
               :created_at => Time.now.strftime("%Y/%m/%d %X"))
             new_bookmark.save
             new_feed = true
           end
-          return_feeds << feeds if new_feed
         }
+        return_feeds << feeds if new_feed
       end
     }
     return_feeds
