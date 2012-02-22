@@ -20,7 +20,7 @@ class Automatic
         path.parent.basename.to_s.split('_').map(&:capitalize).join +
         path.basename('.rb').to_s.split('_').map(&:capitalize).join
 
-      autoload klass_name.to_sym, path
+      autoload klass_name.to_sym, path.to_s
     end
 
     @pipeline = []
