@@ -38,14 +38,16 @@ class StoreBookmark
     bookmarks = Bookmark.find(:all)
     return_feeds = []
     @pipeline.each {|feeds|
-      feeds.items.each {|feed|
-        unless bookmarks.detect {|b|b.url == feed.link}
-          new_bookmark = Bookmark.new(:url => feed.link,
-            :created_at => Time.now.strftime("%Y/%m/%d %X"))
-          new_bookmark.save
-          return_feeds << feeds
-        end
-      }
+      unless feeds.nil?
+        feeds.items.each {|feed|
+          unless bookmarks.detect {|b|b.url == feed.link}
+            new_bookmark = Bookmark.new(:url => feed.link,
+              :created_at => Time.now.strftime("%Y/%m/%d %X"))
+            new_bookmark.save
+            return_feeds << feeds
+          end
+        }
+      end
     }
     return_feeds
   end

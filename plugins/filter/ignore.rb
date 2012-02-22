@@ -27,9 +27,11 @@ class FilterIgnore
   def run
     return_feeds = []
     @pipeline.each {|feeds|
-      feeds.items.each {|feed|
-        return_feeds << feeds unless exclude(feed.link)
-      }
+      unless feeds.nil?
+        feeds.items.each {|feed|
+          return_feeds << feeds unless exclude(feed.link)
+        }
+      end
     }
     return_feeds
   end
