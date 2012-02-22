@@ -21,17 +21,19 @@ class FilterIgnore
     if detection
       Log.puts("info", "Excluded: #{link}")
     end
-    return detection
+    detection
   end
 
   def run
     return_feeds = []
     @pipeline.each {|feeds|
+      ignore = false
       unless feeds.nil?
         feeds.items.each {|feed|
-          return_feeds << feeds unless exclude(feed.link)
+          ignore = true if exclude(feed.link)
         }
       end
+      return_feeds << feeds unless ignore
     }
     return_feeds
   end
