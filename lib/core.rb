@@ -8,30 +8,25 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 class Automatic
+  require 'pathname'
+  require 'yaml'
+
   def self.core(recipe)
-    basedir = File.dirname(__FILE__)
-    $:.unshift File.join(basedir, '..', 'plugins', 'subscription')
-    $:.unshift File.join(basedir, '..', 'plugins', 'filter')
-    $:.unshift File.join(basedir, '..', 'plugins', 'store')
-    $:.unshift File.join(basedir, '..', 'plugins', 'publish')
+    basedir = Pathname.new(__FILE__).parent.parent
+    recipe = basedir + 'config/default.yml' if recipe.empty?
 
-    Dir.glob(basedir + '/../plugins/**/*.rb').each {|r|
-      require(File.basename(r, '.rb'))
-    }
+    Pathname.glob(basedir + 'plugins/*/*.rb').each do |path|
+      klass_name =
+        path.parent.basename.to_s.split('_').map(&:capitalize).join +
+        path.basename('.rb').to_s.split('_').map(&:capitalize).join
 
-    require 'yaml'
-    if recipe == ""
-      recipe = basedir + '/../config/default.yml'
+      autoload klass_name.to_sym, path
     end
 
-    File.open(recipe) {|io|
-      YAML.load_documents(io) {|yaml|
-        @pipeline = []
-        yaml['plugins'].each {|plugin|
-          loader = eval(plugin['module']).new(plugin['config'], @pipeline)
-          @pipeline = loader.run
-        }
-      }
-    }
+    @pipeline = []
+    YAML.load(File.read(recipe))['plugins'].each do |plugin|
+      klass = eval(plugin['module'])
+      @pipeline = klass.new(plugin['config'], @pipeline).run
+    end
   end
 end
