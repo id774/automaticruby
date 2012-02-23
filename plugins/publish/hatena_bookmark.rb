@@ -30,7 +30,7 @@ class PublishHatenaBookmark
             :created_at => Time.now.strftime("%Y/%m/%d %X"))
           new_bookmark.save
           hb.post(feed.link, nil)
-          sleep 5
+          sleep @config['interval'].to_i
         }
       end
     }

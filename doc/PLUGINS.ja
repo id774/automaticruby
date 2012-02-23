@@ -66,5 +66,6 @@ PublishHatenaBookmark
     config:
       username: はてな ID
       passowrd: パスワード
+      interval: はてブする間隔 (秒)
 
 

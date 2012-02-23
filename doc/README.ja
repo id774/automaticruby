@@ -81,7 +81,7 @@ automaticruby
 +- db
 |   |
 |   +- bookmark.db
-|        StoreBookmark プラグインで収集された
+|        Store::Bookmark プラグインで収集された
 |        ブックマークが保存される
 |
 +- utils
@@ -154,6 +154,7 @@ plugins:
     config:
       username: your_hatena_id
       password: your_password
+      interval: 5
 
 このサンプルレシピの例では
 1. フィードを購読し

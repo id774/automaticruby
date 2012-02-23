@@ -25,4 +25,5 @@ plugins:
     config:
       username: your_hatena_id
       password: your_password
+      interval: 5
 
