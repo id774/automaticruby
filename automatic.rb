@@ -4,15 +4,14 @@
 # Author::    774 <http://id774.net>
 # Version::   12.02-devel
 # Created::   Feb 18, 2012
-# Updated::   Feb 23, 2012
+# Updated::   Feb 22, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
-require 'pathname'
-basedir = Pathname.new(__FILE__).parent
-Pathname.glob(basedir + 'lib/*.rb').each {|path|
-  klass_name = path.basename('.rb').to_s.split('_').map(&:capitalize).join
-  autoload klass_name.to_sym, path.to_s
+basedir = File.dirname(__FILE__)
+$:.unshift File.join(basedir, 'lib')
+Dir.glob(basedir + '/lib/*.rb').each {|r|
+  require(File.basename(r, '.rb'))
 }
 
 if __FILE__ == $0
@@ -39,5 +38,5 @@ if __FILE__ == $0
     $stderr.puts parser.help
     exit 1
   end
-  Core.pipeline(recipe)
+  Automatic.core(recipe)
 end
