@@ -26,9 +26,6 @@ class PublishHatenaBookmark
       unless feeds.nil?
         feeds.items.each {|feed|
           Log.puts("info", "Bookmarking: #{feed.link}")
-          new_bookmark = Bookmark.new(:url => feed.link,
-            :created_at => Time.now.strftime("%Y/%m/%d %X"))
-          new_bookmark.save
           hb.post(feed.link, nil)
           sleep @config['interval'].to_i
         }
