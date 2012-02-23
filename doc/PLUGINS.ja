@@ -55,7 +55,7 @@ PublishConsole
  /plugins/publish/console.rb
 
 [概要]
- Pipeline をコンソールに出力する
+ パイプラインをコンソールに出力する
 
 [レシピ記法]
   - module: PublishConsole
