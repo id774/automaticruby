@@ -1,6 +1,8 @@
 source :rubygems
 
 gem 'sqlite3-ruby'
+gem 'activesupport'
+gem 'hashie'
 gem 'activerecord'
 gem 'gcalapi'
 
