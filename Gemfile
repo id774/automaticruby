@@ -1,13 +1,10 @@
 source :rubygems
 
-gem 'builder' # Explicit require before simple_xlsx_writer
-gem 'simple_xlsx_writer', :require => 'simple_xlsx'
-
 gem 'sqlite3'
-gem 'activesupport'
+gem 'activesupport', '>=3.0.0'
 gem 'hashie'
 
-gem 'activerecord'
+gem 'activerecord', '>=3.0.0'
 gem 'gcalapi'
 
 group :test do
