@@ -12,7 +12,7 @@ module Automatic
   module Plugin end
 
   module Pipeline
-    def self.plugin_load(module_name)
+    def self.load_plugin(module_name)
       type, filename = module_name.underscore.split('_', 2)
       path = Automatic.plugins_dir + "#{type}/#{filename}.rb"
       Automatic::Plugin.autoload module_name.to_sym, path
@@ -22,7 +22,7 @@ module Automatic
       raise "NoRecipeError" if recipe.nil?
       pipeline = []
       recipe.each_plugin do |plugin|
-        plugin_load(plugin.module)
+        load_plugin(plugin.module)
         klass = Automatic::Plugin.const_get(plugin.module)
         pipeline = klass.new(plugin.config, pipeline).run
       end
