@@ -81,3 +81,23 @@ PublishHatenaBookmark
       interval: はてブする間隔 (秒)
 
 
+PublishGoogleCalendar
+---------------------
+[パス]
+ /plugins/publish/google_calendar.rb
+
+[概要]
+ Google Calendar に予定を登録する
+
+[説明]
+ item.title を当日の Google カレンダーに
+登録する
+
+[レシピ記法]
+  - module: PublishGoogleCalendar
+    config:
+      username: Google メールアドレス
+      password: パスワード
+      interval: 複数の予定の投稿間隔 (秒)
+
+
