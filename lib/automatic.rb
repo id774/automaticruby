@@ -6,6 +6,7 @@
 # Updated::   Feb 24, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 module Automatic
   require 'automatic/recipe'
   require 'automatic/pipeline'
@@ -25,7 +26,7 @@ module Automatic
   def self.config_dir
     @root_dir + "/config/"
   end
-  
+
   def self.run(root_dir)
     @root_dir = root_dir
     recipe_path = ""
@@ -40,7 +41,7 @@ module Automatic
         exit
       end
     end
-    
+
     begin
       parser.parse!
       print "Loading #{recipe_path}\n" unless recipe_path == ""
@@ -49,11 +50,9 @@ module Automatic
       $stderr.puts parser.help
       exit 1
     end
-    
+
     # recipe treat as an object.
     recipe = Automatic::Recipe.new(recipe_path)
     Automatic::Pipeline.run(recipe)
   end
 end
-
-

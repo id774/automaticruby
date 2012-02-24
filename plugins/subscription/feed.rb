@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::SubscriptionFeed
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Feb 22, 2012
+# Updated::   Feb 24, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -13,7 +13,7 @@ module Automatic::Plugin
       @config = config
       @pipeline = pipeline
     end
-    
+
     def run
       @config['feeds'].each {|feed|
         begin

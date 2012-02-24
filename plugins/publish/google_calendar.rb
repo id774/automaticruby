@@ -176,9 +176,3 @@ module Automatic::Plugin
     end
   end
 end
-
-if __FILE__ == $0
-  abort("Usage: google_calendar.rb <date> <time> <plan>") if ARGV.size == 0
-  gc = Googlecalendar.new
-  gc.add(ARGV.join(' '))
-end

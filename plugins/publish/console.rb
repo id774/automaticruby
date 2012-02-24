@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Publish::Console
 # Author::    774 <http://id774.net>
 # Created::   Feb 23, 2012
-# Updated::   Feb 23, 2012
+# Updated::   Feb 24, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 

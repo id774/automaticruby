@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Publish::HatenaBookmark
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Feb 23, 2012
+# Updated::   Feb 24, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -100,11 +100,4 @@ module Automatic::Plugin
       @pipeline
     end
   end
-end
-
-if __FILE__ == $0
-  b_url = ARGV.shift || abort("Usage: hatenabookmark.rb <url> <comment>")
-  b_comment = ARGV.shift
-  hb = Automatic::Plugin::HatenaBookmark.new
-  hb.post(b_url, b_comment)
 end
