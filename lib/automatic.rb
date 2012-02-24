@@ -33,6 +33,7 @@ module Automatic
     require 'optparse'
     parser = OptionParser.new do |parser|
       parser.banner = "Usage: autorb [options] arg"
+      parser.version = VERSION
       parser.separator "options:"
       parser.on('-c', '--config FILE', String,
                 "recipe YAML file"){|c| recipe_path = c}
