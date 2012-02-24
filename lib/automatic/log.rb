@@ -7,15 +7,18 @@
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
-class Log
-  def self.puts(level, message)
-    t = Time.now.strftime("%Y/%m/%d %X")
-    print "#{t} [#{level}] #{message}\n"
+module Automatic
+  module Log
+    def self.puts(level, message)
+      t = Time.now.strftime("%Y/%m/%d %X")
+      print "#{t} [#{level}] #{message}\n"
+    end
   end
 end
 
 if __FILE__ == $0
   level = ARGV.shift || abort("Usage: log.rb <level> <message>")
   message = ARGV.shift
-  Log.puts(level, message)
+  Automatic::Log.puts(level, message)
 end
+
