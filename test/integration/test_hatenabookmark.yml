@@ -1,0 +1,26 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://id774.net/blog/feed/
+
+  - module: FilterIgnore
+    config:
+      exclude:
+        - hoge
+
+  - module: PublishHatenaBookmark
+    config:
+      username: username
+      password: password
+      interval: 1
+
+  - module: PublishConsole
+
