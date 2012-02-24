@@ -20,7 +20,7 @@ module Automatic::Plugin
         detection = true if link.include?(e.chomp)
       }
       if detection
-        Automatic::Plugin::Log.puts("info", "Excluded: #{link}")
+        Automatic::Log.puts("info", "Excluded: #{link}")
       end
       detection
     end
