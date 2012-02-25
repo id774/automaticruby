@@ -8,5 +8,5 @@ gem 'gcalapi'
 
 group :test do
   gem 'rspec'
-  gem 'rcov'
+  gem 'rcov', :platforms => :mri_18
 end
