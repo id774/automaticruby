@@ -29,6 +29,8 @@ $ ./automatic.rb -v
 $ bundle install
 
  任意のレシピ (後述) を作成する。
+$ app.rb -c your_recipe.yml
+
  -c オプション付きで手動実行し、問題がなければ
  cron に登録するなどして自動化する。
 
@@ -86,19 +88,21 @@ $ ./app.rb -c test/integration/feed2console.yml
 |   |
 |   +- automatic
 |   |   |
+|   |   +- environment.rb
+|   |   |    環境情報を読み込む
+|   |   |
 |   |   +- pipeline.rb
 |   |   |    パイプラインと呼ばれるオブジェクトを利用し
 |   |   |    レシピに書かれたプラグインに処理を順次受け渡す
 |   |   |
 |   |   +- feed_parser.rb
-|   |   |    ターゲットとなるフィードを解析し
-|   |   |    エントリのリンクを抽出する
+|   |   |    フィードを解析する
 |   |   |
 |   |   +- log.rb
 |   |   |    ログを出力する
 |   |   |
 |   |   +- recipe.rb
-|   |        レシピをロードする
+|   |        レシピを読み込む
 |   |
 |   +- config
 |
@@ -112,6 +116,7 @@ $ ./app.rb -c test/integration/feed2console.yml
 |   |
 |   +- opml_parser.rb
 |        OPML からフィードの URL を抽出する
+|        既存の RSS Reader からの移行用ツールである
 |
 +- spec
 |    ユニットテスト用ディレクトリ
@@ -242,18 +247,19 @@ Automatic::Pipeline とは
 ========================
 
  本フレームワークはレシピを YAML で解析し、プラグインを
-順次読み込む。このとき @pipeline がインスタンス生成時の
-引数として渡され、戻り値は @pipeline に戻る。
+順次読み込む。このとき pipeline がインスタンス生成時の
+引数として渡され、戻り値は pipeline に戻る。
 
  コードは以下の通りである。
 
-  @pipeline = []
-  YAML.load(File.read(recipe))['plugins'].each do |plugin|
-    klass = eval(plugin['module'])
-    @pipeline = klass.new(plugin['config'], @pipeline).run
-  end
+ pipeline = []
+ recipe.each_plugin do |plugin|
+   load_plugin(plugin.module)
+   klass = Automatic::Plugin.const_get(plugin.module)
+   pipeline = klass.new(plugin.config, pipeline).run
+ end
 
- プラグイン間での連続した @pipeline の受け渡しにより
+ プラグイン間での連続した pipeline の受け渡しにより
 処理要素を直列に連結し、あるプラグインの出力が次の
 プラグインの入力となるパイプライン処理を実現する。
 
@@ -285,14 +291,23 @@ end
 ユニットテスト
 ==============
 
- ユニットテストは RSpec + Jenkins でおこなう。
-プラグインのテストは、引数となるパイプラインを渡し
-戻り値を検査すると良い。
+ ユニットテストは RSpec でおこなう。
+
+ プラグインのテストは、引数となるパイプラインを渡し
+戻り値を検査する。
 
 
-=======================
-インテグレーションテスト
-=======================
+========================
+継続的インテグレーション
+========================
+
+ CI は Jenkins でおこなう。
+ http://id774.net/jenkins/
+
+
+========
+結合試験
+========
 
  結合試験用プラグイン Publish::Console を使うと
 単純に入力されたパイプラインをコンソールに出力する
@@ -327,36 +342,27 @@ TODO
 ====
 
  本フレームワークはまだ開発開始からまもなく、そのため
-多数の TODO を抱えている。
-
-
-テストコード
-------------
- テストコードが必要である。幸いなことにプラガブルな設計
-であるため、単体のテストは比較的容易である。基本的には
-引数にテストオブジェクトを渡し、期待するオブジェクトが
-帰ってくるか検査をすれば良い。
-
- 結合試験は実際には何もしないダミーの試験的なプラグイン
-を作成した上でテスト用のレシピを実行すれば検証可能である。
-
+まだまだ多数の TODO を抱えている。
 
 プラグイン
 ----------
- プラグインの種類がもっと豊富に欲しい。これはアイデア次第
-で無限に追加可能であろう。ネタのようなプラグインでも良い。
+ プラグインの種類がもっと豊富に欲しい。
+ これはアイデア次第で無限に追加可能であろう。
+
+ - Gmail にフィードを送る
+ - 電子書籍化する
+ - エントリの全文取得をする
+ - データベースに蓄積する
+ - なんでもフィード化する
+ - Twitter を購読する
+ - Facebook を購読する
+ - mixi を購読する
 
  パイプラインにハッシュ化されたフィードの配列が入っている
-ので、これを Gmail に送ったり、電子書籍化したり、エントリ
-の全文取得をしたり、各種データベースに蓄積したり、カスタム
-フィードを作成してなんでもフィード化したり、といったことが
-アイデアとして挙げられる。
+のでこれを利用してさまざまな機能を実現できる。
 
- 購読系では Twitter の User Streams を受信したり Facebook
-など各種 SNS を巡回してデータを取得したりといったプラグイン
-の需要が高いだろう。
-
- もちろん今までに無い奇抜なアイデアの実装も大歓迎である。
+ 詳細は GitHub の issues を参照
+ https://github.com/id774/automaticruby/issues
 
 
 
@@ -366,15 +372,16 @@ TODO
 
 Ruby 1.8 以降
 
+
 以下の gem パッケージに依存
 
-sqlite2-ruby
-activesupport ~> 3.0.0
+sqlite3
+activesupport
 hashie
-activerecord ~> 3.0.0
+activerecord
 gcalapi
-rspec
 
+詳細は Gemfile を参照
 
 
 ========
