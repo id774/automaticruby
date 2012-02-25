@@ -1,3 +1,4 @@
+
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'store/bookmark'
@@ -15,7 +16,7 @@ describe Automatic::Plugin::StoreBookmark do
   it "should store 1 record for the new link" do
     instance = Automatic::Plugin::StoreBookmark.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
-        feed { add_link "http://github.com" }
+        feed { item "http://github.com" }
       })
     
     lambda {
@@ -26,7 +27,7 @@ describe Automatic::Plugin::StoreBookmark do
   it "should not store record for the existent link" do
     instance = Automatic::Plugin::StoreBookmark.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
-        feed { add_link "http://github.com" }
+        feed { item "http://github.com" }
       })
     
     instance.run.should have(1).feed

@@ -47,11 +47,12 @@ module AutomaticSpec
       rss.instance_variable_set(:@channel, @channel)
       return rss
     end
-    
-    def add_link(url)
-      item = RSS::Rss::Channel::Item.new
-      item.link = url
-      @channel.items << item
+
+    def item(url, title="")
+      itm = RSS::Rss::Channel::Item.new
+      itm.link = url
+      itm.title = title unless title.blank?
+      @channel.items << itm
     end
   end
 end

@@ -18,7 +18,7 @@ describe Automatic::Plugin::FilterIgnore do
     subject {
       Automatic::Plugin::FilterIgnore.new({'exclude' => []}, 
         AutomaticSpec.generate_pipeline {
-          feed { add_link "http://github.com" }
+          feed { item "http://github.com" }
         })
     }
       
@@ -45,8 +45,8 @@ describe Automatic::Plugin::FilterIgnore do
     subject {
       Automatic::Plugin::FilterIgnore.new({'exclude' => ["github"]},
         AutomaticSpec.generate_pipeline {
-          feed { add_link "http://github.com" }
-          feed { add_link "http://google.com" }
+          feed { item "http://github.com" }
+          feed { item "http://google.com" }
         })
     }
     

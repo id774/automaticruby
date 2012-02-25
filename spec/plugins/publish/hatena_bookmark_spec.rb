@@ -7,7 +7,7 @@ describe Automatic::Plugin::PublishHatenaBookmark do
     Automatic::Plugin::PublishHatenaBookmark.new(
       {"username" => "user", "password" => "pswd"},
       AutomaticSpec.generate_pipeline{
-        feed { add_link "http://github.com" }
+        feed { item "http://github.com" }
       })
   }
 

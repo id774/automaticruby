@@ -18,7 +18,7 @@ Automatic::Plugin::PublishConsole.send(:include, PpInterceptor)
 describe Automatic::Plugin::PublishConsole do
   subject {
     Automatic::Plugin::PublishConsole.new({}, AutomaticSpec.generate_pipeline{
-        feed { add_link "http://github.com" }
+        feed { item "http://github.com" }
       })
   }
 
