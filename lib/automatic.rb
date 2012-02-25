@@ -8,6 +8,7 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic
+  require 'automatic/environment'
   require 'automatic/recipe'
   require 'automatic/pipeline'
   require 'automatic/log'
