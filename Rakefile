@@ -12,7 +12,8 @@ end
 RSpec::Core::RakeTask.new(:rcov) do |spec|
   spec.pattern = 'spec/**/*_spec.rb'
   exclude_files = [
-    "gems"
+    "gems",
+    "spec"
   ]
   spec.rcov_opts = ['--exclude', exclude_files.join(",")]
   spec.rcov = true
