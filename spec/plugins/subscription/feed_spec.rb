@@ -22,7 +22,7 @@ describe Automatic::Plugin::SubscriptionFeed do
   end
 
 
-  context "with empty feeds" do
+  context "with feeds whose valid URL" do
     subject {
       Automatic::Plugin::SubscriptionFeed.new(
         { 'feeds' => [
