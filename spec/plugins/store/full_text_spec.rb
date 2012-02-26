@@ -8,7 +8,7 @@ require 'pathname'
 describe Automatic::Plugin::StoreFullText do
   before do
     @db_filename = "test_full_text.db"
-    db_path = Pathname(__FILE__).parent+"../../../db/#{@db_filename}"
+    db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{@db_filename}"
     db_path.delete if db_path.exist?
     Automatic::Plugin::StoreFullText.new({"db" => @db_filename}).run
   end

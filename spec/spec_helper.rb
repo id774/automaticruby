@@ -36,6 +36,14 @@ module AutomaticSpec
       pipeline_generator.instance_eval(&block)
       return pipeline_generator.feeds
     end
+
+    def root_dir
+      return File.join(__FILE__, "../../")
+    end
+
+    def db_dir
+      return File.join(root_dir, "db")
+    end
   end
 
   class StubPipelineGenerator
