@@ -14,7 +14,7 @@ module Automatic
   require 'automatic/log'
   require 'automatic/feed_parser'
 
-  VERSION = "12.02.1"
+  VERSION = "12.02.1-devel"
   
   def self.root_dir
     @root_dir
