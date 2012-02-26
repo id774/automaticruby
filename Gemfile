@@ -10,4 +10,5 @@ group :test do
   gem 'rspec'
   gem 'rcov', :platforms => :mri_18
   gem 'simplecov'
+  gem 'simplecov-rcov'
 end
