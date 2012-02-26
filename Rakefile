@@ -9,12 +9,20 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
-RSpec::Core::RakeTask.new(:rcov) do |spec|
-  spec.pattern = 'spec/**/*_spec.rb'
-  exclude_files = [
-    "gems",
-    "spec"
-  ]
-  spec.rcov_opts = ['--exclude', exclude_files.join(",")]
-  spec.rcov = true
+if /^1\.9\./ =~ RUBY_VERSION
+  desc "Run RSpec code examples with simplecov"
+  task :simplecov do
+    ENV['COVERAGE'] = "on"
+    Rake::Task[:spec].invoke
+  end
+else
+  desc "Run RSpec code examples with rcov"
+  RSpec::Core::RakeTask.new(:rcov) do |spec|
+    spec.pattern = FileList['spec/**/*_spec.rb']
+    exclude_files = [
+      "gems",
+    ]
+    spec.rcov_opts = ['--exclude', exclude_files.join(",")]
+    spec.rcov = true
+  end
 end
