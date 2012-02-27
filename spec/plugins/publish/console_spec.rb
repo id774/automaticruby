@@ -2,29 +2,23 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'publish/console'
 
-module PpInterceptor
-  attr_reader :outputs
-
-  def pp_with_store(value)
-    @outputs = [] if @outputs.nil?
-    @outputs << value
-    pp_without_store(value)
-  end
-  alias_method_chain :pp, :store
-end
-
-Automatic::Plugin::PublishConsole.send(:include, PpInterceptor)
-
 describe Automatic::Plugin::PublishConsole do
+  before do
+    @pipeline = AutomaticSpec.generate_pipeline {
+      feed { item "http://github.com" }
+    }
+  end
+  
   subject {
-    Automatic::Plugin::PublishConsole.new({}, AutomaticSpec.generate_pipeline{
-        feed { item "http://github.com" }
-      })
+    Automatic::Plugin::PublishConsole.new({}, @pipeline)
   }
 
-  it "should call 'pp'" do
-    subject.run
-    subject.should have(1).outputs
+  it "should output pretty inspect of feeds" do
+    output = mock("output")
+    output.should_receive(:puts).
+      with("info", @pipeline[0].items[0].pretty_inspect)
+    subject.instance_variable_set(:@output, output)
+    subject.run    
   end
 end
 

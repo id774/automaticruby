@@ -10,18 +10,18 @@
 module Automatic::Plugin
   class PublishConsole
     require 'pp'
-    attr_accessor :hb
 
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
+      @output = STDOUT
     end
 
     def run
-      @pipeline.each {|feeds|
+      @pipeline.each { |feeds|
         unless feeds.nil?
-          feeds.items.each {|feed|
-            pp feed
+          feeds.items.each { |feed|
+            @output.puts("info", feed.pretty_inspect)
           }
         end
       }
