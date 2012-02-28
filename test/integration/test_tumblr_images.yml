@@ -1,0 +1,24 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://reretlet.tumblr.com/rss
+
+  - module: StoreBookmark
+    config:
+      db: image.db
+
+  - module: FilterImage
+
+  - module: StoreTargetLink
+    config:
+      path: /tmp
+      interval: 1
+
