@@ -34,6 +34,19 @@ FilterIgnore
         - 無視キーワード ...
 
 
+FilterImage
+------------
+[パス]
+ /plugins/filter/image.rb
+
+[概要]
+ パーマリンクを本文中の画像のリンクに書き換える
+ 画像のリンクが無い場合は nil にする
+
+[レシピ記法]
+  - module: FilterImage
+
+
 StorePermalink
 --------------
 [パス]
@@ -64,6 +77,21 @@ StoreFullText
   - module: StoreFullText
     config:
       db: SQLite3 DB 名
+
+
+StoreTargetLink
+--------------
+[パス]
+ /plugins/store/target_link.rb
+
+[概要]
+ リンク先のコンテンツをローカルに保存する
+
+[レシピ記法]
+  - module: StoreTargetLink
+    config:
+      path: 保存先のフォルダ
+      interval: 保存する間隔 (秒)
 
 
 PublishConsole
