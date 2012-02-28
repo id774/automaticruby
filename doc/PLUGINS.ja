@@ -162,3 +162,23 @@ PublishGoogleCalendar
       interval: 複数の予定の投稿間隔 (秒)
 
 
+NotifyIkachan
+---------------------
+[パス]
+ /plugins/notify/ikachan.rb
+
+[概要]
+ ikachan へメッセージを送信する
+
+[説明]
+ ikachan へ HTTP 経由で POST します
+ ikachan とは: http://blog.yappo.jp/yappo/archives/000760.html
+
+[レシピ記法]
+  - module: NotifyIkachan
+    config:
+      url: http://sample.com
+      port: 4979             # ポート番号、デフォルトは 4979
+      channels: foo,bar,#baz # '#' はあってもなくても自動的につけられる、複数は','で指定
+      command: notice        # privmsg や notice など
+      interval: 5            # ポストする間隔 (秒)
