@@ -337,6 +337,19 @@ URL リストを抽出するのに使う。
 $ ruby opml_parser.rb > feeds.txt
 
 
+名前
+ utils/auto_discovery.rb
+
+説明
+ 引数に指定した URL から購読対象のフィードを
+オートディスカバリで抽出する。
+
+$ ruby autodiscovery.rb "https://twitter.com/twitt"
+["https://twitter.com/statuses/user_timeline/4441691.rss",
+ "https://twitter.com/favorites/4441691.rss"]
+
+
+
 ====
 TODO
 ====
