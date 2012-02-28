@@ -11,9 +11,7 @@ plugins:
       feeds:
         - http://reretlet.tumblr.com/rss
 
-  - module: FilterImage
-
-  - module: StorePermalink
+  - module: StoreBookmark
     config:
       db: image.db
 
