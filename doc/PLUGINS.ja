@@ -49,6 +49,23 @@ StoreBookmark
       db: ブックマークを保存する SQLite3 DB 名
 
 
+StoreFullText
+-------------
+[パス]
+ /plugins/store/full_text.rb
+
+[概要]
+ フィードを DB に保存する
+
+ 保存した DB は以下のビューワでも閲覧できる
+ https://github.com/id774/blog_viewer
+
+[レシピ記法]
+  - module: StoreFullText
+    config:
+      db: SQLite3 DB 名
+
+
 PublishConsole
 ------------
 [パス]
