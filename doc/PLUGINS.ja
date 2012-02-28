@@ -34,14 +34,14 @@ FilterIgnore
         - 無視キーワード ...
 
 
-StoreBookmark
--------------
+StorePermalink
+--------------
 [パス]
- /plugins/store/bookmark.rb
+ /plugins/store/permalink.rb
 
 [概要]
- ブックマークを保存する
- DB を参照し重複したブックマークは破棄する
+ パーマリンクを保存する
+ 重複したパーマリンクは破棄する
 
 [レシピ記法]
   - module: StoreBookmark
@@ -55,7 +55,7 @@ StoreFullText
  /plugins/store/full_text.rb
 
 [概要]
- フィードを DB に保存する
+ フィード全文を DB に保存する
 
  保存した DB は以下のビューワでも閲覧できる
  https://github.com/id774/blog_viewer

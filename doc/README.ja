@@ -108,8 +108,8 @@ $ ./app.rb -c test/integration/feed2console.yml
 |
 +- db
 |   |
-|   +- bookmark.db
-|        Store::Bookmark プラグインで収集された
+|   +- permalink.db
+|        Store::Permalink プラグインで収集された
 |        ブックマークが保存される
 |
 +- utils
@@ -183,9 +183,9 @@ plugins:
         - hoge
         - fuga
 
-  - module: StoreBookmark
+  - module: StorePermalink
     config:
-      db: bookmark.db
+      db: permalink.db
 
   - module: PublishHatenaBookmark
     config:
@@ -196,7 +196,7 @@ plugins:
 このサンプルレシピの例では
 1. フィードを購読し
 2. 無視キーワードを含む URL を除外し
-3. 情報をデータベースに保存し
+3. パーマリンクをデータベースに保存し
 4. はてなブックマークをする
 という一連の処理をプラグインの組み合わせで実現している。
 

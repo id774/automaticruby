@@ -16,9 +16,9 @@ plugins:
       exclude:
         - hoge
 
-  - module: StoreBookmark
+  - module: StorePermalink
     config:
-      db: bookmark.db
+      db: test_permalink.db
 
   - module: PublishConsole
 

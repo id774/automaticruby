@@ -17,9 +17,9 @@ plugins:
         - hoge
         - fuga
 
-  - module: StoreBookmark
+  - module: StorePermalink
     config:
-      db: bookmark.db
+      db: permalink.db
 
   - module: PublishHatenaBookmark
     config:

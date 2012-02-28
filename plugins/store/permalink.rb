@@ -1,23 +1,18 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Store::Bookmark
+# Name::      Automatic::Plugin::Store::Permalink
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
 # Updated::   Feb 22, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
-#
-# Notice:
-# This Plugin was renamed to Store::Permalink.
-# Store::Bookmark will be removed.
-#
 require 'plugins/store/store_database'
 
 module Automatic::Plugin  
-  class Bookmark < ActiveRecord::Base
+  class Permalink < ActiveRecord::Base
   end
 
-  class StoreBookmark
+  class StorePermalink
     include Automatic::Plugin::StoreDatabase
 
     def initialize(config, pipeline=[])
@@ -37,12 +32,12 @@ module Automatic::Plugin
     end
 
     def model_class
-      return Automatic::Plugin::Bookmark
+      return Automatic::Plugin::Permalink
     end
     
     def run
       return for_each_new_feed { |feed|
-        Bookmark.create(
+        Permalink.create(
           :url => feed.link,
           :created_at => Time.now.strftime("%Y/%m/%d %X"))
       }
