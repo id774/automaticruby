@@ -21,6 +21,7 @@ describe Automatic::Plugin::NotifyIkachan do
   it "should post title and link in the feed" do
     ikachan = mock("ikachan")
     ikachan.should_receive(:post).with("http://github.com", "GitHub")
+    ikachan.should_receive(:params)
     subject.instance_variable_set(:@ikachan, ikachan)
     subject.run.should have(1).feed
   end
