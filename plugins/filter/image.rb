@@ -33,10 +33,9 @@ module Automatic::Plugin
           feeds.items.each {|feed|
             arr = parse_array(feed.description)
             if arr.length > 0
-              feed.description = arr[0]
-              Automatic::Log.puts("info", "Image: #{feed.description}")
+              feed.link = arr[0]
             else
-              feed.description = nil
+              feed.link = nil
             end
           }
         end
