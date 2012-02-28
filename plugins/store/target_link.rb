@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::Image
+# Name::      Automatic::Plugin::Store::TargetLink
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
 # Updated::   Feb 28, 2012
@@ -8,40 +8,36 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class FilterImage
-    require 'net/http'
-    require 'kconv'
+  class StoreTargetLink
+    require 'open-uri'
 
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
     end
 
-    def parse_array(string)
-      array = Array.new
-      string.scan(/<img src="(.*?)"/) { |matched|
-        array = array | matched
-      }
-      return array
+    def wget(url)
+      filename = url.split(/\//).last
+      open(url) do |source|
+        open(File.join(@config['path'], filename), "w+b") do |o|
+          o.print source.read
+        end
+      end
     end
 
     def run
-      return_feeds = []
       @pipeline.each {|feeds|
-        img_url = ""
         unless feeds.nil?
           feeds.items.each {|feed|
-            arr = parse_array(feed.description)
-            if arr.length > 0
-              feed.link = arr[0]
-            else
-              feed.link = nil
+            unless feed.link.nil?
+              Automatic::Log.puts("info", "Wget: #{feed.link}")
+              wget(feed.link)
             end
+            sleep @config['interval'].to_i
           }
         end
-        return_feeds << feeds
       }
-      return_feeds
+      @pipeline
     end
   end
 end
