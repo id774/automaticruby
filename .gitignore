@@ -1,4 +1,4 @@
 Gemfile.lock
 db/*.db
 coverage
-
+.bundle
