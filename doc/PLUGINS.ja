@@ -47,6 +47,22 @@ FilterImage
   - module: FilterImage
 
 
+FilterTumblrResize
+--------------------
+[パス]
+ /plugins/filter/tumblr_resize.rb
+
+[概要]
+ パーマリンクを Tumblr の最大サイズ
+ (High Res) に書き換える
+
+[前提]
+ パーマリンクが画像リンクに書き換え済であること
+
+[レシピ記法]
+  - module: FilterTumblrResize
+
+
 StorePermalink
 --------------
 [パス]

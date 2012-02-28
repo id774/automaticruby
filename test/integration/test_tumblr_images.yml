@@ -11,11 +11,13 @@ plugins:
       feeds:
         - http://reretlet.tumblr.com/rss
 
-  - module: StoreBookmark
+  - module: StorePermalink
     config:
       db: image.db
 
   - module: FilterImage
+
+  - module: FilterTumblrResize
 
   - module: StoreTargetLink
     config:
