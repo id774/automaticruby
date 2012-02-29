@@ -7,15 +7,6 @@ See doc/README.ja file.
 (document written in Japanese.)
 
 
-Author
-------
-
-**774**
-
-+ http://id774.net
-+ http://github.com/id774
-
-
 Development
 -----------
 
@@ -42,6 +33,27 @@ How to Join
 3. Send pull request!
 
 After that, we will give you the right to commit for a quick fix finely.
+
+
+Coding Rule
+-----------
+
++ 2 tabs, soft tabs.
++ Remove the space at the end of a line.
++ Namespace and conventions, see the existing code.
++ {} is recommended than do end (To avoid end end end,,).
++ RDoc Header is written by creator of the file.
++ Write RSPec tests.
++ Aim at 100% coverage.
+
+
+Author
+------
+
+**774**
+
++ http://id774.net
++ http://github.com/id774
 
 
 Copyright and license
