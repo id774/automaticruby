@@ -16,6 +16,34 @@ Author
 + http://github.com/id774
 
 
+Development
+-----------
+
+We need your help.
+
+**Repository**
+
++ https://github.com/id774/automaticruby
+
+**Issues**
+
++ https://github.com/id774/automaticruby/issues
+
+**CI**
+
++ http://id774.net/jenkins/
+
+
+How to Join
+-----------
+
+1. Watch the repository.
+2. Write new plugin or existing code improvement.
+3. Send pull request!
+
+After that, we will give you the right to commit for a quick fix finely.
+
+
 Copyright and license
 ---------------------
 
