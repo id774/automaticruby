@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Store::Database
+# Author::    kzgs
+# Created::   Feb 27, 2012
+# Updated::   Feb 29, 2012
+# Copyright:: kzgs Copyright (c) 2012
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 require 'active_record'
 
 module Automatic::Plugin
