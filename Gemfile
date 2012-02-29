@@ -6,6 +6,7 @@ gem 'hashie'
 gem 'activerecord', '~>3'
 gem 'gcalapi'
 gem 'xml-simple'
+gem 'hatenabm'
 
 group :test do
   gem 'rspec'
