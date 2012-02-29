@@ -8,7 +8,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'custom_feed/svn_log'
+require 'custom/feed_svn_log'
 
 describe Automatic::Plugin::CustomFeedSVNLog do
   context "with feeds whose valid URL" do

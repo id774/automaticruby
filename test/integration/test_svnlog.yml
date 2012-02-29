@@ -1,0 +1,14 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: CustomFeedSVNLog
+    config:
+      target: http://redmine.rubyforge.org/svn
+      fetch_items: 2
+
+  - module: PublishConsole

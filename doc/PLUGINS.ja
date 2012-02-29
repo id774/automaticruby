@@ -182,3 +182,21 @@ NotifyIkachan
       channels: foo,bar,#baz # '#' はあってもなくても自動的につけられる、複数は','で指定
       command: notice        # privmsg や notice など
       interval: 5            # ポストする間隔 (秒)
+
+
+CustomFeedSVNLog
+---------------------
+[パス]
+ /plugins/custom/feed_svn_log.rb
+
+[概要]
+ SVNから新しいリビジョン情報を取得する
+
+[説明]
+ target で指定されてURLからSVNの最新のコミット情報を、fetch_itemsで指定された数だけ取得します
+
+[レシピ記法]
+  - module: CustomFeedSVNLog
+    config:
+      target: http://redmine.rubyforge.org/svn
+      fetch_items: 2 # 指定されない場合は 30
