@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Store::FullText
 # Author::    774 <http://id774.net>
 # Created::   Feb 26, 2012
-# Updated::   Feb 28, 2012
+# Updated::   Feb 29, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 require 'plugins/store/store_database'
@@ -47,6 +47,7 @@ module Automatic::Plugin
             :description => feed.description,
             :content => feed.content_encoded,
             :created_at => Time.now.strftime("%Y/%m/%d %X"))
+          Automatic::Log.puts("info", "Saving: #{feed.link}")
         rescue
           Automatic::Log.puts("warn", "Skip feed due to fault in save.")
         end

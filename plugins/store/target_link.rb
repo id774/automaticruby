@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Store::TargetLink
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Feb 28, 2012
+# Updated::   Feb 29, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -31,7 +31,7 @@ module Automatic::Plugin
           feeds.items.each {|feed|
             begin
               unless feed.link.nil?
-                Automatic::Log.puts("info", "Wget: #{feed.link}")
+                Automatic::Log.puts("info", "Downloading: #{feed.link}")
                 wget(feed.link)
               end
             rescue
