@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
-# Version::   12.02-devel
 # Created::   Feb 18, 2012
 # Updated::   Feb 24, 2012
 # Copyright:: 774 Copyright (c) 2012
