@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::CustomFeed::SVNFLog
 # Author::    kzgs
 # Created::   Feb 29, 2012
-# Updated::   Feb 29, 2012
+# Updated::   Mar 3, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 

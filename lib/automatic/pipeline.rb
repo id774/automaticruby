@@ -3,7 +3,7 @@
 # Name::      Automatic::Core
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Feb 24, 2012
+# Updated::   Mar 3, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -14,9 +14,12 @@ module Automatic
 
   module Pipeline
     def self.load_plugin(module_name)
-      type, filename = module_name.underscore.split('_', 2)
-      path = Automatic.plugins_dir + "#{type}/#{filename}.rb"
-      Automatic::Plugin.autoload module_name.to_sym, path
+      Dir.foreach(Automatic.plugins_dir) do |subdir|
+        if /^#{subdir}_(.*)$/ =~ module_name.underscore
+          path = Automatic.plugins_dir + subdir + "/#{$1}.rb"
+          Automatic::Plugin.autoload module_name.to_sym, path.to_s
+        end
+      end
     end
  
     def self.run(recipe)
