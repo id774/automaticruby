@@ -2,3 +2,8 @@ Gemfile.lock
 db/*.db
 coverage
 .bundle
+bin/autospec
+bin/htmldiff
+bin/ldiff
+bin/rspec
+vendor/gems/

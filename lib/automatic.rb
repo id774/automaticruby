@@ -3,7 +3,7 @@
 # Author::    774 <http://id774.net>
 # Version::   12.02.1-devel
 # Created::   Feb 18, 2012
-# Updated::   Feb 24, 2012
+# Updated::   Mar  2, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -33,7 +33,7 @@ module Automatic
     recipe_path = ""
     require 'optparse'
     parser = OptionParser.new do |parser|
-      parser.banner = "Usage: autorb [options] arg"
+      parser.banner = "Usage: app.rb [options] arg"
       parser.version = VERSION
       parser.separator "options:"
       parser.on('-c', '--config FILE', String,
