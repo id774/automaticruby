@@ -24,9 +24,15 @@ $ ./automatic.rb -v
 ============
 
  本ソフトウェアを GitHub がらダウンロードする。
- 
- bundle install する
-$ bundle install
+$ git clone git://github.com/id774/automaticruby.git
+
+
+ ruby 1.9 の場合
+$ script/bootstrap
+
+ ruby 1.8 の場合
+ Gemfile にある必要な gem を手動でインストールする
+
 
  任意のレシピ (後述) を作成する。
 $ app.rb -c your_recipe.yml
