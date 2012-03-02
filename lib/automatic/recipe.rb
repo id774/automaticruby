@@ -23,9 +23,9 @@ module Automatic
     end
 
     def each_plugin
-      @procedure.plugins.each do |plugin|
+      @procedure.plugins.each { |plugin|
         yield plugin
-      end
+      }
     end
   end
 end

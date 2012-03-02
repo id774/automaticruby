@@ -12,7 +12,7 @@ describe Automatic::Plugin::StorePermalink do
     db_path.delete if db_path.exist?
     Automatic::Plugin::StorePermalink.new({"db" => @db_filename}).run
   end
-  
+
   it "should store 1 record for the new link" do
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
@@ -29,7 +29,7 @@ describe Automatic::Plugin::StorePermalink do
       AutomaticSpec.generate_pipeline {
         feed { item "http://github.com" }
       })
-    
+
     instance.run.should have(1).feed
     lambda {
       instance.run.should have(0).feed

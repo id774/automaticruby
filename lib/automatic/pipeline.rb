@@ -22,11 +22,11 @@ module Automatic
     def self.run(recipe)
       raise "NoRecipeError" if recipe.nil?
       pipeline = []
-      recipe.each_plugin do |plugin|
+      recipe.each_plugin { |plugin|
         load_plugin(plugin.module)
         klass = Automatic::Plugin.const_get(plugin.module)
         pipeline = klass.new(plugin.config, pipeline).run
-      end
+      }
     end
   end
 end

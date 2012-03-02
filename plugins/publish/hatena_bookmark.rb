@@ -55,7 +55,7 @@ module Automatic::Plugin
       uri = URI.parse(url)
       proxy_class = Net::HTTP::Proxy(ENV["PROXY"], 8080)
       http = proxy_class.new(uri.host)
-      http.start do |http|
+      http.start {|http|
         # b_url = NKF.nkf('-w', b_url)
         # b_comment = NKF.nkf('-w', b_comment)
         res = http.post(uri.path, toXml(b_url, b_comment), header)
@@ -69,7 +69,7 @@ module Automatic::Plugin
         else
           print "#{t} [error] #{res.code} Error: #{b_url}\n"
         end
-      end
+      }
     end
   end
 

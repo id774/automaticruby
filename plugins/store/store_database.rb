@@ -32,11 +32,11 @@ module Automatic::Plugin
     private
 
     def create_table
-      ActiveRecord::Migration.create_table(model_class.table_name) do |t|
-        column_definition.each_pair do |column_name, column_type|
+      ActiveRecord::Migration.create_table(model_class.table_name) { |t|
+        column_definition.each_pair { |column_name, column_type|
           t.column column_name, column_type
-        end
-      end
+        }
+      }
     end
 
     def db_dir
@@ -51,4 +51,3 @@ module Automatic::Plugin
     end
   end
 end
-  

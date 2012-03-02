@@ -11,7 +11,7 @@ require 'rss/maker'
 module Automatic::Plugin
   class CustomFeedSVNLog
     require 'xmlsimple'
-    
+
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
@@ -19,18 +19,18 @@ module Automatic::Plugin
 
     def run
       revisions = XmlSimple.xml_in(`svn log #{svn_log_argument}`)["logentry"]
-      @pipeline << RSS::Maker.make("1.0") do |maker|
+      @pipeline << RSS::Maker.make("1.0") { |maker|
         maker.channel.title = @config["title"] || ""
         maker.channel.about = ""
         maker.channel.description = ""
         maker.channel.link = base_url
-        revisions.each do |rev|
+        revisions.each { |rev|
           item = maker.items.new_item
           item.title = "#{rev["msg"]} by #{rev["author"]}"
           item.link = base_url+"/!svn/bc/#{rev["revision"]}"
           item.date = Time.parse(rev["date"][0])
-        end
-      end
+        }
+      }
       return @pipeline
     end
 

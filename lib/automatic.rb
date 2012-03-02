@@ -15,11 +15,11 @@ module Automatic
   require 'automatic/feed_parser'
 
   VERSION = "12.02.1-devel"
-  
+
   def self.root_dir
     @root_dir
   end
-  
+
   def self.plugins_dir
     @root_dir + "/plugins/"
   end
@@ -32,17 +32,17 @@ module Automatic
     @root_dir = root_dir
     recipe_path = ""
     require 'optparse'
-    parser = OptionParser.new do |parser|
+    parser = OptionParser.new { |parser|
       parser.banner = "Usage: app.rb [options] arg"
       parser.version = VERSION
       parser.separator "options:"
       parser.on('-c', '--config FILE', String,
                 "recipe YAML file"){|c| recipe_path = c}
-      parser.on('-h', '--help', "show this message") do
+      parser.on('-h', '--help', "show this message") { 
         puts parser
         exit
-      end
-    end
+      }
+    }
 
     begin
       parser.parse!

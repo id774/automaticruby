@@ -13,7 +13,7 @@ describe Automatic::Plugin::FilterIgnore do
       }
     end
   end
-  
+
   context "with empty exclusion target" do
     subject {
       Automatic::Plugin::FilterIgnore.new({'exclude' => []}, 
@@ -67,5 +67,5 @@ describe Automatic::Plugin::FilterIgnore do
     describe "#run" do
       its(:run) { should have(1).feeds }
     end
-  end  
+  end
 end

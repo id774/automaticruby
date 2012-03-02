@@ -399,6 +399,7 @@ activesupport
 hashie
 activerecord
 gcalapi
+xml-simple
 
 詳細は Gemfile を参照
 

@@ -48,8 +48,8 @@ module AutomaticSpec
 
   class StubPipelineGenerator
     attr_reader :feeds
-    
-    def initialize
+  
+  def initialize
       @feeds = []
     end
     
@@ -59,7 +59,7 @@ module AutomaticSpec
       @feeds << feed_generator.feed
     end
   end
-  
+
   class StubFeedGenerator
     def initialize
       @channel = RSS::Rss::Channel.new
@@ -80,4 +80,3 @@ module AutomaticSpec
     end
   end
 end
-

@@ -16,10 +16,10 @@ module Automatic
       begin
         unless url.nil?
           feed = URI.parse(url).normalize
-          open(feed) do |http|
+          open(feed) { |http|
             response = http.read
             RSS::Parser.parse(response, false)
-          end
+          }
         end
       rescue => e
         raise e

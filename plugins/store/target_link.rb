@@ -18,11 +18,11 @@ module Automatic::Plugin
 
     def wget(url)
       filename = url.split(/\//).last
-      open(url) do |source|
-        open(File.join(@config['path'], filename), "w+b") do |o|
+      open(url) { |source|
+        open(File.join(@config['path'], filename), "w+b") { |o|
           o.print source.read
-        end
-      end
+        }
+      }
     end
 
     def run

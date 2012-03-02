@@ -163,7 +163,7 @@ PublishGoogleCalendar
 
 
 NotifyIkachan
----------------------
+-------------
 [パス]
  /plugins/notify/ikachan.rb
 
@@ -171,7 +171,7 @@ NotifyIkachan
  ikachan へメッセージを送信する
 
 [説明]
- ikachan へ HTTP 経由で POST します
+ ikachan へ HTTP 経由で POST する
  ikachan とは: http://blog.yappo.jp/yappo/archives/000760.html
 
 [レシピ記法]
@@ -185,18 +185,21 @@ NotifyIkachan
 
 
 CustomFeedSVNLog
----------------------
+----------------
 [パス]
  /plugins/custom/feed_svn_log.rb
 
 [概要]
- SVNから新しいリビジョン情報を取得する
+ SVN から新しいリビジョン情報を取得する
 
 [説明]
- target で指定されてURLからSVNの最新のコミット情報を、fetch_itemsで指定された数だけ取得します
+ target で指定された URL から SVN のコミット情報を
+ fetch_items で指定された数だけ取得する
 
 [レシピ記法]
   - module: CustomFeedSVNLog
     config:
       target: http://redmine.rubyforge.org/svn
       fetch_items: 2 # 指定されない場合は 30
+
+
