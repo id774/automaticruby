@@ -16,7 +16,8 @@ describe Automatic::Plugin::FilterImage do
       Automatic::Plugin::FilterImage.new({},
         AutomaticSpec.generate_pipeline {
           feed {
-            item "http://google.com", "", "<img src=\"aaa\">"
+            item "http://tumblr.com", "",
+            "<img src=\"http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png\">"
           }})}
 
     describe "#run" do
@@ -25,7 +26,29 @@ describe Automatic::Plugin::FilterImage do
       specify {
         subject.run
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
-        should == "aaa"
+        should == "http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png"
+      }
+    end
+  end  
+end
+
+describe Automatic::Plugin::FilterImage do  
+  context "with description with image tag" do
+    subject {
+      Automatic::Plugin::FilterImage.new({},
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://tumblr.com", "",
+            "<img src=\"http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg\">"
+          }})}
+
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+
+      specify {
+        subject.run
+        subject.instance_variable_get(:@pipeline)[0].items[0].link.
+        should == "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg"
       }
     end
   end  
