@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::CustomFeed::SVNFLog
+# Author::    kzgs
+# Created::   Feb 26, 2012
+# Updated::   Mar 3, 2012
+# Copyright:: kzgs Copyright (c) 2012
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'publish/google_calendar'
@@ -25,33 +32,60 @@ end
 
 describe Automatic::Plugin::Googlecalendar do
   describe "#add" do
-    context "Today's event to some place" do
+    context "All day events" do
       specify {
-        GoogleCalendar::Calendar.stub(:new) {
-          cal = mock("cal")
-          cal.should_receive(:create_event).and_return {
-            event = mock("event")
-            {
-              :title => "お出かけ",
-              :where => "池袋",
-              :st => nil,
-              :en => nil,
-              :allday => true
-            }.each_pair do |key, value|
-              if value.nil?
-                event.should_receive("#{key}=".to_sym)
-              else
-                event.should_receive("#{key}=".to_sym).with(value)
-              end
-            end
-            event.should_receive(:st)
-            event.should_receive(:save!)
-            event
-          }
-          cal
-        }
+        set_gcal_mock(all_day_event_mock("お出かけ", "池袋", Date.today))
         Automatic::Plugin::Googlecalendar.new.add("今日お出かけ＠池袋")
+      }
+
+      specify {
+        set_gcal_mock(all_day_event_mock("映画", "新宿", Date.today+1))
+        Automatic::Plugin::Googlecalendar.new.add("明日映画＠新宿")
+      }
+
+      specify {
+        set_gcal_mock(all_day_event_mock("買い物", "渋谷", Date.today+2))
+        Automatic::Plugin::Googlecalendar.new.add("明後日買い物＠渋谷")
+      }
+      
+      specify {
+        set_gcal_mock(all_day_event_mock("お花見", "上野"))
+        Automatic::Plugin::Googlecalendar.new.add("日曜日お花見＠上野")
       }
     end
   end
+end
+
+def all_day_event_mock(title, where, date=nil)
+  event = mock("event")
+  {
+    :title => title,
+    :where => where,
+    :st => date.nil? ? nil : Time.mktime(date.year, date.month, date.day),
+    :en => nil,
+    :allday => true
+  }.each_pair do |key, value|
+    if value.nil?
+      event.should_receive("#{key}=".to_sym)
+    else
+      event.should_receive("#{key}=".to_sym).with(value)
+    end
+  end
+  event.should_receive(:st)
+  event.should_receive(:save!)
+  return event
+end
+
+def cal_mock(event_mock)
+  cal = mock("cal")
+  cal.should_receive(:create_event).and_return {
+    event_mock
+  }
+  return cal
+end
+
+def set_gcal_mock(event_mock)
+  GoogleCalendar::Calendar.stub(:new) {
+    cal_mock(event_mock)
+  }
 end
