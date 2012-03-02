@@ -16,11 +16,11 @@ module Automatic::Plugin
     end
 
     def resize(string)
-      string.gsub("_75sq\.", "_1280\.")
-      string.gsub("_100\.", "_1280\.")
-      string.gsub("_250\.", "_1280\.")
-      string.gsub("_400\.", "_1280\.")
-      string.gsub("_500\.", "_1280\.")
+      string = string.gsub("_75sq\.", "_1280\.")
+      string = string.gsub("_100\.", "_1280\.")
+      string = string.gsub("_250\.", "_1280\.")
+      string = string.gsub("_400\.", "_1280\.")
+      string = string.gsub("_500\.", "_1280\.")
     end
 
     def run

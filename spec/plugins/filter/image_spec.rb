@@ -17,9 +17,8 @@ describe Automatic::Plugin::FilterImage do
         AutomaticSpec.generate_pipeline {
           feed {
             item "http://google.com", "", "<img src=\"aaa\">"
-          }})
-    }
-    
+          }})}
+
     describe "#run" do
       its(:run) { should have(1).feeds }
 
