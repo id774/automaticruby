@@ -52,8 +52,7 @@ module Automatic::Plugin
         begin
           date = Date.parse(datestr)
         rescue ArgumentError
-          puts "不正な日付形式-1： [#{datestr}]"
-          exit
+          raise "不正な日付形式-1： [#{datestr}]"
         end
       when /^([0-9]+\/[0-9]+)\s*/
         # mm/dd
@@ -62,8 +61,7 @@ module Automatic::Plugin
         begin
           date = Date.parse(datestr)
         rescue ArgumentError
-          puts "不正な日付形式-2： [#{datestr}]"
-          exit
+          raise "不正な日付形式-2： [#{datestr}]"
         end
         while date < today
           date = date >> 12
@@ -79,14 +77,12 @@ module Automatic::Plugin
         when 4
           datestr = datestr.slice(0..1) + "/" + datestr.slice(2..3)
         else
-          puts "不正な日付形式-3： [#{datestr}]"
-          exit
+          raise "不正な日付形式-3： [#{datestr}]"
         end
         begin
           date = Date.parse(datestr)
         rescue ArgumentError
-          puts "不正な日付形式-4： [#{datestr}]"
-          exit
+          raise "不正な日付形式-4： [#{datestr}]"
         end
         while date < today
           date = date >> 12

@@ -49,8 +49,26 @@ describe Automatic::Plugin::Googlecalendar do
       }
       
       specify {
-        set_gcal_mock(all_day_event_mock("お花見", "上野"))
+        set_gcal_mock(all_day_event_mock("お花見", "上野", Date.today.end_of_week))
         Automatic::Plugin::Googlecalendar.new.add("日曜日お花見＠上野")
+      }
+      
+      specify {
+        set_gcal_mock(all_day_event_mock(
+            "花火", "晴海", Time.mktime(2012, 8, 15)))
+        Automatic::Plugin::Googlecalendar.new.add("2012/8/15花火＠晴海")
+      }
+
+      specify {
+        lambda {
+          Automatic::Plugin::Googlecalendar.new.add("2012/2/30")
+        }.should raise_exception(RuntimeError, /不正な日付形式-1/)
+      }
+
+      specify {
+        lambda {
+          Automatic::Plugin::Googlecalendar.new.add("2/30")
+        }.should raise_exception(RuntimeError, /不正な日付形式-2/)
       }
     end
   end
