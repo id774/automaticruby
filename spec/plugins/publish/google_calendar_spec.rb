@@ -49,7 +49,7 @@ describe Automatic::Plugin::Googlecalendar do
       }
       
       specify {
-        set_gcal_mock(all_day_event_mock("お花見", "上野", Date.today.end_of_week))
+        set_gcal_mock(all_day_event_mock("お花見", "上野"))
         Automatic::Plugin::Googlecalendar.new.add("日曜日お花見＠上野")
       }
       
