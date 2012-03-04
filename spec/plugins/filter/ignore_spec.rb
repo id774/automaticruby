@@ -3,67 +3,55 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 require 'filter/ignore'
 
 describe Automatic::Plugin::FilterIgnore do
-  context "with invalid argument for #initialize" do
-    context "empty config" do
-      subject { Automatic::Plugin::FilterIgnore.new({}) }
-      
-      specify {
-        lambda { subject.exclude("") }.should raise_exception(
-          NoMethodError, /undefined method `each'/)
-      }
-    end
-  end
-
-  context "with empty exclusion target" do
+  context "with exclusion by title" do
     subject {
-      Automatic::Plugin::FilterIgnore.new({'exclude' => []}, 
+      Automatic::Plugin::FilterIgnore.new({
+        'title' => ["CD"],
+        'title' => ["DVD"],
+        'title' => ["LIVE"],
+        'title' => ["HMV"],
+      },
         AutomaticSpec.generate_pipeline {
-          feed { item "http://github.com" }
+          feed { item "http://id774.net/blog/feed/" }
+          feed { item "http://www.hmv.co.jp/rss/news/top/1_100/" }
         })
     }
-      
-    describe "#exclude" do
-      context "for empty link" do
-        specify {
-          subject.exclude("").should be_false
-        }
-      end
-      
-      context "for existent link" do
-        specify {
-          subject.exclude("http://github.com").should be_false
-        }
-      end
-    end
-
+    
     describe "#run" do
       its(:run) { should have(1).feeds }
     end
-  end  
-  
-  context "with exclusion target 'github'" do
+  end
+
+  context "with exclusion by description" do
     subject {
-      Automatic::Plugin::FilterIgnore.new({'exclude' => ["github"]},
+      Automatic::Plugin::FilterIgnore.new({
+        'description' => ["CD"],
+        'description' => ["DVD"],
+        'description' => ["LIVE"],
+        'description' => ["HMV"],
+      },
+        AutomaticSpec.generate_pipeline {
+          feed { item "http://id774.net/blog/feed/" }
+          feed { item "http://www.hmv.co.jp/rss/news/top/1_100/" }
+        })
+    }
+    
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+    end
+  end
+
+  context "with exclusion by link" do
+    subject {
+      Automatic::Plugin::FilterIgnore.new({
+        'link' => ["github"],
+      },
         AutomaticSpec.generate_pipeline {
           feed { item "http://github.com" }
           feed { item "http://google.com" }
         })
     }
     
-    describe "#exclude" do
-      context "for empty link" do
-        specify {
-          subject.exclude("").should be_false
-        }
-      end
-      
-      context "for the link including exclusion targed" do
-        specify {
-          subject.exclude("http://github.com").should be_true
-        }
-      end
-    end
-
     describe "#run" do
       its(:run) { should have(1).feeds }
     end
