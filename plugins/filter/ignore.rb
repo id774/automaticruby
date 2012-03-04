@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Filter::Ignore
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Feb 24, 2012
+# Updated::   Mar  4, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -14,13 +14,31 @@ module Automatic::Plugin
       @pipeline = pipeline
     end
 
-    def exclude(link)
+    def exclude(items)
       detection = false
-      @config['exclude'].each {|e|
-        detection = true if link.include?(e.chomp)
-      }
-      if detection
-        Automatic::Log.puts("info", "Excluded: #{link}")
+      unless @config['title'].nil?
+        @config['title'].each {|e|
+          if items.title.include?(e.chomp)
+            detection = true 
+            Automatic::Log.puts("info", "Excluded by title: #{items.link}")
+          end
+        }
+      end
+      unless @config['link'].nil?
+        @config['link'].each {|e|
+          if items.link.include?(e.chomp)
+            detection = true 
+            Automatic::Log.puts("info", "Excluded by link: #{items.link}")
+          end
+        }
+      end
+      unless @config['description'].nil?
+        @config['description'].each {|e|
+          if items.description.include?(e.chomp)
+            detection = true 
+            Automatic::Log.puts("info", "Excluded by description: #{items.link}")
+          end
+        }
       end
       detection
     end
@@ -30,8 +48,8 @@ module Automatic::Plugin
       @pipeline.each {|feeds|
         ignore = false
         unless feeds.nil?
-          feeds.items.each {|feed|
-            ignore = true if exclude(feed.link)
+          feeds.items.each {|items|
+            ignore = true if exclude(items)
           }
         end
         return_feeds << feeds unless ignore

@@ -1,0 +1,26 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://fotologue.jp/sleepyrabbit/rss.xml
+
+  - module: StorePermalink
+    config:
+      db: image.db
+
+  - module: FilterImage
+
+  - module: FilterTumblrResize
+
+  - module: StoreTargetLink
+    config:
+      path: /tmp
+      interval: 1
+
