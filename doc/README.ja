@@ -185,7 +185,7 @@ plugins:
 
   - module: FilterIgnore
     config:
-      exclude:
+      link:
         - hoge
         - fuga
 

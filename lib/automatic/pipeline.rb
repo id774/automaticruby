@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Core
+# Name::      Automatic::Pipeline
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
 # Updated::   Mar 3, 2012
