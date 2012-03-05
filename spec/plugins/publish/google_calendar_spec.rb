@@ -34,41 +34,15 @@ describe Automatic::Plugin::Googlecalendar do
   describe "#add" do
     context "All day events" do
       specify {
-        set_gcal_mock(all_day_event_mock("お出かけ", "池袋", Date.today))
-        Automatic::Plugin::Googlecalendar.new.add("今日お出かけ＠池袋")
-      }
-
-      specify {
-        set_gcal_mock(all_day_event_mock("映画", "新宿", Date.today+1))
-        Automatic::Plugin::Googlecalendar.new.add("明日映画＠新宿")
-      }
-
-      specify {
-        set_gcal_mock(all_day_event_mock("買い物", "渋谷", Date.today+2))
-        Automatic::Plugin::Googlecalendar.new.add("明後日買い物＠渋谷")
-      }
-      
-      specify {
-        set_gcal_mock(all_day_event_mock("お花見", "上野"))
-        Automatic::Plugin::Googlecalendar.new.add("日曜日お花見＠上野")
-      }
-      
-      specify {
         set_gcal_mock(all_day_event_mock(
-            "花火", "晴海", Time.mktime(2012, 8, 15)))
-        Automatic::Plugin::Googlecalendar.new.add("2012/8/15花火＠晴海")
+            "花火＠晴海", "", Time.mktime(2012, 8, 15)))
+        Automatic::Plugin::Googlecalendar.new.add("2012/8/15 花火＠晴海")
       }
 
       specify {
         lambda {
           Automatic::Plugin::Googlecalendar.new.add("2012/2/30")
         }.should raise_exception(RuntimeError, /不正な日付形式-1/)
-      }
-
-      specify {
-        lambda {
-          Automatic::Plugin::Googlecalendar.new.add("2/30")
-        }.should raise_exception(RuntimeError, /不正な日付形式-2/)
       }
     end
   end
@@ -78,7 +52,6 @@ def all_day_event_mock(title, where, date=nil)
   event = mock("event")
   {
     :title => title,
-    :where => where,
     :st => date.nil? ? nil : Time.mktime(date.year, date.month, date.day),
     :en => nil,
     :allday => true

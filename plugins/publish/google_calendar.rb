@@ -20,32 +20,14 @@ module Automatic::Plugin
     end
 
     def add(arg)
-      weekdays = [ '日', '月', '火', '水', '木', '金', '土' ]
       date     = nil
       time_st  = nil
       time_en  = nil
       text     = ''
-      location = ''
 
       # Parse Date
       require 'date'
-      today = Date.today
-      case arg
-      when /^今日\s*/
-        date = today
-        text = $'
-      when /^(明日|あした|あす)\s*/
-        date = today + 1
-        text = $'
-      when /^(明後日|あさって)\s*/
-        date = today + 2
-        text = $'
-      when /^(日|月|火|水|木|金|土)曜(日)?\s*/
-        date_offset = (weekdays.index($1) - today.wday + 7) % 7
-        date_offset += 7 if date_offset == 0
-        date = today + date_offset
-        text = $'
-      when /^([0-9]+\/[0-9]+\/[0-9]+)\s*/
+      if /^([0-9]+\/[0-9]+\/[0-9]+)\s*/ =~ arg
         # yyyy/mm/dd
         datestr = $1
         text    = $'
@@ -54,94 +36,24 @@ module Automatic::Plugin
         rescue ArgumentError
           raise "不正な日付形式-1： [#{datestr}]"
         end
-      when /^([0-9]+\/[0-9]+)\s*/
-        # mm/dd
-        datestr = $1
-        text    = $'
-        begin
-          date = Date.parse(datestr)
-        rescue ArgumentError
-          raise "不正な日付形式-2： [#{datestr}]"
-        end
-        while date < today
-          date = date >> 12
-        end
-      when /^([0-9]+)\s*/
-        datestr = $1
-        text    = $'
-        case datestr.length
-        when 2
-          datestr = datestr.slice(0..0) + "/" + datestr.slice(1..1)
-        when 3
-          datestr = datestr.slice(0..0) + "/" + datestr.slice(1..2)
-        when 4
-          datestr = datestr.slice(0..1) + "/" + datestr.slice(2..3)
-        else
-          raise "不正な日付形式-3： [#{datestr}]"
-        end
-        begin
-          date = Date.parse(datestr)
-        rescue ArgumentError
-          raise "不正な日付形式-4： [#{datestr}]"
-        end
-        while date < today
-          date = date >> 12
-        end
-      end
-
-      # Parse Time
-      require 'time'
-      begin
-        case text
-        when /^([0-9]+):([0-9]+)-([0-9]+):([0-9]+)\s*/
-          time_st = Time.mktime(date.year, date.month, date.day, $1.to_i, $2.to_i, 0, 0)
-          time_en = Time.mktime(date.year, date.month, date.day, $3.to_i, $4.to_i, 0, 0)
-          text = $'
-        when /^([0-9]+):([0-9]+)\s*/
-          time_st = Time.mktime(date.year, date.month, date.day, $1.to_i, $2.to_i, 0, 0)
-          time_en = time_st + 3600
-          text = $'
-        end
-      rescue ArgumentError
-        puts "時刻が範囲外？： #{text}"
-        exit
-      end
-
-      # Parse Location
-      if text =~ /＠/
-        text     = $`
-        location = $'
       end
 
       puts "日付     ： #{date}"
-      puts "開始時刻 ： #{time_st}"
-      puts "開始時刻 ： #{time_en}"
       puts "タイトル ： #{text}"
-      puts "場所     ： #{location}"
 
       # Register to calendar
       require 'rubygems'
       require 'gcalapi'
 
-      cal = GoogleCalendar::Calendar.new(GoogleCalendar::Service.new(@user["username"], @user["password"]), @feed)
-
-      if time_st && time_en
-        event       = cal.create_event
-        event.title = text
-        event.where = location
-        event.st    = time_st
-        event.en    = time_en
-        event.save!
-      else
-        # All day
-        event       = cal.create_event
-        event.title = text
-        event.where = location
-        event.st    = Time.mktime(date.year, date.month, date.day)
-        event.en    = event.st
-        event.allday = true
-        event.save!
-      end
+      cal = GoogleCalendar::Calendar.new(GoogleCalendar::Service.new(
+          @user["username"], @user["password"]), @feed)
+      
+      event       = cal.create_event
+      event.title = text
+      event.st    = Time.mktime(date.year, date.month, date.day)
+      event.en    = event.st
+      event.allday = true
+      event.save!
     end
   end
 
