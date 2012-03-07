@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "12.3"
+  s.version = ""
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
     "config/default.yml",
     "config/feed2console.yml",
     "db/.gitkeep",
+    "doc/AUTHORS",
     "doc/COPYING",
     "doc/ChangeLog",
     "doc/PLUGINS.ja",
@@ -36,7 +37,6 @@ Gem::Specification.new do |s|
     "lib/automatic/log.rb",
     "lib/automatic/pipeline.rb",
     "lib/automatic/recipe.rb",
-    "lib/config/validator.rb",
     "plugins/custom_feed/svn_log.rb",
     "plugins/filter/ignore.rb",
     "plugins/filter/image.rb",
