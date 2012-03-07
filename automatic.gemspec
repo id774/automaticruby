@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "12.2.1"
+  s.version = "12.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
-    "app.rb",
     "automatic.gemspec",
     "bin/automatic",
     "config/default.yml",

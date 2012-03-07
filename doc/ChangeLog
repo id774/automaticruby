@@ -1,3 +1,22 @@
+=== 12.03 / 2012-03-07
+
+* Distribute as a gem library
+
+* Plugins added
+
+  * CustomFeed::SVNLog
+  * Notify::Ikachan
+  * Filter::TumblrResize
+  * Filter::Image
+  * Store::TargetLink
+
+* CI / Build scripts
+
+  * script/bootstrap
+
+* Signficant Refactoring
+
+
 === 12.02.1 / 2012-02-25
 
 * Point release

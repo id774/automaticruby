@@ -4,13 +4,13 @@ automaticruby
  automaticruby - Ruby による汎用的な自動処理フレームワーク
 
 書式
-$ bin/automatic
+$ automatic
 
  任意のレシピを指定して起動する
-$ bin/automatic -c <recipe>
+$ automatic -c <recipe>
 
  バージョン番号を表示する
-$ bin/automatic -v
+$ automatic -v
 
 説明
  このソフトウェアは、プラガブルに機能を拡張可能な Ruby
@@ -23,9 +23,12 @@ $ bin/automatic -v
 インストール
 ============
 
- 本ソフトウェアを GitHub がらダウンロードする。
-$ git clone git://github.com/id774/automaticruby.git
+[安定版]
+$ gem install automatic
 
+
+[開発版]
+$ git clone git://github.com/id774/automaticruby.git
 
  ruby 1.9 の場合
 $ script/bootstrap
@@ -34,6 +37,10 @@ $ script/bootstrap
  Gemfile にある必要な gem を手動でインストールする
 
 
+============
+実行してみる
+============
+
  任意のレシピ (後述) を作成する。
 $ bin/automatic -c your_recipe.yml
 
@@ -41,14 +48,9 @@ $ bin/automatic -c your_recipe.yml
  cron に登録するなどして自動化する。
 
 
-============
-実行してみる
-============
-
  試しに実行するなら config/feed2console.yml
 を利用すると良い。
-
-$ bin/automatic -c config/feed2console.yml
+$ automatic -c config/feed2console.yml
 
  これは、ブログのフィードを単純にコンソール出力するだけの
 簡単なレシピである。

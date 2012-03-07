@@ -10,16 +10,16 @@ See doc/README.ja file.
 Usage
 -----
 
-Get started -- checkout https://github.com/id774/automaticruby
+Get started 
 
 ``` html
-bin/automatic
+gem install automatic
 ```
 
 Specify any recipe with -c option.
 
 ``` html
-bin/automatic -c <recipe>
+automatic -c <recipe>
 ```
 
 For more info, refer to the document (doc/README.ja).
@@ -94,6 +94,12 @@ Author
 
 + http://id774.net
 + http://github.com/id774
+
+
+Developers
+----------
+
+See doc/AUTHORS.
 
 
 Copyright and license
