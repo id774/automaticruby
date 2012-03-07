@@ -97,23 +97,24 @@ $ automatic -c config/feed2console.yml
 |   |    Automatic モジュールの定義をする
 |   |
 |   +- automatic
-|       |
-|       +- environment.rb
-|       |    環境情報を読み込む
-|       |
-|       +- pipeline.rb
-|       |    パイプラインと呼ばれるオブジェクトを利用し
-|       |    レシピに書かれたプラグインに処理を順次受け渡す
-|       |
-|       +- feed_parser.rb
-|       |    フィードを解析する
-|       |
-|       +- log.rb
-|       |    ログを出力する
-|       |
-|       +- recipe.rb
-|            レシピを読み込む
-|
+|   |   |
+|   |   +- environment.rb
+|   |   |    環境情報を読み込む
+|   |   |
+|   |   +- pipeline.rb
+|   |   |    パイプラインと呼ばれるオブジェクトを利用し
+|   |   |    レシピに書かれたプラグインに処理を順次受け渡す
+|   |   |
+|   |   +- feed_parser.rb
+|   |   |    フィードを解析する
+|   |   |
+|   |   +- log.rb
+|   |   |    ログを出力する
+|   |   |
+|   |   +- recipe.rb
+|   |        レシピを読み込む
+|   |
+|   +- config
 |
 +- db
 |   |

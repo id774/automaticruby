@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
-# Version::   12.03
+# Version::   12.03-devel
 # Created::   Feb 18, 2012
 # Updated::   Mar  7, 2012
 # Copyright:: 774 Copyright (c) 2012
@@ -14,7 +14,7 @@ module Automatic
   require 'automatic/log'
   require 'automatic/feed_parser'
 
-  VERSION = "12.03"
+  VERSION = "12.03-devel"
 
   def self.root_dir
     @root_dir
