@@ -15,7 +15,7 @@ Jeweler::Tasks.new do |gem|
   gem.name = "automatic"
   gem.homepage = "http://github.com/id774/automaticruby"
   gem.license = "GPL"
-  gem.summary = %Q{Ruby General Automation Framework}
+  gem.summary = %Q{Automatic Ruby}
   gem.description = %Q{Ruby General Automation Framework}
   gem.email = "idnanashi@gmail.com"
   gem.authors = ["id774"]
