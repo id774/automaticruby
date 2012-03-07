@@ -12,10 +12,9 @@ Gem::Specification.new do |s|
   s.date = "2012-03-07"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
-  s.executables = [".gitkeep", "automatic"]
+  s.executables = ["automatic"]
   s.extra_rdoc_files = [
-    "README.md",
-    "README.txt"
+    "README.md"
   ]
   s.files = [
     "Gemfile",
