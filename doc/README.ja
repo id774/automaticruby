@@ -42,7 +42,7 @@ $ script/bootstrap
 ============
 
  任意のレシピ (後述) を作成する。
-$ bin/automatic -c your_recipe.yml
+$ automatic -c your_recipe.yml
 
  -c オプション付きで手動実行し、問題がなければ
  cron に登録するなどして自動化する。
@@ -97,24 +97,23 @@ $ automatic -c config/feed2console.yml
 |   |    Automatic モジュールの定義をする
 |   |
 |   +- automatic
-|   |   |
-|   |   +- environment.rb
-|   |   |    環境情報を読み込む
-|   |   |
-|   |   +- pipeline.rb
-|   |   |    パイプラインと呼ばれるオブジェクトを利用し
-|   |   |    レシピに書かれたプラグインに処理を順次受け渡す
-|   |   |
-|   |   +- feed_parser.rb
-|   |   |    フィードを解析する
-|   |   |
-|   |   +- log.rb
-|   |   |    ログを出力する
-|   |   |
-|   |   +- recipe.rb
-|   |        レシピを読み込む
-|   |
-|   +- config
+|       |
+|       +- environment.rb
+|       |    環境情報を読み込む
+|       |
+|       +- pipeline.rb
+|       |    パイプラインと呼ばれるオブジェクトを利用し
+|       |    レシピに書かれたプラグインに処理を順次受け渡す
+|       |
+|       +- feed_parser.rb
+|       |    フィードを解析する
+|       |
+|       +- log.rb
+|       |    ログを出力する
+|       |
+|       +- recipe.rb
+|            レシピを読み込む
+|
 |
 +- db
 |   |
@@ -171,7 +170,7 @@ $ automatic -c config/feed2console.yml
 された場合は config/default.yml が呼ばれる。
 
 [起動例]
-$ bin/automatic -c ~/recipes/your_recipe.yml
+$ automatic -c ~/recipes/your_recipe.yml
 
 
 ================

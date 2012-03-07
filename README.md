@@ -10,7 +10,7 @@ See doc/README.ja file.
 Usage
 -----
 
-Get started 
+Get started.
 
 ``` html
 gem install automatic
