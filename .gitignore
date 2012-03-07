@@ -6,4 +6,6 @@ bin/autospec
 bin/htmldiff
 bin/ldiff
 bin/rspec
+bin/rake
+bin/sow
 vendor/gems/
