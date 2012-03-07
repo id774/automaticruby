@@ -33,7 +33,7 @@ module Automatic
     recipe_path = ""
     require 'optparse'
     parser = OptionParser.new { |parser|
-      parser.banner = "Usage: app.rb [options] arg"
+      parser.banner = "Usage: automatic [options] arg"
       parser.version = VERSION
       parser.separator "options:"
       parser.on('-c', '--config FILE', String,

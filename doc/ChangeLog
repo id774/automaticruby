@@ -1,0 +1,17 @@
+=== 12.02.1 / 2012-02-25
+
+* Point release
+
+  * Big Refactoring for core.
+	* Reorganization of the namespace.
+  * A few plugins added.
+
+
+=== 12.02 / 2012-02-18
+
+* First release
+
+  * Scratch of this script.
+	* Plugin existing only for hatenabookmark.
+
+
