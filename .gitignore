@@ -3,9 +3,16 @@ db/*.db
 coverage
 .bundle
 bin/autospec
+bin/cdiff
+bin/cucumber
+bin/decolor
 bin/htmldiff
+bin/jeweler
 bin/ldiff
+bin/rdoc
+bin/ri
 bin/rspec
 bin/rake
 bin/sow
+pkg/
 vendor/gems/
