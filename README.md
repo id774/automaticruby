@@ -10,7 +10,7 @@ See doc/README.ja file.
 Usage
 -----
 
-Get started -- checkout http://github.com/id774/automatic
+Get started -- checkout https://github.com/id774/automaticruby
 
 ``` html
 bin/automatic
