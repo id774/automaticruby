@@ -9,6 +9,20 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
+require 'jeweler'
+Jeweler::Tasks.new do |gem|
+  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+  gem.name = "automatic"
+  gem.homepage = "http://github.com/id774/automaticruby"
+  gem.license = "GPL"
+  gem.summary = %Q{Ruby General Automation Framework}
+  gem.description = %Q{Ruby General Automation Framework}
+  gem.email = "idnanashi@gmail.com"
+  gem.authors = ["id774"]
+  # dependencies defined in Gemfile
+end
+Jeweler::RubygemsDotOrgTasks.new
+
 if /^1\.9\./ =~ RUBY_VERSION
   desc "Run RSpec code examples with simplecov"
   task :simplecov do
