@@ -34,7 +34,7 @@ module Automatic::Plugin
       end
       unless @config['exclude'].nil?
         @config['exclude'].each {|e|
-          if items.exclude.include?(e.chomp)
+          if items.link.include?(e.chomp)
             detection = true 
             Automatic::Log.puts("info", "Excluded by link: #{items.link}")
           end
