@@ -80,13 +80,23 @@ $ automatic -c config/feed2console.yml
 |
 +- plugins
 |   |
-|   +- subscription フィードを購読するプラグイン
+|   +- subscription
+|   |    フィードを購読するプラグイン
 |   |
-|   +- filter 情報をフィルタリングするプラグイン
+|   +- customfeed
+|   |    カスタムフィードを生成するプラグイン
 |   |
-|   +- store 情報を内部に保存するプラグイン
+|   +- filter
+|   |    情報をフィルタリングするプラグイン
 |   |
-|   +- publish 外部に情報を送信するプラグイン
+|   +- store
+|   |    情報を内部に保存するプラグイン
+|   |
+|   +- notify
+|   |    情報を通知するプラグイン
+|   |
+|   +- publish
+|        外部に情報を送信するプラグイン
 |
 |   プラグインを開発した場合は plugins ディレクトリに置く
 |
@@ -245,6 +255,9 @@ https://github.com/id774/automaticruby
 
 課題
 https://github.com/id774/automaticruby/issues
+
+RubyForge
+http://rubyforge.org/projects/automatic/
 
 CI
 http://id774.net/jenkins/

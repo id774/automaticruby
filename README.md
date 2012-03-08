@@ -44,6 +44,10 @@ We need your help.
 
 + https://github.com/id774/automaticruby/issues
 
+**RubyFroge**
+
++ http://rubyforge.org/projects/automatic/
+
 **CI**
 
 + http://id774.net/jenkins/
