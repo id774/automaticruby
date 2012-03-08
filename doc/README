@@ -1,0 +1,424 @@
+automaticruby
+
+Name
+ Automatic Ruby - Generic framework for automated processing by ruby
+
+Syntax
+$ automatic
+
+Specify the start of any recipe
+$ automatic -c <recipe>
+
+To view the version number
+$ automatic -v
+
+Description
+ This is a general-purpose automatic processing by the ruby framework
+that can extend the functionality into pluggable. It can collects
+a variety of information by the plug-ins. And it can be output in any form.
+
+
+============
+Installation
+============
+
+[Stable]
+$ gem install automatic
+
+[Development]
+$ git clone git://github.com/id774/automaticruby.git
+
+
+ If the ruby 1.9, put following command.
+$ script/bootstrap
+
+ If the ruby 1.8, necessary to manually install the gems in the Gemfile.
+
+
+===========
+Try running
+===========
+
+ To create (see below) of any recipe.
+$ automatic -c your_recipe.yml
+
+ -c option to run with the manual. If there is no problem
+to automate, register it to cron.
+
+
+ This is the easy recipe to simply output blog's feed to
+only console. It can be used to check the operation of
+this software.
+$ automatic -c config/feed2console.yml
+
+
+============================
+Directory and file structure
+============================
+.
+|
++-+ bin
+| |
+| +-- automatic
+|   The main file for run.
+|
++-+ config
+| |
+| +-- default.yml
+|   To describe the recipe information in the form of yaml.
+|   They called in the argument -c option of Automatic Ruby.
+|   If you write a new recipe is located in the config directory.
+|
+|
++-+ plugins
+| |
+| +-- subscription
+| | Plug-ins to subscribe to feeds.
+| |
+| +-- customfeed
+| | Plug-ins to generate a custom feed.
+| |
+| +-- filter
+| | Plug-ins to filter the information.
+| |
+| +-- store
+| | Plug-ins to store the information to internally.
+| |
+| +-- notify
+| | Plug-ins to notify the information.
+| |
+| +-- publish
+|   Plug-ins to send information to external.
+|
+| If you write a new plug-in is located in the plugins directory.
+|
+|
++-+ lib
+| |
+| +-- automatic.rb
+| | To the definition of automatic module.
+| |
+| +-+ automatic
+| | |
+| | +-- environment.rb
+| | | Read the environmental information.
+| | |
+| | +-- pipeline.rb
+| | | To use an object called a pipeline
+| | | sequentially processing plug-ins in recipes.
+| | |
+| | +-- feed_parser.rb
+| | | To parse the feed.
+| | |
+| | +-- log.rb
+| | | To output logs.
+| | |
+| | +-- recipe.rb
+| |   Read a recipes.
+| |
+| +-- config
+|
++-+ db
+| |
+| +-- permalink.db
+|   Have been collected in the plug-in Store::Permalink.
+|
++-+ script
+| |
+| +-- bootstrap
+|   To set the environment, such as bundle install.
+|   (Only more than ruby 1.9)
+|
++-- utils
+|   Directory for auxiliary tools.
+|
++-- spec
+|   Directory for unit tests.
+|
++-+ test
+| |
+| +-- integration
+|   Directory for the Integration Test.
+|
++-+ vendor
+| |
+| +-- gems
+|   Bundle installed gem packages.
+|
++---+ doc
+    |
+    +-- COPYING
+    | The license for this software.
+    |
+    +-- PLUGINS
+    | Documentation for plug-ins.
+    |
+    +-- README
+      This document.
+
+
+=======
+Recipes
+=======
+
+ Automatic Ruby parses configuration file that was written
+in the form of YAML in a variety of information and
+associated plug-ins.
+
+ This YAML file is called "Recipe".
+
+ When you start automatic ruby without argument -c option,
+the config/default.yml is called. You can use -c option that
+be able to specify a file name.
+
+[Example]
+$ automatic -c ~/recipes/your_recipe.yml
+
+
+=====================
+How to write a Recipe
+=====================
+
+ The Recipe has an implicit naming convention.
+The following is a sample of recipes and yaml files.
+
+
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://example.com/rss2
+        - http://hogefuga.com/feed
+
+  - module: FilterIgnore
+    config:
+      link:
+        - hoge
+        - fuga
+
+  - module: StorePermalink
+    config:
+      db: permalink.db
+
+  - module: PublishHatenaBookmark
+    config:
+      username: your_hatena_id
+      password: your_password
+      interval: 5
+
+
+In the case of sample this recipe.
+1. Subscribe to some RSS feeds.
+2. Feed ignore the keyword from the contains urls.
+3. Store permalink to database.
+4. Bookmarking to Hatena Bookmark.
+
+(Hatena Bookmark is a most popular social bookmark service
+in Japan.)
+
+These have been realized by a combination of plug-ins
+a series of processes.
+
+In this way, by simply writing to the recipe and
+configuration information for plug-ins, free processing can
+be achieved by a combination of multiple plug-ins.
+
+The possibility of infinite depending on the combination
+of plug-ins can be realized.
+
+All depending on whether you make a plug-in looks like!
+
+
+===========
+Development
+===========
+
+Repository
+https://github.com/id774/automaticruby
+
+Issues
+https://github.com/id774/automaticruby/issues
+
+RubyForge
+http://rubyforge.org/projects/automatic/
+
+CI
+http://id774.net/jenkins/
+
+
+How to Join
+1. Fork the repository.
+2. Write new plugin or existing code improvement.
+3. Send pull request!
+
+After that, we will give you the right to commit for a quick fix finely.
+
+
+===========
+Coding Rule
+===========
+
+2 tabs (Soft Tabs).
+Remove trailing spaces.
+Namespace and conventions, see the existing code.
+{} is recommended than do end (To avoid end end end,,).
+RDoc Header is written by creator of the file.
+Write tests with RSPec.
+Aim at 100% coverage.
+
+
+===================
+Automatic::Pipeline
+===================
+
+ This framework sequentially analyze a plug-ins on yaml recipe.
+At this time, pipeline passed instantance as an argument. And then,
+pipeline backs again as the return value.
+
+ Code is as follows.
+
+ pipeline = []
+ recipe.each_plugin { |plugin|
+   load_plugin(plugin.module)
+   klass = Automatic::Plugin.const_get(plugin.module)
+   pipeline = klass.new(plugin.config, pipeline).run
+ }
+
+ In this iteration, sequential processing can be realized.
+
+ This mechanism called "Automatic::Pipeline"
+
+
+
+=============================
+Implementation of the plug-in
+=============================
+
+ Plug-in is loaded by the constructor of YAML.load
+Class is recieved the array of hashes as the instance
+variable of pipelines object.
+
+Example implementation of the constructor that is recommended
+is as follows.
+
+def initialize(config, pipeline=[])
+  @config = config
+  @pipeline = pipeline
+end
+
+Run an instance method is called automatically. The return value
+is on the instance variable @pipeline. And then, be handed over
+to the next plug-in in the recipe.
+
+
+=========
+Unit Test
+=========
+
+Unit testing is performed in RSpec.
+
+Test of the plug-in, pass the pipeline which will be the argument,
+to check the return value.
+
+
+======================
+Continuous Integration
+======================
+
+CI is performed in Jenkins.
+http://id774.net/jenkins/
+
+
+============
+Binding Test
+============
+
+To combine more than one recipe under the test/integration.
+Put a recipe for performing the test.
+
+
+===========================
+Description of the plug-ins
+===========================
+
+See doc/PLUGINS.
+
+
+==========================
+Description of other tools
+==========================
+
+Files under the utils are ancillary tools for dealing with feed.
+The contents are as follows.
+
+
+Name
+ utils/opml_parser.rb
+
+Description
+Use to extract the url list from Opml feed of
+registered RSS Reader of existing.
+
+$ ruby opml_parser.rb > feeds.txt
+
+
+Name
+ utils/auto_discovery.rb
+
+Description
+ Extracted with auto-discovery subscribe to a feed
+ from the URL specified in the argument.
+
+$ ruby auto_discovery.rb "https://twitter.com/twitt"
+["https://twitter.com/statuses/user_timeline/4441691.rss",
+ "https://twitter.com/favorites/4441691.rss"]
+
+
+
+==============
+Update History
+==============
+
+See doc/ChangeLog.
+
+
+====
+TODO
+====
+ Refer to the issues of github
+ https://github.com/id774/automaticruby/issues
+
+
+===========
+Environment
+===========
+
+ruby 1.8 or later
+
+
+The following packages depend on the gem.
+
+sqlite3
+activesupport
+hashie
+activerecord
+gcalapi
+xml-simple
+
+For more information, see Gemfile.
+
+
+=====
+Notes
+=====
+
+To avoid excessive scraping, use in the bounds of common sense.
+This software is GPLv3 license.
+
