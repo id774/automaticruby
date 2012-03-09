@@ -3,6 +3,13 @@ Automatic Ruby
 
 **Ruby General Automation Framework**
 
+
+Description
+-----------
+This is a general-purpose automatic processing by the ruby framework
+that can extend the functionality as pluggable. It can collects
+a variety of information by the plug-ins can be output in any form.
+
 See doc/README file.
 
 

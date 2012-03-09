@@ -355,7 +355,7 @@ See doc/PLUGINS.
 Description of other tools
 ==========================
 
-Files under the utils are ancillary tools for dealing with feed.
+ Files under the utils are ancillary tools for dealing with feed.
 The contents are as follows.
 
 
@@ -363,7 +363,7 @@ Name
  utils/opml_parser.rb
 
 Description
-Use to extract the url list from Opml feed of
+ Use to extract the url list from Opml feed of
 registered RSS Reader of existing.
 
 $ ruby opml_parser.rb > feeds.txt
@@ -374,7 +374,7 @@ Name
 
 Description
  Extracted with auto-discovery subscribe to a feed
- from the URL specified in the argument.
+from the URL specified in the argument.
 
 $ ruby auto_discovery.rb "https://twitter.com/twitt"
 ["https://twitter.com/statuses/user_timeline/4441691.rss",
