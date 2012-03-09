@@ -72,28 +72,6 @@ We need your help.
 + http://id774.net/jenkins/
 
 
-How to Join
------------
-
-1. Fork the repository.
-2. Write new plugin or existing code improvement.
-3. Send pull request!
-
-After that, we will give you the right to commit for a quick fix finely.
-
-
-Coding Rule
------------
-
-+ 2 tabs (Soft Tabs).
-+ Remove trailing spaces.
-+ Namespace and conventions, see the existing code.
-+ {} is recommended than do end (To avoid end end end,,).
-+ RDoc Header is written by creator of the file.
-+ Write tests with RSPec.
-+ Aim at 100% coverage.
-
-
 ChangeLog
 ---------
 
@@ -110,6 +88,12 @@ Releases will be numbered with the follow format:
 This naming convention is to mimic the Ubuntu.
 
 
+Developers
+----------
+
+See doc/AUTHORS.
+
+
 Author
 ------
 
@@ -119,14 +103,8 @@ Author
 + http://github.com/id774
 
 
-Developers
-----------
-
-See doc/AUTHORS.
-
-
-Copyright and license
----------------------
+License
+-------
 
 Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
