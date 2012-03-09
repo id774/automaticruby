@@ -14,8 +14,8 @@ $ automatic -v
 
 Description
  This is a general-purpose automatic processing by the ruby framework
-that can extend the functionality into pluggable. It can collects
-a variety of information by the plug-ins. And it can be output in any form.
+that can extend the functionality as pluggable. It can collects
+a variety of information by the plug-ins can be output in any form.
 
 
 ============
@@ -162,14 +162,14 @@ Recipes
 =======
 
  Automatic Ruby parses configuration file that was written
-in the form of YAML in a variety of information and
-associated plug-ins.
+in the form of YAML which including variety of information
+of associated plug-ins.
 
  This YAML file is called "Recipe".
 
  When you start automatic ruby without argument -c option,
-the config/default.yml is called. You can use -c option that
-be able to specify a file name.
+the config/default.yml is called. You can use -c option for
+specify a file name.
 
 [Example]
 $ automatic -c ~/recipes/your_recipe.yml

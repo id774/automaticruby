@@ -3,14 +3,13 @@ Automatic Ruby
 
 **Ruby General Automation Framework**
 
-See doc/README.ja file.
-(document written in Japanese.)
+See doc/README file.
 
 
-Usage
------
+Get Started
+-----------
 
-Get started.
+Installation.
 
 ``` html
 gem install automatic
@@ -22,7 +21,27 @@ Specify any recipe with -c option.
 automatic -c <recipe>
 ```
 
-For more info, refer to the document (doc/README.ja).
+Example.
+
+``` html
+$ automatic -c config/feed2console.yml
+```
+
+
+What is Recipe?
+---------------
+
+Automatic Ruby parses configuration file that was written
+in the form of YAML which including variety of information
+of associated plug-ins.
+
+This YAML file is called "Recipe".
+
+When you start automatic ruby without argument -c option,
+the config/default.yml is called. You can use -c option for
+specify a file name.
+
+For more info, refer to the document (doc/README).
 
 
 Environment
@@ -66,12 +85,12 @@ After that, we will give you the right to commit for a quick fix finely.
 Coding Rule
 -----------
 
-+ 2 tabs, soft tabs.
-+ Remove the space at the end of a line.
++ 2 tabs (Soft Tabs).
++ Remove trailing spaces.
 + Namespace and conventions, see the existing code.
 + {} is recommended than do end (To avoid end end end,,).
 + RDoc Header is written by creator of the file.
-+ Write RSPec tests.
++ Write tests with RSPec.
 + Aim at 100% coverage.
 
 
