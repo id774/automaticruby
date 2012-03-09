@@ -18,7 +18,7 @@ module Automatic::Plugin
       detection = false
       unless @config['title'].nil?
         @config['title'].each {|e|
-          if items.title.include?(e.chomp)
+          if item.title.include?(e.chomp)
             detection = true 
             Automatic::Log.puts("info", "Excluded by title: #{items.link}")
           end
