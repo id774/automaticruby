@@ -15,18 +15,7 @@ module Automatic
   require 'automatic/feed_parser'
 
   VERSION = "12.03-devel"
-
-  def self.root_dir
-    @root_dir
-  end
-
-  def self.plugins_dir
-    @root_dir + "/plugins/"
-  end
-
-  def self.config_dir
-    @root_dir + "/config/"
-  end
+  USER_DIR = ".automatic"
 
   def self.run(root_dir)
     @root_dir = root_dir
@@ -57,4 +46,25 @@ module Automatic
     recipe = Automatic::Recipe.new(recipe_path)
     Automatic::Pipeline.run(recipe)
   end
+
+  def self.root_dir
+    @root_dir
+  end
+
+  def self.plugins_dir
+    @root_dir + "/plugins/"
+  end
+
+  def self.config_dir
+    @root_dir + "/config/"
+  end
+
+  def self.user_dir
+    Dir.home + USER_DIR
+  end
+
+  def self.user_plugins_dir
+    Dir.home + USER_DIR + "/plugins/"
+  end
+
 end

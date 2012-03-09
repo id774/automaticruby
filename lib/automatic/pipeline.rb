@@ -14,12 +14,13 @@ module Automatic
 
   module Pipeline
     def self.load_plugin(module_name)
-      Dir.foreach(Automatic.plugins_dir) do |subdir|
+      Dir[Automatic.plugins_dir+"/*.rb", 
+          Automatic.user_plugins_dir+"/*.rb"].each{ |subdir|
         if /^#{subdir}_(.*)$/ =~ module_name.underscore
           path = Automatic.plugins_dir + subdir + "/#{$1}.rb"
           Automatic::Plugin.autoload module_name.to_sym, path.to_s
         end
-      end
+      }
     end
  
     def self.run(recipe)
