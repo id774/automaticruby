@@ -67,7 +67,7 @@ Directory and file structure
 | +-- default.yml
 |   To describe the recipe information in the form of yaml.
 |   They called in the argument -c option of Automatic Ruby.
-|   If you write a new recipe is located in the config directory.
+|   If you write a new recipe, locate it in the config directory.
 |
 |
 +-+ plugins
@@ -90,7 +90,7 @@ Directory and file structure
 | +-- publish
 |   Plug-ins to send information to external.
 |
-| If you write a new plug-in is located in the plugins directory.
+| If you write a new plug-in, locate it in the plugins directory.
 |
 |
 +-+ lib
@@ -133,7 +133,7 @@ Directory and file structure
 |   Directory for auxiliary tools.
 |
 +-- spec
-|   Directory for unit tests.
+|   Directory for unit tests (Use RSpec).
 |
 +-+ test
 | |
@@ -253,7 +253,10 @@ CI
 http://id774.net/jenkins/
 
 
+===========
 How to Join
+===========
+
 1. Fork the repository.
 2. Write new plugin or existing code improvement.
 3. Send pull request!
@@ -386,12 +389,13 @@ $ ruby auto_discovery.rb "https://twitter.com/twitt"
 Update History
 ==============
 
-See doc/ChangeLog.
+ See doc/ChangeLog.
 
 
 ====
 TODO
 ====
+
  Refer to the issues of github
  https://github.com/id774/automaticruby/issues
 
@@ -400,7 +404,7 @@ TODO
 Environment
 ===========
 
-ruby 1.8 or later
+ ruby 1.8 or later
 
 
 The following packages depend on the gem.
@@ -421,4 +425,5 @@ Notes
 
 To avoid excessive scraping, use in the bounds of common sense.
 This software licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 
