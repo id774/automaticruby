@@ -15,56 +15,68 @@ module Automatic
   require 'automatic/feed_parser'
 
   VERSION = "12.03-devel"
-  USER_DIR = ".automatic"
+  USER_DIR = "/.automatic"
 
-  def self.run(root_dir)
-    @root_dir = root_dir
-    recipe_path = ""
-    require 'optparse'
-    parser = OptionParser.new { |parser|
-      parser.banner = "Usage: automatic [options] arg"
-      parser.version = VERSION
-      parser.separator "options:"
-      parser.on('-c', '--config FILE', String,
-                "recipe YAML file"){|c| recipe_path = c}
-      parser.on('-h', '--help', "show this message") { 
-        puts parser
-        exit
+  class << self
+    def run(root_dir, user_dir = nil)
+      @root_dir = root_dir
+      set_user_dir(user_dir)
+      recipe_path = ""
+      require 'optparse'
+      parser = OptionParser.new { |parser|
+        parser.banner = "Usage: automatic [options] arg"
+        parser.version = VERSION
+        parser.separator "options:"
+        parser.on('-c', '--config FILE', String,
+                  "recipe YAML file"){|c| recipe_path = c}
+        parser.on('-h', '--help', "show this message") { 
+          puts parser
+          exit
+        }
       }
-    }
 
-    begin
-      parser.parse!
-      print "Loading #{recipe_path}\n" unless recipe_path == ""
-    rescue OptionParser::ParseError => err
-      $stderr.puts err.message
-      $stderr.puts parser.help
-      exit 1
+      begin
+        parser.parse!
+        print "Loading #{recipe_path}\n" unless recipe_path == ""
+      rescue OptionParser::ParseError => err
+        $stderr.puts err.message
+        $stderr.puts parser.help
+        exit 1
+      end
+
+      # recipe treat as an object.
+      recipe = Automatic::Recipe.new(recipe_path)
+      Automatic::Pipeline.run(recipe)
     end
 
-    # recipe treat as an object.
-    recipe = Automatic::Recipe.new(recipe_path)
-    Automatic::Pipeline.run(recipe)
-  end
+    def root_dir
+      @root_dir
+    end
 
-  def self.root_dir
-    @root_dir
-  end
+    def plugins_dir
+      File.join(@root_dir, "plugins")
+    end
 
-  def self.plugins_dir
-    File.join(@root_dir, "plugins")
-  end
+    def config_dir
+      File.join(@root_dir, "config")
+    end
 
-  def self.config_dir
-    File.join(@root_dir, "config")
-  end
+    def set_user_dir(user_dir)
+      if ENV["AUTOMATIC_RUBY_ENV"] == "test" && !(user_dir.nil?)
+        @user_dir = user_dir 
+      else
+        @user_dir = Dir.home + USER_DIR
+      end
+    end
 
-  def self.user_dir
-    File.join(Dir.home, USER_DIR)
-  end
+    def user_dir
+      @user_dir
+    end
 
-  def self.user_plugins_dir
-    File.join(Dir.home, USER_DIR, "plugins")
+    def user_plugins_dir
+      File.join(@user_dir, "plugins")
+    end
+
   end
 
 end
