@@ -3,7 +3,7 @@
 # Author::    774 <http://id774.net>
 # Version::   12.03-devel
 # Created::   Feb 18, 2012
-# Updated::   Mar  7, 2012
+# Updated::   Mar 10, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -52,19 +52,19 @@ module Automatic
   end
 
   def self.plugins_dir
-    @root_dir + "/plugins/"
+    File.join(@root_dir, "plugins")
   end
 
   def self.config_dir
-    @root_dir + "/config/"
+    File.join(@root_dir, "config")
   end
 
   def self.user_dir
-    Dir.home + USER_DIR
+    File.join(Dir.home, USER_DIR)
   end
 
   def self.user_plugins_dir
-    Dir.home + USER_DIR + "/plugins/"
+    File.join(Dir.home, USER_DIR, "plugins")
   end
 
 end
