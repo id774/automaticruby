@@ -6,9 +6,10 @@ Automatic Ruby
 
 Description
 -----------
-This is a general-purpose automatic processing by the ruby framework
-that can extend the functionality as pluggable. It can collects
-a variety of information by the plug-ins can be output in any form.
+
+This is a general-purpose automatic processing
+ruby framework which can extend the functionality
+by plug-ins.
 
 See doc/README file.
 
