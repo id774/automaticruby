@@ -18,34 +18,11 @@ module Automatic
   USER_DIR = "/.automatic"
 
   class << self
-    def run(_root_dir, _user_dir = nil)
-      self.root_dir = _root_dir
-      self.user_dir = _user_dir
-      recipe_path = ""
-      require 'optparse'
-      parser = OptionParser.new { |parser|
-        parser.banner = "Usage: automatic [options] arg"
-        parser.version = VERSION
-        parser.separator "options:"
-        parser.on('-c', '--config FILE', String,
-                  "recipe YAML file"){|c| recipe_path = c}
-        parser.on('-h', '--help', "show this message") { 
-          puts parser
-          exit
-        }
-      }
-
-      begin
-        parser.parse!
-        print "Loading #{recipe_path}\n" unless recipe_path == ""
-      rescue OptionParser::ParseError => err
-        $stderr.puts err.message
-        $stderr.puts parser.help
-        exit 1
-      end
-
-      # recipe treat as an object.
-      recipe = Automatic::Recipe.new(recipe_path)
+    def run(args = { })
+      self.root_dir = args[:root_dir]
+      self.user_dir = args[:user_dir]
+          
+      recipe        = Automatic::Recipe.new(args[:recipe])
       Automatic::Pipeline.run(recipe)
     end
 
@@ -80,7 +57,6 @@ module Automatic
     def user_plugins_dir
       File.join(@user_dir, "plugins")
     end
-
   end
 
 end

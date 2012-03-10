@@ -1,8 +1,8 @@
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'plugins'))
-$LOAD_PATH.unshift File.dirname(__FILE__)
-
+APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), ".."))
+$LOAD_PATH.unshift APP_ROOT
+$LOAD_PATH.unshift File.join(APP_ROOT)
+$LOAD_PATH.unshift File.join(APP_ROOT, 'lib')
+$LOAD_PATH.unshift File.join(APP_ROOT, 'plugins')
 
 ENV["AUTOMATIC_RUBY_ENV"] ||= "test"
 Bundler.require :test if defined?(Bundler)
