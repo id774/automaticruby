@@ -18,9 +18,9 @@ module Automatic
   USER_DIR = "/.automatic"
 
   class << self
-    def run(root_dir, user_dir = nil)
-      @root_dir = root_dir
-      set_user_dir(user_dir)
+    def run(_root_dir, _user_dir = nil)
+      self.root_dir = _root_dir
+      self.user_dir = _user_dir
       recipe_path = ""
       require 'optparse'
       parser = OptionParser.new { |parser|
@@ -53,6 +53,10 @@ module Automatic
       @root_dir
     end
 
+    def root_dir=(_root_dir)
+      @root_dir = _root_dir
+    end
+
     def plugins_dir
       File.join(@root_dir, "plugins")
     end
@@ -61,16 +65,16 @@ module Automatic
       File.join(@root_dir, "config")
     end
 
-    def set_user_dir(user_dir)
-      if ENV["AUTOMATIC_RUBY_ENV"] == "test" && !(user_dir.nil?)
-        @user_dir = user_dir 
+    def user_dir
+      @user_dir
+    end
+
+    def user_dir=(_user_dir)
+      if ENV["AUTOMATIC_RUBY_ENV"] == "test" && !(_user_dir.nil?)
+        @user_dir = _user_dir 
       else
         @user_dir = Dir.home + USER_DIR
       end
-    end
-
-    def user_dir
-      @user_dir
     end
 
     def user_plugins_dir
