@@ -76,20 +76,43 @@ How to write a Recipe
 
  The Recipe has an implicit naming convention.
 
+[Syntax]
+
 plugins:
   - module: MODULE_NAME
     config:
       VARIABLES
 
 
- The following is a sample of recipes and yaml files.
+ The following is a example.
 
-global:
-  timezone: Asia/Tokyo
-  cache:
-    base: /tmp
-  log:
-    level: info
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://reretlet.tumblr.com/rss
+
+  - module: StorePermalink
+    config:
+      db: tumblr.db
+
+  - module: FilterImage
+
+  - module: FilterTumblrResize
+
+  - module: StoreTargetLink
+    config:
+      path: /Users/yourname/Desktop/
+      interval: 1
+
+In the case of sample this recipe.
+1. Subscribe to RSS feeds of Tumblr by SubScriptionFeed.
+2. Save permalink to database by StorePermalink.
+3. Specify the URL of the image by FilterImage and FilterTumblrResize.
+4. Social Bookmarking by PublishHatenaBookmark.
+
+
+Showing another example as follows.
 
 plugins:
   - module: SubscriptionFeed
@@ -114,15 +137,15 @@ plugins:
       password: your_password
       interval: 5
 
-
 In the case of sample this recipe.
-1. Subscribe to some RSS feeds.
-2. Feed ignore the keyword from the contains urls.
-3. Store permalink to database.
-4. Bookmarking to Hatena Bookmark.
+1. Subscribe to 2 RSS feeds by SubScriptionFeed.
+2. Feed ignore the keyword by FilterIgnore.
+3. Save permalink to database by StorePermalink.
+4. Social Bookmarking by PublishHatenaBookmark.
 
 (Hatena Bookmark is a most popular social bookmark service
 in Japan.)
+
 
 These have been realized by a combination of plug-ins
 a series of processes.

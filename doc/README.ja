@@ -80,14 +80,48 @@ $ automatic -c ~/recipes/your_recipe.yml
 ================
 
  レシピには暗黙的な命名規則がある。
+
+[書式]
+
+plugins:
+  - module: プラグイン名
+    config:
+      変数
+
+
  以下はレシピのサンプルとなる YAML ファイルである。
 
-global:
-  timezone: Asia/Tokyo
-  cache:
-    base: /tmp
-  log:
-    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://reretlet.tumblr.com/rss
+
+  - module: StorePermalink
+    config:
+      db: tumblr.db
+
+  - module: FilterImage
+
+  - module: FilterTumblrResize
+
+  - module: StoreTargetLink
+    config:
+      path: /Users/yourname/Desktop/
+      interval: 1
+
+
+このサンプルレシピの例では
+1. Subscription Feed で Tumblr のフィードを購読し
+2. StorePermalink でパーマリンクをデータベースに保存し
+3  FilterImage と FilterTumblrResize で画像の URL を指定して
+4. PublishHatenaBookmark ではてなブックマークをする
+という一連の処理をプラグインの組み合わせで実現している。
+
+
+
+以下に別の例を示す。
 
 plugins:
   - module: SubscriptionFeed
@@ -113,11 +147,24 @@ plugins:
       interval: 5
 
 このサンプルレシピの例では
-1. フィードを購読し
-2. 無視キーワードを含む URL を除外し
-3. パーマリンクをデータベースに保存し
-4. はてなブックマークをする
+1. Subscription Feed でフィードを購読し
+2. FilterIgnore で無視キーワードを含む URL を除外し
+3. StorePermalink でパーマリンクをデータベースに保存し
+4. PublishHatenaBookmark ではてなブックマークをする
 という一連の処理をプラグインの組み合わせで実現している。
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 このように、プラグインと設定情報をレシピに記述するだけで
 複数のプラグインの組み合わせにより自由な処理を実現できる。
