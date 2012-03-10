@@ -9,6 +9,20 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
+namespace :spec do 
+  desc "Run RSpec for plugins"
+  RSpec::Core::RakeTask.new(:plugins) do |spec|
+    spec.rspec_opts = ["-c"]
+    spec.pattern = FileList['spec/plugins/**/*_spec.rb']
+  end
+
+  desc "Run RSpec for main procedure"
+  RSpec::Core::RakeTask.new(:lib) do |spec|
+    spec.rspec_opts = ["-c"]
+    spec.pattern = FileList['spec/lib/**/*_spec.rb']
+  end
+end
+
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
