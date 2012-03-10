@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic
 # Author::    kzgs
-# Created::   Mar 9, 2012
-# Updated::   Mar 9, 2012
+# Created::   Mar  9, 2012
+# Updated::   Mar 10, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -33,9 +33,9 @@ describe Automatic do
     }
   end
 
-  describe "#set_user_dir in test env" do 
+  describe "#user_dir= in test env" do 
     before(:all) do 
-      Automatic.set_user_dir(File.dirname(__FILE__) + "/user_dir")
+      Automatic.user_dir = File.dirname(__FILE__) + "/user_dir"
     end
 
     describe "#user_dir" do 
@@ -51,14 +51,14 @@ describe Automatic do
     end
 
     after(:all) do 
-      Automatic.set_user_dir(nil)
+      Automatic.user_dir = nil
     end
   end
 
   describe "#set_user_dir in other env" do 
     before(:all) do 
       ENV["AUTOMATIC_RUBY_ENV"] = "other"
-      Automatic.set_user_dir(nil)
+      Automatic.user_dir = nil
     end
 
     describe "#user_dir" do 
