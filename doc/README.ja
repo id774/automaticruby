@@ -91,7 +91,6 @@ plugins:
 
  以下はレシピのサンプルとなる YAML ファイルである。
 
-
 plugins:
   - module: SubscriptionFeed
     config:
@@ -111,14 +110,12 @@ plugins:
       path: /Users/yourname/Desktop/
       interval: 1
 
-
 このサンプルレシピの例では
 1. Subscription Feed で Tumblr のフィードを購読し
 2. StorePermalink でパーマリンクをデータベースに保存し
 3  FilterImage と FilterTumblrResize で画像の URL を指定して
 4. PublishHatenaBookmark ではてなブックマークをする
 という一連の処理をプラグインの組み合わせで実現している。
-
 
 
 以下に別の例を示す。
@@ -152,18 +149,6 @@ plugins:
 3. StorePermalink でパーマリンクをデータベースに保存し
 4. PublishHatenaBookmark ではてなブックマークをする
 という一連の処理をプラグインの組み合わせで実現している。
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 このように、プラグインと設定情報をレシピに記述するだけで
