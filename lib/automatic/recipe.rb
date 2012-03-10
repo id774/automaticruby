@@ -13,7 +13,7 @@ module Automatic
   class Recipe
     attr_reader :procedure
 
-    def initialize(path)
+    def initialize(path = "")
       path = Automatic.config_dir + '/default.yml' if path.to_s.empty?
       load_recipe(path)
     end
