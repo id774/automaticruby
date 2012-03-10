@@ -73,7 +73,7 @@ module Automatic
       if ENV["AUTOMATIC_RUBY_ENV"] == "test" && !(_user_dir.nil?)
         @user_dir = _user_dir 
       else
-        @user_dir = Dir.home + USER_DIR
+        @user_dir = File.expand_path("~/") + USER_DIR
       end
     end
 

@@ -63,13 +63,13 @@ describe Automatic do
 
     describe "#user_dir" do 
       it "return valid value" do 
-        Automatic.user_dir.should == Dir.home + "/.automatic"
+        Automatic.user_dir.should == File.expand_path("~/") + "/.automatic"
       end
     end
 
     describe "#user_plugins_dir" do 
       it "return valid value" do 
-        Automatic.user_plugins_dir.should == Dir.home + "/.automatic/plugins"
+        Automatic.user_plugins_dir.should == File.expand_path("~/") + "/.automatic/plugins"
       end
     end
 

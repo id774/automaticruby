@@ -27,7 +27,6 @@ describe Automatic::Pipeline do
       end
 
       it "correctly load module" do 
-        require 'pry'
         TEST_MODULES.each do |mod|
           Automatic::Pipeline.load_plugin mod.to_s
           Automatic::Plugin.const_get(mod).class.should == Class
