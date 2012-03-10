@@ -35,11 +35,11 @@ $ script/bootstrap
  If the ruby 1.8, necessary to manually install the gems in the Gemfile.
 
 
-===========
-Try running
-===========
+========
+Start Up
+========
 
- To create (see below) of any recipe.
+ To create of any recipe (see below).
 $ automatic -c your_recipe.yml
 
  -c option to run with the manual. If there is no problem
@@ -50,6 +50,103 @@ to automate, register it to cron.
 only console. It can be used to check the operation of
 this software.
 $ automatic -c config/feed2console.yml
+
+
+=======
+Recipes
+=======
+
+ Automatic Ruby parses configuration file that was written
+in the form of YAML which including variety of information
+of associated plug-ins.
+
+ This YAML file is called "Recipe".
+
+ When you start automatic ruby without argument -c option,
+the config/default.yml is called. You can use -c option for
+specify a file name.
+
+[Example]
+$ automatic -c ~/recipes/your_recipe.yml
+
+
+=====================
+How to write a Recipe
+=====================
+
+ The Recipe has an implicit naming convention.
+
+plugins:
+  - module: MODULE_NAME
+    config:
+      VARIABLES
+
+
+ The following is a sample of recipes and yaml files.
+
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://example.com/rss2
+        - http://hogefuga.com/feed
+
+  - module: FilterIgnore
+    config:
+      link:
+        - hoge
+        - fuga
+
+  - module: StorePermalink
+    config:
+      db: permalink.db
+
+  - module: PublishHatenaBookmark
+    config:
+      username: your_hatena_id
+      password: your_password
+      interval: 5
+
+
+In the case of sample this recipe.
+1. Subscribe to some RSS feeds.
+2. Feed ignore the keyword from the contains urls.
+3. Store permalink to database.
+4. Bookmarking to Hatena Bookmark.
+
+(Hatena Bookmark is a most popular social bookmark service
+in Japan.)
+
+These have been realized by a combination of plug-ins
+a series of processes.
+
+In this way, by simply writing to the recipe and
+configuration information for plug-ins, free processing can
+be achieved by a combination of multiple plug-ins.
+
+The possibility of infinite depending on the combination
+of plug-ins can be realized.
+
+All depending on whether you make a plug-in looks like!
+
+
+=======
+Plug-in
+=======
+
+Plug-ins from the plugins directory (see below) will be loaded.
+
+If ~ /.automatic/plugins exists, is loaded into them as well.
+
+Put your own plug-ins in your home directory.
+(How to make the plug-in will be described later)
 
 
 ============================
@@ -156,84 +253,6 @@ Directory and file structure
     +-- README
       This document.
 
-
-=======
-Recipes
-=======
-
- Automatic Ruby parses configuration file that was written
-in the form of YAML which including variety of information
-of associated plug-ins.
-
- This YAML file is called "Recipe".
-
- When you start automatic ruby without argument -c option,
-the config/default.yml is called. You can use -c option for
-specify a file name.
-
-[Example]
-$ automatic -c ~/recipes/your_recipe.yml
-
-
-=====================
-How to write a Recipe
-=====================
-
- The Recipe has an implicit naming convention.
-The following is a sample of recipes and yaml files.
-
-
-global:
-  timezone: Asia/Tokyo
-  cache:
-    base: /tmp
-  log:
-    level: info
-
-plugins:
-  - module: SubscriptionFeed
-    config:
-      feeds:
-        - http://example.com/rss2
-        - http://hogefuga.com/feed
-
-  - module: FilterIgnore
-    config:
-      link:
-        - hoge
-        - fuga
-
-  - module: StorePermalink
-    config:
-      db: permalink.db
-
-  - module: PublishHatenaBookmark
-    config:
-      username: your_hatena_id
-      password: your_password
-      interval: 5
-
-
-In the case of sample this recipe.
-1. Subscribe to some RSS feeds.
-2. Feed ignore the keyword from the contains urls.
-3. Store permalink to database.
-4. Bookmarking to Hatena Bookmark.
-
-(Hatena Bookmark is a most popular social bookmark service
-in Japan.)
-
-These have been realized by a combination of plug-ins
-a series of processes.
-
-In this way, by simply writing to the recipe and
-configuration information for plug-ins, free processing can
-be achieved by a combination of multiple plug-ins.
-
-The possibility of infinite depending on the combination
-of plug-ins can be realized.
-
-All depending on whether you make a plug-in looks like!
 
 
 ===========

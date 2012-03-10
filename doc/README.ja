@@ -57,6 +57,97 @@ $ automatic -c config/feed2console.yml
  本ソフトウェアの動作確認に使うことができる。
 
 
+==========
+レシピとは
+==========
+
+ Automatic Ruby では YAML 形式で書かれた設定ファイル
+を解析し、呼び出すプラグインの情報とそれに伴う様々な
+情報を読み込む。
+
+ この YAML ファイルをレシピと呼ぶ。
+
+ automatic.rb 起動時に -c オプションの引数にレシピの
+ファイル名を指定することができる。オプションが省略
+された場合は config/default.yml が呼ばれる。
+
+[起動例]
+$ automatic -c ~/recipes/your_recipe.yml
+
+
+================
+レシピの記述方法
+================
+
+ レシピには暗黙的な命名規則がある。
+ 以下はレシピのサンプルとなる YAML ファイルである。
+
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://example.com/rss2
+        - http://hogefuga.com/feed
+
+  - module: FilterIgnore
+    config:
+      link:
+        - hoge
+        - fuga
+
+  - module: StorePermalink
+    config:
+      db: permalink.db
+
+  - module: PublishHatenaBookmark
+    config:
+      username: your_hatena_id
+      password: your_password
+      interval: 5
+
+このサンプルレシピの例では
+1. フィードを購読し
+2. 無視キーワードを含む URL を除外し
+3. パーマリンクをデータベースに保存し
+4. はてなブックマークをする
+という一連の処理をプラグインの組み合わせで実現している。
+
+このように、プラグインと設定情報をレシピに記述するだけで
+複数のプラグインの組み合わせにより自由な処理を実現できる。
+
+たとえば Twitter に投稿する Publish::Twitter プラグインを
+作成し上記のレシピに記述すれば、自動的に記事を Twitter に
+投稿する自動処理が完成する。
+
+Gmail に送信する Publish::Gmail プラグインを作成しレシピ
+に追加すれば、フィードの記事を Gmail で読めるようになる。
+
+他にもリンクを元にブログ記事全文を取得したり、電子書籍の
+形式にして Kindle で読めるようにしたり、データベースに
+ブログ記事全文を保存してローカルのアプリで読めるように
+したりなど、プラグインの組み合わせ次第で無限の可能性を
+実現することができる。
+
+
+==========
+プラグイン
+==========
+
+プラグインは後述する plugins ディレクトリにあるものが読み込まれる。
+
+~/.automatic/plugins が存在する場合、それらも同様に読み込まれる。
+
+自作したプラグインはホームディレクトリに置くと良い。
+(プラグインの作り方は後述する)
+
+
 ==========================
 ディレクトリとファイル構成
 ==========================
@@ -164,85 +255,6 @@ $ automatic -c config/feed2console.yml
     |
     +- README.ja
          本ドキュメント
-
-
-==========
-レシピとは
-==========
-
- Automatic Ruby では YAML 形式で書かれた設定ファイル
-を解析し、呼び出すプラグインの情報とそれに伴う様々な
-情報を読み込む。
-
- この YAML ファイルをレシピと呼ぶ。
-
- automatic.rb 起動時に -c オプションの引数にレシピの
-ファイル名を指定することができる。オプションが省略
-された場合は config/default.yml が呼ばれる。
-
-[起動例]
-$ automatic -c ~/recipes/your_recipe.yml
-
-
-================
-レシピの記述方法
-================
-
- レシピには暗黙的な命名規則がある。
- 以下はレシピのサンプルとなる YAML ファイルである。
-
-global:
-  timezone: Asia/Tokyo
-  cache:
-    base: /tmp
-  log:
-    level: info
-
-plugins:
-  - module: SubscriptionFeed
-    config:
-      feeds:
-        - http://example.com/rss2
-        - http://hogefuga.com/feed
-
-  - module: FilterIgnore
-    config:
-      link:
-        - hoge
-        - fuga
-
-  - module: StorePermalink
-    config:
-      db: permalink.db
-
-  - module: PublishHatenaBookmark
-    config:
-      username: your_hatena_id
-      password: your_password
-      interval: 5
-
-このサンプルレシピの例では
-1. フィードを購読し
-2. 無視キーワードを含む URL を除外し
-3. パーマリンクをデータベースに保存し
-4. はてなブックマークをする
-という一連の処理をプラグインの組み合わせで実現している。
-
-このように、プラグインと設定情報をレシピに記述するだけで
-複数のプラグインの組み合わせにより自由な処理を実現できる。
-
-たとえば Twitter に投稿する Publish::Twitter プラグインを
-作成し上記のレシピに記述すれば、自動的に記事を Twitter に
-投稿する自動処理が完成する。
-
-Gmail に送信する Publish::Gmail プラグインを作成しレシピ
-に追加すれば、フィードの記事を Gmail で読めるようになる。
-
-他にもリンクを元にブログ記事全文を取得したり、電子書籍の
-形式にして Kindle で読めるようにしたり、データベースに
-ブログ記事全文を保存してローカルのアプリで読めるように
-したりなど、プラグインの組み合わせ次第で無限の可能性を
-実現することができる。
 
 
 

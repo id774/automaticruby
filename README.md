@@ -49,6 +49,15 @@ When you start automatic ruby without argument -c option,
 the config/default.yml is called. You can use -c option for
 specify a file name.
 
+The Recipe has an implicit naming convention.
+
+``` html
+plugins:
+  - module: MODULE_NAME
+    config:
+      VARIABLES
+```
+
 For more info, refer to the document (doc/README).
 
 
