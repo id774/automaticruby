@@ -109,7 +109,7 @@ In the case of sample this recipe.
 1. Subscribe to RSS feeds of Tumblr by SubScriptionFeed.
 2. Save permalink to database by StorePermalink.
 3. Specify the URL of the image by FilterImage and FilterTumblrResize.
-4. Social Bookmarking by PublishHatenaBookmark.
+4. Downloading image file of Tumblr.
 
 
 Showing another example as follows.
@@ -338,7 +338,7 @@ pipeline backs again as the return value.
 
  In this iteration, sequential processing can be realized.
 
- This mechanism called "Automatic::Pipeline"
+ This mechanism called "Automatic::Pipeline".
 
 
 
