@@ -6,7 +6,7 @@
 # Copyright:: ainame Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
-require File.expand_path(File.join(File.dirname(__FILE__) ,'../spec_helper'))
+require File.expand_path(File.join(File.dirname(__FILE__) ,'../../spec_helper'))
 require 'automatic'
 require 'automatic/pipeline'
 
@@ -15,7 +15,7 @@ TEST_MODULES = ["SubscriptionFeed", "FilterIgnore"]
 describe Automatic::Pipeline do 
   describe "in default dir" do 
     before do 
-      Automatic.root_dir = File.expand_path(File.join(File.dirname(__FILE__), "../../"))
+      Automatic.root_dir = APP_ROOT
       Automatic.user_dir = nil
     end
     
@@ -37,8 +37,8 @@ describe Automatic::Pipeline do
 
   describe "in user dir" do 
     before do 
-      Automatic.root_dir = File.expand_path(File.join(File.dirname(__FILE__), "../../"))
-      Automatic.user_dir = File.expand_path(File.join(File.dirname(__FILE__), "../user_dir/"))
+      Automatic.root_dir = APP_ROOT
+      Automatic.user_dir = File.join(APP_ROOT, "spec/user_dir")
     end
 
     describe "#load_plugin" do
