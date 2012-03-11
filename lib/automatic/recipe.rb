@@ -14,7 +14,6 @@ module Automatic
     attr_reader :procedure
 
     def initialize(path = "")
-      path = Automatic.config_dir + '/default.yml' if path.to_s.empty?
       load_recipe(path)
     end
 

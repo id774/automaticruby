@@ -21,9 +21,7 @@ module Automatic
     def run(args = { })
       self.root_dir = args[:root_dir]
       self.user_dir = args[:user_dir]
-          
-      recipe        = Automatic::Recipe.new(args[:recipe])
-      Automatic::Pipeline.run(recipe)
+      Automatic::Pipeline.run(args[:recipe])
     end
 
     def root_dir
