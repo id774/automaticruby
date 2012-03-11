@@ -32,5 +32,26 @@ describe Automatic::Plugin::HatenaBookmark do
         /^UsernameToken\sUsername="anonymous",\sPasswordDigest=".+", Nonce=".+", Created="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"/)
     }
   end
+
+  describe "#post" do
+    subject {
+      Automatic::Plugin::HatenaBookmark.new
+    }
+
+    specify {
+      url = "http://www.google.com"
+      comment = "Can we trust them ?"
+
+      require 'net/http'
+      res = stub("res")
+      res.should_receive(:code).and_return("201")
+      http = mock("http")
+      http.should_receive(:post).with("/atom/post", subject.toXml(url, comment),
+        subject.wsse("", "")).and_return(res)
+      http.should_receive(:start).and_yield(http)
+      proxy = Net::HTTP.stub(:new) { http }
+      subject.post(url, comment)
+    }
+  end
 end
 
