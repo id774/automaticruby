@@ -2,6 +2,7 @@ Gemfile.lock
 db/*.db
 coverage
 .bundle
+.rbenv-version
 bin/autospec
 bin/cdiff
 bin/cucumber
@@ -16,3 +17,5 @@ bin/rake
 bin/sow
 pkg/
 vendor/gems/
+vendor/bundle/
+
