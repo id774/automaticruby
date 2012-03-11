@@ -40,6 +40,14 @@ subparsers['opmlparser'] = lambda { |argv|
   }
 }
 
+subparsers['feedparser'] = lambda { |argv|
+  require 'pp'
+  require 'automatic/feed_parser'
+  url = argv.shift || abort("Usage: #{File.basename($0)} feedparser <url>")
+  rss_results = Automatic::FeedParser.get_rss(url)
+  pp rss_results
+}
+
 parser.order!(ARGV)
 
 if ARGV.empty?

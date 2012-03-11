@@ -1,9 +1,8 @@
-#!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 # Name::      Automatic::FeedParser
 # Author::    774 <http://id774.net>
 # Created::   Feb 19, 2012
-# Updated::   Feb 24, 2012
+# Updated::   Mar 11, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -26,11 +25,4 @@ module Automatic
       end
     end
   end
-end
-
-if __FILE__ == $0
-  url = ARGV.shift || abort("Usage: feed_parser.rb <url>")
-  rss_results = Automatic::FeedParser.get_rss(url)
-  require 'pp'
-  pp links
 end
