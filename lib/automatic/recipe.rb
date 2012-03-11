@@ -1,8 +1,8 @@
 # Name::      Automatic::Recipe
-# Author::    774 <http://id774.net>
+# Author::    ainame
 # Version::   12.02-devel
 # Created::   Feb 18, 2012
-# Updated::   Mar 11, 2012
+# Updated::   Mar 12, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
