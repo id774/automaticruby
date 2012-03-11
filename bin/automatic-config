@@ -16,36 +16,42 @@ require 'optparse'
 parser = OptionParser.new { |opt|
 }
 
-subparsers = Hash.new { |h, k|
-  puts "No such subcommand: #{k}"
-  exit 1
-}
+def abort_with_usage(subcommand, message)
+  top_filename = File.basename($0)
+  abort("Usage: #{top_filename} #{subcommand} #{message}")
+end
 
-subparsers['autodiscovery'] = lambda { |argv|
-  require 'pp'
-  require 'feedbag'
-  url = argv.shift || abort("Usage: #{File.basename($0)} autodiscovery <url>")
-  pp Feedbag.find(url)
-}
-
-subparsers['opmlparser'] = lambda { |argv|
-  require 'automatic/opml'
-  path = argv.shift
-  if path.nil?
-    abort "Usage: #{File.basename($0)} opmlparser <omml path>"
-  end
-  parser = Automatic::OPML::Parser.new(File.read(path))
-  parser.each_outline {|opml, o|
-    puts "#{o.xmlUrl}"
+subparsers = {
+  'autodiscovery' => lambda { |argv|
+    require 'pp'
+    require 'feedbag'
+    url = argv.shift || abort_with_usage("autodiscovery", "<url>")
+    pp Feedbag.find(url)
+  },
+  'opmlparser' => lambda { |argv|
+    require 'automatic/opml'
+    path = argv.shift
+    if path.nil?
+      abort_with_usage("opmlparser", "<omml path>")
+    end
+    parser = Automatic::OPML::Parser.new(File.read(path))
+    parser.each_outline {|opml, o|
+      puts "#{o.xmlUrl}"
+    }
+  },
+  'feedparser' => lambda { |argv|
+    require 'pp'
+    require 'automatic/feed_parser'
+    url = argv.shift || abort_with_usage("feedparser", "<url>")
+    rss_results = Automatic::FeedParser.get_rss(url)
+    pp rss_results
+  },
+  'log' => lambda { |argv|
+    require 'automatic/log'
+    level = argv.shift || abort_with_usage("log", "<level> <message>")
+    message = ARGV.shift
+    Automatic::Log.puts(level, message)
   }
-}
-
-subparsers['feedparser'] = lambda { |argv|
-  require 'pp'
-  require 'automatic/feed_parser'
-  url = argv.shift || abort("Usage: #{File.basename($0)} feedparser <url>")
-  rss_results = Automatic::FeedParser.get_rss(url)
-  pp rss_results
 }
 
 parser.order!(ARGV)
@@ -55,4 +61,7 @@ if ARGV.empty?
   exit 1
 end
 
-subparsers[ARGV.shift].call(ARGV)
+Hash.new { |h, k|
+  puts "No such subcommand: #{k}"
+  exit 1
+}.update(subparsers)[ARGV.shift].call(ARGV)
