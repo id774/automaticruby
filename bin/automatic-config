@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+# Name::      Automatic::Ruby
+# Author::    kzgs
+# Created::   Mar 11, 2012
+# Updated::   Mar 11, 2012
+# Copyright:: kzgs Copyright (c) 2012
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
+root_dir = File.expand_path("..", File.dirname(__FILE__))
+$:.unshift root_dir + '/lib'
+
+require 'rubygems'
+require 'optparse'
+
+parser = OptionParser.new { |opt|
+}
+
+subparsers = Hash.new { |h, k|
+  puts "No such subcommand: #{k}"
+  exit 1
+}
+
+subparsers['autodiscovery'] = lambda { |argv|
+  require 'pp'
+  require 'feedbag'
+  url = argv.shift || abort("Usage: #{File.basename($0)} autodiscovery <url>")
+  pp Feedbag.find(url)
+}
+
+subparsers['opmlparser'] = lambda { |argv|
+  require 'automatic/opml'
+  path = argv.shift
+  if path.nil?
+    abort "Usage: #{File.basename($0)} opmlparser <omml path>"
+  end
+  parser = Automatic::OPML::Parser.new(File.read(path))
+  parser.each_outline {|opml, o|
+    puts "#{o.xmlUrl}"
+  }
+}
+
+parser.order!(ARGV)
+
+if ARGV.empty?
+  puts "Available commands: #{subparsers.keys.join(", ")}"
+  exit 1
+end
+
+subparsers[ARGV.shift].call(ARGV)
