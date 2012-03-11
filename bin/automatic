@@ -27,12 +27,22 @@ parser = OptionParser.new { |parser|
 
 begin
   parser.parse!
-  puts "Loading #{recipe_path}" if recipe_path.empty?
+  puts "Loading #{recipe_path}" unless recipe_path.empty?
 rescue OptionParser::ParseError => err
   $stderr.puts err.message
   $stderr.puts parser.help
   exit 1
 end
 
-Automatic.run(:recipe   => recipe_path,
+if recipe_path.to_s.empty? 
+  if ENV["AUTOMATIC_RUBY_ENV"] == "test"
+    recpie_path = File.join(root_dir, 'config/default.yml') 
+  else
+    puts parser
+    exit 0
+  end
+end
+
+recipe = Automatic::Recipe.new(recipe_path)
+Automatic.run(:recipe   => recipe,
               :root_dir => root_dir)
