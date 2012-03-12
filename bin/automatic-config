@@ -26,8 +26,10 @@ subparsers = {
     Dir::entries(root_dir + '/plugins').sort.each { |path|
       require 'fileutils'
       dir = (File.expand_path('~/.automatic/plugins/' + path))
-      FileUtils.mkdir_p(dir)
-      puts "Create Directory #{dir}"
+      unless File.exist?(dir)
+        FileUtils.mkdir_p(dir)
+        puts "Create Directory #{dir}"
+      end
     }
   },
   'autodiscovery' => lambda { |argv|
