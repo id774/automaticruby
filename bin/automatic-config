@@ -22,6 +22,14 @@ def abort_with_usage(subcommand, message)
 end
 
 subparsers = {
+  'scaffold' => lambda { |argv|
+    Dir::entries(root_dir + '/plugins').sort.each { |path|
+      require 'fileutils'
+      dir = (File.expand_path('~/.automatic/plugins/' + path))
+      FileUtils.mkdir_p(dir)
+      puts "Create Directory #{dir}"
+    }
+  },
   'autodiscovery' => lambda { |argv|
     require 'pp'
     require 'feedbag'
