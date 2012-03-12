@@ -22,8 +22,9 @@ describe Automatic::Pipeline do
     describe "#load_plugin" do
       it "raise no plugin error" do 
         lambda{ 
-          Automatic::Plugin.load_plugin "FooBar"
-        }.should raise_exception
+          Automatic::Pipeline.load_plugin "FooBar"
+        }.should raise_exception(Automatic::NoPluginError,
+          /unknown plugin named FooBar/)
       end
 
       it "correctly load module" do 

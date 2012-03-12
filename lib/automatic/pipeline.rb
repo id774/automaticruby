@@ -11,6 +11,8 @@ require 'active_support/core_ext'
 
 module Automatic
   module Plugin end
+  class NoPluginError < StandardError; end
+  class NoRecipeError < StandardError; end
 
   module Pipeline
     def self.load_plugin(module_name)
@@ -22,11 +24,11 @@ module Automatic
           return Automatic::Plugin.autoload module_name.to_sym, path.to_s if File.exists? path
         end
       }
-      raise "NoPluginError"
+      raise NoPluginError, "unknown plugin named #{module_name}"
     end
  
     def self.run(recipe)
-      raise "NoRecipeError" if recipe.nil?
+      raise NoRecipeError if recipe.nil?
       pipeline = []
       recipe.each_plugin { |plugin|
         load_plugin(plugin.module)
