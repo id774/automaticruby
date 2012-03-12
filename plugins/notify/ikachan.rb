@@ -31,7 +31,7 @@ module Automatic::Plugin
       proxy_class = Net::HTTP::Proxy(ENV["PROXY"], 8080)
       http        = proxy_class.new(uri.host, uri.port)
       http.start do |http|
-        @params['channels'].each do|channel|
+        @params['channels'].split(",").each do|channel|
           # send join command to make sure when if ikachan is not in the channel
           http.post("/join", "channel=#{channel}")
           res = http.post(uri.path, %Q(channel=#{channel}&message=#{message}))
