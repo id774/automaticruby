@@ -31,8 +31,9 @@ module Automatic
       raise NoRecipeError if recipe.nil?
       pipeline = []
       recipe.each_plugin { |plugin|
-        load_plugin(plugin.module)
-        klass = Automatic::Plugin.const_get(plugin.module)
+        mod = plugin.module
+        load_plugin(mod)
+        klass = Automatic::Plugin.const_get(mod)
         pipeline = klass.new(plugin.config, pipeline).run
       }
     end

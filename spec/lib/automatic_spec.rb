@@ -22,6 +22,13 @@ describe Automatic do
     end
   end
 
+  describe "#(root|config)_dir" do
+    specify {
+      Automatic.root_dir.should == APP_ROOT
+      Automatic.config_dir.should == APP_ROOT+"/config"
+    }
+  end
+
   describe "#user_dir= in test env" do 
     before(:all) do 
       Automatic.user_dir = File.join(APP_ROOT, "spec/user_dir")

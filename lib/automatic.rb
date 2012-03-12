@@ -18,20 +18,14 @@ module Automatic
   USER_DIR = "/.automatic"
 
   class << self
+    attr_accessor :root_dir
+
     def run(args = { })
       self.root_dir = args[:root_dir]
       self.user_dir = args[:user_dir]
       Automatic::Pipeline.run(args[:recipe])
     end
-
-    def root_dir
-      @root_dir
-    end
-
-    def root_dir=(_root_dir)
-      @root_dir = _root_dir
-    end
-
+    
     def plugins_dir
       File.join(@root_dir, "plugins")
     end

@@ -10,7 +10,7 @@ require File.expand_path(File.join(File.dirname(__FILE__) ,'../spec_helper'))
 require 'automatic'
 require 'automatic/pipeline'
 
-TEST_MODULES = ["SubscriptionFeed", "FilterIgnore"]
+TEST_MODULES = ["SubscriptionFeed", "FilterIgnore"] if TEST_MODULES.nil?
 
 describe Automatic::Pipeline do 
   describe "in default dir" do 
@@ -32,6 +32,17 @@ describe Automatic::Pipeline do
           Automatic::Pipeline.load_plugin mod.to_s
           Automatic::Plugin.const_get(mod).class.should == Class
         end
+      end
+    end
+
+    describe "#run" do
+      it "run a recipe with FilterIgnore module" do
+        plugin = mock("plugin")
+        plugin.should_receive(:module).and_return("FilterIgnore")
+        plugin.should_receive(:config)
+        recipe = mock("recipe")
+        recipe.should_receive(:each_plugin).and_yield(plugin)
+        Automatic::Pipeline.run(recipe).should == []
       end
     end
   end
