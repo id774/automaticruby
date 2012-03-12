@@ -32,19 +32,20 @@ module Automatic::Plugin
       http        = proxy_class.new(uri.host, uri.port)
       http.start do |http|
         @params['channels'].each do|channel|
-          http.post("/join", "channel=#{channel}") # send join command to make sure when if ikachan is not in the channel
+          # send join command to make sure when if ikachan is not in the channel
+          http.post("/join", "channel=#{channel}")
           res = http.post(uri.path, %Q(channel=#{channel}&message=#{message}))
-          t   = Time.now.strftime("%Y/%m/%d %X")
-          if res.code == "200" then
-            puts "#{t} [info] Success: #{message}"
+          if res.code == "200"
+            Automatic::Log.puts(:info, "Success: #{message}")
           else
-            puts "#{t} [error] #{res.code} Error: #{message}"
+            Automatic::Log.puts(:error, "#{res.code} Error: #{message}")
           end
         end
       end
     end
 
     private
+    
     def build_message(link, title)
       message = ""
       message += "#{title.to_s} - " unless title.blank?

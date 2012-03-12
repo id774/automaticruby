@@ -26,3 +26,33 @@ describe Automatic::Plugin::NotifyIkachan do
     subject.run.should have(1).feed
   end
 end
+
+describe Automatic::Plugin::Ikachan do
+  describe "#post" do
+    subject {
+      Automatic::Plugin::Ikachan.new.tap { |ikachan|
+        ikachan.params = {
+          "channels" => "#room",
+          "url"      => "http://sample.com",
+          "port"     => "4979",
+          "command"  => "notice",
+        }
+      }
+    }
+
+    specify {
+      link = "http://www.google.com"
+
+      require 'net/http'
+      res = stub("res")
+      res.should_receive(:code).and_return("200")
+      http = mock("http")
+      http.should_receive(:post).with("/join", "channel=#room")
+      http.should_receive(:post).with(
+        "/notice", "channel=#room&message=#{link}").and_return(res)
+      http.should_receive(:start).and_yield(http)
+      proxy = Net::HTTP.stub(:new) { http }
+      subject.post(link)
+    }
+  end
+end
