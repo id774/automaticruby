@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Publish::HatenaBookmark
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Feb 24, 2012
+# Updated::   Mar 12, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -55,19 +55,16 @@ module Automatic::Plugin
       uri = URI.parse(url)
       proxy_class = Net::HTTP::Proxy(ENV["PROXY"], 8080)
       http = proxy_class.new(uri.host)
-      http.start {|http|
+      http.start { |http|
         # b_url = NKF.nkf('-w', b_url)
         # b_comment = NKF.nkf('-w', b_comment)
         res = http.post(uri.path, toXml(b_url, b_comment), header)
-        t = Time.now.strftime("%Y/%m/%d %X")
         if res.code == "201" then
-          unless b_comment.nil?
-            print "#{t} [info] Success: #{b_url} Comment: #{b_comment}\n"
-          else
-            print "#{t} [info] Success: #{b_url}\n"
-          end
+          message = "Success: #{b_url}"
+          message += " Comment: #{b_comment}" unless b_comment.nil?
+          Automatic::Log.puts(:info, message)
         else
-          print "#{t} [error] #{res.code} Error: #{b_url}\n"
+          Automatic::Log.puts(:error, "#{res.code} Error: #{b_url}")
         end
       }
     end

@@ -52,6 +52,21 @@ describe Automatic::Plugin::HatenaBookmark do
       proxy = Net::HTTP.stub(:new) { http }
       subject.post(url, comment)
     }
+
+    specify {
+      url = "http://www.google.com"
+      comment = "Can we trust them ?"
+
+      require 'net/http'
+      res = stub("res")
+      res.should_receive(:code).twice.and_return("400")
+      http = mock("http")
+      http.should_receive(:post).with("/atom/post", subject.toXml(url, comment),
+        subject.wsse("", "")).and_return(res)
+      http.should_receive(:start).and_yield(http)
+      proxy = Net::HTTP.stub(:new) { http }
+      subject.post(url, comment)
+    }
   end
 end
 
