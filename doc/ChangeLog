@@ -17,7 +17,7 @@
   * feedparser
   * log
 
-* Added Integration script on CI.
+* Added Integration Test Script for CI.
 
   * script/build
 
