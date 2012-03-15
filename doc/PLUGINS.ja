@@ -135,7 +135,7 @@ PublishHatenaBookmark
 送信する
 
 [レシピ記法]
-  - module: AutoBookmark
+  - module: PublishHatenaBookmark
     config:
       username: はてな ID
       passowrd: パスワード
@@ -151,8 +151,7 @@ PublishGoogleCalendar
  Google Calendar に予定を登録する
 
 [説明]
- item.title を当日の Google カレンダーに
-登録する
+ item.title を Google カレンダーに登録する
 
 [レシピ記法]
   - module: PublishGoogleCalendar
