@@ -167,6 +167,10 @@ plugins:
 自作したプラグインはホームディレクトリに置くと良い。
 (プラグインの作り方は後述する)
 
+以下のコマンドで自作したプラグインのためのサブディレクトリを自動生成できる。
+$ automatic-config scaffold
+(automatic-config の説明は後述する)
+
 
 ==========================
 ディレクトリとファイル構成
@@ -176,7 +180,10 @@ plugins:
 +- bin
 |   |
 |   +- automatic
-|        実行ファイル本体
+|   |    実行ファイル本体
+|   |
+|   +- automatic-config
+|        利用を補助するためのツール
 |
 +- config
 |   |
@@ -421,34 +428,35 @@ doc/PLUGINS.ja を参照
 
 
 
-====================
-その他のツールの説明
-====================
+================
+automatic-config
+================
 
-utils の下にはフィードを扱うための補助的なツールが
-置かれる。内容は以下のとおりである。
+automatic-config は補助的なツールである。
 
+[書式]
+$ automatic-config
+ サブコマンドの一覧を表示する
 
-名前
- utils/opml_parser.rb
+$ automatic-config scaffold
+ ホームディレクトリに ~/.automatic ディレクトリを生成する。
 
-説明
- 既存の RSS Reader の OPML から登録済みフィードの
-URL リストを抽出するのに使う。
+$ automatic-config autodiscovery <url>
+ 対象の URL をオートディスカバリで探知しフィードの URL を返す。
+(例)
+$ automatic-config autodiscovery http://id774.net/blog
+["http://id774.net/blog/feed/", "http://id774.net/blog/comments/feed/"]
 
-$ ruby opml_parser.rb > feeds.txt
+$ automatic-config opmlparser <opml path>
+ OPML ファイルを解析し URL を出力する。
+(例)
+$ automatic-config opmlparser opml.xml > feeds.txt
 
+$ automatic-config feedparser <url>
+ フィードを解析して内容を返す。
 
-名前
- utils/auto_discovery.rb
-
-説明
- 引数に指定した URL から購読対象のフィードを
-オートディスカバリで抽出する。
-
-$ ruby auto_discovery.rb "https://twitter.com/twitt"
-["https://twitter.com/statuses/user_timeline/4441691.rss",
- "https://twitter.com/favorites/4441691.rss"]
+$ automatic-config log <level> <message>
+ Automatic Ruby のログ形式でメッセージを出力する。
 
 
 

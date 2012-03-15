@@ -35,9 +35,9 @@ $ script/bootstrap
  If the ruby 1.8, necessary to manually install the gems in the Gemfile.
 
 
-========
-Start Up
-========
+===========
+Get Started
+===========
 
  To create of any recipe (see below).
 $ automatic -c your_recipe.yml
@@ -169,7 +169,13 @@ Plug-ins from the plugins directory (see below) will be loaded.
 If ~ /.automatic/plugins exists, is loaded into them as well.
 
 Put your own plug-ins in your home directory.
-(How to make the plug-in will be described later)
+(How to make the plug-in will be described later.)
+
+You can automatically generate a sub-directory for your own plug-ins
+with the following command.
+
+$ automatic-config scaffold
+(For a description of automatic-config will be described later.)
 
 
 ============================
@@ -180,7 +186,10 @@ Directory and file structure
 +-+ bin
 | |
 | +-- automatic
-|   The main file for run.
+| | The main file for run.
+| |
+| +-- automatic-config
+|   The tool for the auxiliary.
 |
 +-+ config
 | |
@@ -248,9 +257,6 @@ Directory and file structure
 | +-- bootstrap
 |   To set the environment, such as bundle install.
 |   (Only more than ruby 1.9)
-|
-+-- utils
-|   Directory for auxiliary tools.
 |
 +-- spec
 |   Directory for unit tests (Use RSpec).
@@ -396,34 +402,36 @@ Description of the plug-ins
 See doc/PLUGINS.
 
 
-==========================
-Description of other tools
-==========================
 
- Files under the utils are ancillary tools for dealing with feed.
-The contents are as follows.
+================
+automatic-config
+================
 
+automatic-config is the auxiliary tool.
 
-Name
- utils/opml_parser.rb
+[Syntax]
+$ automatic-config
+ To view a list of sub-command.
 
-Description
- Use to extract the url list from Opml feed of
-registered RSS Reader of existing.
+$ automatic-config scaffold
+ To generate a ~/.automatic directory in your home directory.
 
-$ ruby opml_parser.rb > feeds.txt
+$ automatic-config autodiscovery <url>
+ Return the URL of the feed of target detected by auto discovery.
+(ex.)
+$ automatic-config autodiscovery http://id774.net/blog
+["http://id774.net/blog/feed/", "http://id774.net/blog/comments/feed/"]
 
+$ automatic-config opmlparser <opml path>
+ To output the URLs to parse the OPML file.
+(ex.)
+$ automatic-config opmlparser opml.xml > feeds.txt
 
-Name
- utils/auto_discovery.rb
+$ automatic-config feedparser <url>
+ Return the contents to parse the feed.
 
-Description
- Extracted with auto-discovery subscribe to a feed
-from the URL specified in the argument.
-
-$ ruby auto_discovery.rb "https://twitter.com/twitt"
-["https://twitter.com/statuses/user_timeline/4441691.rss",
- "https://twitter.com/favorites/4441691.rss"]
+$ automatic-config log <level> <message>
+ To output log messages in the form of Automatic Ruby.
 
 
 
@@ -457,6 +465,7 @@ hashie
 activerecord
 gcalapi
 xml-simple
+feedbag
 
 For more information, see Gemfile.
 
