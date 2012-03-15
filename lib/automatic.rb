@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
-# Version::   12.03-devel
+# Version::   12.3.1
 # Created::   Feb 18, 2012
-# Updated::   Mar 12, 2012
+# Updated::   Mar 15, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -14,7 +14,7 @@ module Automatic
   require 'automatic/log'
   require 'automatic/feed_parser'
 
-  VERSION = "12.03-devel"
+  VERSION = "12.3.1"
   USER_DIR = "/.automatic"
 
   class << self

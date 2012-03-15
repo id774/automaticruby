@@ -1,8 +1,17 @@
+=== 12.3.1 / 2012-03-15
+
+* English Documents.
+
+* The user who installed the gem package be able to create own plugins.
+
+* Utils merged to automatic-config command.
+
+
 === 12.03 / 2012-03-07
 
-* Distribute as a gem library
+* Distribute as a gem library.
 
-* Plugins added
+* Plugins added.
 
   * CustomFeed::SVNLog
   * Notify::Ikachan
@@ -10,27 +19,27 @@
   * Filter::Image
   * Store::TargetLink
 
-* CI / Build scripts
+* CI / Build scripts.
 
   * script/bootstrap
 
-* Signficant Refactoring
+* Signficant Refactoring.
 
 
 === 12.02.1 / 2012-02-25
 
-* Point release
+* Point release.
 
   * Big Refactoring for core.
-	* Reorganization of the namespace.
+  * Reorganization of the namespace.
   * A few plugins added.
 
 
 === 12.02 / 2012-02-18
 
-* First release
+* First release.
 
   * Scratch of this script.
-	* Plugin existing only for hatenabookmark.
+  * Plugin existing only for hatenabookmark.
 
 

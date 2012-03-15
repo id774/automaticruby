@@ -26,7 +26,7 @@ module Automatic
       }
       raise NoPluginError, "unknown plugin named #{module_name}"
     end
- 
+
     def self.run(recipe)
       raise NoRecipeError if recipe.nil?
       pipeline = []

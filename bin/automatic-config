@@ -42,7 +42,7 @@ subparsers = {
     require 'automatic/opml'
     path = argv.shift
     if path.nil?
-      abort_with_usage("opmlparser", "<omml path>")
+      abort_with_usage("opmlparser", "<opml path>")
     end
     parser = Automatic::OPML::Parser.new(File.read(path))
     parser.each_outline {|opml, o|

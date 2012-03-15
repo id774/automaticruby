@@ -9,7 +9,7 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://fotologue.jp/sleepyrabbit/rss.xml
+        - http://instagram.yuyuweb.cc/rss
 
   - module: StorePermalink
     config:
@@ -22,5 +22,5 @@ plugins:
   - module: StoreTargetLink
     config:
       path: /tmp
-      interval: 1
+      interval: 2
 

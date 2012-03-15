@@ -9,21 +9,18 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://example.com/rss2
-
-  - module: FilterIgnore
-    config:
-      exclude:
-        - hoge
-        - fuga
+        - http://reretlet.tumblr.com/rss
 
   - module: StorePermalink
     config:
-      db: permalink.db
+      db: tumblr.db
 
-  - module: PublishHatenaBookmark
+  - module: FilterImage
+
+  - module: FilterTumblrResize
+
+  - module: StoreTargetLink
     config:
-      username: your_hatena_id
-      password: your_password
-      interval: 5
+      path: /tmp
+      interval: 2
 

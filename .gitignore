@@ -7,9 +7,11 @@ bin/autospec
 bin/cdiff
 bin/cucumber
 bin/decolor
+bin/feedbag
 bin/htmldiff
 bin/jeweler
 bin/ldiff
+bin/rcov
 bin/rdoc
 bin/ri
 bin/rspec

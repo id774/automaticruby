@@ -33,4 +33,3 @@ describe Automatic::Plugin::SubscriptionFeed do
     its(:run) { should have(1).feed }
   end
 end
-

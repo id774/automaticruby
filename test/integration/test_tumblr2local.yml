@@ -22,5 +22,5 @@ plugins:
   - module: StoreTargetLink
     config:
       path: /tmp
-      interval: 1
+      interval: 2
 

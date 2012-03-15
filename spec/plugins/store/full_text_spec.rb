@@ -1,4 +1,3 @@
-
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'store/full_text'
@@ -36,4 +35,3 @@ describe Automatic::Plugin::StoreFullText do
     }.should change(Automatic::Plugin::Blog, :count).by(0)
   end
 end
-

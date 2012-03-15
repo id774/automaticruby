@@ -69,4 +69,3 @@ describe Automatic::Plugin::HatenaBookmark do
     }
   end
 end
-

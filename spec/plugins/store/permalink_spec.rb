@@ -36,4 +36,3 @@ describe Automatic::Plugin::StorePermalink do
     }.should change(Automatic::Plugin::Permalink, :count).by(0)
   end
 end
-

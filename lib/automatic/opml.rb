@@ -26,7 +26,7 @@ module Automatic
         end
       }
     end
-    
+
     module DOM
       class Element
       include Enumerable
@@ -38,7 +38,7 @@ module Automatic
         end
         attr_accessor :parent
         attr_reader :attr, :children
-        
+
         def each
           yield self
           @children.each {|c|
@@ -47,13 +47,13 @@ module Automatic
             }
           }
         end
-        
+
         def <<(elem)
           elem.parent = self if elem.respond_to? :parent=
             @children << elem
           self
         end
-        
+
         def [](n)
           if n.is_a? String
           @attr[n]
@@ -61,7 +61,7 @@ module Automatic
             @children[n]
           end
         end
-        
+
         def []=(k,v)
           if k.is_a? String
             @attr[k] = v
@@ -69,43 +69,43 @@ module Automatic
             @children[k] = v
           end
         end
-        
+
         def text
           @attr['text']
         end
-        
+
         def type
           @attr['type']
         end
-        
+
         def is_comment?
           @attr['isComment']=='true'
         end
-        
+
         def is_breaakpoint?
           @attr['isBreakpoint']=='true'
         end
       end # Element
-      
+
       class OPML < Element
         def head
           @children.find {|x| x.is_a? Head }
         end
-        
+
         def body
           @children.find {|x| x.is_a? Body }
         end
       end
-      
+
       class Head < Element
       end
-      
+
       class Body < Element
         def outline
           @children.find {|x| x.is_a? Outline }
         end
       end
-      
+
       class Outline < Element
         def method_missing(name,*arg,&block)
           name = name.to_s
@@ -119,13 +119,13 @@ module Automatic
         end
       end
     end # Model
-    
+
     class Parser
       def initialize(port)
         @p = REXML::Parsers::PullParser.new(port)
         @opml = nil
       end
-      
+
       def parse_tree
         root = cur = nil
         while event=@p.pull
@@ -170,7 +170,7 @@ module Automatic
         end # while
         root
       end # parse_tree
-      
+
       def each_outline
         root = cur = nil
         while event=@p.pull
@@ -217,7 +217,7 @@ module Automatic
           end
         end # while
       end # each_outline
-      
+
       def read_text
         text = ""
         while event = @p.pull
@@ -237,4 +237,3 @@ module Automatic
     end # Parser
   end # OPML
 end
-

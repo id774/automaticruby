@@ -27,4 +27,3 @@ describe Automatic::Plugin::StoreTargetLink do
     end
   end
 end
-

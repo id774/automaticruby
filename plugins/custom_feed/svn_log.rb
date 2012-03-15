@@ -39,7 +39,7 @@ module Automatic::Plugin
     def base_url
       return @config['target'].gsub(/\/$/, "")
     end
-    
+
     def svn_log_argument
       return [
         base_url,

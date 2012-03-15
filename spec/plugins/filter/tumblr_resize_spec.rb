@@ -29,7 +29,7 @@ describe Automatic::Plugin::FilterTumblrResize do
         should == "http://29.media.tumblr.com/tumblr_m07wrcDBBF1qzoj1jo1_1280.jpg"
       }
     end
-  end  
+  end
 end
 
 describe Automatic::Plugin::FilterTumblrResize do
@@ -50,7 +50,7 @@ describe Automatic::Plugin::FilterTumblrResize do
         should == "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_1280.jpg"
       }
     end
-  end  
+  end
 end
 
 describe Automatic::Plugin::FilterTumblrResize do
@@ -71,7 +71,7 @@ describe Automatic::Plugin::FilterTumblrResize do
         should == "http://28.media.tumblr.com/tumblr_m07wtaxxSa1qzoj1jo1_1280.jpg"
       }
     end
-  end  
+  end
 end
 
 describe Automatic::Plugin::FilterTumblrResize do
@@ -98,5 +98,5 @@ describe Automatic::Plugin::FilterTumblrResize do
         should == "http://29.media.tumblr.com/tumblr_m07wrcDBBF1qzoj1jo1_1280.jpg"
       }
     end
-  end  
+  end
 end

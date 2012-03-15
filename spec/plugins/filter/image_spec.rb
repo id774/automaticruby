@@ -10,7 +10,7 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'filter/image'
 
-describe Automatic::Plugin::FilterImage do  
+describe Automatic::Plugin::FilterImage do
   context "with description with image tag" do
     subject {
       Automatic::Plugin::FilterImage.new({},
@@ -29,10 +29,10 @@ describe Automatic::Plugin::FilterImage do
         should == "http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png"
       }
     end
-  end  
+  end
 end
 
-describe Automatic::Plugin::FilterImage do  
+describe Automatic::Plugin::FilterImage do
   context "with description with image tag" do
     subject {
       Automatic::Plugin::FilterImage.new({},
@@ -51,5 +51,5 @@ describe Automatic::Plugin::FilterImage do
         should == "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg"
       }
     end
-  end  
+  end
 end

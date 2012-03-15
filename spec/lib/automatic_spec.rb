@@ -75,4 +75,3 @@ describe Automatic do
   end
 
 end
-

@@ -18,7 +18,6 @@ describe Automatic::Plugin::PublishConsole do
     output.should_receive(:puts).
       with("info", @pipeline[0].items[0].pretty_inspect)
     subject.instance_variable_set(:@output, output)
-    subject.run    
+    subject.run
   end
 end
-
