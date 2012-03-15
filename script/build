@@ -13,7 +13,7 @@ bundle exec rake simplecov
 run_test() {
     while [ $# -gt 0 ]
     do
-        bin/automatic -c $1
+        $RACK_ROOT/bin/automatic -c $1
         echo "Return Code is $?"
         shift
     done
