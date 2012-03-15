@@ -490,6 +490,7 @@ hashie
 activerecord
 gcalapi
 xml-simple
+feedbag
 
 詳細は Gemfile を参照
 

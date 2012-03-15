@@ -201,3 +201,5 @@ CustomFeedSVNLog
     config:
       target: http://redmine.rubyforge.org/svn
       fetch_items: 2 # If not specified, 30
+
+
