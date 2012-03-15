@@ -379,20 +379,28 @@ Test of the plug-in, pass the pipeline which will be the argument,
 to check the return value.
 
 
+============
+Binding Test
+============
+
+To combine more than one recipe under the test/integration.
+Put the recipe for the binding test.
+
+Before you check-in to the repository, run following
+command with ruby 1.9.
+$ script/build
+
+By this, all RSpec tests and binding tests will be conducted.
+You can check-in to the repository after all test successed.
+Otherwise, CI will fail.
+
+
 ======================
 Continuous Integration
 ======================
 
 CI is performed in Jenkins.
 http://id774.net/jenkins/
-
-
-============
-Binding Test
-============
-
-To combine more than one recipe under the test/integration.
-Put a recipe for performing the test.
 
 
 ===========================

@@ -11,4 +11,5 @@ plugins:
       target: http://redmine.rubyforge.org/svn
       fetch_items: 2
 
-  - module: PublishConsole
+  #- module: PublishConsole
+

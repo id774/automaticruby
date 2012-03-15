@@ -17,8 +17,6 @@ plugins:
 
   - module: FilterImage
 
-  - module: FilterTumblrResize
-
   - module: StoreTargetLink
     config:
       path: /tmp

@@ -16,7 +16,7 @@ plugins:
       link:
         - hoge
 
-  - module: PublishConsole
+  #- module: PublishConsole
 
   - module: StoreFullText
     config:

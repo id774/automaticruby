@@ -15,8 +15,11 @@ plugins:
     config:
       title:
         - Twitter
+
+  - module: FilterIgnore
+    config:
       description:
         - Facebook
 
-  - module: PublishConsole
+  #- module: PublishConsole
 

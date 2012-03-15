@@ -1,0 +1,30 @@
+#!/bin/sh
+set -ex
+
+export RACK_ROOT="."
+export RACK_ENV="test"
+export DATABASE_URL="$RACK_ROOT/db"
+
+ruby -v
+script/bootstrap
+
+bundle exec rake simplecov
+
+run_test() {
+    while [ $# -gt 0 ]
+    do
+        bin/automatic -c $1
+        echo "Return Code is $?"
+        shift
+    done
+}
+
+load_tests() {
+    for YAML_FILE in "$RACK_ROOT/test/integration/*.yml"
+    do
+        run_test $YAML_FILE
+    done
+    unset YAML_FILE
+}
+
+load_tests

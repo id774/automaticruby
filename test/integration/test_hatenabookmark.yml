@@ -22,5 +22,5 @@ plugins:
       password: password
       interval: 1
 
-  - module: PublishConsole
+  #- module: PublishConsole
 

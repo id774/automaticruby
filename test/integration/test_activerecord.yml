@@ -20,5 +20,5 @@ plugins:
     config:
       db: test_permalink.db
 
-  - module: PublishConsole
+  #- module: PublishConsole
 
