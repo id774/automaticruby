@@ -1,10 +1,25 @@
-=== 12.3.1 / 2012-03-15
+=== 12.3.1 / 2012-03-16
 
 * English Documents.
 
+  * doc/README
+  * doc/PLUGINS
+
 * The user who installed the gem package be able to create own plugins.
 
-* Utils merged to automatic-config command.
+  * ~/.automatic/plugins
+
+* Utils merged to automatic-config command and added following subcommand.
+
+  * scaffold
+  * autodiscovery
+  * opmlparser
+  * feedparser
+  * log
+
+* Added Integration script on CI.
+
+  * script/build
 
 
 === 12.03 / 2012-03-07
