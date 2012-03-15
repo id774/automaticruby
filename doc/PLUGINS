@@ -1,0 +1,205 @@
+===========================
+Description of the plug-ins
+===========================
+
+SubscriptionFeed
+----------------
+[Path]
+ /plugins/subscription/feed.rb
+
+[Abstract]
+ Subscribe to feed.
+
+[Syntax]
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - FEED
+        - FEED ...
+
+
+FilterIgnore
+------------
+[Path]
+ /plugins/filter/ignore.rb
+
+[Abstract]
+ To exclude the NG word.
+
+[Syntax]
+  - module: FilterIgnore
+    config:
+      exclude:
+        - KEYWORD
+        - KEYWORD ...
+
+
+FilterImage
+------------
+[Path]
+ /plugins/filter/image.rb
+
+[Abstract]
+ Rewrite the permalink to link of the image in the contents.
+ If there is no link of image, the permalink will be nil.
+
+[Syntax]
+  - module: FilterImage
+
+
+FilterTumblrResize
+--------------------
+[Path]
+ /plugins/filter/tumblr_resize.rb
+
+[Abstract]
+ To rewrite the permalink to the maximum size of
+ the Tumblr (High Res).
+
+[Assumption]
+ It has already been rewritten to perm link image link
+
+[Syntax]
+  - module: FilterTumblrResize
+
+
+StorePermalink
+--------------
+[Path]
+ /plugins/store/permalink.rb
+
+[Abstract]
+ To save a permanent link.
+ The duplicate permalink will be discarded.
+
+[Syntax]
+  - module: StoreBookmark
+    config:
+      db: DB_NAME
+
+
+StoreFullText
+-------------
+[Path]
+ /plugins/store/full_text.rb
+
+[Abstract]
+ To save a full text of contents.
+
+ Saved text can be viewed in the viewer below
+ https://github.com/id774/blog_viewer
+
+[Syntax]
+  - Module: StoreFullText
+    config:
+      db: DB_NAME
+
+
+StoreTargetLink
+---------------
+[Path]
+ /plugins/store/target_link.rb
+
+[Abstract]
+ To store target locally.
+ This emulate "Right click to save".
+
+[Syntax]
+  - Module: StoreTargetLink
+    config:
+      path: SAVE_TO_PATH
+      interval: INTERVAL_FOR_DOWNLOAD (in seconds.)
+
+
+PublishConsole
+--------------
+[Path]
+ /plugins/publish/console.rb
+
+[Abstract]
+ Output pipeline to the console.
+
+[Syntax]
+  - module: PublishConsole
+
+
+PublishHatenaBookmark
+---------------------
+[Path]
+ /plugins/publish/hatenabookmark.rb
+
+[Abstract]
+ To Hatena Bookmark (Social Bookmark).
+
+[Description]
+ To generate the XML for submission to
+ Hatena Bookmark API.
+
+[Syntax]
+  - Modu  - module: PublishHatenaBookmark
+    config:
+      username: HATENA_ID
+      passowrd: PASSWORD
+      interval: INTERVAL_FOR_BOOKMARK (in seconds.)
+
+
+PublishGoogleCalendar
+---------------------
+[Path]
+ /plugins/publish/google_calendar.rb
+
+[Abstract]
+ To register an appointment to Google Calendar.
+
+[Description]
+ Register item.title to Google Calendar.
+
+[Notation recipe]
+  - module: PublishGoogleCalendar
+    config:
+      username: GOOGLE_ACCOUNT
+      password: PASSWORD
+      interval: INTERVAL
+
+
+NotifyIkachan
+-------------
+[Path]
+ /plugins/notify/ikachan.rb
+
+[Abstract]
+ To send a message to ikachan.
+
+[Description]
+ POST to ikachan via HTTP.
+ ikachan is: http://blog.yappo.jp/yappo/archives/000760.html
+
+[Syntax]
+  - module: NotifyIkachan
+    config:
+      url: http://sample.com
+      port: 4979             # port number, the default is 4979.
+      channels: foo,bar,#baz # '#' is priced automatically, multiple by ','
+      command: notice        # privmsg,notice etc..
+      interval: 5            # post interval. (s)
+
+
+CustomFeedSVNLog
+----------------
+[Path]
+ /plugins/custom/feed_svn_log.rb
+
+[Abstract]
+ Get new revision info from SVN.
+
+[Description]
+ To get the number that is specified by fetch_items.
+
+[Notation recipe]
+  - Module: CustomFeedSVNLog
+  - module: CustomFeedSVNLog
+    config:
+      target: http://redmine.rubyforge.org/svn
+      fetch_items: 2 # If not specified, 30
+
+
