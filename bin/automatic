@@ -3,11 +3,12 @@
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
 # Created::   Feb 18, 2012
-# Updated::   Mar 12, 2012
+# Updated::   Mar 16, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 root_dir = File.expand_path("..", File.dirname(__FILE__))
+$:.unshift root_dir
 $:.unshift root_dir + '/lib'
 require 'automatic'
 require 'optparse'
