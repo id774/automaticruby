@@ -20,5 +20,5 @@ plugins:
 
   - module: StoreFullText
     config:
-      db: blog.db
+      db: test_blog.db
 

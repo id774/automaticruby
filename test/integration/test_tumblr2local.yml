@@ -9,11 +9,11 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://reretlet.tumblr.com/rss
+        - http://reblog.id774.net/rss
 
   - module: StorePermalink
     config:
-      db: image.db
+      db: test_tumblr.db
 
   - module: FilterImage
 

@@ -13,7 +13,7 @@ plugins:
 
   - module: StorePermalink
     config:
-      db: image.db
+      db: test_image.db
 
   - module: FilterImage
 

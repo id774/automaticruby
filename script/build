@@ -1,20 +1,33 @@
 #!/bin/sh
-set -ex
+#
+########################################################################
+# Integration Build Script
+#
+#  Maintainer: id774 <idnanashi@gmail.com>
+#
+#  v1.0 3/16,2012
+#       First.
+########################################################################
 
-export RACK_ROOT="."
-export RACK_ENV="test"
-export DATABASE_URL="$RACK_ROOT/db"
+kickstart() {
+    export RACK_ROOT="."
+    export RACK_ENV="test"
+    export DATABASE_URL="$RACK_ROOT/db"
+    ruby -v
+    test_config log info started.
+}
 
-ruby -v
-script/bootstrap
-
-bundle exec rake simplecov
+exec_rspec() {
+    $RACK_ROOT/bin/automatic -v
+    $RACK_ROOT/script/bootstrap
+    bundle exec $RACK_ROOT/bin/rake simplecov
+}
 
 run_test() {
     while [ $# -gt 0 ]
     do
         $RACK_ROOT/bin/automatic -c $1
-        echo "Return Code is $?"
+        test_config log info $?
         shift
     done
 }
@@ -27,4 +40,24 @@ load_tests() {
     unset YAML_FILE
 }
 
-load_tests
+test_config() {
+    $RACK_ROOT/bin/automatic-config $*
+}
+
+added_tests() {
+    test_config scaffold
+    test_config autodiscovery http://id774.net/blog/
+    test_config opmlparser "$RACK_ROOT/test/fixtures/sampleOPML.xml"
+    test_config feedparser http://id774.net/blog/feed/ > /dev/null
+    test_config log info finished.
+}
+
+main() {
+    kickstart
+    exec_rspec
+    load_tests
+    added_tests
+}
+
+set -ex
+main

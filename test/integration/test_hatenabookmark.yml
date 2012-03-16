@@ -16,6 +16,10 @@ plugins:
       link:
         - hoge
 
+  - module: StorePermalink
+    config:
+      db: test_permalink.db
+
   - module: PublishHatenaBookmark
     config:
       username: username
