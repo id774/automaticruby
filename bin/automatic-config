@@ -10,11 +10,13 @@
 root_dir = File.expand_path("..", File.dirname(__FILE__))
 $:.unshift root_dir + '/lib'
 
+require 'automatic'
 require 'rubygems'
 require 'optparse'
 
 parser = OptionParser.new { |opt|
 }
+parser.version = Automatic.const_get(:VERSION)
 
 def abort_with_usage(subcommand, message)
   top_filename = File.basename($0)
