@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.date = "2012-03-16"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
-  s.executables = ["automatic"]
+  s.executables = ["automatic", "automatic-config"]
   s.extra_rdoc_files = [
     "README.md"
   ]
@@ -23,20 +23,25 @@ Gem::Specification.new do |s|
     "VERSION",
     "automatic.gemspec",
     "bin/automatic",
+    "bin/automatic-config",
     "config/default.yml",
     "config/feed2console.yml",
     "db/.gitkeep",
     "doc/AUTHORS",
     "doc/COPYING",
     "doc/ChangeLog",
+    "doc/PLUGINS",
     "doc/PLUGINS.ja",
+    "doc/README",
     "doc/README.ja",
     "lib/automatic.rb",
     "lib/automatic/environment.rb",
     "lib/automatic/feed_parser.rb",
     "lib/automatic/log.rb",
+    "lib/automatic/opml.rb",
     "lib/automatic/pipeline.rb",
     "lib/automatic/recipe.rb",
+    "lib/config/validator.rb",
     "plugins/custom_feed/svn_log.rb",
     "plugins/filter/ignore.rb",
     "plugins/filter/image.rb",
@@ -51,6 +56,10 @@ Gem::Specification.new do |s|
     "plugins/store/target_link.rb",
     "plugins/subscription/feed.rb",
     "script/bootstrap",
+    "script/build",
+    "spec/lib/automatic/pipeline_spec.rb",
+    "spec/lib/automatic_spec.rb",
+    "spec/lib/pipeline_spec.rb",
     "spec/plugins/custom_feed/svn_log_spec.rb",
     "spec/plugins/filter/ignore_spec.rb",
     "spec/plugins/filter/image_spec.rb",
@@ -64,6 +73,8 @@ Gem::Specification.new do |s|
     "spec/plugins/store/target_link_spec.rb",
     "spec/plugins/subscription/feed_spec.rb",
     "spec/spec_helper.rb",
+    "spec/user_dir/plugins/store/mock.rb",
+    "test/fixtures/sampleOPML.xml",
     "test/integration/test_activerecord.yml",
     "test/integration/test_fulltext.yml",
     "test/integration/test_hatenabookmark.yml",
@@ -72,8 +83,6 @@ Gem::Specification.new do |s|
     "test/integration/test_image2local.yml",
     "test/integration/test_svnlog.yml",
     "test/integration/test_tumblr2local.yml",
-    "utils/auto_discovery.rb",
-    "utils/opml_parser.rb",
     "vendor/.gitkeep"
   ]
   s.homepage = "http://github.com/id774/automaticruby"
@@ -92,6 +101,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activerecord>, ["~> 3"])
       s.add_runtime_dependency(%q<gcalapi>, [">= 0"])
       s.add_runtime_dependency(%q<xml-simple>, [">= 0"])
+      s.add_runtime_dependency(%q<feedbag>, [">= 0"])
       s.add_development_dependency(%q<cucumber>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
@@ -102,6 +112,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<activerecord>, ["~> 3"])
       s.add_dependency(%q<gcalapi>, [">= 0"])
       s.add_dependency(%q<xml-simple>, [">= 0"])
+      s.add_dependency(%q<feedbag>, [">= 0"])
       s.add_dependency(%q<cucumber>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
@@ -113,6 +124,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<activerecord>, ["~> 3"])
     s.add_dependency(%q<gcalapi>, [">= 0"])
     s.add_dependency(%q<xml-simple>, [">= 0"])
+    s.add_dependency(%q<feedbag>, [">= 0"])
     s.add_dependency(%q<cucumber>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
