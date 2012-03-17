@@ -1,4 +1,4 @@
-# Version:20120307
+# Version:20120317
 
 source :rubygems
 
@@ -18,7 +18,7 @@ group :test do
 end
 
 group :development do
-  gem "cucumber", ">= 0"
-  gem "bundler", "~> 1.0.0"
-  gem "jeweler", "~> 1.8.3"
+  gem "cucumber"
+  gem "bundler"
+  gem "jeweler"
 end
