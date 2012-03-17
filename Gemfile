@@ -1,4 +1,4 @@
-# Version:20120317
+# Version:20120317-1
 
 source :rubygems
 source "http://gems.github.com"
@@ -17,7 +17,7 @@ group :test do
   gem 'rcov', :platforms => :mri_18
   gem 'simplecov'
   gem 'simplecov-rcov'
-  gem 'koseki-mocksmtpd'
+  gem 'boomerang-mocksmtpd'
 end
 
 group :development do
