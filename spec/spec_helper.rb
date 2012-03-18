@@ -11,9 +11,10 @@ if ENV['COVERAGE'] == 'on'
   require 'simplecov'
   require 'simplecov-rcov'
   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-  
+
   SimpleCov.start do
     add_filter "spec"
+    add_filter "vendor"
   end
 end
 
@@ -50,11 +51,11 @@ module AutomaticSpec
 
   class StubPipelineGenerator
     attr_reader :feeds
-  
+
   def initialize
       @feeds = []
     end
-    
+
     def feed(&block)
       feed_generator = StubFeedGenerator.new
       feed_generator.instance_eval(&block)
@@ -66,7 +67,7 @@ module AutomaticSpec
     def initialize
       @channel = RSS::Rss::Channel.new
     end
-    
+
     def feed
       rss = RSS::Rss.new([])
       rss.instance_variable_set(:@channel, @channel)
