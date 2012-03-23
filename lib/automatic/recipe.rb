@@ -1,6 +1,5 @@
 # Name::      Automatic::Recipe
 # Author::    ainame
-# Version::   12.02-devel
 # Created::   Feb 18, 2012
 # Updated::   Mar 12, 2012
 # Copyright:: 774 Copyright (c) 2012
