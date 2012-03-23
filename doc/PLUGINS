@@ -18,6 +18,18 @@ SubscriptionFeed
         - FEED ...
 
 
+FilterReverse
+-------------
+[Path]
+ /plugins/filter/reverse.rb
+
+[Abstract]
+ Sort feed by date.
+
+[Syntax]
+  - module: FilterReverse
+
+
 FilterIgnore
 ------------
 [Path]

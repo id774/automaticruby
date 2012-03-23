@@ -18,6 +18,18 @@ SubscriptionFeed
         - フィード名 ...
 
 
+FilterReverse
+-------------
+[パス]
+ /plugins/filter/reverse.rb
+
+[概要]
+ 日付の逆順にソートする
+
+[レシピ記法]
+  - module: FilterImage
+
+
 FilterIgnore
 ------------
 [パス]
