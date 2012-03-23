@@ -1,0 +1,21 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://www.google.com/alerts/feeds/01922355350745702683/544996148035630811
+        - http://www.google.com/alerts/feeds/01922355350745702683/18239124957297333757
+        - http://www.google.com/alerts/feeds/01922355350745702683/11755855657646433816
+
+  #- module: PublishConsole
+
+  - module: StoreFullText
+    config:
+      db: test_googlealert.db
+
