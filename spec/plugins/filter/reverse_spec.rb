@@ -19,10 +19,10 @@ describe Automatic::Plugin::FilterReverse do
           feed {
             item "http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png", "",
             "<img src=\"http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png\">",
-            "Fri, 23 Mar 2012 00:00:00 +0000"
+            "Fri, 23 Mar 2012 00:01:00 +0000"
             item "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg", "",
             "<img src=\"http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg\">",
-            "Fri, 23 Mar 2012 00:01:00 +0000"
+            "Fri, 23 Mar 2012 00:00:00 +0000"
           }})}
 
     describe "#run" do
@@ -30,9 +30,9 @@ describe Automatic::Plugin::FilterReverse do
 
       specify {
         subject.run
-        subject.instance_variable_get(:@pipeline)[0].items[1].link.
-        should == "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg"
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
+        should == "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg"
+        subject.instance_variable_get(:@pipeline)[0].items[1].link.
         should == "http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png"
       }
     end

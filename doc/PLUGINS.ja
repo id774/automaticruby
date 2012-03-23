@@ -24,7 +24,7 @@ FilterReverse
  /plugins/filter/reverse.rb
 
 [概要]
- 日付の逆順にソートする
+ 日付の昇順にソートする
 
 [レシピ記法]
   - module: FilterImage

@@ -24,7 +24,7 @@ FilterReverse
  /plugins/filter/reverse.rb
 
 [Abstract]
- Sort feed by date.
+ Sort feed by date asc.
 
 [Syntax]
   - module: FilterReverse
