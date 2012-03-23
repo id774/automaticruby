@@ -254,6 +254,9 @@ Directory and file structure
 |
 +-+ script
 | |
+| +-- build
+| | Run Integration Test that carried out on CI.
+| |
 | +-- bootstrap
 |   To set the environment, such as bundle install.
 |   (Only more than ruby 1.9)
@@ -262,6 +265,9 @@ Directory and file structure
 |   Directory for unit tests (Use RSpec).
 |
 +-+ test
+| |
+| +-- fixtures
+| | Fixtures for test.
 | |
 | +-- integration
 |   Directory for the Integration Test.
@@ -337,8 +343,9 @@ pipeline backs again as the return value.
 
  pipeline = []
  recipe.each_plugin { |plugin|
-   load_plugin(plugin.module)
-   klass = Automatic::Plugin.const_get(plugin.module)
+   mod = plugin.module
+   load_plugin(mod)
+   klass = Automatic::Plugin.const_get(mod)
    pipeline = klass.new(plugin.config, pipeline).run
  }
 

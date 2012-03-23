@@ -252,6 +252,9 @@ $ automatic-config scaffold
 |
 +- script
 |   |
+|   +- build
+|   |    CI で実施する結合試験をおこなう
+|   |
 |   +- bootstrap
 |        bundle install 等の環境設定をおこなう
 |        (ruby 1.9 以上のみ)
@@ -263,6 +266,9 @@ $ automatic-config scaffold
 |    ユニットテスト用ディレクトリ
 |
 +- test
+|   |
+|   +- fixtures
+|   |    テストでロードされるフィクスチャ
 |   |
 |   +- integration
 |        インテグレーションテスト用ディレクトリ
@@ -276,6 +282,9 @@ $ automatic-config scaffold
     |
     +- COPYING
     |    本ソフトウェアのライセンス
+    |
+    +- ChangeLog
+    |    更新履歴
     |
     +- PLUGINS.ja
     |    プラグインについてのドキュメント
@@ -361,8 +370,9 @@ Automatic::Pipeline とは
 
  pipeline = []
  recipe.each_plugin { |plugin|
-   load_plugin(plugin.module)
-   klass = Automatic::Plugin.const_get(plugin.module)
+   mod = plugin.module
+   load_plugin(mod)
+   klass = Automatic::Plugin.const_get(mod)
    pipeline = klass.new(plugin.config, pipeline).run
  }
 
