@@ -445,6 +445,11 @@ $ automatic-config opmlparser opml.xml > feeds.txt
 $ automatic-config feedparser <url>
  Return the contents to parse the feed.
 
+$ automatic-config inspect <url>
+ Return the URL of the feed of target detected by auto discovery.
+ Return the contents to parse the first feed further.
+ This inspects verify the target subscriptionable.
+
 $ automatic-config log <level> <message>
  To output log messages in the form of Automatic Ruby.
 

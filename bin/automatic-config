@@ -58,6 +58,15 @@ subparsers = {
     rss_results = Automatic::FeedParser.get_rss(url)
     pp rss_results
   },
+  'inspect' => lambda { |argv|
+    require 'automatic/feed_parser'
+    require 'feedbag'
+    url = argv.shift || abort_with_usage("inspect", "<url>")
+    feeds = Feedbag.find(url)
+    pp feeds
+    rss_results = Automatic::FeedParser.get_rss(feeds.pop)
+    pp rss_results
+  },
   'log' => lambda { |argv|
     require 'automatic/log'
     level = argv.shift || abort_with_usage("log", "<level> <message>")

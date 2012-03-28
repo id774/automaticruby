@@ -474,6 +474,11 @@ $ automatic-config opmlparser opml.xml > feeds.txt
 $ automatic-config feedparser <url>
  フィードを解析して内容を返す。
 
+$ automatic-config inspect <url>
+ 対象の URL をオートディスカバリで探知する。
+ さらに最初のフィードの URL を解析して内容を返す。
+ 目的のサイトのフィードを購読可能かどうか検証するのに使う。
+
 $ automatic-config log <level> <message>
  Automatic Ruby のログ形式でメッセージを出力する。
 
