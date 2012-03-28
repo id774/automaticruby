@@ -17,12 +17,21 @@ describe Automatic::Plugin::FilterReverse do
       Automatic::Plugin::FilterReverse.new({},
         AutomaticSpec.generate_pipeline {
           feed {
-            item "http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png", "",
-            "<img src=\"http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png\">",
-            "Fri, 23 Mar 2012 00:01:00 +0000"
-            item "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg", "",
-            "<img src=\"http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg\">",
-            "Fri, 23 Mar 2012 00:00:00 +0000"
+            item "http://aaa.png", "",
+            "<img src=\"http://aaa.png\">",
+            "Fri, 23 Mar 2012 00:10:00 +0000"
+            item "http://bbb.png", "",
+            "<img src=\"http://bbb.png\">",
+            "Fri, 25 Mar 2012 01:05:00 +0000"
+            item "http://ccc.png", "",
+            "<img src=\"http://ccc.png\">",
+            "Fri, 22 Mar 2012 00:15:00 +0000"
+            item "http://ddd.png", "",
+            "<img src=\"http://ddd.png\">",
+            "Fri, 23 Mar 2012 00:00:08 +0000"
+            item "http://eee.png", "",
+            "<img src=\"http://eee.png\">",
+            "Fri, 23 Nov 2012 00:09:00 +0000"
           }})}
 
     describe "#run" do
@@ -31,9 +40,15 @@ describe Automatic::Plugin::FilterReverse do
       specify {
         subject.run
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
-        should == "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg"
+        should == "http://ccc.png"
         subject.instance_variable_get(:@pipeline)[0].items[1].link.
-        should == "http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png"
+        should == "http://ddd.png"
+        subject.instance_variable_get(:@pipeline)[0].items[2].link.
+        should == "http://aaa.png"
+        subject.instance_variable_get(:@pipeline)[0].items[3].link.
+        should == "http://bbb.png"
+        subject.instance_variable_get(:@pipeline)[0].items[4].link.
+        should == "http://eee.png"
       }
     end
   end
