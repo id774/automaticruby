@@ -1,0 +1,21 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://b.hatena.ne.jp/Naruhodius/rss
+
+  - module: PublishMail
+    config:
+      port: 25
+      mailto: 774@id774.net
+      mailfrom: automatic@harpuia.id774.net
+
+  #- module: PublishConsole
+
