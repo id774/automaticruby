@@ -14,7 +14,7 @@ plugins:
   - module: PublishMail
     config:
       port: 25
-      mailto: 774@id774.net
+      mailto: plagger.receiver@gmail.com
       mailfrom: automatic@harpuia.id774.net
 
   #- module: PublishConsole
