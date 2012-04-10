@@ -86,7 +86,7 @@ We need your help.
 
 **CI**
 
-+ http://id774.net/jenkins/
++ http://jenkins.id774.net/jenkins/
 
 
 ChangeLog

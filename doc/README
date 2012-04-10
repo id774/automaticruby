@@ -304,7 +304,7 @@ RubyForge
 http://rubyforge.org/projects/automatic/
 
 CI
-http://id774.net/jenkins/
+http://jenkins.id774.net/jenkins/
 
 
 ===========
@@ -407,7 +407,7 @@ Continuous Integration
 ======================
 
 CI is performed in Jenkins.
-http://id774.net/jenkins/
+http://jenkins.id774.net/jenkins/
 
 
 ===========================

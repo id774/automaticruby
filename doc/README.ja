@@ -308,7 +308,7 @@ RubyForge
 http://rubyforge.org/projects/automatic/
 
 CI
-http://id774.net/jenkins/
+http://jenkins.id774.net/jenkins/
 
 
 プラグインを新しく作ったり、あるいはフレームワークを
@@ -436,7 +436,7 @@ $ script/build
 ========================
 
  CI は Jenkins でおこなう。
- http://id774.net/jenkins/
+ http://jenkins.id774.net/jenkins/
 
 
 ================
