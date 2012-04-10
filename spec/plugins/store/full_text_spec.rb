@@ -15,7 +15,7 @@ describe Automatic::Plugin::StoreFullText do
   it "should store 1 record for the new blog entry" do
     instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
-        feed { item "http://id774.net/blog/feed/" }
+        feed { item "http://blog.id774.net/blogs/feed/" }
       })
     
     lambda {
@@ -26,7 +26,7 @@ describe Automatic::Plugin::StoreFullText do
   it "should not store record for the existent blog entry" do
     instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
-        feed { item "http://id774.net/blog/feed/" }
+        feed { item "http://blog.id774.net/blogs/feed/" }
       })
     
     instance.run.should have(1).feed

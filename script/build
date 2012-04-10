@@ -46,9 +46,9 @@ test_config() {
 
 added_tests() {
     test_config scaffold
-    test_config autodiscovery http://id774.net/blog/
+    test_config autodiscovery http://blog.id774.net/blogs/
     test_config opmlparser "$RACK_ROOT/test/fixtures/sampleOPML.xml"
-    test_config feedparser http://id774.net/blog/feed/ > /dev/null
+    test_config feedparser http://blog.id774.net/blogs/feed/ > /dev/null
     test_config log info finished.
 }
 

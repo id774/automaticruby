@@ -434,8 +434,8 @@ $ automatic-config scaffold
 $ automatic-config autodiscovery <url>
  Return the URL of the feed of target detected by auto discovery.
 (ex.)
-$ automatic-config autodiscovery http://id774.net/blog
-["http://id774.net/blog/feed/", "http://id774.net/blog/comments/feed/"]
+$ automatic-config autodiscovery http://blog.id774.net/blogs
+["http://blog.id774.net/blogs/feed/", "http://blog.id774.net/blogs/comments/feed/"]
 
 $ automatic-config opmlparser <opml path>
  To output the URLs to parse the OPML file.

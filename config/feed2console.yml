@@ -9,7 +9,7 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://id774.net/blog/feed/
+        - http://blog.id774.net/blogs/feed/
 
   - module: PublishConsole
 
