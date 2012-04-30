@@ -1,3 +1,16 @@
+=== 12.4.0 / 2012-04-30
+
+* Inspect SubCommand added to automatic-config.
+
+* Added Plugins.
+
+  * Filter::Reverse
+	* Publish::SMTP
+	* Publish::Mail
+
+* Running all Integration Tests with CI.
+
+
 === 12.3.1 / 2012-03-16
 
 * English Documents.
