@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "12.3.1"
+  s.version = "12.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
-  s.date = "2012-03-16"
+  s.date = "2012-04-30"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
   s.executables = ["automatic", "automatic-config"]
