@@ -41,15 +41,17 @@ Gem::Specification.new do |s|
     "lib/automatic/opml.rb",
     "lib/automatic/pipeline.rb",
     "lib/automatic/recipe.rb",
-    "lib/config/validator.rb",
     "plugins/custom_feed/svn_log.rb",
     "plugins/filter/ignore.rb",
     "plugins/filter/image.rb",
+    "plugins/filter/reverse.rb",
     "plugins/filter/tumblr_resize.rb",
     "plugins/notify/ikachan.rb",
     "plugins/publish/console.rb",
     "plugins/publish/google_calendar.rb",
     "plugins/publish/hatena_bookmark.rb",
+    "plugins/publish/mail.rb",
+    "plugins/publish/smtp.rb",
     "plugins/store/full_text.rb",
     "plugins/store/permalink.rb",
     "plugins/store/store_database.rb",
@@ -63,11 +65,14 @@ Gem::Specification.new do |s|
     "spec/plugins/custom_feed/svn_log_spec.rb",
     "spec/plugins/filter/ignore_spec.rb",
     "spec/plugins/filter/image_spec.rb",
+    "spec/plugins/filter/reverse_spec.rb",
     "spec/plugins/filter/tumblr_resize_spec.rb",
     "spec/plugins/notify/ikachan_spec.rb",
     "spec/plugins/publish/console_spec.rb",
     "spec/plugins/publish/google_calendar_spec.rb",
     "spec/plugins/publish/hatena_bookmark_spec.rb",
+    "spec/plugins/publish/mail_spec.rb",
+    "spec/plugins/publish/smtp_spec.rb",
     "spec/plugins/store/full_text_spec.rb",
     "spec/plugins/store/permalink_spec.rb",
     "spec/plugins/store/target_link_spec.rb",
@@ -77,10 +82,13 @@ Gem::Specification.new do |s|
     "test/fixtures/sampleOPML.xml",
     "test/integration/test_activerecord.yml",
     "test/integration/test_fulltext.yml",
+    "test/integration/test_googlealert.yml",
     "test/integration/test_hatenabookmark.yml",
     "test/integration/test_ignore.yml",
     "test/integration/test_ignore2.yml",
     "test/integration/test_image2local.yml",
+    "test/integration/test_mail.yml",
+    "test/integration/test_reverse.yml",
     "test/integration/test_svnlog.yml",
     "test/integration/test_tumblr2local.yml",
     "vendor/.gitkeep"
@@ -88,7 +96,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/id774/automaticruby"
   s.licenses = ["GPL"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.17"
+  s.rubygems_version = "1.8.19"
   s.summary = "Automatic Ruby"
 
   if s.respond_to? :specification_version then
@@ -99,35 +107,38 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activesupport>, ["~> 3"])
       s.add_runtime_dependency(%q<hashie>, [">= 0"])
       s.add_runtime_dependency(%q<activerecord>, ["~> 3"])
+      s.add_runtime_dependency(%q<actionmailer>, ["~> 3"])
       s.add_runtime_dependency(%q<gcalapi>, [">= 0"])
       s.add_runtime_dependency(%q<xml-simple>, [">= 0"])
       s.add_runtime_dependency(%q<feedbag>, [">= 0"])
       s.add_development_dependency(%q<cucumber>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
+      s.add_development_dependency(%q<bundler>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
       s.add_dependency(%q<sqlite3>, [">= 0"])
       s.add_dependency(%q<activesupport>, ["~> 3"])
       s.add_dependency(%q<hashie>, [">= 0"])
       s.add_dependency(%q<activerecord>, ["~> 3"])
+      s.add_dependency(%q<actionmailer>, ["~> 3"])
       s.add_dependency(%q<gcalapi>, [">= 0"])
       s.add_dependency(%q<xml-simple>, [">= 0"])
       s.add_dependency(%q<feedbag>, [">= 0"])
       s.add_dependency(%q<cucumber>, [">= 0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
+      s.add_dependency(%q<bundler>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
     end
   else
     s.add_dependency(%q<sqlite3>, [">= 0"])
     s.add_dependency(%q<activesupport>, ["~> 3"])
     s.add_dependency(%q<hashie>, [">= 0"])
     s.add_dependency(%q<activerecord>, ["~> 3"])
+    s.add_dependency(%q<actionmailer>, ["~> 3"])
     s.add_dependency(%q<gcalapi>, [">= 0"])
     s.add_dependency(%q<xml-simple>, [">= 0"])
     s.add_dependency(%q<feedbag>, [">= 0"])
     s.add_dependency(%q<cucumber>, [">= 0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
+    s.add_dependency(%q<bundler>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
   end
 end
 
