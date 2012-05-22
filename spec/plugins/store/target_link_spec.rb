@@ -21,7 +21,6 @@ describe Automatic::Plugin::StoreTargetLink do
         AutomaticSpec.generate_pipeline {
           feed { item "http://digithoughts.com/rss" }
         })
-      
       instance.run.should have(1).feed
       (Pathname(dir)+"rss").should be_exist
     end

@@ -12,22 +12,22 @@ require 'automatic/pipeline'
 
 TEST_MODULES = ["SubscriptionFeed", "FilterIgnore"] if TEST_MODULES.nil?
 
-describe Automatic::Pipeline do 
-  describe "in default dir" do 
-    before do 
+describe Automatic::Pipeline do
+  describe "in default dir" do
+    before do
       Automatic.root_dir = File.expand_path(File.join(File.dirname(__FILE__), "../../"))
       Automatic.user_dir = nil
     end
-    
+
     describe "#load_plugin" do
-      it "raise no plugin error" do 
-        lambda{ 
+      it "raise no plugin error" do
+        lambda{
           Automatic::Pipeline.load_plugin "FooBar"
         }.should raise_exception(Automatic::NoPluginError,
           /unknown plugin named FooBar/)
       end
 
-      it "correctly load module" do 
+      it "correctly load module" do
         TEST_MODULES.each do |mod|
           Automatic::Pipeline.load_plugin mod.to_s
           Automatic::Plugin.const_get(mod).class.should == Class
@@ -47,14 +47,14 @@ describe Automatic::Pipeline do
     end
   end
 
-  describe "in user dir" do 
-    before do 
+  describe "in user dir" do
+    before do
       Automatic.root_dir = File.expand_path(File.join(File.dirname(__FILE__), "../../"))
       Automatic.user_dir = File.expand_path(File.join(File.dirname(__FILE__), "../user_dir/"))
     end
 
     describe "#load_plugin" do
-      it "correctly load module" do 
+      it "correctly load module" do
         # StoreMock is the mock class that it return pipeline.
         mock = "StoreMock"
         Automatic::Pipeline.load_plugin mock

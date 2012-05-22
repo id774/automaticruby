@@ -13,7 +13,7 @@ describe Automatic::Plugin::FilterIgnore do
           feed { item "http://google.com" }
         })
     }
-    
+
     describe "#run" do
       its(:run) { should have(2).feeds }
     end
@@ -29,7 +29,7 @@ describe Automatic::Plugin::FilterIgnore do
           feed { item "http://google.com" }
         })
     }
-    
+
     describe "#run" do
       its(:run) { should have(2).feeds }
     end
@@ -45,7 +45,7 @@ describe Automatic::Plugin::FilterIgnore do
           feed { item "http://google.com" }
         })
     }
-    
+
     describe "#run" do
       its(:run) { should have(1).feeds }
     end

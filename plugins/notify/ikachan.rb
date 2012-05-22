@@ -45,7 +45,7 @@ module Automatic::Plugin
     end
 
     private
-    
+
     def build_message(link, title)
       message = ""
       message += "#{title.to_s} - " unless title.blank?

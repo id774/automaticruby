@@ -47,7 +47,6 @@ module Automatic::Plugin
 
       cal = GoogleCalendar::Calendar.new(GoogleCalendar::Service.new(
           @user["username"], @user["password"]), @feed)
-      
       event       = cal.create_event
       event.title = text
       event.st    = Time.mktime(date.year, date.month, date.day)

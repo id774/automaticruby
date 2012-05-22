@@ -18,7 +18,7 @@ describe Automatic::Plugin::StorePermalink do
       AutomaticSpec.generate_pipeline {
         feed { item "http://github.com" }
       })
-    
+
     lambda {
       instance.run.should have(1).feed
     }.should change(Automatic::Plugin::Permalink, :count).by(1)

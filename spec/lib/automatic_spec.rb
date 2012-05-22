@@ -30,46 +30,46 @@ describe Automatic do
   end
 
   describe "#user_dir= in test env" do 
-    before(:all) do 
+    before(:all) do
       Automatic.user_dir = File.join(APP_ROOT, "spec/user_dir")
     end
 
-    describe "#user_dir" do 
-      it "return valid value" do 
+    describe "#user_dir" do
+      it "return valid value" do
         Automatic.user_dir.should == File.join(APP_ROOT, "spec/user_dir")
       end
     end
 
-    describe "#user_plugins_dir" do 
-      it "return valid value" do 
+    describe "#user_plugins_dir" do
+      it "return valid value" do
         Automatic.user_plugins_dir.should == File.join(APP_ROOT, "spec/user_dir/plugins")
       end
     end
 
-    after(:all) do 
+    after(:all) do
       Automatic.user_dir = nil
     end
   end
 
-  describe "#set_user_dir in other env" do 
-    before(:all) do 
+  describe "#set_user_dir in other env" do
+    before(:all) do
       ENV["AUTOMATIC_RUBY_ENV"] = "other"
       Automatic.user_dir = nil
     end
 
-    describe "#user_dir" do 
-      it "return valid value" do 
+    describe "#user_dir" do
+      it "return valid value" do
         Automatic.user_dir.should == File.expand_path("~/") + "/.automatic"
       end
     end
 
-    describe "#user_plugins_dir" do 
-      it "return valid value" do 
+    describe "#user_plugins_dir" do
+      it "return valid value" do
         Automatic.user_plugins_dir.should == File.expand_path("~/") + "/.automatic/plugins"
       end
     end
 
-    after(:all) do 
+    after(:all) do
       ENV["AUTOMATIC_RUBY_ENV"] = "test"
     end
   end

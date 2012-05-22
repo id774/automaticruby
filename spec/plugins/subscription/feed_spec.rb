@@ -8,7 +8,7 @@ describe Automatic::Plugin::SubscriptionFeed do
       Automatic::Plugin::SubscriptionFeed.new(
         { 'feeds' => [] })
     }
-    
+
     its(:run) { should be_empty }
   end
 

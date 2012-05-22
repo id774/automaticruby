@@ -29,10 +29,10 @@ module Automatic::Plugin
       # Unique value
       nonce = [Time.now.to_i.to_s].pack('m').gsub(/\n/, '')
       now = Time.now.utc.iso8601
-      
+
       # Base64 encoding for SHA1 Digested strings
       digest = [Digest::SHA1.digest(nonce + now + password)].pack("m").gsub(/\n/, '')
-      
+
       {'X-WSSE' => sprintf(
                            %Q<UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s">,
                            hatena_id, digest, nonce, now)

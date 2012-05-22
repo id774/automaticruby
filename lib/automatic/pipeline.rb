@@ -20,7 +20,7 @@ module Automatic
           Automatic.plugins_dir + "/*"].each{ |dir|
         subdir = File.basename dir
         if /#{subdir}_(.*)$/ =~ module_name.underscore
-          path = dir + "/#{$1}.rb"        
+          path = dir + "/#{$1}.rb"
           return Automatic::Plugin.autoload module_name.to_sym, path.to_s if File.exists? path
         end
       }

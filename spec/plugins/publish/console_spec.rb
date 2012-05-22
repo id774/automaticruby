@@ -8,7 +8,7 @@ describe Automatic::Plugin::PublishConsole do
       feed { item "http://github.com" }
     }
   end
-  
+
   subject {
     Automatic::Plugin::PublishConsole.new({}, @pipeline)
   }

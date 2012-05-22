@@ -11,13 +11,13 @@ describe Automatic::Plugin::StoreFullText do
     db_path.delete if db_path.exist?
     Automatic::Plugin::StoreFullText.new({"db" => @db_filename}).run
   end
-  
+
   it "should store 1 record for the new blog entry" do
     instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed { item "http://blog.id774.net/blogs/feed/" }
       })
-    
+
     lambda {
       instance.run.should have(1).feed
     }.should change(Automatic::Plugin::Blog, :count).by(1)
@@ -28,7 +28,7 @@ describe Automatic::Plugin::StoreFullText do
       AutomaticSpec.generate_pipeline {
         feed { item "http://blog.id774.net/blogs/feed/" }
       })
-    
+
     instance.run.should have(1).feed
     lambda {
       instance.run.should have(0).feed

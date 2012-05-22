@@ -14,7 +14,7 @@ module Automatic::Plugin
 
   class StoreFullText
     include Automatic::Plugin::StoreDatabase
-    
+
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline

@@ -25,7 +25,7 @@ module Automatic
       self.user_dir = args[:user_dir]
       Automatic::Pipeline.run(args[:recipe])
     end
-    
+
     def plugins_dir
       File.join(@root_dir, "plugins")
     end

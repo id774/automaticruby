@@ -30,7 +30,7 @@ module Automatic
     module DOM
       class Element
       include Enumerable
-        
+
         def initialize
           @attr = {}
           @parent = nil

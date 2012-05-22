@@ -8,7 +8,7 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 require 'plugins/store/store_database'
 
-module Automatic::Plugin  
+module Automatic::Plugin
   class Permalink < ActiveRecord::Base
   end
 
@@ -24,9 +24,9 @@ module Automatic::Plugin
       return {
         :url => :string,
         :created_at => :string
-      } 
+      }
     end
-    
+
     def unique_key
       return :url
     end
@@ -34,7 +34,7 @@ module Automatic::Plugin
     def model_class
       return Automatic::Plugin::Permalink
     end
-    
+
     def run
       return for_each_new_feed { |feed|
         Permalink.create(
