@@ -1,0 +1,26 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: CustomFeedURI
+    config:
+      urls:
+        - http://reblog.id774.net/
+
+  - module: FilterLink
+
+  - module: FilterJpeg
+
+  - module: StoreLink
+    config:
+      db: test_link.db
+
+  - module: StoreTarget
+    config:
+      path: /tmp
+      interval: 2
+

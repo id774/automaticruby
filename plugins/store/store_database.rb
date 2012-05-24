@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Store::Database
 # Author::    kzgs
 # Created::   Feb 27, 2012
-# Updated::   Feb 29, 2012
+# Updated::   May 24, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -10,6 +10,23 @@ require 'active_record'
 
 module Automatic::Plugin
   module StoreDatabase
+    def for_each_new_link
+      prepare_database
+      existing_records = model_class.find(:all)
+      return_feeds = []
+      @pipeline.each { |link|
+        unless link.nil?
+          new_link = false
+          unless existing_records.detect { |b| b.try(unique_key) == link }
+            yield(link)
+            new_link = true
+          end
+          return_feeds << link if new_link
+        end
+      }
+      return_feeds
+    end
+
     def for_each_new_feed
       prepare_database
       existing_records = model_class.find(:all)
