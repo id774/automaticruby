@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Store::Database
 # Author::    kzgs
 # Created::   Feb 27, 2012
-# Updated::   May 24, 2012
+# Updated::   May 28, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -13,7 +13,7 @@ module Automatic::Plugin
     def for_each_new_link
       prepare_database
       existing_records = model_class.find(:all)
-      return_feeds = []
+      return_html = []
       @pipeline.each { |link|
         unless link.nil?
           new_link = false
@@ -21,10 +21,10 @@ module Automatic::Plugin
             yield(link)
             new_link = true
           end
-          return_feeds << link if new_link
+          return_html << link if new_link
         end
       }
-      return_feeds
+      return_html
     end
 
     def for_each_new_feed

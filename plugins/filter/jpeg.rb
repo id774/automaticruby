@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Filter::Jpeg
 # Author::    774 <http://id774.net>
 # Created::   May 24, 2012
-# Updated::   May 24, 2012
+# Updated::   May 28, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -15,15 +15,15 @@ module Automatic::Plugin
     end
 
     def run
-      return_feeds = []
-      @pipeline.each {|feeds|
-        unless feeds.nil?
-          feeds.scan(/(.*?\.jp*g$)/) { |matched|
-            return_feeds << matched.join(" ")
+      return_html = []
+      @pipeline.each {|html|
+        unless html.nil?
+          html.scan(/(.*?\.jp*g$)/) { |matched|
+            return_html << matched.join(" ")
           }
         end
       }
-      return_feeds
+      return_html
     end
   end
 end

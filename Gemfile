@@ -11,6 +11,7 @@ gem 'actionmailer', '~>3'
 gem 'gcalapi'
 gem 'xml-simple'
 gem 'feedbag'
+gem 'hpricot'
 
 group :test do
   gem 'rspec'
