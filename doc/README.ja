@@ -382,6 +382,11 @@ Automatic::Pipeline とは
 
  この機構を本フレームワークでは Automatic::Pipeline と呼ぶ。
 
+ pipeline の中身は任意のオブジェクトである。
+ RSS 、 HTML 、その他様々なフォーマットを格納して良い。
+ ただし、プラグインを組み合わせるとき前のプラグインの出力と
+次のプラグインの入力のデータフォーマットが一致する必要がある。
+
 
 ====================
 プラグインの実装規約
@@ -515,6 +520,7 @@ activerecord
 gcalapi
 xml-simple
 feedbag
+hpricot
 
 詳細は Gemfile を参照
 
