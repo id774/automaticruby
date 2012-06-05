@@ -7,6 +7,12 @@ SubscriptionFeed
 [パス]
  /plugins/subscription/feed.rb
 
+[入力]
+ 無し
+
+[出力]
+ フィード
+
 [概要]
  フィードを購読する
 
@@ -23,6 +29,12 @@ FilterReverse
 [パス]
  /plugins/filter/reverse.rb
 
+[入力]
+ フィード
+
+[出力]
+ フィード
+
 [概要]
  日付の昇順にソートする
 
@@ -34,6 +46,12 @@ FilterIgnore
 ------------
 [パス]
  /plugins/filter/ignore.rb
+
+[入力]
+ フィード
+
+[出力]
+ フィード
 
 [概要]
  NG ワードを除外する
@@ -51,6 +69,12 @@ FilterImage
 [パス]
  /plugins/filter/image.rb
 
+[入力]
+ フィード
+
+[出力]
+ フィード
+
 [概要]
  パーマリンクを本文中の画像のリンクに書き換える
  画像のリンクが無い場合は nil にする
@@ -63,6 +87,12 @@ FilterTumblrResize
 --------------------
 [パス]
  /plugins/filter/tumblr_resize.rb
+
+[入力]
+ フィード
+
+[出力]
+ フィード
 
 [概要]
  パーマリンクを Tumblr の最大サイズ
@@ -80,6 +110,12 @@ StorePermalink
 [パス]
  /plugins/store/permalink.rb
 
+[入力]
+ フィード
+
+[出力]
+ フィード
+
 [概要]
  パーマリンクを保存する
  重複したパーマリンクは破棄する
@@ -94,6 +130,12 @@ StoreFullText
 -------------
 [パス]
  /plugins/store/full_text.rb
+
+[入力]
+ フィード
+
+[出力]
+ フィード
 
 [概要]
  フィード全文を DB に保存する
@@ -112,6 +154,12 @@ StoreTargetLink
 [パス]
  /plugins/store/target_link.rb
 
+[入力]
+ フィード
+
+[出力]
+ フィード
+
 [概要]
  リンク先のコンテンツをローカルに保存する
 
@@ -127,6 +175,12 @@ PublishConsole
 [パス]
  /plugins/publish/console.rb
 
+[入力]
+ フィード
+
+[出力]
+ フィード
+
 [概要]
  パイプラインをコンソールに出力する
 
@@ -141,6 +195,12 @@ PublishHatenaBookmark
 
 [概要]
  はてなブックマークをする
+
+[入力]
+ フィード
+
+[出力]
+ フィード
 
 [説明]
  はてなブックマーク API への投稿用 XML を生成し
@@ -162,6 +222,12 @@ PublishGoogleCalendar
 [概要]
  Google Calendar に予定を登録する
 
+[入力]
+ フィード
+
+[出力]
+ フィード
+
 [説明]
  item.title を Google カレンダーに登録する
 
@@ -181,6 +247,12 @@ NotifyIkachan
 [概要]
  ikachan へメッセージを送信する
 
+[入力]
+ フィード
+
+[出力]
+ フィード
+
 [説明]
  ikachan へ HTTP 経由で POST する
  ikachan とは: http://blog.yappo.jp/yappo/archives/000760.html
@@ -199,6 +271,12 @@ CustomFeedSVNLog
 ----------------
 [パス]
  /plugins/custom/feed_svn_log.rb
+
+[入力]
+ フィード
+
+[出力]
+ フィード
 
 [概要]
  SVN から新しいリビジョン情報を取得する

@@ -7,6 +7,12 @@ SubscriptionFeed
 [Path]
  /plugins/subscription/feed.rb
 
+[Input]
+ None
+
+[Output]
+ Feed
+
 [Abstract]
  Subscribe to feed.
 
@@ -23,6 +29,12 @@ FilterReverse
 [Path]
  /plugins/filter/reverse.rb
 
+[Input]
+ None
+
+[Output]
+ Feed
+
 [Abstract]
  Sort feed by date asc.
 
@@ -34,6 +46,12 @@ FilterIgnore
 ------------
 [Path]
  /plugins/filter/ignore.rb
+
+[Input]
+ None
+
+[Output]
+ Feed
 
 [Abstract]
  To exclude the NG word.
@@ -51,6 +69,12 @@ FilterImage
 [Path]
  /plugins/filter/image.rb
 
+[Input]
+ None
+
+[Output]
+ Feed
+
 [Abstract]
  Rewrite the permalink to link of the image in the contents.
  If there is no link of image, the permalink will be nil.
@@ -63,6 +87,12 @@ FilterTumblrResize
 --------------------
 [Path]
  /plugins/filter/tumblr_resize.rb
+
+[Input]
+ None
+
+[Output]
+ Feed
 
 [Abstract]
  To rewrite the permalink to the maximum size of
@@ -80,6 +110,12 @@ StorePermalink
 [Path]
  /plugins/store/permalink.rb
 
+[Input]
+ None
+
+[Output]
+ Feed
+
 [Abstract]
  To save a permanent link.
  The duplicate permalink will be discarded.
@@ -94,6 +130,12 @@ StoreFullText
 -------------
 [Path]
  /plugins/store/full_text.rb
+
+[Input]
+ None
+
+[Output]
+ Feed
 
 [Abstract]
  To save a full text of contents.
@@ -112,6 +154,12 @@ StoreTargetLink
 [Path]
  /plugins/store/target_link.rb
 
+[Input]
+ None
+
+[Output]
+ Feed
+
 [Abstract]
  To store target locally.
  This emulate "Right click to save".
@@ -128,6 +176,12 @@ PublishConsole
 [Path]
  /plugins/publish/console.rb
 
+[Input]
+ None
+
+[Output]
+ Feed
+
 [Abstract]
  Output pipeline to the console.
 
@@ -139,6 +193,12 @@ PublishHatenaBookmark
 ---------------------
 [Path]
  /plugins/publish/hatenabookmark.rb
+
+[Input]
+ None
+
+[Output]
+ Feed
 
 [Abstract]
  To Hatena Bookmark (Social Bookmark).
@@ -160,6 +220,12 @@ PublishGoogleCalendar
 [Path]
  /plugins/publish/google_calendar.rb
 
+[Input]
+ None
+
+[Output]
+ Feed
+
 [Abstract]
  To register an appointment to Google Calendar.
 
@@ -178,6 +244,12 @@ NotifyIkachan
 -------------
 [Path]
  /plugins/notify/ikachan.rb
+
+[Input]
+ None
+
+[Output]
+ Feed
 
 [Abstract]
  To send a message to ikachan.
@@ -200,6 +272,12 @@ CustomFeedSVNLog
 ----------------
 [Path]
  /plugins/custom/feed_svn_log.rb
+
+[Input]
+ None
+
+[Output]
+ Feed
 
 [Abstract]
  Get new revision info from SVN.
