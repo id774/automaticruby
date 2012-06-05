@@ -307,10 +307,28 @@ CustomFeedURI
  http/ftp の URL をファイルオブジェクトとして開く
 
 [レシピ記法]
-  - module: CustomFeedSVNLog
+  - module: CustomFeedURI
     config:
       url:
         - URL
         - URL ...
+
+
+FilterLink
+------------
+[パス]
+ /plugins/filter/link.rb
+
+[入力]
+ ファイルオブジェクト
+
+[出力]
+ HTML
+
+[概要]
+ HTML の a リンクのみを抽出する
+
+[レシピ記法]
+  - module: FilterLink
 
 

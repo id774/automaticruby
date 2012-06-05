@@ -307,10 +307,28 @@ CustomFeedURI
  Open http or ftp URL to file object.
 
 [Syntax]
-  - module: CustomFeedSVNLog
+  - module: CustomFeedURI
     config:
       url:
         - URL
         - URL ...
+
+
+FilterLink
+------------
+[Path]
+ /plugins/filter/link.rb
+
+[Input]
+ File Object
+
+[Output]
+ HTML
+
+[Description]
+ Extract a link in HTML.
+
+[Syntax]
+  - module: FilterLink
 
 
