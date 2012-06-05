@@ -270,10 +270,10 @@ NotifyIkachan
 CustomFeedSVNLog
 ----------------
 [パス]
- /plugins/custom/feed_svn_log.rb
+ /plugins/custom_feed/svn_log.rb
 
 [入力]
- フィード
+ 無し
 
 [出力]
  フィード
@@ -290,5 +290,27 @@ CustomFeedSVNLog
     config:
       target: http://redmine.rubyforge.org/svn
       fetch_items: 2 # 指定されない場合は 30
+
+
+CustomFeedURI
+-------------
+[パス]
+ /plugins/custom_feed/uri.rb
+
+[入力]
+ 無し
+
+[出力]
+ ファイルオブジェクト
+
+[概要]
+ http/ftp の URL をファイルオブジェクトとして開く
+
+[レシピ記法]
+  - module: CustomFeedSVNLog
+    config:
+      url:
+        - URL
+        - URL ...
 
 

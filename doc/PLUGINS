@@ -232,7 +232,7 @@ PublishGoogleCalendar
 [Description]
  Register item.title to Google Calendar.
 
-[Notation recipe]
+[Syntax]
   - module: PublishGoogleCalendar
     config:
       username: GOOGLE_ACCOUNT
@@ -271,10 +271,10 @@ NotifyIkachan
 CustomFeedSVNLog
 ----------------
 [Path]
- /plugins/custom/feed_svn_log.rb
+ /plugins/custom_feed/svn_log.rb
 
 [Input]
- Feed
+ None
 
 [Output]
  Feed
@@ -285,11 +285,32 @@ CustomFeedSVNLog
 [Description]
  To get the number that is specified by fetch_items.
 
-[Notation recipe]
-  - Module: CustomFeedSVNLog
+[Syntax]
   - module: CustomFeedSVNLog
     config:
       target: http://redmine.rubyforge.org/svn
       fetch_items: 2 # If not specified, 30
+
+
+CustomFeedURI
+-------------
+[Path]
+ /plugins/custom_feed/uri.rb
+
+[Input]
+ None
+
+[Output]
+ File Object
+
+[Description]
+ Open http or ftp URL to file object.
+
+[Syntax]
+  - module: CustomFeedSVNLog
+    config:
+      url:
+        - URL
+        - URL ...
 
 
