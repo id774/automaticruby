@@ -315,7 +315,7 @@ CustomFeedURI
 
 
 FilterLink
-------------
+----------
 [パス]
  /plugins/filter/link.rb
 
@@ -332,3 +332,40 @@ FilterLink
   - module: FilterLink
 
 
+FilterJpeg
+----------
+[パス]
+ /plugins/filter/jpeg.rb
+
+[入力]
+ HTML
+
+[出力]
+ HTML
+
+[概要]
+ 末尾が jp*g なリンクのみを抽出する
+
+[レシピ記法]
+  - module: FilterJpeg
+
+
+StoreTarget
+-----------
+[パス]
+ /plugins/store/target.rb
+
+[入力]
+ HTML
+
+[出力]
+ HTML
+
+[概要]
+ リンク先のコンテンツをローカルに保存する
+
+[レシピ記法]
+  - module: StoreTarget
+    config:
+      path: 保存先のフォルダ
+      interval: 保存する間隔 (秒)

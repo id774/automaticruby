@@ -315,7 +315,7 @@ CustomFeedURI
 
 
 FilterLink
-------------
+----------
 [Path]
  /plugins/filter/link.rb
 
@@ -332,3 +332,40 @@ FilterLink
   - module: FilterLink
 
 
+FilterJpeg
+----------
+[Path]
+ /plugins/filter/jpeg.rb
+
+[Input]
+ HTML
+
+[Output]
+ HTML
+
+[Description]
+ Extract jpg link from HTML.
+
+[Syntax]
+  - module: FilterJpeg
+
+
+StoreTarget
+-----------
+[Path]
+ /plugins/store/target.rb
+
+[Input]
+ HTML
+
+[Output]
+ HTML
+
+[Description]
+ リンク先のコンテンツをローカルに保存する
+
+[Syntax]
+  - module: StoreTarget
+    config:
+      path: SAVE_TO_PATH
+      interval: INTERVAL_FOR_DOWNLOAD (in seconds.)
