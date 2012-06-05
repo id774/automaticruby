@@ -30,7 +30,7 @@ FilterReverse
  /plugins/filter/reverse.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -48,7 +48,7 @@ FilterIgnore
  /plugins/filter/ignore.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -70,7 +70,7 @@ FilterImage
  /plugins/filter/image.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -89,7 +89,7 @@ FilterTumblrResize
  /plugins/filter/tumblr_resize.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -111,7 +111,7 @@ StorePermalink
  /plugins/store/permalink.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -132,7 +132,7 @@ StoreFullText
  /plugins/store/full_text.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -155,7 +155,7 @@ StoreTargetLink
  /plugins/store/target_link.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -177,7 +177,7 @@ PublishConsole
  /plugins/publish/console.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -195,7 +195,7 @@ PublishHatenaBookmark
  /plugins/publish/hatenabookmark.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -221,7 +221,7 @@ PublishGoogleCalendar
  /plugins/publish/google_calendar.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -246,7 +246,7 @@ NotifyIkachan
  /plugins/notify/ikachan.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
@@ -274,7 +274,7 @@ CustomFeedSVNLog
  /plugins/custom/feed_svn_log.rb
 
 [Input]
- None
+ Feed
 
 [Output]
  Feed
