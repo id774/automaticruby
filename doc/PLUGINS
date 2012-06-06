@@ -161,7 +161,7 @@ StoreTargetLink
  Feed
 
 [Abstract]
- To store target locally.
+ Store target locally.
  This emulate "Right click to save".
 
 [Syntax]
@@ -362,7 +362,8 @@ StoreTarget
  HTML
 
 [Description]
- リンク先のコンテンツをローカルに保存する
+ Store target locally by a link in HTML.
+ This emulate "Right click to save".
 
 [Syntax]
   - module: StoreTarget

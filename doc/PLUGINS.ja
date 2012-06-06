@@ -362,7 +362,7 @@ StoreTarget
  HTML
 
 [概要]
- リンク先のコンテンツをローカルに保存する
+ HTML の a リンク先のコンテンツをローカルに保存する
 
 [レシピ記法]
   - module: StoreTarget

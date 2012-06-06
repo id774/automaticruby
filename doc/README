@@ -380,6 +380,11 @@ Run an instance method is called automatically. The return value
 is on the instance variable @pipeline. And then, be handed over
 to the next plug-in in the recipe.
 
+@pipeline's data format should be combined. If the preceding
+plug-in will return an RSS feed, you need to write handle the
+RSS feed. If the one will return as HTML, you need to write
+code to handle HTML.
+
 
 =========
 Unit Test
