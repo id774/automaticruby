@@ -117,11 +117,11 @@ StorePermalink
  Feed
 
 [Abstract]
- To save a permanent link.
+ Save a permanent link.
  The duplicate permalink will be discarded.
 
 [Syntax]
-  - module: StoreBookmark
+  - module: StorePermalink
     config:
       db: DB_NAME
 
@@ -138,7 +138,7 @@ StoreFullText
  Feed
 
 [Abstract]
- To save a full text of contents.
+ Save a full text of contents.
 
  Saved text can be viewed in the viewer below
  https://github.com/id774/blog_viewer
@@ -348,6 +348,28 @@ FilterJpeg
 
 [Syntax]
   - module: FilterJpeg
+
+
+StoreLink
+---------
+[Path]
+ /plugins/store/link.rb
+
+[Input]
+ HTML
+
+[Output]
+ HTML
+
+[Abstract]
+ Save a permanent link.
+ The duplicate permalink will be discarded.
+ This is a HTML version for StorePermalink.
+
+[Syntax]
+  - module: StoreLink
+    config:
+      db: DB_NAME
 
 
 StoreTarget

@@ -121,9 +121,9 @@ StorePermalink
  重複したパーマリンクは破棄する
 
 [レシピ記法]
-  - module: StoreBookmark
+  - module: StorePermalink
     config:
-      db: ブックマークを保存する SQLite3 DB 名
+      db: パーマリンクを保存する SQLite3 DB 名
 
 
 StoreFullText
@@ -348,6 +348,28 @@ FilterJpeg
 
 [レシピ記法]
   - module: FilterJpeg
+
+
+StoreLink
+---------
+[パス]
+ /plugins/store/link.rb
+
+[入力]
+ HTML
+
+[出力]
+ HTML
+
+[概要]
+ パーマリンクを保存する
+ 重複したパーマリンクは破棄する
+ これは StorePermalink の HTML 版である
+
+[レシピ記法]
+  - module: StoreLink
+    config:
+      db: パーマリンクを保存する SQLite3 DB 名
 
 
 StoreTarget
