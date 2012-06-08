@@ -5,8 +5,8 @@
 * Added Plugins.
 
   * Filter::Reverse
-	* Publish::SMTP
-	* Publish::Mail
+  * Publish::SMTP
+  * Publish::Mail
 
 * Running all Integration Tests with CI.
 

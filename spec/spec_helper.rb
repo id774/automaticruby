@@ -37,7 +37,7 @@ module AutomaticSpec
     def generate_pipeline(&block)
       pipeline_generator = StubPipelineGenerator.new
       pipeline_generator.instance_eval(&block)
-      return pipeline_generator.feeds
+      return pipeline_generator.pipeline
     end
 
     def root_dir
@@ -50,16 +50,22 @@ module AutomaticSpec
   end
 
   class StubPipelineGenerator
-    attr_reader :feeds
+    attr_reader :pipeline
 
-  def initialize
-      @feeds = []
+    def initialize
+      @pipeline = []
     end
 
     def feed(&block)
-      feed_generator = StubFeedGenerator.new
-      feed_generator.instance_eval(&block)
-      @feeds << feed_generator.feed
+      generator = StubFeedGenerator.new
+      generator.instance_eval(&block)
+      @pipeline << generator.feed
+    end
+
+    def html(&block)
+      generator = StubHTMLGenerator.new
+      generator.instance_eval(&block)
+      @pipeline << generator.html
     end
   end
 
@@ -81,6 +87,15 @@ module AutomaticSpec
       itm.instance_variable_set(:@description, description)
       itm.pubDate = date unless date.blank?
       @channel.items << itm
+    end
+  end
+
+  class StubHTMLGenerator
+    def initialize
+    end
+
+    def html
+      #TODO: implement
     end
   end
 end
