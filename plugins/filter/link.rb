@@ -17,17 +17,17 @@ module Automatic::Plugin
     end
 
     def run
-      return_html = []
+      @return_html = []
       @pipeline.each {|html|
         img_url = ""
         unless html.nil?
           doc = Hpricot(html)
           (doc/:a).each {|link|
-            return_html << link[:href]
+            @return_html << link[:href]
           }
         end
       }
-      return_html
+      @return_html
     end
   end
 end

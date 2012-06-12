@@ -62,10 +62,10 @@ module AutomaticSpec
       @pipeline << generator.feed
     end
 
-    def html(&block)
-      generator = StubHTMLGenerator.new
-      generator.instance_eval(&block)
-      @pipeline << generator.html
+    def html(fixture)
+      obj = File.read(File.join(File.dirname(__FILE__),
+        "..", "test", "fixtures", fixture))
+      @pipeline << obj
     end
   end
 
@@ -87,15 +87,6 @@ module AutomaticSpec
       itm.instance_variable_set(:@description, description)
       itm.pubDate = date unless date.blank?
       @channel.items << itm
-    end
-  end
-
-  class StubHTMLGenerator
-    def initialize
-    end
-
-    def html
-      #TODO: implement
     end
   end
 end

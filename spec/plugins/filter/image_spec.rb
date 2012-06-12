@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::CustomFeed::SVNFLog
+# Name::      Automatic::Plugin::Filter::Image
 # Author::    kzgs
 # Created::   Mar 1, 2012
 # Updated::   Mar 1, 2012
