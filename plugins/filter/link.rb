@@ -9,7 +9,7 @@
 
 module Automatic::Plugin
   class FilterLink
-    require 'hpricot'
+    require 'nokogiri'
 
     def initialize(config, pipeline=[])
       @config = config
@@ -21,7 +21,7 @@ module Automatic::Plugin
       @pipeline.each {|html|
         img_url = ""
         unless html.nil?
-          doc = Hpricot(html)
+          doc = Nokogiri::HTML(html)
           (doc/:a).each {|link|
             @return_html << link[:href]
           }

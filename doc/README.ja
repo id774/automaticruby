@@ -526,7 +526,7 @@ activerecord
 gcalapi
 xml-simple
 feedbag
-hpricot
+nokogiri
 
 詳細は Gemfile を参照
 
