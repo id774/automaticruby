@@ -9,7 +9,7 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
-namespace :spec do 
+namespace :spec do
   desc "Run RSpec for plugins"
   RSpec::Core::RakeTask.new(:plugins) do |spec|
     spec.rspec_opts = ["-c"]
