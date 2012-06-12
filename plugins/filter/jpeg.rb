@@ -15,15 +15,15 @@ module Automatic::Plugin
     end
 
     def run
-      return_html = []
+      @return_html = []
       @pipeline.each {|html|
         unless html.nil?
           html.scan(/(.*?\.jp*g$)/) { |matched|
-            return_html << matched.join(" ")
+            @return_html << matched.join(" ")
           }
         end
       }
-      return_html
+      @return_html
     end
   end
 end

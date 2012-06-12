@@ -13,7 +13,7 @@ module Automatic::Plugin
     def for_each_new_link
       prepare_database
       existing_records = model_class.find(:all)
-      return_html = []
+      @return_html = []
       @pipeline.each { |link|
         unless link.nil?
           new_link = false
@@ -21,10 +21,10 @@ module Automatic::Plugin
             yield(link)
             new_link = true
           end
-          return_html << link if new_link
+          @return_html << link if new_link
         end
       }
-      return_html
+      @return_html
     end
 
     def for_each_new_feed
