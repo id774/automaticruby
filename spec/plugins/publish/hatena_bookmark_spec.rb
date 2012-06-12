@@ -8,7 +8,8 @@ describe Automatic::Plugin::PublishHatenaBookmark do
       {"username" => "user", "password" => "pswd"},
       AutomaticSpec.generate_pipeline{
         feed { item "http://github.com" }
-      })
+      }
+    )
   }
 
   it "should post the link in the feed" do

@@ -19,7 +19,8 @@ describe Automatic::Plugin::PublishGoogleCalendar do
         feed {
           item "http://github.com", "GitHub"
         }
-      })
+      }
+    )
   }
 
   it "should post the link in the feed" do

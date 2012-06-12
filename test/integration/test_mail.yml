@@ -9,7 +9,7 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://b.hatena.ne.jp/Naruhodius/rss
+        - http://blog.yuyuweb.cc/rss
 
   - module: PublishMail
     config:

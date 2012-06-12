@@ -9,7 +9,7 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://blog.id774.net/blogs/feed/
+        - http://blog.id774.net/post/feed/
 
   - module: FilterIgnore
     config:

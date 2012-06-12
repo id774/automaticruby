@@ -6,7 +6,8 @@ describe Automatic::Plugin::SubscriptionFeed do
   context "with empty feeds" do
     subject {
       Automatic::Plugin::SubscriptionFeed.new(
-        { 'feeds' => [] })
+        { 'feeds' => [] }
+      )
     }
 
     its(:run) { should be_empty }
@@ -15,7 +16,8 @@ describe Automatic::Plugin::SubscriptionFeed do
   context "with feeds whose invalid URL" do
     subject {
       Automatic::Plugin::SubscriptionFeed.new(
-        { 'feeds' => ["invalid_url"] })
+        { 'feeds' => ["invalid_url"] }
+      )
     }
 
     its(:run) { should be_empty }
@@ -27,7 +29,8 @@ describe Automatic::Plugin::SubscriptionFeed do
       Automatic::Plugin::SubscriptionFeed.new(
         { 'feeds' => [
             "https://github.com/id774/automaticruby/commits/master.atom"]
-        })
+        }
+      )
     }
 
     its(:run) { should have(1).feed }

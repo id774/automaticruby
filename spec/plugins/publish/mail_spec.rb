@@ -32,7 +32,8 @@ describe Automatic::Plugin::PublishMail do
           sender.should == "<from@example.com>"
           recipients.should == ["<to@example.com>"]
         }
-      })
+      }
+    )
     Thread.start {
       smtpd.start
     }

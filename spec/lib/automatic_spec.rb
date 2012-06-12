@@ -13,7 +13,7 @@ describe Automatic do
   describe "#run" do
     describe "with a root dir which has default recipe" do
       specify {
-        lambda{ 
+        lambda{
           Automatic.run(:recipe   => "",
                         :root_dir => APP_ROOT,
                         :user_dir => APP_ROOT + "/spec/user_dir")
