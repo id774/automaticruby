@@ -64,7 +64,7 @@ module AutomaticSpec
 
     def html(fixture)
       obj = File.read(File.join(File.dirname(__FILE__),
-        "..", "test", "fixtures", fixture))
+        "fixtures", fixture))
       @pipeline << obj
     end
   end
