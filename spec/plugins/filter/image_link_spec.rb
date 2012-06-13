@@ -20,7 +20,7 @@ describe Automatic::Plugin::FilterImageLink do
       )}
 
     describe "#run" do
-      its(:run) { should have(6).feeds }
+      its(:run) { should have(10).feeds }
       specify {
         subject.run
         expect = "http://link_1.jpg"
@@ -35,6 +35,14 @@ describe Automatic::Plugin::FilterImageLink do
         subject.instance_variable_get(:@return_html)[4].should == expect
         expect = "http://link_6.PNG"
         subject.instance_variable_get(:@return_html)[5].should == expect
+        expect = "http://link_8.gif"
+        subject.instance_variable_get(:@return_html)[6].should == expect
+        expect = "http://link_9.GIF"
+        subject.instance_variable_get(:@return_html)[7].should == expect
+        expect = "http://link_10.tiff"
+        subject.instance_variable_get(:@return_html)[8].should == expect
+        expect = "http://link_11.TIFF"
+        subject.instance_variable_get(:@return_html)[9].should == expect
       }
     end
   end
