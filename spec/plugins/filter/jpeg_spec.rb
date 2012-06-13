@@ -20,13 +20,21 @@ describe Automatic::Plugin::FilterJpeg do
       )}
 
     describe "#run" do
-      its(:run) { should have(2).feeds }
+      its(:run) { should have(6).feeds }
       specify {
         subject.run
-        expect = "http://oh-news.net/live/wp-content/uploads/2011/04/Eila_omote.jpg"
+        expect = "http://link_1.jpg"
         subject.instance_variable_get(:@return_html)[0].should == expect
-        expect = "http://oh-news.net/live/wp-content/uploads/2011/04/Sanya_omote.jpg"
+        expect = "http://link_2.jpg"
         subject.instance_variable_get(:@return_html)[1].should == expect
+        expect = "http://link_3.JPG"
+        subject.instance_variable_get(:@return_html)[2].should == expect
+        expect = "http://link_4.png"
+        subject.instance_variable_get(:@return_html)[3].should == expect
+        expect = "http://link_5.jpeg"
+        subject.instance_variable_get(:@return_html)[4].should == expect
+        expect = "http://link_6.PNG"
+        subject.instance_variable_get(:@return_html)[5].should == expect
       }
     end
   end
