@@ -39,7 +39,7 @@ FilterReverse
  日付の昇順にソートする
 
 [レシピ記法]
-  - module: FilterImage
+  - module: FilterReverse
 
 
 FilterIgnore
@@ -64,10 +64,10 @@ FilterIgnore
         - 無視キーワード ...
 
 
-FilterImage
-------------
+FilterImageSource
+-----------------
 [パス]
- /plugins/filter/image.rb
+ /plugins/filter/image_source.rb
 
 [入力]
  フィード
@@ -76,11 +76,11 @@ FilterImage
  フィード
 
 [概要]
- パーマリンクを本文中の画像のリンクに書き換える
- 画像のリンクが無い場合は nil にする
+ パーマリンクを本文中の画像のソースリンクに書き換える
+ 画像のソースリンクが無い場合は nil にする
 
 [レシピ記法]
-  - module: FilterImage
+  - module: FilterImageSource
 
 
 FilterTumblrResize
@@ -332,10 +332,10 @@ FilterLink
   - module: FilterLink
 
 
-FilterJpeg
-----------
+FilterImageLink
+---------------
 [パス]
- /plugins/filter/jpeg.rb
+ /plugins/filter/image_link.rb
 
 [入力]
  HTML
@@ -344,10 +344,10 @@ FilterJpeg
  HTML
 
 [概要]
- 末尾が jp*g なリンクのみを抽出する
+ 画像ファイルのリンクのみを抽出する
 
 [レシピ記法]
-  - module: FilterJpeg
+  - module: FilterImageLink
 
 
 StoreLink

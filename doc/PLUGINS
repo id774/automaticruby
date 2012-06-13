@@ -64,10 +64,10 @@ FilterIgnore
         - KEYWORD ...
 
 
-FilterImage
-------------
+FilterImageSource
+-----------------
 [Path]
- /plugins/filter/image.rb
+ /plugins/filter/image_source.rb
 
 [Input]
  Feed
@@ -76,11 +76,11 @@ FilterImage
  Feed
 
 [Abstract]
- Rewrite the permalink to link of the image in the contents.
- If there is no link of image, the permalink will be nil.
+ Rewrite the permalink to source of the image in the contents.
+ If there is no source of image, the permalink will be nil.
 
 [Syntax]
-  - module: FilterImage
+  - module: FilterImageSource
 
 
 FilterTumblrResize
@@ -332,10 +332,10 @@ FilterLink
   - module: FilterLink
 
 
-FilterJpeg
-----------
+FilterImageLink
+---------------
 [Path]
- /plugins/filter/jpeg.rb
+ /plugins/filter/image_link.rb
 
 [Input]
  HTML
@@ -344,10 +344,10 @@ FilterJpeg
  HTML
 
 [Description]
- Extract jpg link from HTML.
+ Extract image's link from HTML.
 
 [Syntax]
-  - module: FilterJpeg
+  - module: FilterImageLink
 
 
 StoreLink

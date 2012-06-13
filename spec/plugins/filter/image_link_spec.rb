@@ -15,7 +15,7 @@ describe Automatic::Plugin::FilterImageLink do
     subject {
       Automatic::Plugin::FilterImageLink.new({},
         AutomaticSpec.generate_pipeline {
-          link "filterJpeg.html"
+          link "filterImageLink.html"
         }
       )}
 
