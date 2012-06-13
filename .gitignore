@@ -10,10 +10,10 @@ bin/decolor
 bin/erubis
 bin/feedbag
 bin/htmldiff
-bin/hpricot
 bin/jeweler
 bin/ldiff
 bin/mocksmtpd
+bin/nokogiri
 bin/rackup
 bin/rcov
 bin/rdoc
