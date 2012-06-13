@@ -18,11 +18,9 @@ describe Automatic::Plugin::StoreTarget do
     Dir.mktmpdir do |dir|
       instance = Automatic::Plugin::StoreTarget.new(
         { "path" => dir },
-        Automatic::Plugin::StoreTarget.new({},
-          AutomaticSpec.generate_pipeline {
-            link "storeTarget.html"
-          }
-        )
+        AutomaticSpec.generate_pipeline {
+          link "storeTarget.html"
+        }
       )
       instance.run.should have(1).feed
       (Pathname(dir)+"tumblr_m4w30kyArQ1qza5ppo1_500.jpg").should be_exist
