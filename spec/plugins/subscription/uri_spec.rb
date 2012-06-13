@@ -8,7 +8,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'custom_feed/uri'
+require 'subscription/uri'
 
 describe Automatic::Plugin::SubscriptionURI do
   context "with empty URLs" do
