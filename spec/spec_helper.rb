@@ -72,8 +72,9 @@ module AutomaticSpec
       obj = File.read(File.join(File.dirname(__FILE__),
         "fixtures", fixture))
       require 'extract/link'
-      @pipeline << obj
-      @pipeline = Automatic::Plugin::ExtractLink.new(nil, @pipeline).run
+      pipeline << obj
+      @pipeline = []
+      @pipeline << Automatic::Plugin::ExtractLink.new(nil, pipeline).run
     end
   end
 
