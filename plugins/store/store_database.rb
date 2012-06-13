@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Store::Database
 # Author::    kzgs
 # Created::   Feb 27, 2012
-# Updated::   May 28, 2012
+# Updated::   Jun 14, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -57,7 +57,12 @@ module Automatic::Plugin
     end
 
     def db_dir
-      return File.join(File.dirname(__FILE__), '..', '..', 'db')
+      dir = (File.expand_path('~/.automatic/db'))
+      if File.directory?(dir)
+        return dir
+      else
+        return File.join(File.dirname(__FILE__), '..', '..', 'db')
+      end
     end
 
     def prepare_database

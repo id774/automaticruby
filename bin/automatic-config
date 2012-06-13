@@ -3,7 +3,7 @@
 # Name::      Automatic::Ruby
 # Author::    kzgs
 # Created::   Mar 11, 2012
-# Updated::   Mar 11, 2012
+# Updated::   Jun 14, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -25,14 +25,26 @@ end
 
 subparsers = {
   'scaffold' => lambda { |argv|
+    require 'fileutils'
     Dir::entries(root_dir + '/plugins').sort.each { |path|
-      require 'fileutils'
       dir = (File.expand_path('~/.automatic/plugins/' + path))
       unless File.exist?(dir)
         FileUtils.mkdir_p(dir)
         puts "Create Directory #{dir}"
       end
     }
+    dir = (File.expand_path('~/.automatic/config'))
+    unless File.exist?(dir)
+      FileUtils.mkdir_p(dir)
+      FileUtils.cp_r(root_dir + '/config', dir + '/example')
+      FileUtils.cp_r(root_dir + '/test/integration', dir + '/test')
+      puts "Create Directory #{dir}"
+    end
+    dir = (File.expand_path('~/.automatic/db'))
+    unless File.exist?(dir)
+      FileUtils.mkdir_p(dir)
+      puts "Create Directory #{dir}"
+    end
   },
   'autodiscovery' => lambda { |argv|
     require 'pp'
