@@ -28,7 +28,8 @@ describe Automatic::Plugin::StorePermalink do
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed { item "http://github.com" }
-      })
+      }
+    )
 
     instance.run.should have(1).feed
     lambda {

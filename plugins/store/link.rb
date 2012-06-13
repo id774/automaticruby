@@ -6,6 +6,7 @@
 # Updated::   May 24, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 require 'plugins/store/store_database'
 
 module Automatic::Plugin

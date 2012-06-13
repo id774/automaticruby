@@ -16,7 +16,8 @@ describe Automatic::Plugin::StoreFullText do
     instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed { item "http://blog.id774.net/blogs/feed/" }
-      })
+      }
+    )
 
     lambda {
       instance.run.should have(1).feed
@@ -27,7 +28,8 @@ describe Automatic::Plugin::StoreFullText do
     instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed { item "http://blog.id774.net/blogs/feed/" }
-      })
+      }
+    )
 
     instance.run.should have(1).feed
     lambda {
