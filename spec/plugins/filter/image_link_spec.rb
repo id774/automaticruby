@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::Jpeg
+# Name::      Automatic::Plugin::Filter::ImageLink
 # Author::    774 <http://id774.net>
 # Created::   Jun 13, 2012
 # Updated::   Jun 13, 2012
@@ -8,12 +8,12 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'filter/jpeg'
+require 'filter/image_link'
 
-describe Automatic::Plugin::FilterJpeg do
+describe Automatic::Plugin::FilterImageLink do
   context "with html contain link tag" do
     subject {
-      Automatic::Plugin::FilterJpeg.new({},
+      Automatic::Plugin::FilterImageLink.new({},
         AutomaticSpec.generate_pipeline {
           link "filterJpeg.html"
         }

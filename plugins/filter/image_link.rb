@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::Jpeg
+# Name::      Automatic::Plugin::Filter::ImageLink
 # Author::    774 <http://id774.net>
 # Created::   May 24, 2012
 # Updated::   Jun 13, 2012
@@ -8,7 +8,7 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class FilterJpeg
+  class FilterImageLink
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline

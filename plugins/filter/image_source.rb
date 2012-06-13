@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::Image
+# Name::      Automatic::Plugin::Filter::ImageSource
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Feb 28, 2012
+# Updated::   Jun 13, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class FilterImage
+  class FilterImageSource
     require 'net/http'
     require 'kconv'
 

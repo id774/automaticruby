@@ -13,7 +13,7 @@ plugins:
 
   - module: ExtractLink
 
-  - module: FilterJpeg
+  - module: FilterImageLink
 
   - module: StoreLink
     config:

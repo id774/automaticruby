@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::Image
+# Name::      Automatic::Plugin::Filter::ImageSource
 # Author::    kzgs
 # Created::   Mar 1, 2012
-# Updated::   Mar 1, 2012
+# Updated::   Jun 13, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'filter/image'
+require 'filter/image_source'
 
-describe Automatic::Plugin::FilterImage do
+describe Automatic::Plugin::FilterImageSource do
   context "with description with image tag" do
     subject {
-      Automatic::Plugin::FilterImage.new({},
+      Automatic::Plugin::FilterImageSource.new({},
         AutomaticSpec.generate_pipeline {
           feed {
             item "http://tumblr.com", "",
@@ -32,10 +32,10 @@ describe Automatic::Plugin::FilterImage do
   end
 end
 
-describe Automatic::Plugin::FilterImage do
+describe Automatic::Plugin::FilterImageSource do
   context "with description with image tag" do
     subject {
-      Automatic::Plugin::FilterImage.new({},
+      Automatic::Plugin::FilterImageSource.new({},
         AutomaticSpec.generate_pipeline {
           feed {
             item "http://tumblr.com", "",

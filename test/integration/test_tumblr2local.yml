@@ -15,7 +15,7 @@ plugins:
     config:
       db: test_tumblr.db
 
-  - module: FilterImage
+  - module: FilterImageSource
 
   - module: FilterTumblrResize
 

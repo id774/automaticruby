@@ -15,7 +15,7 @@ plugins:
     config:
       db: test_image.db
 
-  - module: FilterImage
+  - module: FilterImageSource
 
   - module: StoreTargetLink
     config:
