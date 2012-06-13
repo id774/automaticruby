@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::CustomFeed::URI
+# Name::      Automatic::Plugin::Subscription::URI
 # Author::    774 <http://id774.net>
 # Created::   Jun 12, 2012
 # Updated::   Jun 12, 2012
@@ -10,10 +10,10 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'custom_feed/uri'
 
-describe Automatic::Plugin::CustomFeedURI do
+describe Automatic::Plugin::SubscriptionURI do
   context "with empty URLs" do
     subject {
-      Automatic::Plugin::CustomFeedURI.new(
+      Automatic::Plugin::SubscriptionURI.new(
         { 'urls' => [] })
     }
     its(:run) { should be_empty }
@@ -21,7 +21,7 @@ describe Automatic::Plugin::CustomFeedURI do
 
   context "with URLs whose invalid URL" do
     subject {
-      Automatic::Plugin::CustomFeedURI.new(
+      Automatic::Plugin::SubscriptionURI.new(
         { 'urls' => ["invalid_url"] }
       )
     }
@@ -31,7 +31,7 @@ describe Automatic::Plugin::CustomFeedURI do
 
   context "with URLs whose valid URL" do
     subject {
-      Automatic::Plugin::CustomFeedURI.new(
+      Automatic::Plugin::SubscriptionURI.new(
         { 'urls' => [
             "https://github.com/id774/automaticruby"]
         }

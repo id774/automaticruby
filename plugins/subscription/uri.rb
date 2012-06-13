@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::CustomFeed::URI
+# Name::      Automatic::Plugin::Subscription::URI
 # Author::    774 <http://id774.net>
 # Created::   May 24, 2012
 # Updated::   May 24, 2012
@@ -7,7 +7,7 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class CustomFeedURI
+  class SubscriptionURI
     require 'open-uri'
 
     def initialize(config, pipeline=[])
@@ -25,6 +25,8 @@ module Automatic::Plugin
           Automatic::Log.puts("error", "Fault in parsing: #{url}")
         end
       }
+      require 'pp'
+      pp @pipeline
       return @pipeline
     end
   end
