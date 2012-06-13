@@ -67,6 +67,14 @@ module AutomaticSpec
         "fixtures", fixture))
       @pipeline << obj
     end
+
+    def link(fixture)
+      obj = File.read(File.join(File.dirname(__FILE__),
+        "fixtures", fixture))
+      require 'extract/link'
+      @pipeline << obj
+      @pipeline = Automatic::Plugin::ExtractLink.new(nil, @pipeline).run
+    end
   end
 
   class StubFeedGenerator
