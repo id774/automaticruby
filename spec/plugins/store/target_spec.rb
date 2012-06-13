@@ -23,7 +23,7 @@ describe Automatic::Plugin::StoreTarget do
         }
       )
       instance.run.should have(1).feed
-      (Pathname(dir)+"tumblr_m4w30kyArQ1qza5ppo1_500.jpg").should be_exist
+      (Pathname(dir)+"Eila_omote.jpg").should be_exist
     end
   end
 end
