@@ -24,6 +24,12 @@ module Automatic::Plugin
           html.scan(/(.*?\.png$)/i) { |matched|
             @return_html << matched.join(" ")
           }
+          html.scan(/(.*?\.gif$)/i) { |matched|
+            @return_html << matched.join(" ")
+          }
+          html.scan(/(.*?\.tiff$)/i) { |matched|
+            @return_html << matched.join(" ")
+          }
         end
       }
       @return_html
