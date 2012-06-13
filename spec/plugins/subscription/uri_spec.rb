@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::URI
 # Author::    774 <http://id774.net>
 # Created::   Jun 12, 2012
-# Updated::   Jun 12, 2012
+# Updated::   Jun 13, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
