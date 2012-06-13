@@ -14,12 +14,11 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
+      @output = STDOUT
     end
 
     def run
-      @pipeline.each { |contents|
-        pp contents
-      }
+      pp(@pipeline, out=@output)
       @pipeline
     end
   end
