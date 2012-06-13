@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::Link
+# Name::      Automatic::Plugin::Extract::Link
 # Author::    774 <http://id774.net>
 # Created::   Jun 12, 2012
-# Updated::   Jun 12, 2012
+# Updated::   Jun 13, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'filter/link'
+require 'extract/link'
 
-describe Automatic::Plugin::FilterLink do
+describe Automatic::Plugin::ExtractLink do
   context "with html contain link tag" do
     subject {
-      Automatic::Plugin::FilterLink.new({},
+      Automatic::Plugin::ExtractLink.new({},
         AutomaticSpec.generate_pipeline {
           html "filterLink.html"
         }

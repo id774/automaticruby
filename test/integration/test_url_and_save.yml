@@ -11,7 +11,7 @@ plugins:
       urls:
         - http://reblog.id774.net/
 
-  - module: FilterLink
+  - module: ExtractLink
 
   - module: FilterJpeg
 
