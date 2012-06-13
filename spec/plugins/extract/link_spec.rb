@@ -15,16 +15,22 @@ describe Automatic::Plugin::ExtractLink do
     subject {
       Automatic::Plugin::ExtractLink.new({},
         AutomaticSpec.generate_pipeline {
-          html "filterLink.html"
+          html "extractLink.html"
         }
       )}
 
     describe "#run" do
-      its(:run) { should have(1).feeds }
+      its(:run) { should have(4).feeds }
       specify {
         subject.run
         except = "http://id774.net"
         subject.instance_variable_get(:@return_html)[0].should == except
+        except = "http://reblog.id774.net"
+        subject.instance_variable_get(:@return_html)[1].should == except
+        except = "http://oh-news.net/live/wp-content/uploads/2011/04/Eila_omote.jpg"
+        subject.instance_variable_get(:@return_html)[2].should == except
+        except = "http://blog.id774.net/post/"
+        subject.instance_variable_get(:@return_html)[3].should == except
       }
     end
   end
