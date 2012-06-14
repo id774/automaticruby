@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::CustomFeed::SVNFLog
 # Author::    kzgs
+#             774 <http://id774.net>
 # Created::   Mar 4, 2012
-# Updated::   Mar 4, 2012
+# Updated::   Jun 14, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -26,4 +27,17 @@ describe Automatic::Plugin::StoreTargetLink do
       (Pathname(dir)+"rss").should be_exist
     end
   end
+
+  it "should error during file download" do
+    Dir.mktmpdir do |dir|
+      instance = Automatic::Plugin::StoreTargetLink.new(
+        { "path" => dir },
+        AutomaticSpec.generate_pipeline {
+          feed { item "aaa" }
+        }
+      )
+      instance.run.should have(1).feed
+    end
+  end
+
 end
