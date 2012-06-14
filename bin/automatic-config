@@ -75,7 +75,7 @@ subparsers = {
   },
   'opmlparser' => lambda { |argv|
     require 'automatic/opml'
-    pathh = argv.shift
+    path = argv.shift
     if path.nil?
       abort_with_usage("opmlparser", "<opml path>")
     end
