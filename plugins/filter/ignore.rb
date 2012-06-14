@@ -15,14 +15,6 @@ module Automatic::Plugin
 
     def exclude(items)
       detection = false
-      unless @config['title'].nil?
-        @config['title'].each {|e|
-          if items.title.include?(e.chomp)
-            detection = true
-            Automatic::Log.puts("info", "Excluded by title: #{items.title}")
-          end
-        }
-      end
       unless @config['link'].nil?
         @config['link'].each {|e|
           if items.link.include?(e.chomp)
