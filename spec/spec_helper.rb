@@ -45,7 +45,12 @@ module AutomaticSpec
     end
 
     def db_dir
-      return File.join(root_dir, "db")
+      dir = (File.expand_path('~/.automatic/db'))
+      if File.directory?(dir)
+        return dir
+      else
+        return File.join(root_dir, "db")
+      end
     end
   end
 
