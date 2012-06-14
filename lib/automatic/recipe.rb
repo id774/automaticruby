@@ -18,9 +18,8 @@ module Automatic
 
     def load_recipe(path)
       dir = File.join((File.expand_path('~/.automatic/config/')), path)
-      if File.exist?(dir)
-        path = dir
-      end
+      path = dir if File.exist?(dir)
+      Automatic::Log.puts("info", "Loading: #{path}")
       @procedure = Hashie::Mash.new(YAML.load(File.read(path)))
     end
 

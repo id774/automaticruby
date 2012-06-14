@@ -44,8 +44,13 @@ test_config() {
     $RACK_ROOT/bin/automatic-config $*
 }
 
-added_tests() {
+test_scaffold() {
     test_config scaffold
+    test_config unscaffold
+}
+
+added_tests() {
+    test -f $HOME/.automatic || test_scaffold
     test_config autodiscovery http://blog.id774.net/blogs/
     test_config opmlparser "$RACK_ROOT/test/fixtures/sampleOPML.xml"
     test_config feedparser http://blog.id774.net/blogs/feed/ > /dev/null

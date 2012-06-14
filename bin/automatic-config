@@ -13,6 +13,9 @@ $:.unshift root_dir + '/lib'
 require 'automatic'
 require 'rubygems'
 require 'optparse'
+require 'fileutils'
+require 'feedbag'
+require 'pp'
 
 parser = OptionParser.new { |opt|
 }
@@ -25,7 +28,6 @@ end
 
 subparsers = {
   'scaffold' => lambda { |argv|
-    require 'fileutils'
     Dir::entries(root_dir + '/plugins').sort.each { |path|
       dir = (File.expand_path('~/.automatic/plugins/' + path))
       unless File.exist?(dir)
@@ -46,25 +48,18 @@ subparsers = {
       puts "Create Directory #{dir}"
     end
   },
+  'unscaffold' => lambda { |argv|
+    dir = (File.expand_path('~/.automatic'))
+    if File.directory?(dir)
+      puts "Remove Directory #{dir}"
+      FileUtils.rm_r(dir)
+    end
+  },
   'autodiscovery' => lambda { |argv|
-    require 'pp'
-    require 'feedbag'
     url = argv.shift || abort_with_usage("autodiscovery", "<url>")
     pp Feedbag.find(url)
   },
-  'opmlparser' => lambda { |argv|
-    require 'automatic/opml'
-    path = argv.shift
-    if path.nil?
-      abort_with_usage("opmlparser", "<opml path>")
-    end
-    parser = Automatic::OPML::Parser.new(File.read(path))
-    parser.each_outline {|opml, o|
-      puts "#{o.xmlUrl}"
-    }
-  },
   'feedparser' => lambda { |argv|
-    require 'pp'
     require 'automatic/feed_parser'
     url = argv.shift || abort_with_usage("feedparser", "<url>")
     rss_results = Automatic::FeedParser.get_rss(url)
@@ -72,12 +67,22 @@ subparsers = {
   },
   'inspect' => lambda { |argv|
     require 'automatic/feed_parser'
-    require 'feedbag'
     url = argv.shift || abort_with_usage("inspect", "<url>")
     feeds = Feedbag.find(url)
     pp feeds
     rss_results = Automatic::FeedParser.get_rss(feeds.pop)
     pp rss_results
+  },
+  'opmlparser' => lambda { |argv|
+    require 'automatic/opml'
+    pathh = argv.shift
+    if path.nil?
+      abort_with_usage("opmlparser", "<opml path>")
+    end
+    parser = Automatic::OPML::Parser.new(File.read(path))
+    parser.each_outline {|opml, o|
+      puts "#{o.xmlUrl}"
+    }
   },
   'log' => lambda { |argv|
     require 'automatic/log'
