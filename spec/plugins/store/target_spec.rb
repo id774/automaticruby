@@ -22,8 +22,20 @@ describe Automatic::Plugin::StoreTarget do
           link "storeTarget.html"
         }
       )
-      instance.run.should have(1).feed
+      instance.run.should have(1).item
       (Pathname(dir)+"Eila_omote.jpg").should be_exist
+    end
+  end
+
+  it "should error during file download" do
+    Dir.mktmpdir do |dir|
+      instance = Automatic::Plugin::StoreTarget.new(
+        { "path" => dir },
+        AutomaticSpec.generate_pipeline {
+          link "storeTarget2.html"
+        }
+      )
+      instance.run.should have(1).items
     end
   end
 end

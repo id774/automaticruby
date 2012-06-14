@@ -43,4 +43,5 @@ describe Automatic::Plugin::StoreFullText do
       instance.run.should have(0).feed
     }.should change(Automatic::Plugin::Blog, :count).by(0)
   end
+
 end
