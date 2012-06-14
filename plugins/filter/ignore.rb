@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::Ignore
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Mar  8, 2012
+# Updated::   Jun 14, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -18,15 +18,15 @@ module Automatic::Plugin
       unless @config['title'].nil?
         @config['title'].each {|e|
           if items.title.include?(e.chomp)
-            detection = true 
-            Automatic::Log.puts("info", "Excluded by title: #{items.link}")
+            detection = true
+            Automatic::Log.puts("info", "Excluded by title: #{items.title}")
           end
         }
       end
       unless @config['link'].nil?
         @config['link'].each {|e|
           if items.link.include?(e.chomp)
-            detection = true 
+            detection = true
             Automatic::Log.puts("info", "Excluded by link: #{items.link}")
           end
         }
@@ -34,7 +34,7 @@ module Automatic::Plugin
       unless @config['exclude'].nil?
         @config['exclude'].each {|e|
           if items.link.include?(e.chomp)
-            detection = true 
+            detection = true
             Automatic::Log.puts("info", "Excluded by link: #{items.link}")
           end
         }
@@ -42,7 +42,7 @@ module Automatic::Plugin
       unless @config['description'].nil?
         @config['description'].each {|e|
           if items.description.include?(e.chomp)
-            detection = true 
+            detection = true
             Automatic::Log.puts("info", "Excluded by description: #{items.link}")
           end
         }
@@ -51,7 +51,7 @@ module Automatic::Plugin
     end
 
     def run
-      return_feeds = []
+      @return_feeds = []
       @pipeline.each {|feeds|
         ignore = false
         unless feeds.nil?
@@ -59,9 +59,9 @@ module Automatic::Plugin
             ignore = true if exclude(items)
           }
         end
-        return_feeds << feeds unless ignore
+        @return_feeds << feeds unless ignore
       }
-      return_feeds
+      @return_feeds
     end
   end
 end
