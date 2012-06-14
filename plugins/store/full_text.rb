@@ -3,17 +3,17 @@
 # Name::      Automatic::Plugin::Store::FullText
 # Author::    774 <http://id774.net>
 # Created::   Feb 26, 2012
-# Updated::   Feb 29, 2012
+# Updated::   Jun 14, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
-require 'plugins/store/store_database'
+require 'plugins/store/database'
 
 module Automatic::Plugin
   class Blog < ActiveRecord::Base
   end
 
   class StoreFullText
-    include Automatic::Plugin::StoreDatabase
+    include Automatic::Plugin::Database
 
     def initialize(config, pipeline=[])
       @config = config
