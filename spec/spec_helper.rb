@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Name::      Automatic::Spec
+# Updated::   Jun 14, 2012
+
 APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 $LOAD_PATH.unshift APP_ROOT
 $LOAD_PATH.unshift File.join(APP_ROOT)

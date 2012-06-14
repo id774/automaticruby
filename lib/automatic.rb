@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
 # Version::   12.4.0-devel

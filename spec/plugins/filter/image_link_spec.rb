@@ -17,10 +17,11 @@ describe Automatic::Plugin::FilterImageLink do
         AutomaticSpec.generate_pipeline {
           link "filterImageLink.html"
         }
-      )}
+      )
+    }
 
     describe "#run" do
-      its(:run) { should have(10).feeds }
+      its(:run) { should have(10).items }
       specify {
         subject.run
         expect = "http://link_1.jpg"

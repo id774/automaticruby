@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Store::Link
 # Author::    774 <http://id774.net>
@@ -29,7 +28,7 @@ describe Automatic::Plugin::StoreLink do
     )
 
     lambda {
-      instance.run.should have(14).feeds
+      instance.run.should have(14).items
     }.should change(Automatic::Plugin::Link, :count).by(14)
   end
 
@@ -40,9 +39,9 @@ describe Automatic::Plugin::StoreLink do
       }
     )
 
-    instance.run.should have(15).feeds
+    instance.run.should have(15).items
     lambda {
-      instance.run.should have(0).feed
+      instance.run.should have(0).items
     }.should change(Automatic::Plugin::Link, :count).by(0)
   end
 end

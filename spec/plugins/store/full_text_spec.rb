@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Store::FullText
+# Author::    774 <http://id774.net>
+# Updated::   Jun 14, 2012
+# Copyright:: 774 Copyright (c) 2012
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'store/full_text'

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Name::      Automatic::StoreMock
+# Updated::   Jun 14, 2012
+
 module Automatic::Plugin
   class StoreMock
     def initialize(config, pipeline = [])

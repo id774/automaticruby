@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Name::      Automatic::Recipe
 # Author::    ainame
 # Created::   Feb 18, 2012

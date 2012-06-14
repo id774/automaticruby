@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'rexml/document'
 require 'rexml/parsers/pullparser'
 

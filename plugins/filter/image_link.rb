@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Filter::ImageLink
 # Author::    774 <http://id774.net>

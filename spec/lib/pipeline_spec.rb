@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-# Name::      pipeline_sepc.rb
+# Name::      Automatic::Pipeline
 # Author::    ainame
+#             774 <http://id774.net>
 # Created::   Mar 10, 2012
-# Updated::   Mar 10, 2012
+# Updated::   Jun 14, 2012
 # Copyright:: ainame Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 

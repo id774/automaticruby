@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Filter::ImageSource
 # Author::    kzgs
+#             774 <http://id774.net>
 # Created::   Mar 1, 2012
 # Updated::   Jun 13, 2012
 # Copyright:: kzgs Copyright (c) 2012

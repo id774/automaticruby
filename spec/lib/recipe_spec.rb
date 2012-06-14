@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Name::      recipe_sepc.rb
+# Name::      Auaotmatic::Recipe
 # Author::    774 <http://id774.net>
 # Created::   Jun 14, 2012
 # Updated::   Jun 14, 2012
@@ -20,7 +20,7 @@ describe Automatic::Recipe do
       Automatic.user_dir = nil
     end
 
-    describe "with " do
+    describe "with a normal recipe" do
       it "correctly load recipe" do
         recipe = Automatic::Recipe.new(TEST_RECIPE)
         expect =[{"module"=>"SubscriptionFeed",

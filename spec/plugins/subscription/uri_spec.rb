@@ -38,6 +38,6 @@ describe Automatic::Plugin::SubscriptionURI do
       )
     }
 
-    its(:run) { should have(1).feed }
+    its(:run) { should have(1).item }
   end
 end
