@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Recipe
 # Author::    ainame
+#             774 <http://id774.net>
 # Created::   Feb 18, 2012
 # Updated::   Jun 14, 2012
 # Copyright:: 774 Copyright (c) 2012

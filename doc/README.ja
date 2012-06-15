@@ -30,11 +30,7 @@ $ gem install automatic
 [開発版]
 $ git clone git://github.com/id774/automaticruby.git
 
- ruby 1.9 の場合
 $ script/bootstrap
-
- ruby 1.8 の場合
- Gemfile にある必要な gem を手動でインストールする
 
 
 ============
@@ -47,14 +43,32 @@ $ automatic -c your_recipe.yml
  -c オプション付きで手動実行し、問題がなければ
  cron に登録するなどして自動化する。
 
+ 以下のコマンドはホームディレクトリに ~/.automatic を生成する。
 
- 試しに実行するなら config/feed2console.yml
+$ automatic-config scaffold
+(automatic-config の説明は後述する)
+
+ 自作したレシピやプラグインは ~/.automatic に置く。
+ (プラグインの作り方は後述する)
+
+
+ 試しに実行するなら ~/.automatic/config/feed2console.yml
 を利用すると良い。
-$ automatic -c config/feed2console.yml
+$ automatic -c ~/.automatic/config/feed2console.yml
 
  これは、ブログのフィードを単純にコンソール出力するだけの
 簡単なレシピである。
  本ソフトウェアの動作確認に使うことができる。
+
+
+ 単純なファイル名を -c の引数に指定した場合 ~/.automatic/config
+にある同名のファイルがあれば優先的に読み込まれる。
+
+ ~/.automatic/db が存在する場合、データベースを生成するタイプの
+プラグインはこのディレクトリにファイルを保存する。
+
+~/.automatic/plugins が存在する場合、本体付属のプラグインと
+同様にそれらも読み込まれる。
 
 
 ==========
@@ -156,21 +170,6 @@ plugins:
 ことができる。
 
 
-==========
-プラグイン
-==========
-
-プラグインは後述する plugins ディレクトリにあるものが読み込まれる。
-
-~/.automatic/plugins が存在する場合、それらも同様に読み込まれる。
-
-自作したプラグインはホームディレクトリに置くと良い。
-(プラグインの作り方は後述する)
-
-以下のコマンドで自作したプラグインのためのサブディレクトリを自動生成できる。
-$ automatic-config scaffold
-(automatic-config の説明は後述する)
-
 
 ==========================
 ディレクトリとファイル構成
@@ -186,12 +185,9 @@ $ automatic-config scaffold
 |        利用を補助するためのツール
 |
 +- config
-|   |
-|   +- default.yml
-|        デフォルトでロードされるレシピ
-|        YAML 形式でプラグインの情報を記述する
-|        automatic.rb の -c オプションの引数で
-|        任意のファイル名をレシピとして指定できる
+|   YAML 形式でプラグインの情報を記述する
+|   automatic.rb の -c オプションの引数で
+|   任意のファイル名をレシピとして指定できる
 |
 |   新しくレシピを書いた場合は config ディレクトリに置く
 |
