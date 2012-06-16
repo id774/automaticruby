@@ -2,10 +2,13 @@
 #
 ########################################################################
 # Integration Build Script
+#  $1 = all (Run integration tests)
 #
 #  Maintainer: id774 <idnanashi@gmail.com>
 #
-#  v1.1 6/16,2012
+#  v1.2 6/16,2012
+#       Add all option for integration tests.
+#  v1.1 6/14,2012
 #       Correspond to unscaffold subcommand.
 #  v1.0 3/16,2012
 #       First.
@@ -59,12 +62,16 @@ added_tests() {
     test_config log info finished.
 }
 
-main() {
-    kickstart
-    exec_rspec
+integration() {
     load_tests
     added_tests
 }
 
+main() {
+    kickstart
+    exec_rspec
+    test -n "$1" && integration
+}
+
 set -ex
-main
+main $*
