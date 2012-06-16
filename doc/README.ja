@@ -64,10 +64,10 @@ $ automatic -c ~/.automatic/config/feed2console.yml
  単純なファイル名を -c の引数に指定した場合 ~/.automatic/config
 にある同名のファイルがあれば優先的に読み込まれる。
 
- ~/.automatic/db が存在する場合、データベースを生成するタイプの
+  ~/.automatic/db が存在する場合、データベースを生成するタイプの
 プラグインはこのディレクトリにファイルを保存する。
 
-~/.automatic/plugins が存在する場合、本体付属のプラグインと
+ ~/.automatic/plugins が存在する場合、本体付属のプラグインと
 同様にそれらも読み込まれる。
 
 
@@ -470,8 +470,8 @@ $ automatic-config scaffold
 $ automatic-config autodiscovery <url>
  対象の URL をオートディスカバリで探知しフィードの URL を返す。
 (例)
-$ automatic-config autodiscovery http://blog.id774.net/blogs
-["http://blog.id774.net/blogs/feed/", "http://blog.id774.net/blogs/comments/feed/"]
+$ automatic-config autodiscovery http://blog.id774.net/post
+["http://blog.id774.net/post/feed/", "http://blog.id774.net/post/comments/feed/"]
 
 $ automatic-config opmlparser <opml path>
  OPML ファイルを解析し URL を出力する。

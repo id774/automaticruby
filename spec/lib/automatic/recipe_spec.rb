@@ -6,17 +6,17 @@
 # Copyright:: ainame Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
-require File.expand_path(File.join(File.dirname(__FILE__) ,'../spec_helper'))
+require File.expand_path(File.join(File.dirname(__FILE__) ,'../../spec_helper'))
 require 'automatic'
 require 'automatic/recipe'
 
-TEST_RECIPE =  File.expand_path(File.join(File.dirname(__FILE__) ,
-  '..', 'fixtures', 'sampleRecipe.yml'))
+TEST_RECIPE =  File.expand_path(File.join(APP_ROOT, "spec",
+  'fixtures', 'sampleRecipe.yml'))
 
 describe Automatic::Recipe do
   describe "with recipe" do
     before do
-      Automatic.root_dir = File.expand_path(File.join(File.dirname(__FILE__), "../../"))
+      Automatic.root_dir = File.expand_path(File.join(File.dirname(__FILE__), "../../../"))
       Automatic.user_dir = nil
     end
 

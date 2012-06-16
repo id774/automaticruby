@@ -72,13 +72,13 @@ module AutomaticSpec
     end
 
     def html(fixture)
-      obj = File.read(File.join(File.dirname(__FILE__),
+      obj = File.read(File.join(APP_ROOT, "spec",
         "fixtures", fixture))
       @pipeline << obj
     end
 
     def link(fixture)
-      obj = File.read(File.join(File.dirname(__FILE__),
+      obj = File.read(File.join(APP_ROOT, "spec",
         "fixtures", fixture))
       require 'extract/link'
       @pipeline << obj

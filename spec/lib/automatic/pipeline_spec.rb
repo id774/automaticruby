@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-# Name::      pipeline_sepc.rb
+# Name::      Automatic::Pipeline
 # Author::    ainame
+#             774 <http://id774.net>
 # Created::   Mar 10, 2012
-# Updated::   Mar 10, 2012
+# Updated::   Jun 16, 2012
 # Copyright:: ainame Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -22,8 +23,9 @@ describe Automatic::Pipeline do
     describe "#load_plugin" do
       it "raise no plugin error" do
         lambda{
-          Automatic::Plugin.load_plugin "FooBar"
-        }.should raise_exception
+          Automatic::Pipeline.load_plugin "FooBar"
+        }.should raise_exception(Automatic::NoPluginError,
+          /unknown plugin named FooBar/)
       end
 
       it "correctly load module" do
@@ -31,6 +33,17 @@ describe Automatic::Pipeline do
           Automatic::Pipeline.load_plugin mod.to_s
           Automatic::Plugin.const_get(mod).class.should == Class
         end
+      end
+    end
+
+    describe "#run" do
+      it "run a recipe with FilterIgnore module" do
+        plugin = mock("plugin")
+        plugin.should_receive(:module).and_return("FilterIgnore")
+        plugin.should_receive(:config)
+        recipe = mock("recipe")
+        recipe.should_receive(:each_plugin).and_yield(plugin)
+        Automatic::Pipeline.run(recipe).should == []
       end
     end
   end
