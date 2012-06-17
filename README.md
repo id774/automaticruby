@@ -21,6 +21,7 @@ Installation.
 
 ``` html
 gem install automatic
+automatic-config scaffold
 ```
 
 Specify any recipe with -c option.
@@ -32,7 +33,7 @@ automatic -c <recipe>
 Example.
 
 ``` html
-$ automatic -c config/feed2console.yml
+$ automatic -c ~/.automatic/config/example/feed2console.yml
 ```
 
 
@@ -45,9 +46,7 @@ of associated plug-ins.
 
 This YAML file is called "Recipe".
 
-When you start automatic ruby without argument -c option,
-the config/default.yml is called. You can use -c option for
-specify a file name.
+You can use -c option for specify a file name.
 
 The Recipe has an implicit naming convention.
 
@@ -84,6 +83,10 @@ We need your help.
 
 + http://rubyforge.org/projects/automatic/
 
+**RubyGems.org**
+
++ https://rubygems.org/gems/automatic
+
 **CI**
 
 + http://jenkins.id774.net/jenkins/
@@ -102,7 +105,7 @@ Releases will be numbered with the follow format:
 
 `<year>.<month>`
 
-This naming convention is to mimic the Ubuntu.
+This naming convention is to mimic Ubuntu.
 
 
 Developers

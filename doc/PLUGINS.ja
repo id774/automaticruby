@@ -292,16 +292,16 @@ CustomFeedSVNLog
       fetch_items: 2 # 指定されない場合は 30
 
 
-CustomFeedURI
--------------
+SubscriptionURI
+---------------
 [パス]
- /plugins/custom_feed/uri.rb
+ /plugins/subscription/uri.rb
 
 [入力]
  無し
 
 [出力]
- ファイルオブジェクト
+ HTML
 
 [概要]
  http/ftp の URL をファイルオブジェクトとして開く
@@ -314,16 +314,16 @@ CustomFeedURI
         - URL ...
 
 
-FilterLink
-----------
+ExtractLink
+-----------
 [パス]
- /plugins/filter/link.rb
+ /plugins/extract/link.rb
 
 [入力]
- ファイルオブジェクト
+ HTML
 
 [出力]
- HTML
+ An array of links.
 
 [概要]
  HTML の a リンクのみを抽出する
@@ -338,10 +338,10 @@ FilterImageLink
  /plugins/filter/image_link.rb
 
 [入力]
- HTML
+ An array of links.
 
 [出力]
- HTML
+ An array of links.
 
 [概要]
  画像ファイルのリンクのみを抽出する
@@ -356,10 +356,10 @@ StoreLink
  /plugins/store/link.rb
 
 [入力]
- HTML
+ An array of links.
 
 [出力]
- HTML
+ An array of links.
 
 [概要]
  パーマリンクを保存する
@@ -378,10 +378,10 @@ StoreTarget
  /plugins/store/target.rb
 
 [入力]
- HTML
+ An array of links.
 
 [出力]
- HTML
+ An array of links.
 
 [概要]
  HTML の a リンク先のコンテンツをローカルに保存する

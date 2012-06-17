@@ -1,8 +1,43 @@
+=== 12.6.0 / 2012-06-18
+
+* Added plug-ins.
+
+  * Subscription::URI
+  * Extract::Link
+  * Filter::Image
+  * Store::Link
+  * Store::Target
+
+* Improvement automatic-config.
+
+  * Scaffold makes config and db directory.
+  * Unscaffold SubCommand added to automatic-config.
+
+* Improvement search path.
+
+  * Search user_dir's config when order -c option with simple filename.
+  * If user's db directory exist, use it.
+
+* Improvement log.
+
+  * Show recipe and db name on log.
+
+* Refactoring.
+
+  * Refactoring plug-in names.
+  * Header fields.
+
+* Add tests.
+
+  * RSpec code coverage over 99%.
+  * Add all option script/build.
+
+
 === 12.4.0 / 2012-04-30
 
 * Inspect SubCommand added to automatic-config.
 
-* Added Plugins.
+* Added plug-ins.
 
   * Filter::Reverse
   * Publish::SMTP

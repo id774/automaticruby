@@ -25,31 +25,42 @@ Installation
 [Stable]
 $ gem install automatic
 
+$ automatic-config scaffold
+(Make ~/.automatic on your home directory.)
+
+
 [Development]
 $ git clone git://github.com/id774/automaticruby.git
 
-
- If the ruby 1.9, put following command.
+$ cd automaticruby
 $ script/bootstrap
-
- If the ruby 1.8, necessary to manually install the gems in the Gemfile.
 
 
 ===========
 Get Started
 ===========
 
- To create of any recipe (see below).
+ Create of any recipe (see below).
 $ automatic -c your_recipe.yml
 
  -c option to run with the manual. If there is no problem
 to automate, register it to cron.
 
+ If you specify the-c argument of a simple file name, load
+the file located in ~ /.automatic/config. If not exist,
+load file as specified in the path.
+
+ If ~/.automatic/db exists, plug-ins save the file to this
+directory.
+
+ If ~/.automatic/plugins exists, the plug-ins be loaded
+ as well.
+
 
  This is the easy recipe to simply output blog's feed to
 only console. It can be used to check the operation of
 this software.
-$ automatic -c config/feed2console.yml
+$ automatic -c ~/automatic/config/example/feed2console.yml
 
 
 =======
@@ -62,12 +73,10 @@ of associated plug-ins.
 
  This YAML file is called "Recipe".
 
- When you start automatic ruby without argument -c option,
-the config/default.yml is called. You can use -c option for
-specify a file name.
+ You can use -c option for specify a file name.
 
 [Example]
-$ automatic -c ~/recipes/your_recipe.yml
+$ automatic -c your_recipe.yml
 
 
 =====================
@@ -303,6 +312,9 @@ https://github.com/id774/automaticruby/issues
 RubyForge
 http://rubyforge.org/projects/automatic/
 
+RubyGems.org
+https://rubygems.org/gems/automatic
+
 CI
 http://jenkins.id774.net/jenkins/
 
@@ -436,10 +448,13 @@ automatic-config is the auxiliary tool.
 
 [Syntax]
 $ automatic-config
- To view a list of sub-command.
+ Show list of sub-command.
 
 $ automatic-config scaffold
- To generate a ~/.automatic directory in your home directory.
+ Make ~/.automatic directory in your home directory.
+
+$ automatic-config unscaffold
+ Delete ~/.automatic directory.
 
 $ automatic-config autodiscovery <url>
  Return the URL of the feed of target detected by auto discovery.
@@ -448,7 +463,7 @@ $ automatic-config autodiscovery http://blog.id774.net/post
 ["http://blog.id774.net/post/feed/", "http://blog.id774.net/post/comments/feed/"]
 
 $ automatic-config opmlparser <opml path>
- To output the URLs to parse the OPML file.
+ Output the URLs to parse the OPML file.
 (ex.)
 $ automatic-config opmlparser opml.xml > feeds.txt
 
@@ -461,7 +476,7 @@ $ automatic-config inspect <url>
  This inspects verify the target subscriptionable.
 
 $ automatic-config log <level> <message>
- To output log messages in the form of Automatic Ruby.
+ Output log messages in the form of Automatic Ruby.
 
 
 

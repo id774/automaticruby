@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic
 # Author::    kzgs
+#             774 <http://id774.net>
 # Created::   Mar  9, 2012
 # Updated::   Mar 10, 2012
 # Copyright:: kzgs Copyright (c) 2012
@@ -20,6 +21,12 @@ describe Automatic do
         }.should_not raise_exception(Errno::ENOENT)
       }
     end
+  end
+
+  describe "#version" do
+    specify {
+      Automatic.const_get(:VERSION).should == "12.6.0"
+    }
   end
 
   describe "#(root|config)_dir" do

@@ -292,16 +292,16 @@ CustomFeedSVNLog
       fetch_items: 2 # If not specified, 30
 
 
-CustomFeedURI
--------------
+SubscriptionURI
+---------------
 [Path]
- /plugins/custom_feed/uri.rb
+ /plugins/subscription/uri.rb
 
 [Input]
  None
 
 [Output]
- File Object
+ HTML
 
 [Description]
  Open http or ftp URL to file object.
@@ -314,16 +314,16 @@ CustomFeedURI
         - URL ...
 
 
-FilterLink
-----------
+ExtractLink
+-----------
 [Path]
- /plugins/filter/link.rb
+ /plugins/extract/link.rb
 
 [Input]
- File Object
+ HTML
 
 [Output]
- HTML
+ An array of links.
 
 [Description]
  Extract a link in HTML.
@@ -338,10 +338,10 @@ FilterImageLink
  /plugins/filter/image_link.rb
 
 [Input]
- HTML
+ An array of links.
 
 [Output]
- HTML
+ An array of links.
 
 [Description]
  Extract image's link from HTML.
@@ -356,10 +356,10 @@ StoreLink
  /plugins/store/link.rb
 
 [Input]
- HTML
+ An array of links.
 
 [Output]
- HTML
+ An array of links.
 
 [Abstract]
  Save a permanent link.
@@ -378,10 +378,10 @@ StoreTarget
  /plugins/store/target.rb
 
 [Input]
- HTML
+ An array of links.
 
 [Output]
- HTML
+ An array of links.
 
 [Description]
  Store target locally by a link in HTML.

@@ -20,7 +20,7 @@ parser = OptionParser.new { |parser|
   parser.separator "options:"
   parser.on('-c', '--config FILE', String,
             "recipe YAML file"){|c| recipe_path = c}
-  parser.on('-h', '--help', "show this message") { 
+  parser.on('-h', '--help', "show this message") {
     puts parser
     exit
   }
@@ -35,9 +35,9 @@ rescue OptionParser::ParseError => err
   exit 1
 end
 
-if recipe_path.to_s.empty? 
+if recipe_path.to_s.empty?
   if ENV["AUTOMATIC_RUBY_ENV"] == "test"
-    recpie_path = File.join(root_dir, 'config/default.yml') 
+    recpie_path = File.join(root_dir, 'config/default.yml')
   else
     puts parser
     exit 0

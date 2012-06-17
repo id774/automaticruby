@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Ruby
 # Author::    kzgs
+#             774 <http://id774.net>
 # Created::   Mar 11, 2012
-# Updated::   Jun 14, 2012
+# Updated::   Jun 17, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -39,7 +40,6 @@ subparsers = {
     unless File.exist?(dir)
       FileUtils.mkdir_p(dir)
       FileUtils.cp_r(root_dir + '/config', dir + '/example')
-      FileUtils.cp_r(root_dir + '/test/integration', dir + '/test')
       puts "Create Directory #{dir}"
     end
     dir = (File.expand_path('~/.automatic/db'))

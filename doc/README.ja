@@ -26,10 +26,14 @@ $ automatic -v
 [安定版]
 $ gem install automatic
 
+$ automatic-config scaffold
+(ホームディレクトリに ~/.automatic を生成する)
+
 
 [開発版]
 $ git clone git://github.com/id774/automaticruby.git
 
+$ cd automaticruby
 $ script/bootstrap
 
 
@@ -43,32 +47,25 @@ $ automatic -c your_recipe.yml
  -c オプション付きで手動実行し、問題がなければ
  cron に登録するなどして自動化する。
 
- 以下のコマンドはホームディレクトリに ~/.automatic を生成する。
-
-$ automatic-config scaffold
-(automatic-config の説明は後述する)
-
- 自作したレシピやプラグインは ~/.automatic に置く。
- (プラグインの作り方は後述する)
-
-
- 試しに実行するなら ~/.automatic/config/feed2console.yml
-を利用すると良い。
-$ automatic -c ~/.automatic/config/feed2console.yml
-
- これは、ブログのフィードを単純にコンソール出力するだけの
-簡単なレシピである。
- 本ソフトウェアの動作確認に使うことができる。
-
-
  単純なファイル名を -c の引数に指定した場合 ~/.automatic/config
-にある同名のファイルがあれば優先的に読み込まれる。
+にある同名のファイルがあれば優先的に読み込まれる。無い場合は指定通りの
+パスにあるファイルが読み込まれる。
 
   ~/.automatic/db が存在する場合、データベースを生成するタイプの
 プラグインはこのディレクトリにファイルを保存する。
 
  ~/.automatic/plugins が存在する場合、本体付属のプラグインと
 同様にそれらも読み込まれる。
+
+
+ 試しに実行するなら ~/.automatic/config/feed2console.yml
+を実行すると良い。
+$ automatic -c ~/.automatic/config/feed2console.yml
+
+ これは、ブログのフィードを単純にコンソール出力するだけの
+簡単なレシピである。
+ 本ソフトウェアの動作確認に使うことができる。
+
 
 
 ==========
@@ -82,11 +79,10 @@ $ automatic -c ~/.automatic/config/feed2console.yml
  この YAML ファイルをレシピと呼ぶ。
 
  automatic.rb 起動時に -c オプションの引数にレシピの
-ファイル名を指定することができる。オプションが省略
-された場合は config/default.yml が呼ばれる。
+ファイル名を指定することができる。
 
 [起動例]
-$ automatic -c ~/recipes/your_recipe.yml
+$ automatic -c your_recipe.yml
 
 
 ================
@@ -303,6 +299,9 @@ https://github.com/id774/automaticruby/issues
 RubyForge
 http://rubyforge.org/projects/automatic/
 
+RubyGems.org
+https://rubygems.org/gems/automatic
+
 CI
 http://jenkins.id774.net/jenkins/
 
@@ -466,6 +465,9 @@ $ automatic-config
 
 $ automatic-config scaffold
  ホームディレクトリに ~/.automatic ディレクトリを生成する。
+
+$ automatic-config unscaffold
+ ホームディレクトリの ~/.automatic ディレクトリを削除する。
 
 $ automatic-config autodiscovery <url>
  対象の URL をオートディスカバリで探知しフィードの URL を返す。

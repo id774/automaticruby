@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
-# Version::   12.4.0-devel
+# Version::   12.6.0
 # Created::   Feb 18, 2012
-# Updated::   Apr 30, 2012
+# Updated::   Jun 18, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -14,7 +14,7 @@ module Automatic
   require 'automatic/log'
   require 'automatic/feed_parser'
 
-  VERSION = "12.4.0-devel"
+  VERSION = "12.6.0"
   USER_DIR = "/.automatic"
 
   class << self
