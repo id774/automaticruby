@@ -58,9 +58,8 @@ $ automatic -c your_recipe.yml
 同様にそれらも読み込まれる。
 
 
- 試しに実行するなら ~/.automatic/config/feed2console.yml
-を実行すると良い。
-$ automatic -c ~/.automatic/config/feed2console.yml
+ 試しに実行するなら以下を実行すると良い。
+$ automatic -c ~/.automatic/config/example/feed2console.yml
 
  これは、ブログのフィードを単純にコンソール出力するだけの
 簡単なレシピである。
@@ -196,6 +195,9 @@ plugins:
 |   +- customfeed
 |   |    カスタムフィードを生成するプラグイン
 |   |
+|   +- extract
+|   |    情報を抽出するプラグイン
+|   |
 |   +- filter
 |   |    情報をフィルタリングするプラグイン
 |   |
@@ -217,30 +219,27 @@ plugins:
 |   |    Automatic モジュールの定義をする
 |   |
 |   +- automatic
-|   |   |
-|   |   +- environment.rb
-|   |   |    環境情報を読み込む
-|   |   |
-|   |   +- pipeline.rb
-|   |   |    パイプラインと呼ばれるオブジェクトを利用し
-|   |   |    レシピに書かれたプラグインに処理を順次受け渡す
-|   |   |
-|   |   +- feed_parser.rb
-|   |   |    フィードを解析する
-|   |   |
-|   |   +- log.rb
-|   |   |    ログを出力する
-|   |   |
-|   |   +- recipe.rb
-|   |        レシピを読み込む
-|   |
-|   +- config
+|       |
+|       +- environment.rb
+|       |    環境情報を読み込む
+|       |
+|       +- pipeline.rb
+|       |    パイプラインと呼ばれるオブジェクトを利用し
+|       |    レシピに書かれたプラグインに処理を順次受け渡す
+|       |
+|       +- feed_parser.rb
+|       |    フィードを解析する
+|       |
+|       +- log.rb
+|       |    ログを出力する
+|       |
+|       +- recipe.rb
+|            レシピを読み込む
 |
 +- db
-|   |
-|   +- permalink.db
-|        Store::Permalink プラグインで収集された
-|        ブックマークが保存される
+|
+|   ~/.automatic/db が無い場合、ここにデータベースが
+|   保存される
 |
 +- script
 |   |
@@ -250,9 +249,6 @@ plugins:
 |   +- bootstrap
 |        bundle install 等の環境設定をおこなう
 |        (ruby 1.9 以上のみ)
-|
-+- utils
-|    補助的なツールのためのディレクトリ
 |
 +- spec
 |    ユニットテスト用ディレクトリ

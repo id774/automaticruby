@@ -200,10 +200,9 @@ Directory and file structure
 | +-- automatic-config
 |   The tool for the auxiliary.
 |
-+-+ config
-| |
-| +-- default.yml
-|   To describe the recipe information in the form of yaml.
++-- config
+|
+|   Describe the recipe information in the form of yaml.
 |   They called in the argument -c option of Automatic Ruby.
 |   If you write a new recipe, locate it in the config directory.
 |
@@ -215,6 +214,9 @@ Directory and file structure
 | |
 | +-- customfeed
 | | Plug-ins to generate a custom feed.
+| |
+| +-- extract
+| | Plug-ins to extract the information.
 | |
 | +-- filter
 | | Plug-ins to filter the information.
@@ -237,29 +239,26 @@ Directory and file structure
 | | To the definition of automatic module.
 | |
 | +-+ automatic
-| | |
-| | +-- environment.rb
-| | | Read the environmental information.
-| | |
-| | +-- pipeline.rb
-| | | To use an object called a pipeline
-| | | sequentially processing plug-ins in recipes.
-| | |
-| | +-- feed_parser.rb
-| | | To parse the feed.
-| | |
-| | +-- log.rb
-| | | To output logs.
-| | |
-| | +-- recipe.rb
-| |   Read a recipes.
-| |
-| +-- config
+|   |
+|   +-- environment.rb
+|   | Read the environmental information.
+|   |
+|   +-- pipeline.rb
+|   | To use an object called a pipeline
+|   | sequentially processing plug-ins in recipes.
+|   |
+|   +-- feed_parser.rb
+|   | To parse the feed.
+|   |
+|   +-- log.rb
+|   | To output logs.
+|   |
+|   +-- recipe.rb
+|     Read a recipes.
 |
-+-+ db
-| |
-| +-- permalink.db
-|   Have been collected in the plug-in Store::Permalink.
++-- db
+|
+| If ~/.automatic/db not exist, save db file here.
 |
 +-+ script
 | |
@@ -290,6 +289,9 @@ Directory and file structure
     |
     +-- COPYING
     | The license for this software.
+    |
+    +-- ChangeLog
+    | Update history.
     |
     +-- PLUGINS
     | Documentation for plug-ins.
