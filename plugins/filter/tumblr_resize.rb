@@ -23,7 +23,7 @@ module Automatic::Plugin
     end
 
     def run
-      return_feeds = []
+      @return_feeds = []
       @pipeline.each {|feeds|
         img_url = ""
         unless feeds.nil?
@@ -31,9 +31,9 @@ module Automatic::Plugin
             feed.link = resize(feed.link) unless feed.link.nil?
           }
         end
-        return_feeds << feeds
+        @return_feeds << feeds
       }
-      return_feeds
+      @return_feeds
     end
   end
 end

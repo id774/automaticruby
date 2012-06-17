@@ -16,17 +16,17 @@ module Automatic::Plugin
     end
 
     def run
-      return_feeds = []
+      @return_feeds = []
       @pipeline.each { |feeds|
         return_feed_items = []
         unless feeds.nil?
           feeds.items.sort!{|a,b|
             a.date <=> b.date
           }
-          return_feeds << feeds
+          @return_feeds << feeds
         end
       }
-      return_feeds
+      @return_feeds
     end
   end
 end

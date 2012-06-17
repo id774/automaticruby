@@ -20,7 +20,8 @@ module Automatic
         subdir = File.basename dir
         if /#{subdir}_(.*)$/ =~ module_name.underscore
           path = dir + "/#{$1}.rb"
-          return Automatic::Plugin.autoload module_name.to_sym, path.to_s if File.exists? path
+          return Automatic::Plugin.autoload module_name.to_sym,
+            path.to_s if File.exists? path
         end
       }
       raise NoPluginError, "unknown plugin named #{module_name}"

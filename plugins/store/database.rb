@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Store::Database
 # Author::    kzgs
+#             774 <http://id774.net>
 # Created::   Feb 27, 2012
-# Updated::   Jun 14, 2012
+# Updated::   Jun 17, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -30,7 +31,7 @@ module Automatic::Plugin
     def for_each_new_feed
       prepare_database
       existing_records = model_class.find(:all)
-      return_feeds = []
+      @return_feeds = []
       @pipeline.each { |feeds|
         unless feeds.nil?
           new_feed = false
@@ -40,10 +41,10 @@ module Automatic::Plugin
               new_feed = true
             end
           }
-          return_feeds << feeds if new_feed
+          @return_feeds << feeds if new_feed
         end
       }
-      return_feeds
+      @return_feeds
     end
 
     private
