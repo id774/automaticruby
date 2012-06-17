@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "12.4.0"
+  s.version = "12.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
-  s.date = "2012-04-30"
+  s.date = "2012-06-17"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
   s.executables = ["automatic", "automatic-config"]
@@ -24,8 +24,8 @@ Gem::Specification.new do |s|
     "automatic.gemspec",
     "bin/automatic",
     "bin/automatic-config",
-    "config/default.yml",
     "config/feed2console.yml",
+    "config/html2console.yml",
     "db/.gitkeep",
     "doc/AUTHORS",
     "doc/COPYING",
@@ -42,52 +42,72 @@ Gem::Specification.new do |s|
     "lib/automatic/pipeline.rb",
     "lib/automatic/recipe.rb",
     "plugins/custom_feed/svn_log.rb",
+    "plugins/extract/link.rb",
     "plugins/filter/ignore.rb",
-    "plugins/filter/image.rb",
+    "plugins/filter/image_link.rb",
+    "plugins/filter/image_source.rb",
     "plugins/filter/reverse.rb",
     "plugins/filter/tumblr_resize.rb",
     "plugins/notify/ikachan.rb",
     "plugins/publish/console.rb",
+    "plugins/publish/dump.rb",
     "plugins/publish/google_calendar.rb",
     "plugins/publish/hatena_bookmark.rb",
     "plugins/publish/mail.rb",
     "plugins/publish/smtp.rb",
+    "plugins/store/database.rb",
     "plugins/store/full_text.rb",
+    "plugins/store/link.rb",
     "plugins/store/permalink.rb",
-    "plugins/store/store_database.rb",
+    "plugins/store/target.rb",
     "plugins/store/target_link.rb",
     "plugins/subscription/feed.rb",
+    "plugins/subscription/uri.rb",
     "script/bootstrap",
     "script/build",
+    "spec/fixtures/extractLink.html",
+    "spec/fixtures/filterImageLink.html",
+    "spec/fixtures/publishDump.html",
+    "spec/fixtures/sampleRecipe.yml",
+    "spec/fixtures/storeLink.html",
+    "spec/fixtures/storeLink2.html",
+    "spec/fixtures/storeTarget.html",
+    "spec/fixtures/storeTarget2.html",
     "spec/lib/automatic/pipeline_spec.rb",
+    "spec/lib/automatic/recipe_spec.rb",
     "spec/lib/automatic_spec.rb",
-    "spec/lib/pipeline_spec.rb",
     "spec/plugins/custom_feed/svn_log_spec.rb",
+    "spec/plugins/extract/link_spec.rb",
     "spec/plugins/filter/ignore_spec.rb",
-    "spec/plugins/filter/image_spec.rb",
+    "spec/plugins/filter/image_link_spec.rb",
+    "spec/plugins/filter/image_source_spec.rb",
     "spec/plugins/filter/reverse_spec.rb",
     "spec/plugins/filter/tumblr_resize_spec.rb",
     "spec/plugins/notify/ikachan_spec.rb",
     "spec/plugins/publish/console_spec.rb",
+    "spec/plugins/publish/dump_spec.rb",
     "spec/plugins/publish/google_calendar_spec.rb",
     "spec/plugins/publish/hatena_bookmark_spec.rb",
     "spec/plugins/publish/mail_spec.rb",
     "spec/plugins/publish/smtp_spec.rb",
     "spec/plugins/store/full_text_spec.rb",
+    "spec/plugins/store/link_spec.rb",
     "spec/plugins/store/permalink_spec.rb",
     "spec/plugins/store/target_link_spec.rb",
+    "spec/plugins/store/target_spec.rb",
     "spec/plugins/subscription/feed_spec.rb",
+    "spec/plugins/subscription/uri_spec.rb",
     "spec/spec_helper.rb",
     "spec/user_dir/plugins/store/mock.rb",
     "test/fixtures/sampleOPML.xml",
     "test/integration/test_activerecord.yml",
     "test/integration/test_fulltext.yml",
+    "test/integration/test_get_image.yml",
     "test/integration/test_googlealert.yml",
     "test/integration/test_hatenabookmark.yml",
     "test/integration/test_ignore.yml",
     "test/integration/test_ignore2.yml",
     "test/integration/test_image2local.yml",
-    "test/integration/test_mail.yml",
     "test/integration/test_reverse.yml",
     "test/integration/test_svnlog.yml",
     "test/integration/test_tumblr2local.yml",
@@ -96,7 +116,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/id774/automaticruby"
   s.licenses = ["GPL"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.19"
+  s.rubygems_version = "1.8.24"
   s.summary = "Automatic Ruby"
 
   if s.respond_to? :specification_version then
@@ -111,6 +131,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<gcalapi>, [">= 0"])
       s.add_runtime_dependency(%q<xml-simple>, [">= 0"])
       s.add_runtime_dependency(%q<feedbag>, [">= 0"])
+      s.add_runtime_dependency(%q<nokogiri>, [">= 0"])
       s.add_development_dependency(%q<cucumber>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
@@ -123,6 +144,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<gcalapi>, [">= 0"])
       s.add_dependency(%q<xml-simple>, [">= 0"])
       s.add_dependency(%q<feedbag>, [">= 0"])
+      s.add_dependency(%q<nokogiri>, [">= 0"])
       s.add_dependency(%q<cucumber>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
@@ -136,6 +158,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<gcalapi>, [">= 0"])
     s.add_dependency(%q<xml-simple>, [">= 0"])
     s.add_dependency(%q<feedbag>, [">= 0"])
+    s.add_dependency(%q<nokogiri>, [">= 0"])
     s.add_dependency(%q<cucumber>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
