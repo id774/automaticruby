@@ -66,9 +66,11 @@ module Automatic::Plugin
     end
 
     def prepare_database
+      db = File.join(db_dir, @config['db'])
+      Automatic::Log.puts("info", "Database: #{db}")
       ActiveRecord::Base.establish_connection(
         :adapter  => "sqlite3",
-        :database => File.join(db_dir, @config['db']))
+        :database => db)
       create_table unless model_class.table_exists?
     end
   end
