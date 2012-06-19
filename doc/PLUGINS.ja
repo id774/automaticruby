@@ -391,3 +391,25 @@ StoreTarget
     config:
       path: 保存先のフォルダ
       interval: 保存する間隔 (秒)
+
+
+FilterAbsoluteURI
+-----------------
+[パス]
+ /plugins/filter/absolute_uri.rb
+
+[入力]
+ An array of links.
+
+[出力]
+ An array of links.
+
+[概要]
+ リンクの相対パスを絶対パスに書き換える
+
+[レシピ記法]
+  - module: FilterAbsoluteURI
+    config:
+      url: http://targethost.com/
+
+

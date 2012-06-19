@@ -392,3 +392,25 @@ StoreTarget
     config:
       path: SAVE_TO_PATH
       interval: INTERVAL_FOR_DOWNLOAD (in seconds.)
+
+
+FilterAbsoluteURI
+-----------------
+[Path]
+ /plugins/filter/absolute_uri.rb
+
+[Input]
+ An array of links.
+
+[Output]
+ An array of links.
+
+[Description]
+ Rewrite relative path to absolute one.
+
+[Syntax]
+  - module: FilterAbsoluteURI
+    config:
+      url: http://targethost.com/
+
+
