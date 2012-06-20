@@ -15,7 +15,11 @@ module Automatic::Plugin
     end
 
     def rewrite(string)
-      string = @config['url'] + string
+      if /^http:\/\/.*$/ =~ string
+        return string
+      else
+        return @config['url'] + string 
+      end
     end
 
     def run
