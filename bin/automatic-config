@@ -33,25 +33,25 @@ subparsers = {
       dir = (File.expand_path('~/.automatic/plugins/' + path))
       unless File.exist?(dir)
         FileUtils.mkdir_p(dir)
-        puts "Create Directory #{dir}"
+        puts "Creating #{dir}"
       end
     }
     dir = (File.expand_path('~/.automatic/config'))
     unless File.exist?(dir)
       FileUtils.mkdir_p(dir)
       FileUtils.cp_r(root_dir + '/config', dir + '/example')
-      puts "Create Directory #{dir}"
+      puts "Creating #{dir}"
     end
     dir = (File.expand_path('~/.automatic/db'))
     unless File.exist?(dir)
       FileUtils.mkdir_p(dir)
-      puts "Create Directory #{dir}"
+      puts "Creating #{dir}"
     end
   },
   'unscaffold' => lambda { |argv|
     dir = (File.expand_path('~/.automatic'))
     if File.directory?(dir)
-      puts "Remove Directory #{dir}"
+      puts "Removing #{dir}"
       FileUtils.rm_r(dir)
     end
   },
