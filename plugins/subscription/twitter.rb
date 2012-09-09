@@ -26,11 +26,11 @@ module Automatic::Plugin
           unless html.nil?
             rss = RSS::Maker.make("2.0") {|maker|
               xss = maker.xml_stylesheets.new_xml_stylesheet
-              xss.href = "http://example.com/index.xsl"
-              maker.channel.about = "http://example.com/index.rdf"
-              maker.channel.title = "Example"
-              maker.channel.description = "Example Site"
-              maker.channel.link = "http://example.com/"
+              xss.href = "http://twitter.com"
+              maker.channel.about = "http://twitter.com/index.rdf"
+              maker.channel.title = "Twitter"
+              maker.channel.description = "Twitter"
+              maker.channel.link = "http://twitter.com/"
               maker.items.do_sort = true
               doc = Nokogiri::HTML(html)
               doc.xpath("/html/body/div").search('[@class="content"]').each {|content|
@@ -51,7 +51,7 @@ module Automatic::Plugin
           Automatic::Log.puts("error", "Fault in parsing: #{url}")
         end
       }
-      return @return_feed
+      @return_feed
     end
   end
 end
