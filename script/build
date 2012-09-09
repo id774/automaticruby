@@ -38,7 +38,7 @@ run_test() {
 }
 
 load_tests() {
-    for YAML_FILE in "$RACK_ROOT/test/integration/*.yml"
+    for YAML_FILE in "$RACK_ROOT/test/integration/test_*.yml"
     do
         run_test $YAML_FILE
     done
