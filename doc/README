@@ -364,11 +364,7 @@ pipeline backs again as the return value.
 
  This mechanism called "Automatic::Pipeline".
 
- The contents of the pipeline is the object of your choice.
- You can be stored in a format RSS, HTML, and various other
-in pipeline. However, when combined with the plug-in, it's
-necessary to input data format of the previous plug-ins
-and plug-in output of the next match.
+ The contents of the pipeline is the array of the feeds.
 
 
 =============================

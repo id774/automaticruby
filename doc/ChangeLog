@@ -1,3 +1,24 @@
+=== 12.9.0 / 2012-09-18
+
+* The format of the pipeline were unified to "feed object" (array of feeds).
+
+  * Some plug-ins have lost backward compatibility.
+
+* Added new plug-ins.
+
+  * Subscription::Link
+  * Subscription::Twitter
+  * Filter::AbsoluteURI
+
+* Removed obsolete plug-ins.
+
+  * Subscription::URI
+  * Extract::Link
+  * Filter::Image
+  * Store::Link
+  * Store::Target
+
+
 === 12.6.0 / 2012-06-18
 
 * Added plug-ins.
