@@ -18,6 +18,38 @@ SubscriptionFeed
         - FEED ...
 
 
+SubscriptionLink
+----------------
+[Path]
+ /plugins/subscription/link.rb
+
+[Abstract]
+ Subscribe urls and extract there links.
+
+[Syntax]
+  - module: SubscriptionLink
+    config:
+      urls:
+        - URL
+        - URL ...
+
+
+SubscriptionTwitter
+-------------------
+[Path]
+ /plugins/subscription/twitter.rb
+
+[Abstract]
+ Subscribe twitter and extract there statuses and the links.
+
+[Syntax]
+  - module: SubscriptionTwittter
+    config:
+      urls:
+        - URL
+        - URL ...
+
+
 FilterReverse
 -------------
 [Path]
@@ -57,6 +89,20 @@ FilterImageSource
 
 [Syntax]
   - module: FilterImageSource
+
+
+FilterAbsoluteURI
+-----------------
+[Path]
+ /plugins/filter/absolute_uri.rb
+
+[Description]
+ Rewrite relative path to absolute one.
+
+[Syntax]
+  - module: FilterAbsoluteURI
+    config:
+      url: http://targethost.com/
 
 
 FilterTumblrResize
@@ -212,25 +258,5 @@ CustomFeedSVNLog
     config:
       target: http://redmine.rubyforge.org/svn
       fetch_items: 2 # If not specified, 30
-
-
-FilterAbsoluteURI
------------------
-[Path]
- /plugins/filter/absolute_uri.rb
-
-[Input]
- An array of links.
-
-[Output]
- An array of links.
-
-[Description]
- Rewrite relative path to absolute one.
-
-[Syntax]
-  - module: FilterAbsoluteURI
-    config:
-      url: http://targethost.com/
 
 

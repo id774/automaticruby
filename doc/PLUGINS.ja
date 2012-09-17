@@ -18,6 +18,38 @@ SubscriptionFeed
         - フィード名 ...
 
 
+SubscriptionLink
+----------------
+[パス]
+ /plugins/subscription/link.rb
+
+[概要]
+ URL を購読しそのリンクを抽出する
+
+[レシピ記法]
+  - module: SubscriptionLink
+    config:
+      urls:
+        - URL
+        - URL ...
+
+
+SubscriptionTwitter
+-------------------
+[パス]
+ /plugins/subscription/link.rb
+
+[概要]
+ Twitter を購読し、発言とそのリンクを抽出する
+
+[レシピ記法]
+  - module: SubscriptionTwitter
+    config:
+      urls:
+        - URL
+        - URL ...
+
+
 FilterReverse
 -------------
 [パス]
@@ -57,6 +89,20 @@ FilterImageSource
 
 [レシピ記法]
   - module: FilterImageSource
+
+
+FilterAbsoluteURI
+-----------------
+[パス]
+ /plugins/filter/absolute_uri.rb
+
+[概要]
+ リンクの相対パスを絶対パスに書き換える
+
+[レシピ記法]
+  - module: FilterAbsoluteURI
+    config:
+      url: http://targethost.com/
 
 
 FilterTumblrResize
@@ -212,19 +258,5 @@ CustomFeedSVNLog
     config:
       target: http://redmine.rubyforge.org/svn
       fetch_items: 2 # 指定されない場合は 30
-
-
-FilterAbsoluteURI
------------------
-[パス]
- /plugins/filter/absolute_uri.rb
-
-[概要]
- リンクの相対パスを絶対パスに書き換える
-
-[レシピ記法]
-  - module: FilterAbsoluteURI
-    config:
-      url: http://targethost.com/
 
 
