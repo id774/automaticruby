@@ -7,9 +7,10 @@
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
+require 'open-uri'
+
 module Automatic::Plugin
   class StoreTargetLink
-    require 'open-uri'
 
     def initialize(config, pipeline=[])
       @config = config

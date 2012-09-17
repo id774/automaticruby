@@ -60,9 +60,9 @@ module Automatic::Plugin
     def db_dir
       dir = (File.expand_path('~/.automatic/db'))
       if File.directory?(dir)
-        return dir
+        dir
       else
-        return File.join(File.dirname(__FILE__), '..', '..', 'db')
+        File.join(File.dirname(__FILE__), '..', '..', 'db')
       end
     end
 

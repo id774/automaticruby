@@ -18,7 +18,7 @@ module Automatic::Plugin
       if /^http:\/\/.*$/ =~ string
         return string
       else
-        return @config['url'] + string 
+        return @config['url'] + string
       end
     end
 

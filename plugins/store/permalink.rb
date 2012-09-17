@@ -6,6 +6,7 @@
 # Updated::   Sep 18, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 require 'plugins/store/database'
 
 module Automatic::Plugin
@@ -21,22 +22,22 @@ module Automatic::Plugin
     end
 
     def column_definition
-      return {
+      {
         :url => :string,
         :created_at => :string
       }
     end
 
     def unique_key
-      return :url
+      :url
     end
 
     def model_class
-      return Automatic::Plugin::Permalink
+      Automatic::Plugin::Permalink
     end
 
     def run
-      return for_each_new_feed {|feed|
+      for_each_new_feed {|feed|
         unless feed.link.nil?
           Permalink.create(
             :url => feed.link,

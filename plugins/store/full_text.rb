@@ -21,7 +21,7 @@ module Automatic::Plugin
     end
 
     def column_definition
-      return {
+      {
         :title => :string,
         :link => :string,
         :description => :string,
@@ -31,15 +31,15 @@ module Automatic::Plugin
     end
 
     def unique_key
-      return :link
+      :link
     end
 
     def model_class
-      return Automatic::Plugin::Blog
+      Automatic::Plugin::Blog
     end
 
     def run
-      return for_each_new_feed { |feed|
+      for_each_new_feed { |feed|
         begin
           Blog.create(
             :title => feed.title,
