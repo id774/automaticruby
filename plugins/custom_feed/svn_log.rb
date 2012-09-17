@@ -53,4 +53,3 @@ module Automatic::Plugin
     end
   end
 end
-

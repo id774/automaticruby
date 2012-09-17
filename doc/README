@@ -333,9 +333,8 @@ After that, we will give you the right to commit for a quick fix finely.
 Coding Rule
 ===========
 
-2 tabs (Soft Tabs).
+Coding standards should be completed in 1 file.
 Remove trailing spaces.
-Namespace and conventions, see the existing code.
 {} is recommended than do end (To avoid end end end,,).
 RDoc Header is written by creator of the file.
 Write tests with RSPec.

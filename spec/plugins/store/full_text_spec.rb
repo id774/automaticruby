@@ -8,7 +8,6 @@
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'store/full_text'
-
 require 'pathname'
 
 describe Automatic::Plugin::StoreFullText do

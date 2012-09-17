@@ -8,13 +8,14 @@
 
   * Subscription::Link
   * Subscription::Twitter
+  * Filter::Image
   * Filter::AbsoluteURI
 
 * Removed obsolete plug-ins.
 
   * Subscription::URI
   * Extract::Link
-  * Filter::Image
+  * Filter::ImageLink
   * Store::Link
   * Store::Target
 
@@ -25,7 +26,7 @@
 
   * Subscription::URI
   * Extract::Link
-  * Filter::Image
+  * Filter::ImageLink
   * Store::Link
   * Store::Target
 

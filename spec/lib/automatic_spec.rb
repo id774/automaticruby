@@ -8,6 +8,7 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
+
 require 'automatic'
 
 describe Automatic do
