@@ -6,20 +6,18 @@ global:
     level: info
 
 plugins:
-  - module: SubscriptionURI
+  - module: SubscriptionLink
     config:
       urls:
         - http://reblog.id774.net/
 
-  - module: ExtractLink
+  - module: FilterImage
 
-  - module: FilterImageLink
-
-  - module: StoreLink
+  - module: StorePermalink
     config:
       db: test_link.db
 
-  - module: StoreTarget
+  - module: StoreTargetLink
     config:
       path: /tmp
       interval: 2

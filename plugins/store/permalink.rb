@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Store::Permalink
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Jun 14, 2012
+# Updated::   Sep 18, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 require 'plugins/store/database'
@@ -36,11 +36,13 @@ module Automatic::Plugin
     end
 
     def run
-      return for_each_new_feed { |feed|
-        Permalink.create(
-          :url => feed.link,
-          :created_at => Time.now.strftime("%Y/%m/%d %X"))
-        Automatic::Log.puts("info", "Saving: #{feed.link}")
+      return for_each_new_feed {|feed|
+        unless feed.link.nil?
+          Permalink.create(
+            :url => feed.link,
+            :created_at => Time.now.strftime("%Y/%m/%d %X"))
+          Automatic::Log.puts("info", "Saving: #{feed.link}")
+        end
       }
     end
   end
