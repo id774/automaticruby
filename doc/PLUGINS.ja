@@ -7,12 +7,6 @@ SubscriptionFeed
 [パス]
  /plugins/subscription/feed.rb
 
-[入力]
- 無し
-
-[出力]
- フィード
-
 [概要]
  フィードを購読する
 
@@ -29,12 +23,6 @@ FilterReverse
 [パス]
  /plugins/filter/reverse.rb
 
-[入力]
- フィード
-
-[出力]
- フィード
-
 [概要]
  日付の昇順にソートする
 
@@ -46,12 +34,6 @@ FilterIgnore
 ------------
 [パス]
  /plugins/filter/ignore.rb
-
-[入力]
- フィード
-
-[出力]
- フィード
 
 [概要]
  NG ワードを除外する
@@ -69,12 +51,6 @@ FilterImageSource
 [パス]
  /plugins/filter/image_source.rb
 
-[入力]
- フィード
-
-[出力]
- フィード
-
 [概要]
  パーマリンクを本文中の画像のソースリンクに書き換える
  画像のソースリンクが無い場合は nil にする
@@ -87,12 +63,6 @@ FilterTumblrResize
 --------------------
 [パス]
  /plugins/filter/tumblr_resize.rb
-
-[入力]
- フィード
-
-[出力]
- フィード
 
 [概要]
  パーマリンクを Tumblr の最大サイズ
@@ -110,12 +80,6 @@ StorePermalink
 [パス]
  /plugins/store/permalink.rb
 
-[入力]
- フィード
-
-[出力]
- フィード
-
 [概要]
  パーマリンクを保存する
  重複したパーマリンクは破棄する
@@ -130,12 +94,6 @@ StoreFullText
 -------------
 [パス]
  /plugins/store/full_text.rb
-
-[入力]
- フィード
-
-[出力]
- フィード
 
 [概要]
  フィード全文を DB に保存する
@@ -154,12 +112,6 @@ StoreTargetLink
 [パス]
  /plugins/store/target_link.rb
 
-[入力]
- フィード
-
-[出力]
- フィード
-
 [概要]
  リンク先のコンテンツをローカルに保存する
 
@@ -175,12 +127,6 @@ PublishConsole
 [パス]
  /plugins/publish/console.rb
 
-[入力]
- フィード
-
-[出力]
- フィード
-
 [概要]
  パイプラインをコンソールに出力する
 
@@ -195,12 +141,6 @@ PublishHatenaBookmark
 
 [概要]
  はてなブックマークをする
-
-[入力]
- フィード
-
-[出力]
- フィード
 
 [説明]
  はてなブックマーク API への投稿用 XML を生成し
@@ -222,12 +162,6 @@ PublishGoogleCalendar
 [概要]
  Google Calendar に予定を登録する
 
-[入力]
- フィード
-
-[出力]
- フィード
-
 [説明]
  item.title を Google カレンダーに登録する
 
@@ -246,12 +180,6 @@ NotifyIkachan
 
 [概要]
  ikachan へメッセージを送信する
-
-[入力]
- フィード
-
-[出力]
- フィード
 
 [説明]
  ikachan へ HTTP 経由で POST する
@@ -272,12 +200,6 @@ CustomFeedSVNLog
 [パス]
  /plugins/custom_feed/svn_log.rb
 
-[入力]
- 無し
-
-[出力]
- フィード
-
 [概要]
  SVN から新しいリビジョン情報を取得する
 
@@ -292,117 +214,10 @@ CustomFeedSVNLog
       fetch_items: 2 # 指定されない場合は 30
 
 
-SubscriptionURI
----------------
-[パス]
- /plugins/subscription/uri.rb
-
-[入力]
- 無し
-
-[出力]
- HTML
-
-[概要]
- http/ftp の URL をファイルオブジェクトとして開く
-
-[レシピ記法]
-  - module: CustomFeedURI
-    config:
-      url:
-        - URL
-        - URL ...
-
-
-ExtractLink
------------
-[パス]
- /plugins/extract/link.rb
-
-[入力]
- HTML
-
-[出力]
- An array of links.
-
-[概要]
- HTML の a リンクのみを抽出する
-
-[レシピ記法]
-  - module: FilterLink
-
-
-FilterImageLink
----------------
-[パス]
- /plugins/filter/image_link.rb
-
-[入力]
- An array of links.
-
-[出力]
- An array of links.
-
-[概要]
- 画像ファイルのリンクのみを抽出する
-
-[レシピ記法]
-  - module: FilterImageLink
-
-
-StoreLink
----------
-[パス]
- /plugins/store/link.rb
-
-[入力]
- An array of links.
-
-[出力]
- An array of links.
-
-[概要]
- パーマリンクを保存する
- 重複したパーマリンクは破棄する
- これは StorePermalink の HTML 版である
-
-[レシピ記法]
-  - module: StoreLink
-    config:
-      db: パーマリンクを保存する SQLite3 DB 名
-
-
-StoreTarget
------------
-[パス]
- /plugins/store/target.rb
-
-[入力]
- An array of links.
-
-[出力]
- An array of links.
-
-[概要]
- HTML の a リンク先のコンテンツをローカルに保存する
-
-[レシピ記法]
-  - module: StoreTarget
-    config:
-      path: 保存先のフォルダ
-      interval: 保存する間隔 (秒)
-
-
 FilterAbsoluteURI
 -----------------
 [パス]
  /plugins/filter/absolute_uri.rb
-
-[入力]
- An array of links.
-
-[出力]
- An array of links.
 
 [概要]
  リンクの相対パスを絶対パスに書き換える

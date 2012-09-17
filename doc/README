@@ -215,9 +215,6 @@ Directory and file structure
 | +-- customfeed
 | | Plug-ins to generate a custom feed.
 | |
-| +-- extract
-| | Plug-ins to extract the information.
-| |
 | +-- filter
 | | Plug-ins to filter the information.
 | |

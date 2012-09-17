@@ -7,12 +7,6 @@ SubscriptionFeed
 [Path]
  /plugins/subscription/feed.rb
 
-[Input]
- None
-
-[Output]
- Feed
-
 [Abstract]
  Subscribe to feed.
 
@@ -29,12 +23,6 @@ FilterReverse
 [Path]
  /plugins/filter/reverse.rb
 
-[Input]
- Feed
-
-[Output]
- Feed
-
 [Abstract]
  Sort feed by date asc.
 
@@ -46,12 +34,6 @@ FilterIgnore
 ------------
 [Path]
  /plugins/filter/ignore.rb
-
-[Input]
- Feed
-
-[Output]
- Feed
 
 [Abstract]
  To exclude the NG word.
@@ -69,12 +51,6 @@ FilterImageSource
 [Path]
  /plugins/filter/image_source.rb
 
-[Input]
- Feed
-
-[Output]
- Feed
-
 [Abstract]
  Rewrite the permalink to source of the image in the contents.
  If there is no source of image, the permalink will be nil.
@@ -87,12 +63,6 @@ FilterTumblrResize
 --------------------
 [Path]
  /plugins/filter/tumblr_resize.rb
-
-[Input]
- Feed
-
-[Output]
- Feed
 
 [Abstract]
  To rewrite the permalink to the maximum size of
@@ -110,12 +80,6 @@ StorePermalink
 [Path]
  /plugins/store/permalink.rb
 
-[Input]
- Feed
-
-[Output]
- Feed
-
 [Abstract]
  Save a permanent link.
  The duplicate permalink will be discarded.
@@ -130,12 +94,6 @@ StoreFullText
 -------------
 [Path]
  /plugins/store/full_text.rb
-
-[Input]
- Feed
-
-[Output]
- Feed
 
 [Abstract]
  Save a full text of contents.
@@ -154,12 +112,6 @@ StoreTargetLink
 [Path]
  /plugins/store/target_link.rb
 
-[Input]
- Feed
-
-[Output]
- Feed
-
 [Abstract]
  Store target locally.
  This emulate "Right click to save".
@@ -176,12 +128,6 @@ PublishConsole
 [Path]
  /plugins/publish/console.rb
 
-[Input]
- Feed
-
-[Output]
- Feed
-
 [Abstract]
  Output pipeline to the console.
 
@@ -193,12 +139,6 @@ PublishHatenaBookmark
 ---------------------
 [Path]
  /plugins/publish/hatenabookmark.rb
-
-[Input]
- Feed
-
-[Output]
- Feed
 
 [Abstract]
  To Hatena Bookmark (Social Bookmark).
@@ -220,12 +160,6 @@ PublishGoogleCalendar
 [Path]
  /plugins/publish/google_calendar.rb
 
-[Input]
- Feed
-
-[Output]
- Feed
-
 [Abstract]
  To register an appointment to Google Calendar.
 
@@ -244,12 +178,6 @@ NotifyIkachan
 -------------
 [Path]
  /plugins/notify/ikachan.rb
-
-[Input]
- Feed
-
-[Output]
- Feed
 
 [Abstract]
  To send a message to ikachan.
@@ -273,12 +201,6 @@ CustomFeedSVNLog
 [Path]
  /plugins/custom_feed/svn_log.rb
 
-[Input]
- None
-
-[Output]
- Feed
-
 [Abstract]
  Get new revision info from SVN.
 
@@ -290,108 +212,6 @@ CustomFeedSVNLog
     config:
       target: http://redmine.rubyforge.org/svn
       fetch_items: 2 # If not specified, 30
-
-
-SubscriptionURI
----------------
-[Path]
- /plugins/subscription/uri.rb
-
-[Input]
- None
-
-[Output]
- HTML
-
-[Description]
- Open http or ftp URL to file object.
-
-[Syntax]
-  - module: CustomFeedURI
-    config:
-      url:
-        - URL
-        - URL ...
-
-
-ExtractLink
------------
-[Path]
- /plugins/extract/link.rb
-
-[Input]
- HTML
-
-[Output]
- An array of links.
-
-[Description]
- Extract a link in HTML.
-
-[Syntax]
-  - module: FilterLink
-
-
-FilterImageLink
----------------
-[Path]
- /plugins/filter/image_link.rb
-
-[Input]
- An array of links.
-
-[Output]
- An array of links.
-
-[Description]
- Extract image's link from HTML.
-
-[Syntax]
-  - module: FilterImageLink
-
-
-StoreLink
----------
-[Path]
- /plugins/store/link.rb
-
-[Input]
- An array of links.
-
-[Output]
- An array of links.
-
-[Abstract]
- Save a permanent link.
- The duplicate permalink will be discarded.
- This is a HTML version for StorePermalink.
-
-[Syntax]
-  - module: StoreLink
-    config:
-      db: DB_NAME
-
-
-StoreTarget
------------
-[Path]
- /plugins/store/target.rb
-
-[Input]
- An array of links.
-
-[Output]
- An array of links.
-
-[Description]
- Store target locally by a link in HTML.
- This emulate "Right click to save".
-
-[Syntax]
-  - module: StoreTarget
-    config:
-      path: SAVE_TO_PATH
-      interval: INTERVAL_FOR_DOWNLOAD (in seconds.)
 
 
 FilterAbsoluteURI
