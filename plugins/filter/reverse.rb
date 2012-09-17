@@ -12,7 +12,6 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
-      @output = STDOUT
     end
 
     def run
