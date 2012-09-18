@@ -84,12 +84,12 @@ module AutomaticSpec
     end
 
     def item(url, title="", description="", date="")
-      item = RSS::Rss::Channel::Item.new
-      item.link = url
-      item.title = title unless title.blank?
-      item.instance_variable_set(:@description, description)
-      item.pubDate = date unless date.blank?
-      @channel.items << item
+      i = RSS::Rss::Channel::Item.new
+      i.link = url
+      i.title = title unless title.blank?
+      i.instance_variable_set(:@description, description)
+      i.pubDate = date unless date.blank?
+      @channel.items << i
     end
   end
 end
