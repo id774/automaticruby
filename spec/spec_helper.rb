@@ -41,11 +41,11 @@ module AutomaticSpec
     def generate_pipeline(&block)
       pipeline_generator = StubPipelineGenerator.new
       pipeline_generator.instance_eval(&block)
-      return pipeline_generator.pipeline
+      pipeline_generator.pipeline
     end
 
     def root_dir
-      return File.join(__FILE__, "../../")
+      File.join(__FILE__, "../../")
     end
 
     def db_dir

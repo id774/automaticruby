@@ -10,7 +10,7 @@ module Automatic::Plugin
     end
 
     def run
-      return @pipeline[0]
+      @pipeline[0]
     end
   end
 end
