@@ -3,7 +3,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Feb 27, 2012
-# Updated::   Jun 17, 2012
+# Updated::   Sep 18, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -19,9 +19,11 @@ module Automatic::Plugin
         unless feeds.nil?
           new_feed = false
           feeds.items.each { |feed|
-            unless existing_records.detect { |b| b.try(unique_key) == feed.link }
-              yield(feed)
-              new_feed = true
+            unless feed.link.nil?
+              unless existing_records.detect { |b| b.try(unique_key) == feed.link }
+                yield(feed)
+                new_feed = true
+              end
             end
           }
           @return_feeds << feeds if new_feed
