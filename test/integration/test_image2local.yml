@@ -9,7 +9,7 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://instagram.yuyuweb.cc/rss
+        - http://reblog.id774.net/rss
 
   - module: StorePermalink
     config:

@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::ImageSource
 # Author::    kzgs
 #             774 <http://id774.net>
-# Created::   Mar 1, 2012
+# Created::   Mar  1, 2012
 # Updated::   Jun 14, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.

@@ -30,7 +30,6 @@ describe Automatic::Plugin::SubscriptionFeed do
     its(:run) { should be_empty }
   end
 
-
   context "with feeds whose valid URL" do
     subject {
       Automatic::Plugin::SubscriptionFeed.new(
