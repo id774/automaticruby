@@ -26,7 +26,7 @@ describe Automatic do
 
   describe "#version" do
     specify {
-      Automatic.const_get(:VERSION).should == "12.9.0"
+      Automatic.const_get(:VERSION).should == "12.9.1"
     }
   end
 

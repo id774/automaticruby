@@ -1,3 +1,10 @@
+=== 12.9.1 / 2012-09-18
+
+* Bug fix
+
+  * It should be considered the case of the feed link including nil
+
+
 === 12.9.0 / 2012-09-18
 
 * The format of the pipeline were unified to "feed object" (array of feeds).
