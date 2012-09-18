@@ -11,23 +11,6 @@ require 'active_record'
 
 module Automatic::Plugin
   module Database
-    def for_each_new_link
-      prepare_database
-      existing_records = model_class.find(:all)
-      @return_html = []
-      @pipeline.each { |link|
-        unless link.nil?
-          new_link = false
-          unless existing_records.detect { |b| b.try(unique_key) == link }
-            yield(link)
-            new_link = true
-          end
-          @return_html << link if new_link
-        end
-      }
-      @return_html
-    end
-
     def for_each_new_feed
       prepare_database
       existing_records = model_class.find(:all)

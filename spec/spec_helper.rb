@@ -51,9 +51,9 @@ module AutomaticSpec
     def db_dir
       dir = (File.expand_path('~/.automatic/db'))
       if File.directory?(dir)
-        return dir
+        dir
       else
-        return File.join(root_dir, "db")
+        File.join(root_dir, "db")
       end
     end
   end
@@ -70,20 +70,6 @@ module AutomaticSpec
       generator.instance_eval(&block)
       @pipeline << generator.feed
     end
-
-    def html(fixture)
-      obj = File.read(File.join(APP_ROOT, "spec",
-        "fixtures", fixture))
-      @pipeline << obj
-    end
-
-    def link(fixture)
-      obj = File.read(File.join(APP_ROOT, "spec",
-        "fixtures", fixture))
-      require 'extract/link'
-      @pipeline << obj
-      @pipeline.replace Automatic::Plugin::ExtractLink.new(nil, @pipeline).run
-    end
   end
 
   class StubFeedGenerator
@@ -94,16 +80,16 @@ module AutomaticSpec
     def feed
       rss = RSS::Rss.new([])
       rss.instance_variable_set(:@channel, @channel)
-      return rss
+      rss
     end
 
     def item(url, title="", description="", date="")
-      itm = RSS::Rss::Channel::Item.new
-      itm.link = url
-      itm.title = title unless title.blank?
-      itm.instance_variable_set(:@description, description)
-      itm.pubDate = date unless date.blank?
-      @channel.items << itm
+      item = RSS::Rss::Channel::Item.new
+      item.link = url
+      item.title = title unless title.blank?
+      item.instance_variable_set(:@description, description)
+      item.pubDate = date unless date.blank?
+      @channel.items << item
     end
   end
 end
