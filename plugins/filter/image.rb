@@ -20,20 +20,22 @@ module Automatic::Plugin
         return_feed_items = []
         unless feeds.nil?
           feeds.items.each {|feed|
-            image_link = nil
-            feed.link.scan(/(.*?\.jp.*g$)/i) { |matched|
-              image_link = matched.join(" ")
-            }
-            feed.link.scan(/(.*?\.png$)/i) { |matched|
-              image_link = matched.join(" ")
-            }
-            feed.link.scan(/(.*?\.gif$)/i) { |matched|
-              image_link = matched.join(" ")
-            }
-            feed.link.scan(/(.*?\.tiff$)/i) { |matched|
-              image_link = matched.join(" ")
-            }
-            feed.link = image_link
+            unless feed.link.nil?
+              image_link = nil
+              feed.link.scan(/(.*?\.jp.*g$)/i) { |matched|
+                image_link = matched.join(" ")
+              }
+              feed.link.scan(/(.*?\.png$)/i) { |matched|
+                image_link = matched.join(" ")
+              }
+              feed.link.scan(/(.*?\.gif$)/i) { |matched|
+                image_link = matched.join(" ")
+              }
+              feed.link.scan(/(.*?\.tiff$)/i) { |matched|
+                image_link = matched.join(" ")
+              }
+              feed.link = image_link
+            end
           }
           @return_feeds << feeds
         end

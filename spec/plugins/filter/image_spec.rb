@@ -26,6 +26,7 @@ describe Automatic::Plugin::FilterImage do
             item "http://id774.net/images/link_8.gif"
             item "http://id774.net/images/link_9.GIF"
             item "http://id774.net/images/link_10.tiff"
+            item nil
             item "http://id774.net/images/link_11.TIFF"
           }})}
 
@@ -55,6 +56,8 @@ describe Automatic::Plugin::FilterImage do
         subject.instance_variable_get(:@return_feeds)[0].items[9].link.
         should == "http://id774.net/images/link_10.tiff"
         subject.instance_variable_get(:@return_feeds)[0].items[10].link.
+        should be_nil
+        subject.instance_variable_get(:@return_feeds)[0].items[11].link.
         should == "http://id774.net/images/link_11.TIFF"
       }
     end
