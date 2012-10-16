@@ -3,7 +3,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  9, 2012
-# Updated::   Jun 18, 2012
+# Updated::   Oct 16, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -26,7 +26,7 @@ describe Automatic do
 
   describe "#version" do
     specify {
-      Automatic.const_get(:VERSION).should == "12.9.1"
+      Automatic.const_get(:VERSION).should == "12.10.0"
     }
   end
 
@@ -37,7 +37,7 @@ describe Automatic do
     }
   end
 
-  describe "#user_dir= in test env" do 
+  describe "#user_dir= in test env" do
     before(:all) do
       Automatic.user_dir = File.join(APP_ROOT, "spec/user_dir")
     end

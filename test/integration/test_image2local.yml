@@ -11,11 +11,13 @@ plugins:
       feeds:
         - http://reblog.id774.net/rss
 
+  - module: FilterImageSource
+
+  - module: FilterTumblrResize
+
   - module: StorePermalink
     config:
       db: test_image.db
-
-  - module: FilterImageSource
 
   - module: StoreTargetLink
     config:

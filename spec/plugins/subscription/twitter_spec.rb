@@ -16,6 +16,7 @@ describe Automatic::Plugin::SubscriptionTwitter do
       Automatic::Plugin::SubscriptionTwitter.new(
         { 'urls' => [] })
     }
+
     its(:run) { should be_empty }
   end
 
@@ -25,6 +26,7 @@ describe Automatic::Plugin::SubscriptionTwitter do
         { 'urls' => ["invalid_url"] }
       )
     }
+
     its(:run) { should be_empty }
   end
 

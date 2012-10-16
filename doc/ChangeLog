@@ -1,3 +1,10 @@
+=== 12.10.0 / 2012-10-16
+
+* Added new plug-in.
+
+  * Subscription::Tumblr
+
+
 === 12.9.1 / 2012-09-18
 
 * Bug fix

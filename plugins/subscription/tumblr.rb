@@ -51,8 +51,8 @@ module Automatic::Plugin
           create_rss(url)
         unless @config['pages'].nil?
           @config['pages'].times {|i|
-            if i > 1
-              old_url = url + "/page/" + i.to_s
+            if i > 0
+              old_url = url + "/page/" + (i+1).to_s
               create_rss(old_url)
             end
           }

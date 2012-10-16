@@ -10,11 +10,9 @@ plugins:
     config:
       urls:
         - http://reblog.id774.net
-      pages: 5
+      pages: 2
 
   - module: FilterImage
-
-  - module: FilterTumblrResize
 
   - module: StorePermalink
     config:
