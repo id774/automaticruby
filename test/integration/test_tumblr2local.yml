@@ -8,11 +8,11 @@ global:
 plugins:
   - module: SubscriptionTumblr
     config:
-      feeds:
-        - http://reblog.id774.net/rss
+      urls:
+        - http://reblog.id774.net
       pages: 5
 
-  - module: FilterImageSource
+  - module: FilterImage
 
   - module: FilterTumblrResize
 

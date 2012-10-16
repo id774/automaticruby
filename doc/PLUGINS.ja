@@ -50,6 +50,24 @@ SubscriptionTwitter
         - URL ...
 
 
+SubscriptionTumblr
+------------------
+[パス]
+ /plugins/subscription/tumblr.rb
+
+[概要]
+ Tumblr を購読し、リンクを抽出する
+ pages が指定された場合、過去のページも遡って購読する
+
+[レシピ記法]
+  - module: SubscriptionTumblr
+    config:
+      urls:
+        - URL
+        - URL ...
+      pages: PAGES
+
+
 FilterReverse
 -------------
 [パス]

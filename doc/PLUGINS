@@ -50,6 +50,24 @@ SubscriptionTwitter
         - URL ...
 
 
+SubscriptionTumblr
+------------------
+[Path]
+ /plugins/subscription/tumblr.rb
+
+[Abstract]
+ Subscribe tumblr and extract the links.
+ If pages specified, including past pages.
+
+[Syntax]
+  - module: SubscriptionTumblr
+    config:
+      urls:
+        - URL
+        - URL ...
+      pages: PAGES
+
+
 FilterReverse
 -------------
 [Path]
