@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "12.9.1"
+  s.version = "12.10.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
-  s.date = "2012-09-18"
+  s.date = "2012-10-16"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
   s.executables = ["automatic", "automatic-config"]
@@ -59,6 +59,7 @@ Gem::Specification.new do |s|
     "plugins/store/target_link.rb",
     "plugins/subscription/feed.rb",
     "plugins/subscription/link.rb",
+    "plugins/subscription/tumblr.rb",
     "plugins/subscription/twitter.rb",
     "script/bootstrap",
     "script/build",
@@ -84,13 +85,13 @@ Gem::Specification.new do |s|
     "spec/plugins/store/target_link_spec.rb",
     "spec/plugins/subscription/feed_spec.rb",
     "spec/plugins/subscription/link_spec.rb",
+    "spec/plugins/subscription/tumblr_spec.rb",
     "spec/plugins/subscription/twitter_spec.rb",
     "spec/spec_helper.rb",
     "spec/user_dir/plugins/store/mock.rb",
     "test/fixtures/sampleOPML.xml",
     "test/integration/test_activerecord.yml",
     "test/integration/test_fulltext.yml",
-    "test/integration/test_get_image.yml",
     "test/integration/test_googlealert.yml",
     "test/integration/test_hatenabookmark.yml",
     "test/integration/test_ignore.yml",
