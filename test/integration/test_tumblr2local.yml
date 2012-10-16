@@ -6,18 +6,19 @@ global:
     level: info
 
 plugins:
-  - module: SubscriptionFeed
+  - module: SubscriptionTumblr
     config:
       feeds:
         - http://reblog.id774.net/rss
-
-  - module: StorePermalink
-    config:
-      db: test_tumblr.db
+      pages: 5
 
   - module: FilterImageSource
 
   - module: FilterTumblrResize
+
+  - module: StorePermalink
+    config:
+      db: test_tumblr.db
 
   - module: StoreTargetLink
     config:

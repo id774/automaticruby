@@ -68,7 +68,7 @@ FilterIgnore
  /plugins/filter/ignore.rb
 
 [Abstract]
- To exclude the NG word.
+ Exclude the NG word.
 
 [Syntax]
   - module: FilterIgnore
@@ -76,6 +76,19 @@ FilterIgnore
       exclude:
         - KEYWORD
         - KEYWORD ...
+
+
+FilterImage
+-----------
+[Path]
+ /plugins/filter/image.rb
+
+[Abstract]
+ Extract images from the link.
+ If not image, the permalink will be nil.
+
+[Syntax]
+  - module: FilterImage
 
 
 FilterImageSource
@@ -111,7 +124,7 @@ FilterTumblrResize
  /plugins/filter/tumblr_resize.rb
 
 [Abstract]
- To rewrite the permalink to the maximum size of
+ Rewrite the permalink to the maximum size of
  the Tumblr (High Res).
 
 [Assumption]
@@ -187,10 +200,10 @@ PublishHatenaBookmark
  /plugins/publish/hatenabookmark.rb
 
 [Abstract]
- To Hatena Bookmark (Social Bookmark).
+ Bookmarking to Hatena Bookmark (Social Bookmark).
 
 [Description]
- To generate the XML for submission to
+ Generate the XML for submission to
  Hatena Bookmark API.
 
 [Syntax]
@@ -207,7 +220,7 @@ PublishGoogleCalendar
  /plugins/publish/google_calendar.rb
 
 [Abstract]
- To register an appointment to Google Calendar.
+ Register an appointment to Google Calendar.
 
 [Description]
  Register item.title to Google Calendar.
@@ -226,7 +239,7 @@ NotifyIkachan
  /plugins/notify/ikachan.rb
 
 [Abstract]
- To send a message to ikachan.
+ Send a message to ikachan.
 
 [Description]
  POST to ikachan via HTTP.
@@ -251,7 +264,7 @@ CustomFeedSVNLog
  Get new revision info from SVN.
 
 [Description]
- To get the number that is specified by fetch_items.
+ Get the number that is specified by fetch_items.
 
 [Syntax]
   - module: CustomFeedSVNLog

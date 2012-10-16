@@ -78,6 +78,19 @@ FilterIgnore
         - 無視キーワード ...
 
 
+FilterImage
+-----------
+[パス]
+ /plugins/filter/image.rb
+
+[概要]
+ パーマリンクから画像のみを抽出する
+ 画像ではないパーマリンクは nil にする
+
+[レシピ記法]
+  - module: FilterImage
+
+
 FilterImageSource
 -----------------
 [パス]
