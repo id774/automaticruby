@@ -26,7 +26,7 @@ module Automatic
     end
 
     def each_plugin
-      @procedure.plugins.each { |plugin|
+      @procedure.plugins.each {|plugin|
         yield plugin
       }
     end

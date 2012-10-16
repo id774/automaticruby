@@ -15,7 +15,7 @@ module Automatic
       begin
         unless url.nil?
           feed = URI.parse(url).normalize
-          open(feed) { |http|
+          open(feed) {|http|
             response = http.read
             RSS::Parser.parse(response, false)
           }

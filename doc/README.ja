@@ -355,13 +355,13 @@ Automatic::Pipeline とは
 
  コードは以下の通りである。
 
- pipeline = []
- recipe.each_plugin { |plugin|
-   mod = plugin.module
-   load_plugin(mod)
-   klass = Automatic::Plugin.const_get(mod)
-   pipeline = klass.new(plugin.config, pipeline).run
- }
+pipeline = []
+recipe.each_plugin {|plugin|
+  mod = plugin.module
+  load_plugin(mod)
+  klass = Automatic::Plugin.const_get(mod)
+  pipeline = klass.new(plugin.config, pipeline).run
+}
 
  プラグイン間での連続した pipeline の受け渡しにより
 処理要素を直列に連結し、あるプラグインの出力が次の

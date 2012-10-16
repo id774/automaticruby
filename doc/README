@@ -351,13 +351,13 @@ pipeline backs again as the return value.
 
  Code is as follows.
 
- pipeline = []
- recipe.each_plugin { |plugin|
-   mod = plugin.module
-   load_plugin(mod)
-   klass = Automatic::Plugin.const_get(mod)
-   pipeline = klass.new(plugin.config, pipeline).run
- }
+pipeline = []
+recipe.each_plugin {|plugin|
+  mod = plugin.module
+  load_plugin(mod)
+  klass = Automatic::Plugin.const_get(mod)
+  pipeline = klass.new(plugin.config, pipeline).run
+}
 
  In this iteration, sequential processing can be realized.
 

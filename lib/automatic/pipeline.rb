@@ -16,7 +16,7 @@ module Automatic
   module Pipeline
     def self.load_plugin(module_name)
       Dir[Automatic.user_plugins_dir + "/*",
-          Automatic.plugins_dir + "/*"].each{ |dir|
+          Automatic.plugins_dir + "/*"].each {|dir|
         subdir = File.basename dir
         if /#{subdir}_(.*)$/ =~ module_name.underscore
           path = dir + "/#{$1}.rb"
@@ -30,7 +30,7 @@ module Automatic
     def self.run(recipe)
       raise NoRecipeError if recipe.nil?
       pipeline = []
-      recipe.each_plugin { |plugin|
+      recipe.each_plugin {|plugin|
         mod = plugin.module
         load_plugin(mod)
         klass = Automatic::Plugin.const_get(mod)
@@ -39,4 +39,3 @@ module Automatic
     end
   end
 end
-
