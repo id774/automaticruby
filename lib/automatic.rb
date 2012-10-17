@@ -13,7 +13,7 @@ module Automatic
   require 'automatic/log'
   require 'automatic/feed_parser'
 
-  VERSION = "12.10.0"
+  VERSION = "12.10.0-dev"
   USER_DIR = "/.automatic"
 
   class << self

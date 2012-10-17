@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Oct 16, 2012
+# Updated::   Oct 17, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -36,7 +36,7 @@ module Automatic::Plugin
               item.title = "Automatic Ruby"
               item.link = link[:href]
               item.date = Time.now
-              item.description = "Automatic::Plugin::Subscription::Link"
+              item.description = "Automatic::Plugin::Subscription::Tumblr"
             end
           }
         }
