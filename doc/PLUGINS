@@ -32,6 +32,7 @@ SubscriptionLink
       urls:
         - URL
         - URL ...
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
 
 
 SubscriptionTwitter
@@ -48,6 +49,7 @@ SubscriptionTwitter
       urls:
         - URL
         - URL ...
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
 
 
 SubscriptionTumblr
@@ -66,6 +68,7 @@ SubscriptionTumblr
         - URL
         - URL ...
       pages: PAGES
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
 
 
 FilterReverse

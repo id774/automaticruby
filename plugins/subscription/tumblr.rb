@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Oct 17, 2012
+# Updated::   Oct 18, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -40,6 +40,7 @@ module Automatic::Plugin
             end
           }
         }
+        sleep @config['interval'].to_i unless @config['internal'].nil?
         @return_feeds << rss
       end
     end

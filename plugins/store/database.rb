@@ -15,12 +15,12 @@ module Automatic::Plugin
       prepare_database
       existing_records = model_class.find(:all)
       @return_feeds = []
-      @pipeline.each { |feeds|
+      @pipeline.each {|feeds|
         unless feeds.nil?
           new_feed = false
-          feeds.items.each { |feed|
+          feeds.items.each {|feed|
             unless feed.link.nil?
-              unless existing_records.detect { |b| b.try(unique_key) == feed.link }
+              unless existing_records.detect {|b| b.try(unique_key) == feed.link }
                 yield(feed)
                 new_feed = true
               end
@@ -35,8 +35,8 @@ module Automatic::Plugin
     private
 
     def create_table
-      ActiveRecord::Migration.create_table(model_class.table_name) { |t|
-        column_definition.each_pair { |column_name, column_type|
+      ActiveRecord::Migration.create_table(model_class.table_name) {|t|
+        column_definition.each_pair {|column_name, column_type|
           t.column column_name, column_type
         }
       }

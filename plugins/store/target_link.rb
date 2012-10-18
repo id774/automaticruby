@@ -34,7 +34,7 @@ module Automatic::Plugin
               unless feed.link.nil?
                 Automatic::Log.puts("info", "Get: #{feed.link}")
                 wget(feed.link)
-                sleep @config['interval'].to_i
+                sleep @config['interval'].to_i unless @config['internal'].nil?
               end
             rescue
               Automatic::Log.puts("error", "Error found during file download.")
