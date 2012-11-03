@@ -8,7 +8,7 @@ global:
 plugins:
   - module: CustomFeedSVNLog
     config:
-      target: http://redmine.rubyforge.org/svn
+      target: http://svn.apache.org/repos/asf/
       fetch_items: 2
 
   #- module: PublishConsole
