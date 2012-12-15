@@ -91,4 +91,29 @@ describe Automatic::Plugin::StorePermalink do
       instance.run.should have(0).feed
     }.should change(Automatic::Plugin::Permalink, :count).by(0)
   end
+
+  it "Only new feed is used when there is new feed." do
+    instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
+      AutomaticSpec.generate_pipeline {
+        feed {
+          item "http://id774.net/images/link_1.jpg"
+          item "http://id774.net/images/link_1.jpg"
+          item "http://id774.net/images/link_3.JPG"
+          item "http://id774.net/images/link_4_2.png"
+          item "http://id774.net/images/link_5_2.jpeg"
+          item "http://id774.net/images/link_6.PNG"
+          item nil
+          item "http://id774.net/images/link_8.gif"
+          item "http://id774.net/images/link_9.GIF"
+          item "http://id774.net/images/link_10.tiff"
+          item "http://id774.net/images/link_11.TIFF"
+        }
+      }
+    )
+
+    instance.run.should have(1).feed
+    lambda {
+      instance.run.should have(0).feed
+    }.should change(Automatic::Plugin::Permalink, :count).by(0)
+  end
 end
