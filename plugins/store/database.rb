@@ -28,7 +28,7 @@ module Automatic::Plugin
               end
             end
           }
-          @return_feeds << create_rss(new_feeds)
+          @return_feeds << create_rss(new_feeds) if new_feeds.length > 0
         end
       }
       @return_feeds
