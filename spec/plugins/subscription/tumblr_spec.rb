@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Oct 16, 2012
+# Updated::   Dec 20, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -47,11 +47,11 @@ describe Automatic::Plugin::SubscriptionTumblr do
       Automatic::Plugin::SubscriptionTumblr.new(
         { 'urls' => [
             "http://reblog.id774.net"],
-          'pages' => 10
+          'pages' => 3
         }
       )
     }
 
-    its(:run) { should have(10).item }
+    its(:run) { should have(3).item }
   end
 end

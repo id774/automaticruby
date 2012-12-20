@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Link
 # Author::    774 <http://id774.net>
 # Created::   Sep 18, 2012
-# Updated::   Oct 18, 2012
+# Updated::   Dec 20, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -21,25 +21,7 @@ module Automatic::Plugin
       Automatic::Log.puts("info", "Parsing: #{url}")
       html = open(url).read
       unless html.nil?
-        rss = RSS::Maker.make("2.0") {|maker|
-          xss = maker.xml_stylesheets.new_xml_stylesheet
-          xss.href = "http://www.rssboard.org/rss-specification"
-          maker.channel.about = "http://feeds.rssboard.org/rssboard"
-          maker.channel.title = "Automatic Ruby"
-          maker.channel.description = "Automatic Ruby"
-          maker.channel.link = "http://www.rssboard.org/rss-specification"
-          maker.items.do_sort = true
-          doc = Nokogiri::HTML(html)
-          (doc/:a).each {|link|
-            unless link[:href].nil?
-              item = maker.items.new_item
-              item.title = "Automatic Ruby"
-              item.link = link[:href]
-              item.date = Time.now
-              item.description = "Automatic::Plugin::Subscription::Link"
-            end
-          }
-        }
+        rss = Automatic::FeedParser.parse(html)
         sleep @config['interval'].to_i unless @config['internal'].nil?
         @return_feeds << rss
       end

@@ -2,7 +2,7 @@
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
 # Created::   Feb 18, 2012
-# Updated::   Dec 20, 2012
+# Updated::   Oct 16, 2012
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -12,7 +12,6 @@ module Automatic
   require 'automatic/pipeline'
   require 'automatic/log'
   require 'automatic/feed_parser'
-  require 'automatic/rss_maker'
 
   VERSION = "12.10.0-dev"
   USER_DIR = "/.automatic"

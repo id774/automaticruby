@@ -27,7 +27,7 @@ module Automatic::Plugin
               end
             end
           }
-          @return_feeds << Automatic::RSSMaker.create(new_feeds) if new_feeds.length > 0
+          @return_feeds << Automatic::FeedParser.create(new_feeds) if new_feeds.length > 0
         end
       }
       @return_feeds

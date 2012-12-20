@@ -4,7 +4,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar 11, 2012
-# Updated::   Jun 17, 2012
+# Updated::   Dec 20, 2012
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -62,7 +62,7 @@ subparsers = {
   'feedparser' => lambda { |argv|
     require 'automatic/feed_parser'
     url = argv.shift || abort_with_usage("feedparser", "<url>")
-    rss_results = Automatic::FeedParser.get_rss(url)
+    rss_results = Automatic::FeedParser.get(url)
     pp rss_results
   },
   'inspect' => lambda { |argv|
@@ -70,7 +70,7 @@ subparsers = {
     url = argv.shift || abort_with_usage("inspect", "<url>")
     feeds = Feedbag.find(url)
     pp feeds
-    rss_results = Automatic::FeedParser.get_rss(feeds.pop)
+    rss_results = Automatic::FeedParser.get(feeds.pop)
     pp rss_results
   },
   'opmlparser' => lambda { |argv|
