@@ -40,8 +40,14 @@ module Automatic
               item = maker.items.new_item
               item.title = feed.title
               item.link = feed.link
-              item.description = feed.description
-              item.date = Time.now
+              begin
+                item.description = feed.description
+                item.author = feed.author
+                item.comments = feed.comments
+                item.date = feed.pubDate || Time.now
+              rescue NoMethodError
+                Automatic::Log.puts("warn", "Undefined field detected in feed.")
+              end
             end
           }
         end
