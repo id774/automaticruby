@@ -41,9 +41,7 @@ module Automatic
               item.title = feed.title
               item.link = feed.link
               item.description = feed.description
-              item.author = feed.author
-              item.comments = feed.comments
-              item.date = feed.pubDate || Time.now
+              item.date = Time.now
             end
           }
         end
