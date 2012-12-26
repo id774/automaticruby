@@ -30,14 +30,14 @@ module Automatic::Plugin
       @pipeline.each {|feeds|
         unless feeds.nil?
           feeds.items.each {|feed|
-            begin
-              unless feed.link.nil?
-                Automatic::Log.puts("info", "Get: #{feed.link}")
+            unless feed.link.nil?
+              Automatic::Log.puts("info", "Get: #{feed.link}")
+              begin
                 wget(feed.link)
                 sleep @config['interval'].to_i unless @config['internal'].nil?
+              rescue
+                Automatic::Log.puts("error", "Error found during file download.")
               end
-            rescue
-              Automatic::Log.puts("error", "Error found during file download.")
             end
           }
         end

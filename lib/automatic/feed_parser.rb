@@ -15,6 +15,7 @@ module Automatic
     def self.get(url)
       begin
         unless url.nil?
+          Automatic::Log.puts("info", "Getting: #{url}")
           feed = URI.parse(url).normalize
           open(feed) {|http|
             response = http.read
@@ -37,6 +38,7 @@ module Automatic
         unless feeds.nil?
           feeds.each {|feed|
             unless feed.link.nil?
+              Automatic::Log.puts("info", "Creating: #{feed.link}")
               item = maker.items.new_item
               item.title = feed.title
               item.link = feed.link
