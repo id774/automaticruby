@@ -31,7 +31,7 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             unless feed.link.nil?
-              Automatic::Log.puts("info", "Get: #{feed.link}")
+              Automatic::Log.puts("info", "Downloading: #{feed.link}")
               begin
                 wget(feed.link)
                 sleep @config['interval'].to_i unless @config['internal'].nil?
