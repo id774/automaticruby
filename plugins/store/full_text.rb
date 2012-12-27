@@ -40,6 +40,7 @@ module Automatic::Plugin
 
     def run
       for_each_new_feed { |feed|
+        Automatic::Log.puts("info", "Saving: #{feed.link}")
         begin
           Blog.create(
             :title => feed.title,
@@ -47,7 +48,6 @@ module Automatic::Plugin
             :description => feed.description,
             :content => feed.content_encoded,
             :created_at => Time.now.strftime("%Y/%m/%d %X"))
-          Automatic::Log.puts("info", "Saving: #{feed.link}")
         rescue
           Automatic::Log.puts("warn", "Skip feed due to fault in save.")
         end
