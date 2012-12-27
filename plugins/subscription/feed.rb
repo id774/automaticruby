@@ -16,7 +16,6 @@ module Automatic::Plugin
     def run
       @config['feeds'].each {|feed|
         begin
-          Automatic::Log.puts("info", "Parsing: #{feed}")
           rss = Automatic::FeedParser.get(feed)
           @pipeline << rss
         rescue
