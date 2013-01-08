@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Link
 # Author::    774 <http://id774.net>
 # Created::   Sep 18, 2012
-# Updated::   Sep 18, 2012
+# Updated::   Jan  8, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -34,7 +34,8 @@ describe Automatic::Plugin::SubscriptionLink do
     subject {
       Automatic::Plugin::SubscriptionLink.new(
         { 'urls' => [
-            "http://id774.net"]
+            "http://id774.net"],
+          'interval' => 5
         }
       )
     }

@@ -3,7 +3,7 @@
 # Name::      Automatic::Plugin::Store::TargetLink
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Mar  1, 2012
+# Updated::   Jan  8, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -34,7 +34,7 @@ module Automatic::Plugin
               Automatic::Log.puts("info", "Downloading: #{feed.link}")
               begin
                 wget(feed.link)
-                sleep @config['interval'].to_i unless @config['internal'].nil?
+                sleep @config['interval'].to_i unless @config['interval'].nil?
               rescue
                 Automatic::Log.puts("error", "Error found during file download.")
               end

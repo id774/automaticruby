@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Twitter
 # Author::    774 <http://id774.net>
 # Created::   Sep  9, 2012
-# Updated::   Oct 18, 2012
+# Updated::   Jan  8, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -42,7 +42,7 @@ module Automatic::Plugin
             item.description = content.search('[@class="js-tweet-text"]').text.to_s
           }
         }
-        sleep @config['interval'].to_i unless @config['internal'].nil?
+        sleep @config['interval'].to_i unless @config['interval'].nil?
         @return_feeds << rss
       end
     end
