@@ -13,7 +13,7 @@ describe Automatic::Plugin::FilterIgnore do
   context "with exclusion by links" do
     subject {
       Automatic::Plugin::FilterIgnore.new({
-        'exclude' => ["comment"],
+        'link' => ["comment"],
       },
         AutomaticSpec.generate_pipeline {
           feed { item "http://github.com" }
@@ -29,7 +29,7 @@ describe Automatic::Plugin::FilterIgnore do
   context "with exclusion by links" do
     subject {
       Automatic::Plugin::FilterIgnore.new({
-        'exclude' => ["comment"],
+        'link' => ["comment"],
       },
         AutomaticSpec.generate_pipeline {
           feed { item "http://github.com" }
@@ -77,7 +77,23 @@ describe Automatic::Plugin::FilterIgnore do
   context "with exclusion by links" do
     subject {
       Automatic::Plugin::FilterIgnore.new({
-        'exclude' => [""],
+        'link' => ["github"],
+      },
+        AutomaticSpec.generate_pipeline {
+          feed { item "http://github.com" }
+          feed { item "http://google.com" }
+        })
+    }
+
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+    end
+  end
+
+  context "with exclusion by links" do
+    subject {
+      Automatic::Plugin::FilterIgnore.new({
+        'link' => [""],
       },
         AutomaticSpec.generate_pipeline {
           feed { item "http://github.com" }
@@ -121,37 +137,4 @@ describe Automatic::Plugin::FilterIgnore do
       its(:run) { should have(0).feeds }
     end
   end
-
-  context "with exclusion by links" do
-    subject {
-      Automatic::Plugin::FilterIgnore.new({
-        'link' => ["github"],
-      },
-        AutomaticSpec.generate_pipeline {
-          feed { item "http://github.com" }
-          feed { item "http://google.com" }
-        })
-    }
-
-    describe "#run" do
-      its(:run) { should have(1).feeds }
-    end
-  end
-
-  context "with exclusion by links" do
-    subject {
-      Automatic::Plugin::FilterIgnore.new({
-        'link' => [""],
-      },
-        AutomaticSpec.generate_pipeline {
-          feed { item "http://github.com" }
-          feed { item "http://google.com" }
-        })
-    }
-
-    describe "#run" do
-      its(:run) { should have(0).feeds }
-    end
-  end
-
 end
