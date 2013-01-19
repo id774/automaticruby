@@ -137,4 +137,34 @@ describe Automatic::Plugin::FilterIgnore do
       its(:run) { should have(0).feeds }
     end
   end
+
+  context "with exclusion by description" do
+    subject {
+      Automatic::Plugin::FilterIgnore.new({
+        'description' => ["bbb"],
+      },
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://hogefuga.com", "",
+            "aaabbbccc"
+          }
+          feed {
+            item "http://aaabbbccc.com", "",
+            "hogefugahoge"
+          }
+          feed {
+            item "http://aaabbbccc.com", "",
+            "aaaccc"
+          }
+          feed {
+            item "http://aaaccc.com", "",
+            "aaabbbccc"
+          }
+        }
+      )}
+
+    describe "#run" do
+      its(:run) { should have(2).feeds }
+    end
+  end
 end
