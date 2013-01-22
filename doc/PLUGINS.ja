@@ -78,9 +78,13 @@ FilterReverse
 
 [概要]
  日付の昇順にソートする
+ もし config で reverse に true が指定されると
+ 昇順ではなく降順にソートする
 
 [レシピ記法]
   - module: FilterReverse
+    config:
+      reverse: true
 
 
 FilterIgnore

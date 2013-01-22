@@ -78,9 +78,12 @@ FilterReverse
 
 [Abstract]
  Sort feed by date asc.
+ If reverse is specified, it's sort feed by date desc.
 
 [Syntax]
   - module: FilterReverse
+    config:
+      reverse: true
 
 
 FilterIgnore
