@@ -3,7 +3,7 @@
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
 # Created::   Feb 18, 2012
-# Updated::   Mar 16, 2012
+# Updated::   Jan 22, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -27,8 +27,8 @@ parser = OptionParser.new { |parser|
 }
 
 begin
+  Automatic::Log.puts("info", "Loading #{recipe_path}") unless recipe_path.empty?
   parser.parse!
-  puts "Loading #{recipe_path}" unless recipe_path.empty?
 rescue OptionParser::ParseError => err
   $stderr.puts err.message
   $stderr.puts parser.help
