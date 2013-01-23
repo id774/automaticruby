@@ -30,14 +30,14 @@ module Automatic::Plugin
       @config['urls'].each {|url|
         begin
           create_rss(url)
-        unless @config['pages'].nil?
-          @config['pages'].times {|i|
-            if i > 0
-              old_url = url + "/page/" + (i+1).to_s
-              create_rss(old_url)
-            end
-          }
-        end
+          unless @config['pages'].nil?
+            @config['pages'].times {|i|
+              if i > 0
+                old_url = url + "/page/" + (i+1).to_s
+                create_rss(old_url)
+              end
+            }
+          end
         rescue
           Automatic::Log.puts("error", "Fault in parsing: #{url}")
         end
