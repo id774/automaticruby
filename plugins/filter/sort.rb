@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::Reverse
+# Name::      Automatic::Plugin::Filter::Sort
 # Author::    774 <http://id774.net>
 # Created::   Mar 23, 2012
-# Updated::   Jan 22, 2013
+# Updated::   Jan 23, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class FilterReverse
+  class FilterSort
 
     def initialize(config, pipeline=[])
       @config = config
