@@ -71,19 +71,19 @@ SubscriptionTumblr
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
 
 
-FilterReverse
--------------
+FilterSort
+----------
 [Path]
- /plugins/filter/reverse.rb
+ /plugins/filter/sort.rb
 
 [Abstract]
- Sort feed by date asc.
- If reverse is specified, it's sort feed by date desc.
+ Sort feed by date asc or desc.
+ If desc is specified, it's sort feed by date desc.
 
 [Syntax]
-  - module: FilterReverse
+  - module: FilterSort
     config:
-      reverse: true
+      sort: asc or desc
 
 
 FilterIgnore

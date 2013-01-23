@@ -11,7 +11,13 @@ plugins:
       feeds:
         - http://blog.id774.net/post/feed/
 
-  - module: FilterReverse
+  - module: FilterSort
+    config:
+      sort: asc
+
+  - module: FilterSort
+    config:
+      sort: desc
 
   #- module: PublishConsole
 

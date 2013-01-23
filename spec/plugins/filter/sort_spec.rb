@@ -13,7 +13,10 @@ require 'filter/sort'
 describe Automatic::Plugin::FilterSort do
   context "It should be asc sorted" do
     subject {
-      Automatic::Plugin::FilterSort.new({},
+      Automatic::Plugin::FilterSort.new(
+        {
+          'sort' => "asc"
+        },
         AutomaticSpec.generate_pipeline {
           feed {
             item "http://aaa.png", "",
@@ -54,7 +57,10 @@ describe Automatic::Plugin::FilterSort do
 
   context "It should be asc sorted" do
     subject {
-      Automatic::Plugin::FilterSort.new({},
+      Automatic::Plugin::FilterSort.new(
+        {
+          'sort' => "asc"
+        },
         AutomaticSpec.generate_pipeline {
           feed {
             item "http://aaa.png", "",
@@ -96,7 +102,8 @@ describe Automatic::Plugin::FilterSort do
   context "It should be desc sorted" do
     subject {
       Automatic::Plugin::FilterSort.new(
-        { 'reverse' => true
+        {
+          'sort' => "desc"
         },
         AutomaticSpec.generate_pipeline {
           feed {
@@ -139,7 +146,8 @@ describe Automatic::Plugin::FilterSort do
   context "It should be desc sorted" do
     subject {
       Automatic::Plugin::FilterSort.new(
-        { 'reverse' => true
+        {
+          'sort' => "desc"
         },
         AutomaticSpec.generate_pipeline {
           feed {

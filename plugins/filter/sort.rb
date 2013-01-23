@@ -19,7 +19,7 @@ module Automatic::Plugin
       @pipeline.each { |feeds|
         return_feed_items = []
         unless feeds.nil?
-          if @config['reverse'].nil?
+          if @config['sort'] == "asc"
             feeds.items.sort!{|a,b|
               a.date <=> b.date
             }

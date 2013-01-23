@@ -71,20 +71,20 @@ SubscriptionTumblr
       interval: スクレイピングの間隔 (秒数, 省略可)
 
 
-FilterReverse
--------------
+FilterSort
+----------
 [パス]
- /plugins/filter/reverse.rb
+ /plugins/filter/sort.rb
 
 [概要]
  日付の昇順にソートする
- もし config で reverse に true が指定されると
+ もし config で sort に desc が指定されると
  昇順ではなく降順にソートする
 
 [レシピ記法]
-  - module: FilterReverse
+  - module: FilterSort
     config:
-      reverse: true
+      sort: asc or desc
 
 
 FilterIgnore
