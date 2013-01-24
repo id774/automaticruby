@@ -16,7 +16,13 @@ plugins:
       link:
         - hoge
 
-  #- module: PublishConsole
+  # - module: PublishConsole
+
+  - module: FilterFullFeed
+    config:
+      siteinfo: items_all.json
+
+  # - module: PublishConsole
 
   - module: StoreFullText
     config:
