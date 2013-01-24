@@ -52,8 +52,6 @@ module Automatic::Plugin
             feed.description = body.to_html.encode('UTF-8', :undef => :replace)
             return feed
           end
-        rescue
-          Automatic::Log.puts("error", "Error found in siteinfo match process.")
         end
       }
       Automatic::Log.puts(:info, "Fulltext SITEINFO not found: #{feed.link}")
