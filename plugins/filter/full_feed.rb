@@ -44,13 +44,18 @@ module Automatic::Plugin
     def fulltext(feed)
       return feed unless feed.link
       @siteinfo.each { |info|
-        if feed.link.match(info['data']['url'])
-          Automatic::Log.puts(:info, "Siteinfo matched: #{info['data']['url']}")
-          html = Nokogiri::HTML.parse(open(feed.link))
-          body = html.xpath(info['data']['xpath'])
-          feed.description = body.to_html.encode('UTF-8', :undef => :replace)
-          return feed
+        begin
+          if feed.link.match(info['data']['url'])
+            Automatic::Log.puts(:info, "Siteinfo matched: #{info['data']['url']}")
+            html = Nokogiri::HTML.parse(open(feed.link))
+            body = html.xpath(info['data']['xpath'])
+            feed.description = body.to_html.encode('UTF-8', :undef => :replace)
+            return feed
+          end
+        rescue
+          Automatic::Log.puts("error", "Error found in siteinfo match process.")
         end
+      end
       }
       Automatic::Log.puts(:info, "Fulltext SITEINFO not found: #{feed.link}")
       return feed
