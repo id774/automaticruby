@@ -55,7 +55,6 @@ module Automatic::Plugin
         rescue
           Automatic::Log.puts("error", "Error found in siteinfo match process.")
         end
-      end
       }
       Automatic::Log.puts(:info, "Fulltext SITEINFO not found: #{feed.link}")
       return feed
