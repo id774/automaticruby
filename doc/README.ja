@@ -460,6 +460,9 @@ $ automatic-config
 
 $ automatic-config scaffold
  ホームディレクトリに ~/.automatic ディレクトリを生成する。
+ この操作により ~/.automatic の下に plugins, db, config, assets
+ディレクトリが生成される。
+ これらは本体のそれぞれのディレクトリよりも優先される。
 
 $ automatic-config unscaffold
  ホームディレクトリの ~/.automatic ディレクトリを削除する。

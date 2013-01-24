@@ -451,6 +451,8 @@ $ automatic-config
 
 $ automatic-config scaffold
  Make ~/.automatic directory in your home directory.
+ This operation makes 'plugins', 'db', 'config', 'assets' directories.
+ These takes precedence the origin directory.
 
 $ automatic-config unscaffold
  Delete ~/.automatic directory.
