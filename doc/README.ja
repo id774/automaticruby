@@ -238,6 +238,12 @@ plugins:
 |   ~/.automatic/db が無い場合、ここにデータベースが
 |   保存される
 |
++- assets
+|
+|   json ファイルなどプラグインの中で適宜必要とされる
+|   ファイルが格納される
+|   ~/.automatic/assets がある場合はそちらが優先される
+|
 +- script
 |   |
 |   +- build

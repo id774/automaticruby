@@ -257,6 +257,11 @@ Directory and file structure
 |
 | If ~/.automatic/db not exist, save db file here.
 |
++-- assets
+|
+| There are some files that needed in a plug-ins.
+| If ~/.automatic/assets exist, takes precedence it.
+|
 +-+ script
 | |
 | +-- build
