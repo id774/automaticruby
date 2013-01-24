@@ -128,6 +128,20 @@ FilterImageSource
   - module: FilterImageSource
 
 
+FilterFullFeed
+--------------
+[Path]
+ /plugins/filter/full_feed.rb
+
+[Abstract]
+ Get full text of feed entry.
+
+[Syntax]
+  - module: FilterFeed
+    config:
+      siteinfo: your siteinfo file's path
+
+
 FilterAbsoluteURI
 -----------------
 [Path]

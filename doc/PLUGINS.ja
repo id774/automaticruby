@@ -129,6 +129,20 @@ FilterImageSource
   - module: FilterImageSource
 
 
+FilterFullFeed
+--------------
+[パス]
+ /plugins/filter/full_feed.rb
+
+[概要]
+ フィードの全文を取得する
+
+[レシピ記法]
+  - module: FilterFeed
+    config:
+      siteinfo: siteinfo ファイル名
+
+
 FilterAbsoluteURI
 -----------------
 [パス]
