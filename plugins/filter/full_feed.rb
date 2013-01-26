@@ -52,6 +52,8 @@ module Automatic::Plugin
             feed.description = body.to_html.encode('UTF-8', :undef => :replace)
             return feed
           end
+        rescue
+          return feed
         end
       }
       Automatic::Log.puts(:info, "Fulltext SITEINFO not found: #{feed.link}")
