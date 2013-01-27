@@ -21,6 +21,7 @@ bin/ri
 bin/rspec
 bin/rake
 bin/sow
+bin/sprockets
 bin/tilt
 bin/tt
 pkg/
