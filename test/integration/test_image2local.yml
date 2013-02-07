@@ -24,3 +24,5 @@ plugins:
       path: /tmp
       interval: 2
 
+  #- module: PublishConsole
+

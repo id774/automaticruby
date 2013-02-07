@@ -1,0 +1,27 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionURI
+    config:
+      urls:
+        - http://alsscan.com/photos.html
+
+  - module: ExtractLink
+
+  - module: FilterImageLink
+
+  - module: FilterAbsoluteURI
+    config:
+      url: http://alsscan.com/
+
+  - module: StoreLink
+    config:
+      db: test_absolute.db
+
+  #- module: PublishConsole
+
