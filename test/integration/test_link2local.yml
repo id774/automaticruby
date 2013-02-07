@@ -8,7 +8,7 @@ global:
 plugins:
   - module: SubscriptionLink
     config:
-      feeds:
+      urls:
         - http://reblog.id774.net
 
   - module: FilterImage
