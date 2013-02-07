@@ -69,6 +69,7 @@ SubscriptionTumblr
         - URL ...
       pages: PAGES
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry: RETRY_COUNT
 
 
 FilterSort
