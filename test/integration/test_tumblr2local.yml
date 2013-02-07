@@ -12,6 +12,21 @@ plugins:
         - http://reblog.id774.net
       pages: 2
 
+  - module: SubscriptionTumblr
+    config:
+      urls:
+        - http://reblog.id774.net
+      pages: 2
+      interval: 1
+
+  - module: SubscriptionTumblr
+    config:
+      urls:
+        - http://reblog.id774.net
+      pages: 1
+      interval: 5
+      retry: 5
+
   - module: FilterImage
 
   - module: StorePermalink
