@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Jan 23, 2013
+# Updated::   Feb  7, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -28,6 +28,7 @@ module Automatic::Plugin
     def run
       @return_feeds = []
       @config['urls'].each {|url|
+        retries = 0
         begin
           create_rss(url)
           unless @config['pages'].nil?
@@ -39,7 +40,10 @@ module Automatic::Plugin
             }
           end
         rescue
+          retries += 1
           Automatic::Log.puts("error", "Fault in parsing: #{url}")
+          sleep @config['interval'].to_i unless @config['interval'].nil?
+          retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
         end
       }
       @return_feeds

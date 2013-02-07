@@ -48,11 +48,27 @@ describe Automatic::Plugin::SubscriptionTumblr do
         { 'urls' => [
             "http://reblog.id774.net"],
           'pages' => 3,
-          'interval' => 5
+          'interval' => 5,
+          'retry' => 5
         }
       )
     }
 
     its(:run) { should have(3).item }
+  end
+
+  context "with retry to URLs whose invalid URL" do
+    subject {
+      Automatic::Plugin::SubscriptionTumblr.new(
+        { 'urls' => [
+            "http://invalidurl.id774.net"],
+          'pages' => 3,
+          'interval' => 1,
+          'retry' => 4
+        }
+      )
+    }
+
+    its(:run) { should be_empty }
   end
 end
