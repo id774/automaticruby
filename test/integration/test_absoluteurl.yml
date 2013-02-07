@@ -17,5 +17,9 @@ plugins:
     config:
       url: http://alsscan.com/
 
+  - module: StorePermalink
+    config:
+      db: test_absoluteuri.db
+
   #- module: PublishConsole
 
