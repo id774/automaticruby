@@ -11,6 +11,19 @@ plugins:
       urls:
         - http://reblog.id774.net
 
+  - module: SubscriptionLink
+    config:
+      urls:
+        - http://reblog.id774.net
+      interval: 1
+
+  - module: SubscriptionLink
+    config:
+      urls:
+        - http://reblog.id774.net
+      interval: 5
+      retry: 5
+
   - module: FilterImage
 
   - module: StorePermalink

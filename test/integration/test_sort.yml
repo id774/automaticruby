@@ -11,6 +11,19 @@ plugins:
       feeds:
         - http://blog.id774.net/post/feed/
 
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://blog.id774.net/post/feed/
+      interval: 1
+
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://blog.id774.net/post/feed/
+      interval: 5
+      retry: 5
+
   - module: FilterSort
     config:
       sort: asc
