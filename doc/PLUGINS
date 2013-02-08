@@ -16,6 +16,8 @@ SubscriptionFeed
       feeds:
         - FEED
         - FEED ...
+      retry: RETRY_COUNT
+      interval: INTERVAL_FOR_RETRY (in seconds.)
 
 
 SubscriptionLink
@@ -33,6 +35,7 @@ SubscriptionLink
         - URL
         - URL ...
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry: RETRY_COUNT
 
 
 SubscriptionTwitter
@@ -50,6 +53,7 @@ SubscriptionTwitter
         - URL
         - URL ...
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry: RETRY_COUNT
 
 
 SubscriptionTumblr
