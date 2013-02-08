@@ -21,7 +21,7 @@ module Automatic::Plugin
           @pipeline << rss
         rescue
           retries += 1
-          Automatic::Log.puts("error", "Fault in parsing: #{feed}")
+          Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{feed}")
           sleep @config['interval'].to_i unless @config['interval'].nil?
           retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
         end

@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Feb  7, 2013
+# Updated::   Feb  8, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -41,7 +41,7 @@ module Automatic::Plugin
           end
         rescue
           retries += 1
-          Automatic::Log.puts("error", "Fault in parsing: #{url}")
+          Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
           sleep @config['interval'].to_i unless @config['interval'].nil?
           retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
         end
