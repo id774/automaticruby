@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::Feed
 # Author::    774 <http://id774.net>
-# Updated::   Jun 14, 2012
+# Updated::   Feb  8, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -40,5 +40,32 @@ describe Automatic::Plugin::SubscriptionFeed do
     }
 
     its(:run) { should have(1).feed }
+  end
+
+  context "with retry to feeds whose valid URL" do
+    subject {
+      Automatic::Plugin::SubscriptionFeed.new(
+        { 'feeds' => [
+            "https://github.com/id774/automaticruby/commits/master.atom"],
+          'retry' => 3,
+          'interval' => 5
+        }
+      )
+    }
+
+    its(:run) { should have(1).feed }
+  end
+
+  context "with retry to feeds whose invalid URL" do
+    subject {
+      Automatic::Plugin::SubscriptionFeed.new(
+        { 'feeds' => ["invalid_url"],
+          'retry' => 1,
+          'interval' => 1
+        }
+      )
+    }
+
+    its(:run) { should be_empty }
   end
 end

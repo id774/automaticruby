@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Twitter
 # Author::    774 <http://id774.net>
 # Created::   Sep 10, 2012
-# Updated::   Jan  8, 2013
+# Updated::   Feb  8, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -35,11 +35,38 @@ describe Automatic::Plugin::SubscriptionTwitter do
       Automatic::Plugin::SubscriptionTwitter.new(
         { 'urls' => [
             "http://id774.net/test/twitter/favorites.html"],
-          'interval' => 5
+          'interval' => 1
         }
       )
     }
 
     its(:run) { should have(1).item }
+  end
+
+  context "with retry to URLs whose valid URL" do
+    subject {
+      Automatic::Plugin::SubscriptionTwitter.new(
+        { 'urls' => [
+            "http://id774.net/test/twitter/favorites.html"],
+          'interval' => 2,
+          'retry' => 1
+        }
+      )
+    }
+
+    its(:run) { should have(1).item }
+  end
+
+  context "with retry to URLs whose invalid URL" do
+    subject {
+      Automatic::Plugin::SubscriptionTwitter.new(
+        { 'urls' => ["invalid_url"],
+          'interval' => 1,
+          'retry' => 2
+        }
+      )
+    }
+
+    its(:run) { should be_empty }
   end
 end

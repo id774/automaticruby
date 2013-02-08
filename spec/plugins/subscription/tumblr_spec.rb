@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Jan  8, 2013
+# Updated::   Feb  8, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -60,11 +60,10 @@ describe Automatic::Plugin::SubscriptionTumblr do
   context "with retry to URLs whose invalid URL" do
     subject {
       Automatic::Plugin::SubscriptionTumblr.new(
-        { 'urls' => [
-            "http://invalidurl.id774.net"],
+        { 'urls' => ["invalid_url"],
           'pages' => 3,
           'interval' => 1,
-          'retry' => 4
+          'retry' => 2
         }
       )
     }

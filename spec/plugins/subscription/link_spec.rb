@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Link
 # Author::    774 <http://id774.net>
 # Created::   Sep 18, 2012
-# Updated::   Jan  8, 2013
+# Updated::   Feb  8, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -35,11 +35,38 @@ describe Automatic::Plugin::SubscriptionLink do
       Automatic::Plugin::SubscriptionLink.new(
         { 'urls' => [
             "http://id774.net"],
-          'interval' => 5
+          'interval' => 1
         }
       )
     }
 
     its(:run) { should have(1).item }
+  end
+
+  context "with retry to URLs whose valid URL" do
+    subject {
+      Automatic::Plugin::SubscriptionLink.new(
+        { 'urls' => [
+            "http://id774.net"],
+          'interval' => 2,
+          'retry' => 3
+        }
+      )
+    }
+
+    its(:run) { should have(1).item }
+  end
+
+  context "with retry to URLs whose invalid URL" do
+    subject {
+      Automatic::Plugin::SubscriptionLink.new(
+        { 'urls' => ["invalid_url"],
+          'interval' => 1,
+          'retry' => 1
+        }
+      )
+    }
+
+    its(:run) { should be_empty }
   end
 end
