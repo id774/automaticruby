@@ -22,7 +22,8 @@ plugins:
   - module: StoreTargetLink
     config:
       path: /tmp
-      interval: 2
+      retry: 2
+      interval: 4
 
   #- module: PublishConsole
 
