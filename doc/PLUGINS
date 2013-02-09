@@ -277,6 +277,25 @@ PublishGoogleCalendar
       interval: INTERVAL
 
 
+PublishInstapaper
+---------------------
+[Path]
+ /plugins/publish/instapaper.rb
+
+[Abstract]
+ Register an appointment to Instapaper.
+
+[Description]
+ Submission to Instapaper API.
+
+[Syntax]
+  - module: PublishInstapaper
+    config:
+      email: INSTAPAPER_ACCOUNT
+      password: PASSWORD
+      interval: INTERVAL
+
+
 NotifyIkachan
 -------------
 [Path]
