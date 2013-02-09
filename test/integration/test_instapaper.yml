@@ -1,0 +1,24 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://blog.id774.net/post/feed/
+
+  - module: StorePermalink
+    config:
+      db: test_instapaper.db
+
+  - module: PublishInstapaper
+    config:
+      email:    your_email
+      password: your_pass
+      interval: 5
+
+  - module: PublishConsole

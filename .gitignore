@@ -3,6 +3,7 @@ db/*.db
 coverage
 .bundle
 .rbenv-version
+tags
 bin/autospec
 bin/cdiff
 bin/cucumber
