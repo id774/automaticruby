@@ -3,7 +3,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  4, 2012
-# Updated::   Jun 14, 2012
+# Updated::   Feb  9, 2013
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -31,6 +31,22 @@ describe Automatic::Plugin::StoreTargetLink do
     Dir.mktmpdir do |dir|
       instance = Automatic::Plugin::StoreTargetLink.new(
         { "path" => dir },
+        AutomaticSpec.generate_pipeline {
+          feed { item "aaa" }
+        }
+      )
+      instance.run.should have(1).feed
+    end
+  end
+
+  it "should error and retry during file download" do
+    Dir.mktmpdir do |dir|
+      instance = Automatic::Plugin::StoreTargetLink.new(
+        {
+          "path" => dir,
+          'retry' => 1,
+          'interval' => 2
+        },
         AutomaticSpec.generate_pipeline {
           feed { item "aaa" }
         }
