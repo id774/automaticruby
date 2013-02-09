@@ -222,6 +222,7 @@ StoreTargetLink
   - Module: StoreTargetLink
     config:
       path: SAVE_TO_PATH
+      retry: RETRY_COUNT
       interval: INTERVAL_FOR_DOWNLOAD (in seconds.)
 
 

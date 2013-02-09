@@ -222,6 +222,7 @@ StoreTargetLink
   - module: StoreTargetLink
     config:
       path: 保存先のフォルダ
+      retry: エラー時のリトライ回数 (回数, 省略時 0)
       interval: 保存する間隔 (秒)
 
 
