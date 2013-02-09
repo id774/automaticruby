@@ -1,0 +1,18 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionGoogleReaderStar
+    config:
+      feeds:
+        - http://www.google.com/reader/public/atom/user%2F00482198897189159802%2Fstate%2Fcom.google%2Fstarred
+
+  - module: PublishConsole
+#  - module: StorePermalink
+#    config:
+#      db: test_googlestar.db
+#

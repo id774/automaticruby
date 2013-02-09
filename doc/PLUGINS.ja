@@ -20,6 +20,22 @@ SubscriptionFeed
       interval: エラー時のリトライ間隔 (秒数, 省略可)
 
 
+SubscriptionGoogleReaderStar
+----------------
+[パス]
+ /plugins/subscription/google_reader_star.rb
+
+[概要]
+ Googleリーダーのスターフィードを購読する
+
+[レシピ記法]
+  - module: SubscriptionGoogleReaderStar
+    config:
+      feeds:
+        - フィード名
+        - フィード名 ...
+
+
 SubscriptionLink
 ----------------
 [パス]
