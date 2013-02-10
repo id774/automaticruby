@@ -20,6 +20,22 @@ SubscriptionFeed
       interval: INTERVAL_FOR_RETRY (in seconds.)
 
 
+SubscriptionGoogleReaderStar
+----------------
+[Path]
+ /plugins/subscription/google_reader_star.rb
+
+[Abstract]
+ Subscribe to Google reader star feed.
+
+[Syntax]
+  - module: SubscriptionGoogleReaderStar
+    config:
+      feeds:
+        - FEED
+        - FEED ...
+
+
 SubscriptionLink
 ----------------
 [Path]
