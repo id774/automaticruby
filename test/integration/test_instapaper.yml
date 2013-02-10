@@ -21,4 +21,4 @@ plugins:
       password: your_pass
       interval: 5
 
-  - module: PublishConsole
+  #- module: PublishConsole
