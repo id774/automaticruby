@@ -118,7 +118,10 @@ FilterIgnore
 [Syntax]
   - module: FilterIgnore
     config:
-      exclude:
+      link:
+        - KEYWORD
+        - KEYWORD ...
+      description:
         - KEYWORD
         - KEYWORD ...
 
