@@ -201,4 +201,78 @@ describe Automatic::Plugin::FilterIgnore do
       its(:run) { should have(3).feeds }
     end
   end
+
+  context "with item base exclusion by links" do
+    subject {
+      Automatic::Plugin::FilterIgnore.new({
+        'link' => ["dddd"],
+      },
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://hogefuga.com", "",
+            "aaaabbbccc"
+            item "http://hogefuga.com", "",
+            "aaaabbbcccdddd"
+          }
+          feed {
+            item "http://aaaabbbccc.com", "",
+            "hogefugahoge"
+          }
+          feed {
+            item "http://aaabbbcccdddd.com", "",
+            "aaaaaaaaaacccdd"
+          }
+          feed {
+            item "http://aaaaccc.com", "",
+            "aabbbccc"
+            item "http://aabbcccdddd.com", "",
+            "aabbbcccddd"
+          }
+          feed {
+            item "http://cccdddd.com", "",
+            "aabbbcccdd"
+          }
+        }
+      )}
+
+    describe "#run" do
+      its(:run) { should have(3).feeds }
+    end
+  end
+
+  context "with item base exclusion by description" do
+    subject {
+      Automatic::Plugin::FilterIgnore.new({
+        'description' => ["aaaa"],
+      },
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://hogefuga.com", "",
+            "aaaabbbccc"
+          }
+          feed {
+            item "http://aaaabbbccc.com", "",
+            "hogefugahoge"
+          }
+          feed {
+            item "http://aaabbbccc.com", "",
+            "aaaaaaaaaacccdd"
+          }
+          feed {
+            item "http://aaccc.com", "",
+            "aaaabbbccc"
+            item "http://aabbccc.com", "",
+            "aabbbccc"
+          }
+          feed {
+            item "http://cccddd.com", "",
+            "aabbbcccdd"
+          }
+        }
+      )}
+
+    describe "#run" do
+      its(:run) { should have(3).feeds }
+    end
+  end
 end
