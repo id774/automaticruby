@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::Ignore
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Jan 19, 2013
+# Updated::   Feb 13, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -37,13 +37,13 @@ module Automatic::Plugin
     def run
       @return_feeds = []
       @pipeline.each {|feeds|
-        ignore = false
+        new_feeds = []
         unless feeds.nil?
           feeds.items.each {|items|
-            ignore = true if exclude(items)
+            new_feeds << items if exclude(items) == false
           }
         end
-        @return_feeds << feeds unless ignore
+        @return_feeds << Automatic::FeedParser.create(new_feeds) if new_feeds.length > 0
       }
       @return_feeds
     end
