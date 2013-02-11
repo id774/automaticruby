@@ -119,7 +119,10 @@ FilterIgnore
 [レシピ記法]
   - module: FilterIgnore
     config:
-      exclude:
+      link:
+        - 無視キーワード
+        - 無視キーワード ...
+      description:
         - 無視キーワード
         - 無視キーワード ...
 
