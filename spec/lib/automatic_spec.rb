@@ -3,7 +3,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  9, 2012
-# Updated::   Feb 13, 2013
+# Updated::   Feb 14, 2013
 # Copyright:: kzgs Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -26,7 +26,7 @@ describe Automatic do
 
   describe "#version" do
     specify {
-      Automatic.const_get(:VERSION).should == "13.2.0"
+      Automatic.const_get(:VERSION).should == "13.2.0-devel"
     }
   end
 
