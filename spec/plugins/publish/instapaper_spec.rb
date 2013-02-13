@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Publish::Instapaper
+# Author::    soramugi <http://soramugi.net>
+# Created::   Feb 9, 2013
+# Updated::   Feb 9, 2013
+# Copyright:: soramugi Copyright (c) 2013
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'publish/instapaper'
