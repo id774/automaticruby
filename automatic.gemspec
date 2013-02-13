@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "13.1.0"
+  s.version = "13.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
-  s.date = "2013-01-08"
+  s.date = "2013-02-13"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
   s.executables = ["automatic", "automatic-config"]
@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
+    "assets/siteinfo/items_all.json",
     "automatic.gemspec",
     "bin/automatic",
     "bin/automatic-config",
@@ -42,15 +43,17 @@ Gem::Specification.new do |s|
     "lib/automatic/recipe.rb",
     "plugins/custom_feed/svn_log.rb",
     "plugins/filter/absolute_uri.rb",
+    "plugins/filter/full_feed.rb",
     "plugins/filter/ignore.rb",
     "plugins/filter/image.rb",
     "plugins/filter/image_source.rb",
-    "plugins/filter/reverse.rb",
+    "plugins/filter/sort.rb",
     "plugins/filter/tumblr_resize.rb",
     "plugins/notify/ikachan.rb",
     "plugins/publish/console.rb",
     "plugins/publish/google_calendar.rb",
     "plugins/publish/hatena_bookmark.rb",
+    "plugins/publish/instapaper.rb",
     "plugins/publish/mail.rb",
     "plugins/publish/smtp.rb",
     "plugins/store/database.rb",
@@ -58,6 +61,7 @@ Gem::Specification.new do |s|
     "plugins/store/permalink.rb",
     "plugins/store/target_link.rb",
     "plugins/subscription/feed.rb",
+    "plugins/subscription/google_reader_star.rb",
     "plugins/subscription/link.rb",
     "plugins/subscription/tumblr.rb",
     "plugins/subscription/twitter.rb",
@@ -69,35 +73,42 @@ Gem::Specification.new do |s|
     "spec/lib/automatic_spec.rb",
     "spec/plugins/custom_feed/svn_log_spec.rb",
     "spec/plugins/filter/absolute_uri_spec.rb",
+    "spec/plugins/filter/full_feed_spec.rb",
     "spec/plugins/filter/ignore_spec.rb",
     "spec/plugins/filter/image_source_spec.rb",
     "spec/plugins/filter/image_spec.rb",
-    "spec/plugins/filter/reverse_spec.rb",
+    "spec/plugins/filter/sort_spec.rb",
     "spec/plugins/filter/tumblr_resize_spec.rb",
     "spec/plugins/notify/ikachan_spec.rb",
     "spec/plugins/publish/console_spec.rb",
     "spec/plugins/publish/google_calendar_spec.rb",
     "spec/plugins/publish/hatena_bookmark_spec.rb",
+    "spec/plugins/publish/instapaper_spec.rb",
     "spec/plugins/publish/mail_spec.rb",
     "spec/plugins/publish/smtp_spec.rb",
     "spec/plugins/store/full_text_spec.rb",
     "spec/plugins/store/permalink_spec.rb",
     "spec/plugins/store/target_link_spec.rb",
     "spec/plugins/subscription/feed_spec.rb",
+    "spec/plugins/subscription/google_reader_star_spec.rb",
     "spec/plugins/subscription/link_spec.rb",
     "spec/plugins/subscription/tumblr_spec.rb",
     "spec/plugins/subscription/twitter_spec.rb",
     "spec/spec_helper.rb",
     "spec/user_dir/plugins/store/mock.rb",
     "test/fixtures/sampleOPML.xml",
+    "test/integration/test_absoluteurl.yml",
     "test/integration/test_activerecord.yml",
     "test/integration/test_fulltext.yml",
     "test/integration/test_googlealert.yml",
+    "test/integration/test_googlestar.yml",
     "test/integration/test_hatenabookmark.yml",
     "test/integration/test_ignore.yml",
     "test/integration/test_ignore2.yml",
     "test/integration/test_image2local.yml",
-    "test/integration/test_reverse.yml",
+    "test/integration/test_instapaper.yml",
+    "test/integration/test_link2local.yml",
+    "test/integration/test_sort.yml",
     "test/integration/test_svnlog.yml",
     "test/integration/test_tumblr2local.yml",
     "vendor/.gitkeep"
