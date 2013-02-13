@@ -234,12 +234,10 @@ plugins:
 |            レシピを読み込む
 |
 +- db
-|
 |   ~/.automatic/db が無い場合、ここにデータベースが
 |   保存される
 |
 +- assets
-|
 |   json ファイルなどプラグインの中で適宜必要とされる
 |   ファイルが格納される
 |   ~/.automatic/assets がある場合はそちらが優先される
@@ -510,21 +508,9 @@ TODO
 動作環境
 ========
 
-Ruby 1.8 以降
+Ruby 1.8 - 2.0
 
-
-以下の gem パッケージに依存
-
-sqlite3
-activesupport
-hashie
-activerecord
-gcalapi
-xml-simple
-feedbag
-nokogiri
-
-詳細は Gemfile を参照
+Gemfile に記述された gem パッケージに依存
 
 
 ========

@@ -492,7 +492,7 @@ Update History
 TODO
 ====
 
- Refer to the issues of github
+ Refer to the issues of github.
  https://github.com/id774/automaticruby/issues
 
 
@@ -500,21 +500,9 @@ TODO
 Environment
 ===========
 
- ruby 1.8 or later
+ Ruby 1.8 - 2.0.
 
-
-The following packages depend on the gem.
-
-sqlite3
-activesupport
-hashie
-activerecord
-gcalapi
-xml-simple
-feedbag
-nokogiri
-
-For more information, see Gemfile.
+ Depend on the packages that described in Gemfile.
 
 
 =====

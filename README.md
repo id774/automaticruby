@@ -63,7 +63,7 @@ For more info, refer to the document (doc/README).
 Environment
 -----------
 
-After ruby 1.8.
+Ruby 1.8 - 2.0, see Gemfile.
 
 
 Development
