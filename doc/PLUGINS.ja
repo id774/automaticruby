@@ -21,12 +21,12 @@ SubscriptionFeed
 
 
 SubscriptionGoogleReaderStar
-----------------
+----------------------------
 [パス]
  /plugins/subscription/google_reader_star.rb
 
 [概要]
- Googleリーダーのスターフィードを購読する
+ Google リーダーのスターフィードを購読する
 
 [レシピ記法]
   - module: SubscriptionGoogleReaderStar
@@ -295,13 +295,14 @@ PublishGoogleCalendar
       password: パスワード
       interval: 複数の予定の投稿間隔 (秒)
 
+
 PublishInstapaper
----------------------
+-----------------
 [パス]
  /plugins/publish/instapaper.rb
 
 [概要]
- Instapaperに登録する
+ Instapaper に登録する
 
 [説明]
  Instapaper API へ送信する

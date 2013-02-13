@@ -21,7 +21,7 @@ SubscriptionFeed
 
 
 SubscriptionGoogleReaderStar
-----------------
+----------------------------
 [Path]
  /plugins/subscription/google_reader_star.rb
 
@@ -297,7 +297,7 @@ PublishGoogleCalendar
 
 
 PublishInstapaper
----------------------
+-----------------
 [Path]
  /plugins/publish/instapaper.rb
 

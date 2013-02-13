@@ -1,3 +1,22 @@
+=== 13.2.0 / 2013-02-xx
+
+* All subscription and download plugins implemented retry function.
+
+* Plugin Filter::Ignore has become item-based filter.
+
+* Plugin Filter::Reverse renamed to Filter::Sort.
+
+* Added new plugins.
+
+  * Publish::Instapaper
+  * Subscription::GoogleReaderStar
+  * Filter::FullFeed
+
+* Improvement tests.
+
+* And other minor bug fix.
+
+
 === 13.1.0 / 2013-01-08
 
 * Fix interval bugs.
