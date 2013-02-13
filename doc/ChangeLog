@@ -1,4 +1,4 @@
-=== 13.2.0 / 2013-02-xx
+=== 13.2.0 / 2013-02-13
 
 * All subscription and download plugins implemented retry function.
 
@@ -8,9 +8,9 @@
 
 * Added new plugins.
 
-  * Publish::Instapaper
   * Subscription::GoogleReaderStar
   * Filter::FullFeed
+  * Publish::Instapaper
 
 * Improvement tests.
 

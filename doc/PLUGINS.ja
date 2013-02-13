@@ -20,22 +20,6 @@ SubscriptionFeed
       interval: エラー時のリトライ間隔 (秒数, 省略可)
 
 
-SubscriptionGoogleReaderStar
-----------------------------
-[パス]
- /plugins/subscription/google_reader_star.rb
-
-[概要]
- Google リーダーのスターフィードを購読する
-
-[レシピ記法]
-  - module: SubscriptionGoogleReaderStar
-    config:
-      feeds:
-        - フィード名
-        - フィード名 ...
-
-
 SubscriptionLink
 ----------------
 [パス]
@@ -46,24 +30,6 @@ SubscriptionLink
 
 [レシピ記法]
   - module: SubscriptionLink
-    config:
-      urls:
-        - URL
-        - URL ...
-      interval: スクレイピングの間隔 (秒数, 省略可)
-      retry: エラー時のリトライ回数 (回数, 省略時 0)
-
-
-SubscriptionTwitter
--------------------
-[パス]
- /plugins/subscription/link.rb
-
-[概要]
- Twitter を購読し、発言とそのリンクを抽出する
-
-[レシピ記法]
-  - module: SubscriptionTwitter
     config:
       urls:
         - URL
@@ -88,6 +54,40 @@ SubscriptionTumblr
         - URL
         - URL ...
       pages: PAGES
+      interval: スクレイピングの間隔 (秒数, 省略可)
+      retry: エラー時のリトライ回数 (回数, 省略時 0)
+
+
+SubscriptionGoogleReaderStar
+----------------------------
+[パス]
+ /plugins/subscription/google_reader_star.rb
+
+[概要]
+ Google リーダーのスターフィードを購読する
+
+[レシピ記法]
+  - module: SubscriptionGoogleReaderStar
+    config:
+      feeds:
+        - フィード名
+        - フィード名 ...
+
+
+SubscriptionTwitter
+-------------------
+[パス]
+ /plugins/subscription/link.rb
+
+[概要]
+ Twitter を購読し、発言とそのリンクを抽出する
+
+[レシピ記法]
+  - module: SubscriptionTwitter
+    config:
+      urls:
+        - URL
+        - URL ...
       interval: スクレイピングの間隔 (秒数, 省略可)
       retry: エラー時のリトライ回数 (回数, 省略時 0)
 
@@ -277,25 +277,6 @@ PublishHatenaBookmark
       interval: はてブする間隔 (秒)
 
 
-PublishGoogleCalendar
----------------------
-[パス]
- /plugins/publish/google_calendar.rb
-
-[概要]
- Google Calendar に予定を登録する
-
-[説明]
- item.title を Google カレンダーに登録する
-
-[レシピ記法]
-  - module: PublishGoogleCalendar
-    config:
-      username: Google メールアドレス
-      password: パスワード
-      interval: 複数の予定の投稿間隔 (秒)
-
-
 PublishInstapaper
 -----------------
 [パス]
@@ -311,6 +292,25 @@ PublishInstapaper
   - module: PublishInstapaper
     config:
       email: Instapaper メールアドレス
+      password: パスワード
+      interval: 複数の予定の投稿間隔 (秒)
+
+
+PublishGoogleCalendar
+---------------------
+[パス]
+ /plugins/publish/google_calendar.rb
+
+[概要]
+ Google Calendar に予定を登録する
+
+[説明]
+ item.title を Google カレンダーに登録する
+
+[レシピ記法]
+  - module: PublishGoogleCalendar
+    config:
+      username: Google メールアドレス
       password: パスワード
       interval: 複数の予定の投稿間隔 (秒)
 

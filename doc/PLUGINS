@@ -20,22 +20,6 @@ SubscriptionFeed
       interval: INTERVAL_FOR_RETRY (in seconds.)
 
 
-SubscriptionGoogleReaderStar
-----------------------------
-[Path]
- /plugins/subscription/google_reader_star.rb
-
-[Abstract]
- Subscribe to Google reader star feed.
-
-[Syntax]
-  - module: SubscriptionGoogleReaderStar
-    config:
-      feeds:
-        - FEED
-        - FEED ...
-
-
 SubscriptionLink
 ----------------
 [Path]
@@ -46,24 +30,6 @@ SubscriptionLink
 
 [Syntax]
   - module: SubscriptionLink
-    config:
-      urls:
-        - URL
-        - URL ...
-      interval: INTERVAL_FOR_SCRAPING (in seconds.)
-      retry: RETRY_COUNT
-
-
-SubscriptionTwitter
--------------------
-[Path]
- /plugins/subscription/twitter.rb
-
-[Abstract]
- Subscribe twitter and extract there statuses and the links.
-
-[Syntax]
-  - module: SubscriptionTwittter
     config:
       urls:
         - URL
@@ -88,6 +54,40 @@ SubscriptionTumblr
         - URL
         - URL ...
       pages: PAGES
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry: RETRY_COUNT
+
+
+SubscriptionGoogleReaderStar
+----------------------------
+[Path]
+ /plugins/subscription/google_reader_star.rb
+
+[Abstract]
+ Subscribe to Google reader star feed.
+
+[Syntax]
+  - module: SubscriptionGoogleReaderStar
+    config:
+      feeds:
+        - FEED
+        - FEED ...
+
+
+SubscriptionTwitter
+-------------------
+[Path]
+ /plugins/subscription/twitter.rb
+
+[Abstract]
+ Subscribe twitter and extract there statuses and the links.
+
+[Syntax]
+  - module: SubscriptionTwittter
+    config:
+      urls:
+        - URL
+        - URL ...
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
       retry: RETRY_COUNT
 
@@ -277,25 +277,6 @@ PublishHatenaBookmark
       interval: INTERVAL_FOR_BOOKMARK (in seconds.)
 
 
-PublishGoogleCalendar
----------------------
-[Path]
- /plugins/publish/google_calendar.rb
-
-[Abstract]
- Register an appointment to Google Calendar.
-
-[Description]
- Register item.title to Google Calendar.
-
-[Syntax]
-  - module: PublishGoogleCalendar
-    config:
-      username: GOOGLE_ACCOUNT
-      password: PASSWORD
-      interval: INTERVAL
-
-
 PublishInstapaper
 -----------------
 [Path]
@@ -311,6 +292,25 @@ PublishInstapaper
   - module: PublishInstapaper
     config:
       email: INSTAPAPER_ACCOUNT
+      password: PASSWORD
+      interval: INTERVAL
+
+
+PublishGoogleCalendar
+---------------------
+[Path]
+ /plugins/publish/google_calendar.rb
+
+[Abstract]
+ Register an appointment to Google Calendar.
+
+[Description]
+ Register item.title to Google Calendar.
+
+[Syntax]
+  - module: PublishGoogleCalendar
+    config:
+      username: GOOGLE_ACCOUNT
       password: PASSWORD
       interval: INTERVAL
 
