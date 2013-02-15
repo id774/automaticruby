@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::GoogleReaderStar
 # Author::    soramugi <http://soramugi.net>
+#             774 <http://id774.net>
 # Created::   Feb 10, 2013
-# Updated::   Feb 10, 2013
+# Updated::   Feb 16, 2013
 # Copyright:: soramugi Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -47,8 +48,6 @@ module Automatic::Plugin
               item.link  = feed.link.href     # google reader feed
               begin
                 item.description = feed.description
-                item.author      = feed.author
-                item.comments    = feed.comments
                 item.date        = feed.pubDate || Time.now
               rescue NoMethodError
                 Automatic::Log.puts("warn", "Undefined field detected in feed.")
