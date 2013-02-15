@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::FullFeed
 # Author::    774 <http://id774.net>
 # Created::   Jan 24, 2013
-# Updated::   Jan 24, 2013
+# Updated::   Feb 15, 2013
 # Copyright:: 774 Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -11,7 +11,7 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 require 'filter/full_feed'
 
 describe Automatic::Plugin::FilterFullFeed do
-  context "It should be asc sorted" do
+  context "It should be matched by siteinfo" do
     subject {
       Automatic::Plugin::FilterFullFeed.new(
         {
