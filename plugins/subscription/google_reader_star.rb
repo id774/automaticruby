@@ -3,7 +3,7 @@
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
 # Created::   Feb 10, 2013
-# Updated::   Feb 16, 2013
+# Updated::   Feb 17, 2013
 # Copyright:: soramugi Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -47,8 +47,8 @@ module Automatic::Plugin
               item.title = feed.title.content # google reader feed
               item.link  = feed.link.href     # google reader feed
               begin
-                item.description = feed.description
-                item.date        = feed.pubDate || Time.now
+                item.description = feed.content
+                item.date        = feed.dc_date || Time.now
               rescue NoMethodError
                 Automatic::Log.puts("warn", "Undefined field detected in feed.")
               end
