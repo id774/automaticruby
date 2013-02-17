@@ -72,6 +72,8 @@ SubscriptionGoogleReaderStar
       feeds:
         - FEED
         - FEED ...
+      retry: RETRY_COUNT
+      interval: INTERVAL_FOR_RETRY (in seconds.)
 
 
 SubscriptionTwitter

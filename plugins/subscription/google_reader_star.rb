@@ -21,11 +21,15 @@ module Automatic::Plugin
     def run
       @return_feeds = []
       @config['feeds'].each {|feed|
+        retries = 0
         begin
           Automatic::Log.puts("info", "Parsing: #{feed}")
           @return_feeds << self.parse(Automatic::FeedParser.get(feed).items)
         rescue
-          Automatic::Log.puts("error", "Fault in parsing: #{feed}")
+          retries += 1
+          Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{feed}")
+          sleep @config['interval'].to_i unless @config['interval'].nil?
+          retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
         end
       }
       @return_feeds
