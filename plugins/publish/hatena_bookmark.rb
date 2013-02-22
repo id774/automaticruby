@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Publish::HatenaBookmark
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Jan  8, 2013
+# Updated::   Feb 22, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -48,13 +48,22 @@ module Automatic::Plugin
     )
     end
 
-    def post(b_url, b_comment)
+    def rewrite(string)
+      if /^\/\/.*$/ =~ string
+        return "http:" + string
+      else
+        return string
+      end
+    end
+
+    def post(r_url, b_comment)
       url = "http://b.hatena.ne.jp/atom/post"
       header = wsse(@user["hatena_id"], @user["password"])
       uri = URI.parse(url)
       proxy_class = Net::HTTP::Proxy(ENV["PROXY"], 8080)
       http = proxy_class.new(uri.host)
       http.start { |http|
+        b_url = rewrite(r_url)
         # b_url = NKF.nkf('-w', b_url)
         # b_comment = NKF.nkf('-w', b_comment)
         res = http.post(uri.path, toXml(b_url, b_comment), header)
