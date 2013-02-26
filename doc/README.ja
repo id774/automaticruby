@@ -25,16 +25,16 @@ $ automatic -v
 
 [安定版]
 $ gem install automatic
-
 $ automatic-config scaffold
 (ホームディレクトリに ~/.automatic を生成する)
+$ automatic -v
 
 
 [開発版]
 $ git clone git://github.com/id774/automaticruby.git
-
 $ cd automaticruby
-$ script/bootstrap
+$ bundle install --path vendor/gems
+$ bin/automatic -v
 
 
 ============
