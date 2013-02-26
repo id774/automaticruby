@@ -6,6 +6,8 @@
 #
 #  Maintainer: id774 <idnanashi@gmail.com>
 #
+#  v1.3 2/26,2013
+#       Remove script/bootstrap.
 #  v1.2 6/16,2012
 #       Add all option for integration tests.
 #  v1.1 6/14,2012
@@ -24,8 +26,8 @@ kickstart() {
 
 exec_rspec() {
     $RACK_ROOT/bin/automatic -v
-    $RACK_ROOT/script/bootstrap
-    bundle exec $RACK_ROOT/bin/rake simplecov
+    bundle install --path vendor/gems
+    bundle exec rake simplecov
 }
 
 run_test() {

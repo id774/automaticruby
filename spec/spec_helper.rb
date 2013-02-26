@@ -28,7 +28,7 @@ require 'lib/automatic'
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
-unless /^1\.9\./ =~ RUBY_VERSION
+if /^1\.8\./ =~ RUBY_VERSION
   require 'rspec'
 end
 
