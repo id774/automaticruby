@@ -27,14 +27,17 @@ $ automatic -v
 $ gem install automatic
 $ automatic-config scaffold
 (ホームディレクトリに ~/.automatic を生成する)
-$ automatic -v
+$ automatic -c ~/.automatic/config/example/feed2console.yml
+(ブログのフィードを入力しターミナルに出力する)
 
 
 [開発版]
 $ git clone git://github.com/id774/automaticruby.git
 $ cd automaticruby
 $ bundle install --path vendor/gems
-$ bin/automatic -v
+$ bin/automatic-config scaffold
+$ bin/automatic -c ~/.automatic/config/example/feed2console.yml
+(上記に同じ)
 
 
 ============

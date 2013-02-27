@@ -26,14 +26,17 @@ Installation
 $ gem install automatic
 $ automatic-config scaffold
 (Make ~/.automatic on your home directory.)
-$ automatic -v
+$ automatic -c ~/.automatic/config/example/feed2console.yml
+(This process will be output my blog feed to your terminal.)
 
 
 [Development]
 $ git clone git://github.com/id774/automaticruby.git
 $ cd automaticruby
 $ bundle install --path vendor/gems
-$ bin/automatic -v
+$ bin/automatic-config scaffold
+$ bin/automatic -c ~/.automatic/config/example/feed2console.yml
+(The same as above.)
 
 
 ===========
@@ -60,7 +63,7 @@ directory.
  This is the easy recipe to simply output blog's feed to
 only console. It can be used to check the operation of
 this software.
-$ automatic -c ~/automatic/config/example/feed2console.yml
+$ automatic -c ~/.automatic/config/example/feed2console.yml
 
 
 =======
