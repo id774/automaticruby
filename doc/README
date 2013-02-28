@@ -268,11 +268,7 @@ Directory and file structure
 +-+ script
 | |
 | +-- build
-| | Run Integration Test that carried out on CI.
-| |
-| +-- bootstrap
-|   To set the environment, such as bundle install.
-|   (Only more than ruby 1.9)
+|   Run Integration Test that carried out on CI.
 |
 +-- spec
 |   Directory for unit tests (Use RSpec).

@@ -248,11 +248,7 @@ plugins:
 +- script
 |   |
 |   +- build
-|   |    CI で実施する結合試験をおこなう
-|   |
-|   +- bootstrap
-|        bundle install 等の環境設定をおこなう
-|        (ruby 1.9 以上のみ)
+|        CI で実施する結合試験をおこなう
 |
 +- spec
 |    ユニットテスト用ディレクトリ
