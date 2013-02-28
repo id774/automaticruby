@@ -17,11 +17,23 @@ See doc/README file.
 Get Started
 -----------
 
-Installation.
+``` html
+[Stable]
+$ gem install automatic
+$ automatic-config scaffold
+(Make ~/.automatic on your home directory.)
+$ automatic -c ~/.automatic/config/example/feed2console.yml
+(This process will be output my blog feed to your terminal.)
+```
 
 ``` html
-gem install automatic
-automatic-config scaffold
+[Development]
+$ git clone git://github.com/id774/automaticruby.git
+$ cd automaticruby
+$ bundle install --path vendor/gems
+$ bin/automatic-config scaffold
+$ bin/automatic -c ~/.automatic/config/example/feed2console.yml
+(The same as above.)
 ```
 
 Specify any recipe with -c option.
