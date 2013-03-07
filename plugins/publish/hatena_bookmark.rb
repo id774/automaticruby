@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Publish::HatenaBookmark
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Feb 22, 2013
+# Updated::   Mar  7, 2013
 # Copyright:: 774 Copyright (c) 2012
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -49,10 +49,12 @@ module Automatic::Plugin
     end
 
     def rewrite(string)
-      if /^\/\/.*$/ =~ string
+      if /^http:\/\/.*$/ =~ string
+        return string
+      elsif /^\/\/.*$/ =~ string
         return "http:" + string
       else
-        return string
+        return "http://" + string
       end
     end
 
