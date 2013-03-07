@@ -49,6 +49,7 @@ module Automatic::Plugin
     end
 
     def post(b_url, b_comment)
+      Automatic::Log.puts("info", "Bookmarking: #{b_url}")
       url = "http://b.hatena.ne.jp/atom/post"
       header = wsse(@user["hatena_id"], @user["password"])
       uri = URI.parse(url)
@@ -87,7 +88,6 @@ module Automatic::Plugin
       @pipeline.each {|feeds|
         unless feeds.nil?
           feeds.items.each {|feed|
-            Automatic::Log.puts("info", "Bookmarking: #{feed.link}")
             hb.post(rewrite(feed.link), nil)
             sleep @config['interval'].to_i unless @config['interval'].nil?
           }
