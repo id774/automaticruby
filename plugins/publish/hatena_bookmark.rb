@@ -48,24 +48,13 @@ module Automatic::Plugin
     )
     end
 
-    def rewrite(string)
-      if /^https?:\/\/.*$/ =~ string
-        return string
-      elsif /^\/\/.*$/ =~ string
-        return "http:" + string
-      else
-        return "http://" + string
-      end
-    end
-
-    def post(r_url, b_comment)
+    def post(b_url, b_comment)
       url = "http://b.hatena.ne.jp/atom/post"
       header = wsse(@user["hatena_id"], @user["password"])
       uri = URI.parse(url)
       proxy_class = Net::HTTP::Proxy(ENV["PROXY"], 8080)
       http = proxy_class.new(uri.host)
       http.start { |http|
-        b_url = rewrite(r_url)
         # b_url = NKF.nkf('-w', b_url)
         # b_comment = NKF.nkf('-w', b_comment)
         res = http.post(uri.path, toXml(b_url, b_comment), header)
@@ -99,12 +88,23 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             Automatic::Log.puts("info", "Bookmarking: #{feed.link}")
-            hb.post(feed.link, nil)
+            hb.post(rewrite(feed.link), nil)
             sleep @config['interval'].to_i unless @config['interval'].nil?
           }
         end
       }
       @pipeline
+    end
+
+    private
+    def rewrite(string)
+      if /^https?:\/\/.*$/ =~ string
+        return string
+      elsif /^\/\/.*$/ =~ string
+        return "http:" + string
+      else
+        return "http://" + string
+      end
     end
   end
 end

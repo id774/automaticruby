@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Publish::HatenaBookmark
+# Author::    774 <http://id774.net>
+# Created::   Feb 22, 2012
+# Updated::   Mar  7, 2013
+# Copyright:: 774 Copyright (c) 2012
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'publish/hatena_bookmark'
@@ -12,7 +20,61 @@ describe Automatic::Plugin::PublishHatenaBookmark do
     )
   }
 
-  it "should post the link in the feed" do
+  it "should post the link with prefix 'http' in the feed" do
+    hb = mock("hb")
+    hb.should_receive(:post).with("http://github.com", nil)
+    subject.instance_variable_set(:@hb, hb)
+    subject.run.should have(1).feed
+  end
+end
+
+describe Automatic::Plugin::PublishHatenaBookmark do
+  subject {
+    Automatic::Plugin::PublishHatenaBookmark.new(
+      {"username" => "user", "password" => "pswd"},
+      AutomaticSpec.generate_pipeline{
+        feed { item "//github.com" }
+      }
+    )
+  }
+
+  it "should post the link with prefix '//...' in the feed" do
+    hb = mock("hb")
+    hb.should_receive(:post).with("http://github.com", nil)
+    subject.instance_variable_set(:@hb, hb)
+    subject.run.should have(1).feed
+  end
+end
+
+describe Automatic::Plugin::PublishHatenaBookmark do
+  subject {
+    Automatic::Plugin::PublishHatenaBookmark.new(
+      {"username" => "user", "password" => "pswd"},
+      AutomaticSpec.generate_pipeline{
+        feed { item "https://github.com" }
+      }
+    )
+  }
+
+  it "should post the link with prefix 'https' in the feed" do
+    hb = mock("hb")
+    hb.should_receive(:post).with("https://github.com", nil)
+    subject.instance_variable_set(:@hb, hb)
+    subject.run.should have(1).feed
+  end
+end
+
+describe Automatic::Plugin::PublishHatenaBookmark do
+  subject {
+    Automatic::Plugin::PublishHatenaBookmark.new(
+      {"username" => "user", "password" => "pswd"},
+      AutomaticSpec.generate_pipeline{
+        feed { item "github.com" }
+      }
+    )
+  }
+
+  it "should post the link with others in the feed" do
     hb = mock("hb")
     hb.should_receive(:post).with("http://github.com", nil)
     subject.instance_variable_set(:@hb, hb)
