@@ -49,7 +49,7 @@ module Automatic::Plugin
     end
 
     def rewrite(string)
-      if /^http:\/\/.*$/ =~ string
+      if /^https?:\/\/.*$/ =~ string
         return string
       elsif /^\/\/.*$/ =~ string
         return "http:" + string
