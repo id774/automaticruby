@@ -144,6 +144,7 @@ describe Automatic::Plugin::FilterIgnore do
         'description' => ["bbb"],
       },
         AutomaticSpec.generate_pipeline {
+          # url, title, description, pubDate, author, source, enclosure
           feed {
             item "http://hogefuga.com", "",
             "aaabbbccc"
