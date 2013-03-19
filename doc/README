@@ -24,7 +24,7 @@ Installation
 
 [Stable]
 $ gem install automatic
-$ automatic-config scaffold
+$ automatic scaffold
 (Make ~/.automatic on your home directory.)
 $ automatic -c ~/.automatic/config/example/feed2console.yml
 (This process will be output my blog feed to your terminal.)
@@ -34,7 +34,7 @@ $ automatic -c ~/.automatic/config/example/feed2console.yml
 $ git clone git://github.com/id774/automaticruby.git
 $ cd automaticruby
 $ bundle install --path vendor/gems
-$ bin/automatic-config scaffold
+$ bin/automatic scaffold
 $ bin/automatic -c ~/.automatic/config/example/feed2console.yml
 (The same as above.)
 
@@ -186,8 +186,8 @@ Put your own plug-ins in your home directory.
 You can automatically generate a sub-directory for your own plug-ins
 with the following command.
 
-$ automatic-config scaffold
-(For a description of automatic-config will be described later.)
+$ automatic scaffold
+(For a description of automatic subcommands will be described later.)
 
 
 ============================
@@ -198,10 +198,7 @@ Directory and file structure
 +-+ bin
 | |
 | +-- automatic
-| | The main file for run.
-| |
-| +-- automatic-config
-|   The tool for the auxiliary.
+|   The main file for run.
 |
 +-- config
 |
@@ -438,44 +435,44 @@ See doc/PLUGINS.
 
 
 
-================
-automatic-config
-================
+===========
+SubCommands
+===========
 
-automatic-config is the auxiliary tool.
+automatic has the auxiliary tool in subcommands.
 
 [Syntax]
-$ automatic-config
- Show list of sub-command.
+$ automatic
+ Show help and list of sub-command.
 
-$ automatic-config scaffold
+$ automatic scaffold
  Make ~/.automatic directory in your home directory.
  This operation makes 'plugins', 'db', 'config', 'assets' directories.
  These takes precedence the origin directory.
 
-$ automatic-config unscaffold
+$ automatic unscaffold
  Delete ~/.automatic directory.
 
-$ automatic-config autodiscovery <url>
+$ automatic autodiscovery <url>
  Return the URL of the feed of target detected by auto discovery.
 (ex.)
-$ automatic-config autodiscovery http://blog.id774.net/post
+$ automatic autodiscovery http://blog.id774.net/post
 ["http://blog.id774.net/post/feed/", "http://blog.id774.net/post/comments/feed/"]
 
-$ automatic-config opmlparser <opml path>
+$ automatic opmlparser <opml path>
  Output the URLs to parse the OPML file.
 (ex.)
-$ automatic-config opmlparser opml.xml > feeds.txt
+$ automatic opmlparser opml.xml > feeds.txt
 
-$ automatic-config feedparser <url>
+$ automatic feedparser <url>
  Return the contents to parse the feed.
 
-$ automatic-config inspect <url>
+$ automatic inspect <url>
  Return the URL of the feed of target detected by auto discovery.
  Return the contents to parse the first feed further.
  This inspects verify the target subscriptionable.
 
-$ automatic-config log <level> <message>
+$ automatic log <level> <message>
  Output log messages in the form of Automatic Ruby.
 
 

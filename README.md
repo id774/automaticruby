@@ -20,7 +20,7 @@ Get Started
 ``` html
 [Stable]
 $ gem install automatic
-$ automatic-config scaffold
+$ automatic scaffold
 (Make ~/.automatic on your home directory.)
 $ automatic -c ~/.automatic/config/example/feed2console.yml
 (This process will be output my blog feed to your terminal.)
@@ -31,7 +31,7 @@ $ automatic -c ~/.automatic/config/example/feed2console.yml
 $ git clone git://github.com/id774/automaticruby.git
 $ cd automaticruby
 $ bundle install --path vendor/gems
-$ bin/automatic-config scaffold
+$ bin/automatic scaffold
 $ bin/automatic -c ~/.automatic/config/example/feed2console.yml
 (The same as above.)
 ```
