@@ -21,7 +21,7 @@ kickstart() {
     export RACK_ENV="test"
     export DATABASE_URL="$RACK_ROOT/db"
     ruby -v
-    test_config log info started.
+    test_subcommand log info started.
 }
 
 exec_rspec() {
@@ -34,7 +34,7 @@ run_test() {
     while [ $# -gt 0 ]
     do
         $RACK_ROOT/bin/automatic -c $1
-        test_config log info $?
+        test_subcommand log info $?
         shift
     done
 }
@@ -47,21 +47,21 @@ load_tests() {
     unset YAML_FILE
 }
 
-test_config() {
-    $RACK_ROOT/bin/automatic-config $*
+test_subcommand() {
+    $RACK_ROOT/bin/automatic $*
 }
 
 test_scaffold() {
-    test_config scaffold
-    test_config unscaffold
+    test_subcommand scaffold
+    test_subcommand unscaffold
 }
 
 added_tests() {
     test -f $HOME/.automatic || test_scaffold
-    test_config autodiscovery http://blog.id774.net/blogs/
-    test_config opmlparser "$RACK_ROOT/test/fixtures/sampleOPML.xml"
-    test_config feedparser http://blog.id774.net/blogs/feed/ > /dev/null
-    test_config log info finished.
+    test_subcommand autodiscovery http://blog.id774.net/blogs/
+    test_subcommand opmlparser "$RACK_ROOT/test/fixtures/sampleOPML.xml"
+    test_subcommand feedparser http://blog.id774.net/blogs/feed/ > /dev/null
+    test_subcommand log info finished.
 }
 
 integration() {
