@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Publish::Instapaper
 # Author::    soramugi <http://soramugi.net>
+#             774 <http://id774.net>
 # Created::   Feb 9, 2013
-# Updated::   Feb 9, 2013
+# Updated::   Mar 22, 2013
 # Copyright:: soramugi Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -13,7 +14,11 @@ require 'publish/instapaper'
 describe Automatic::Plugin::PublishInstapaper do
   subject {
     Automatic::Plugin::PublishInstapaper.new(
-      {"email" => "email@example.com", "password" => "pswd"},
+      { 'email' => "email@example.com",
+        'password' => "pswd",
+        'interval' => 5,
+        'retry' => 5
+      },
       AutomaticSpec.generate_pipeline{
         feed { item "http://github.com" }
       }
@@ -31,11 +36,18 @@ end
 describe Automatic::Plugin::Instapaper do
   describe "#add" do
     subject {
-      Automatic::Plugin::Instapaper.new("email@example.com", "pswd")
+      Automatic::Plugin::Instapaper.new(
+        { 'email' => "email@example.com",
+          'password' => "pswd",
+          'interval' => 5,
+          'retry' => 5
+        }
+      )
     }
-      url         = "http://www.google.com"
-      title       = "automatic test"
-      description = "automatic test"
+
+    url         = "http://www.google.com"
+    title       = "automatic test"
+    description = "automatic test"
 
     specify {
       res = stub("res")
