@@ -1,7 +1,7 @@
-# Version:20130314
+# Version:20130322
 
-source :rubygems
-source "https://gems.github.com"
+source "http://rubygems.org"
+source "http://gems.github.com"
 
 gem 'sqlite3'
 gem 'activesupport', '~>3'
