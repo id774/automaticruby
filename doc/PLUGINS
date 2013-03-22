@@ -295,7 +295,8 @@ PublishInstapaper
     config:
       email: INSTAPAPER_ACCOUNT
       password: PASSWORD
-      interval: INTERVAL
+      interval: INTERVAL_FOR_RETRY (in seconds.)
+      retry: RETRY_COUNT
 
 
 PublishGoogleCalendar

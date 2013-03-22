@@ -295,7 +295,8 @@ PublishInstapaper
     config:
       email: Instapaper メールアドレス
       password: パスワード
-      interval: 複数の予定の投稿間隔 (秒)
+      interval: 複数の予定の投稿間隔, エラー時のリトライ間隔 (秒)
+      retry: エラー時のリトライ回数 (回数, 省略時 0)
 
 
 PublishGoogleCalendar
