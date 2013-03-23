@@ -3,7 +3,7 @@
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
 # Created::   Feb  9, 2013
-# Updated::   Mar 22, 2013
+# Updated::   Mar 23, 2013
 # Copyright:: soramugi Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -38,21 +38,13 @@ module Automatic::Plugin
     private
 
     def request(method, params = {})
-      retries = 0
-      begin
-        request          = Net::HTTP::Post.new('/api/' + method.to_s)
-        request.basic_auth(@username, @password)
-        request.set_form_data(params)
-        http             = Net::HTTP.new('www.instapaper.com', 443)
-        http.use_ssl     = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        http.start { http.request(request) }
-      rescue
-        retries += 1
-        Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in publish to instapaper.")
-        sleep @config['interval'].to_i unless @config['interval'].nil?
-        retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
-      end
+      request          = Net::HTTP::Post.new('/api/' + method.to_s)
+      request.basic_auth(@username, @password)
+      request.set_form_data(params)
+      http             = Net::HTTP.new('www.instapaper.com', 443)
+      http.use_ssl     = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.start { http.request(request) }
     end
   end
 
@@ -75,7 +67,15 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             Automatic::Log.puts("info", "add: #{feed.link}")
-            instapaper.add(feed.link, feed.title, feed.description)
+            retries = 0
+            begin
+              instapaper.add(feed.link, feed.title, feed.description)
+            rescue
+              retries += 1
+              Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in publish to instapaper.")
+              sleep @config['interval'].to_i unless @config['interval'].nil?
+              retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+            end
             sleep @config['interval'].to_i unless @config['interval'].nil?
           }
         end
