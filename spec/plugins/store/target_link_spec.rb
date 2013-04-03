@@ -3,7 +3,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  4, 2012
-# Updated::   Apr  2, 2013
+# Updated::   Apr  3, 2013
 # Copyright:: kzgs Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -19,7 +19,7 @@ describe Automatic::Plugin::StoreTargetLink do
       instance = Automatic::Plugin::StoreTargetLink.new(
         { "path" => dir },
         AutomaticSpec.generate_pipeline {
-          feed { item "http://www.id774.net/test/store/rss" }
+          feed { item "http://id774.net/test/store/rss" }
         }
       )
       instance.run.should have(1).feed
