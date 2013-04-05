@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Filter::AbsoluteURI
 # Author::    774 <http://id774.net>
 # Created::   Jun 20, 2012
-# Updated::   Sep 18, 2012
-# Copyright:: 774 Copyright (c) 2012
+# Updated::   Apr  5, 2013
+# Copyright:: 774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -12,14 +12,6 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
-    end
-
-    def rewrite(string)
-      if /^http:\/\/.*$/ =~ string
-        return string
-      else
-        return @config['url'] + string
-      end
     end
 
     def run
@@ -34,6 +26,15 @@ module Automatic::Plugin
         end
       }
       @return_feeds
+    end
+
+    private
+    def rewrite(string)
+      if /^http:\/\/.*$/ =~ string
+        return string
+      else
+        return @config['url'] + string
+      end
     end
   end
 end

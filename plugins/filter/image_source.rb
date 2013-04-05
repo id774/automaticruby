@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Filter::ImageSource
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Oct 16, 2012
-# Copyright:: 774 Copyright (c) 2012
+# Updated::   Apr  5, 2013
+# Copyright:: 774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -14,14 +14,6 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
-    end
-
-    def rewrite_link(string)
-      array = Array.new
-      string.scan(/<img src="(.*?)"/) { |matched|
-        array = array | matched
-      }
-      array
     end
 
     def run
@@ -41,6 +33,15 @@ module Automatic::Plugin
         @return_feeds << feeds
       }
       @return_feeds
+    end
+
+    private
+    def rewrite_link(string)
+      array = Array.new
+      string.scan(/<img src="(.*?)"/) { |matched|
+        array = array | matched
+      }
+      array
     end
   end
 end

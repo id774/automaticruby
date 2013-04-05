@@ -3,7 +3,7 @@
 # Author::    progd <http://d.hatena.ne.jp/progd/20120429/automatic_ruby_filter_full_feed>
 #             774 <http://id774.net>
 # Created::   Apr 29, 2012
-# Updated::   Jan 24, 2013
+# Updated::   Apr  5, 2013
 # Copyright:: progd
 #             774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
@@ -20,6 +20,21 @@ module Automatic::Plugin
       @pipeline = pipeline
       @siteinfo = get_siteinfo
     end
+
+    def run
+      @return_feeds = []
+      @pipeline.each {|feeds|
+        unless feeds.nil?
+          feeds.items.each {|feed|
+            feed = fulltext(feed)
+          }
+        end
+        @return_feeds << feeds
+      }
+      @return_feeds
+    end
+
+    private
 
     def get_siteinfo
       Automatic::Log.puts(:info, "Loading siteinfo from #{@config['siteinfo']}")
@@ -58,19 +73,6 @@ module Automatic::Plugin
       }
       Automatic::Log.puts(:info, "Fulltext SITEINFO not found: #{feed.link}")
       return feed
-    end
-
-    def run
-      @return_feeds = []
-      @pipeline.each {|feeds|
-        unless feeds.nil?
-          feeds.items.each {|feed|
-            feed = fulltext(feed)
-          }
-        end
-        @return_feeds << feeds
-      }
-      @return_feeds
     end
   end
 end

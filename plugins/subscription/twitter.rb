@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Twitter
 # Author::    774 <http://id774.net>
 # Created::   Sep  9, 2012
-# Updated::   Feb  8, 2013
+# Updated::   Apr  5, 2013
 # Copyright:: 774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -17,6 +17,23 @@ module Automatic::Plugin
       @pipeline = pipeline
     end
 
+    def run
+      @return_feeds = []
+      @config['urls'].each {|url|
+        retries = 0
+        begin
+          create_rss(url)
+        rescue
+          retries += 1
+          Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
+          sleep @config['interval'].to_i unless @config['interval'].nil?
+          retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+        end
+      }
+      @return_feeds
+    end
+
+    private
     def create_rss(url)
       Automatic::Log.puts("info", "Parsing: #{url}")
       html = open(url).read
@@ -45,22 +62,6 @@ module Automatic::Plugin
         sleep @config['interval'].to_i unless @config['interval'].nil?
         @return_feeds << rss
       end
-    end
-
-    def run
-      @return_feeds = []
-      @config['urls'].each {|url|
-        retries = 0
-        begin
-          create_rss(url)
-        rescue
-          retries += 1
-          Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
-          sleep @config['interval'].to_i unless @config['interval'].nil?
-          retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
-        end
-      }
-      @return_feeds
     end
   end
 end

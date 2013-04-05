@@ -20,10 +20,6 @@ module Automatic::Plugin
       }
     end
 
-    def endpoint_url
-      "#{@params['url']}:#{@params['port']}/#{@params['command']}"
-    end
-
     def post(link, title = "")
       message     = build_message(link, title)
       uri         = URI.parse(endpoint_url)
@@ -44,6 +40,10 @@ module Automatic::Plugin
     end
 
     private
+
+    def endpoint_url
+      "#{@params['url']}:#{@params['port']}/#{@params['command']}"
+    end
 
     def build_message(link, title)
       message = ""

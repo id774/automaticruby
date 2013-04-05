@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Feb  8, 2013
+# Updated::   Apr  5, 2013
 # Copyright:: 774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -13,16 +13,6 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
-    end
-
-    def create_rss(url)
-      Automatic::Log.puts("info", "Parsing: #{url}")
-      html = open(url).read
-      unless html.nil?
-        rss = Automatic::FeedParser.parse(html)
-        sleep @config['interval'].to_i unless @config['interval'].nil?
-        @return_feeds << rss
-      end
     end
 
     def run
@@ -47,6 +37,17 @@ module Automatic::Plugin
         end
       }
       @return_feeds
+    end
+
+    private
+    def create_rss(url)
+      Automatic::Log.puts("info", "Parsing: #{url}")
+      html = open(url).read
+      unless html.nil?
+        rss = Automatic::FeedParser.parse(html)
+        sleep @config['interval'].to_i unless @config['interval'].nil?
+        @return_feeds << rss
+      end
     end
   end
 end
