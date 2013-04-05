@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Filter::Image
 # Author::    774 <http://id774.net>
 # Created::   Sep 18, 2012
-# Updated::   Sep 18, 2012
-# Copyright:: 774 Copyright (c) 2012
+# Updated::   Apr  5, 2013
+# Copyright:: 774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -21,26 +21,24 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             unless feed.link.nil?
-              image_link = nil
-              feed.link.scan(/(.*?\.jp.*g$)/i) { |matched|
-                image_link = matched.join(" ")
-              }
-              feed.link.scan(/(.*?\.png$)/i) { |matched|
-                image_link = matched.join(" ")
-              }
-              feed.link.scan(/(.*?\.gif$)/i) { |matched|
-                image_link = matched.join(" ")
-              }
-              feed.link.scan(/(.*?\.tiff$)/i) { |matched|
-                image_link = matched.join(" ")
-              }
-              feed.link = image_link
+              feed.link = image?(feed.link)
             end
           }
           @return_feeds << feeds
         end
       }
       @return_feeds
+    end
+
+    private
+    def image?(link)
+      case link
+        when /\.jpe?g\Z/i then link
+        when /\.gif\Z/i then link
+        when /\.png\Z/i then link
+        when /\.tiff\Z/i then link
+        else nil
+      end
     end
   end
 end
