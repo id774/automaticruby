@@ -20,9 +20,7 @@ module Automatic::Plugin
         return_feed_items = []
         unless feeds.nil?
           feeds.items.each {|feed|
-            unless feed.link.nil?
-              feed.link = image?(feed.link)
-            end
+            feed.link = image?(feed.link) unless feed.link.nil?
           }
           @return_feeds << feeds
         end
