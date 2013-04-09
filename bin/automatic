@@ -3,7 +3,7 @@
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
 # Created::   Feb 18, 2012
-# Updated::   Mar 20, 2013
+# Updated::   Apr  9, 2013
 # Copyright:: 774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -97,14 +97,15 @@ subparsers = {
 }
 
 parser = OptionParser.new {|parser|
-  parser.banner = "Usage: automatic [options] arg"
   parser.version = Automatic.const_get(:VERSION)
-  parser.separator "Args: #{subparsers.keys.join(", ")}"
+  parser.banner = "Automatic #{parser.version}
+    Usage: automatic [options] [subcommand]"
+  parser.separator "SubCommands:
+    #{subparsers.keys.join(", ")}"
   parser.separator "Options:"
   parser.on('-c', '--config FILE', String,
             "recipe YAML file"){|c| recipe_path = c}
   parser.on('-h', '--help', "show this message") {
-
     puts parser
     exit 0
   }
