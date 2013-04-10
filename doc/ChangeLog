@@ -1,3 +1,12 @@
+=== 13.4.0 / 2013-04-10
+
+* Command automatic-config merged into automatic.
+
+* Improvement retry functions.
+
+* Running tests on Ruby 2.0.
+
+
 === 13.2.0 / 2013-02-13
 
 * All subscription and download plugins implemented retry function.
