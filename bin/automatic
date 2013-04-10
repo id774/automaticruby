@@ -3,7 +3,7 @@
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
 # Created::   Feb 18, 2012
-# Updated::   Apr  9, 2013
+# Updated::   Apr 10, 2013
 # Copyright:: 774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -107,7 +107,7 @@ parser = OptionParser.new {|parser|
             "recipe YAML file"){|c| recipe_path = c}
   parser.on('-h', '--help', "show this message") {
     puts parser
-    exit 0
+    exit 1
   }
 }
 
@@ -117,7 +117,7 @@ begin
 rescue OptionParser::ParseError => err
   $stderr.puts err.message
   $stderr.puts parser.help
-  exit 1
+  exit 2
 end
 
 unless recipe_path.to_s.empty?
@@ -129,10 +129,10 @@ else
   unless ARGV.empty?
     Hash.new {|h, k|
       puts "No such subcommand: #{k}"
-      exit 2
+      exit 1
     }.update(subparsers)[ARGV.shift].call(ARGV)
   else
     puts parser
-    exit 0
+    exit 1
   end
 end
