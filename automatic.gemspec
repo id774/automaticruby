@@ -5,14 +5,14 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "13.2.0"
+  s.version = "13.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
-  s.date = "2013-02-13"
+  s.date = "2013-04-10"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
-  s.executables = ["automatic", "automatic-config"]
+  s.executables = ["automatic"]
   s.extra_rdoc_files = [
     "README.md"
   ]
@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
     "assets/siteinfo/items_all.json",
     "automatic.gemspec",
     "bin/automatic",
-    "bin/automatic-config",
     "config/feed2console.yml",
     "db/.gitkeep",
     "doc/AUTHORS",
@@ -65,7 +64,6 @@ Gem::Specification.new do |s|
     "plugins/subscription/link.rb",
     "plugins/subscription/tumblr.rb",
     "plugins/subscription/twitter.rb",
-    "script/bootstrap",
     "script/build",
     "spec/fixtures/sampleRecipe.yml",
     "spec/lib/automatic/pipeline_spec.rb",
