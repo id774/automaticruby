@@ -1,4 +1,4 @@
-# encoding: utf-8
+# -*- mode: ruby; coding: utf-8 -*-
 
 require 'rubygems'
 
@@ -37,7 +37,7 @@ Jeweler::Tasks.new do |gem|
 end
 Jeweler::RubygemsDotOrgTasks.new
 
-unless /^1\.8\./ =~ RUBY_VERSION
+if RUBY_VERSION >= '1.9.0'
   desc "Run RSpec code examples with simplecov"
   task :simplecov do
     ENV['COVERAGE'] = "on"
