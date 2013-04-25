@@ -23,6 +23,8 @@ namespace :spec do
   end
 end
 
+task :default => :spec
+
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
@@ -35,6 +37,7 @@ Jeweler::Tasks.new do |gem|
   gem.authors = ["id774"]
   # dependencies defined in Gemfile
 end
+
 Jeweler::RubygemsDotOrgTasks.new
 
 if RUBY_VERSION >= '1.9.0'
