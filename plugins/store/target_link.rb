@@ -17,15 +17,6 @@ module Automatic::Plugin
       @pipeline = pipeline
     end
 
-    def wget(url)
-      filename = url.split(/\//).last
-      open(url) { |source|
-        open(File.join(@config['path'], filename), "w+b") { |o|
-          o.print source.read
-        }
-      }
-    end
-
     def run
       @pipeline.each {|feeds|
         unless feeds.nil?
@@ -47,6 +38,16 @@ module Automatic::Plugin
         end
       }
       @pipeline
+    end
+
+    private
+    def wget(url)
+      filename = url.split(/\//).last
+      open(url) { |source|
+        open(File.join(@config['path'], filename), "w+b") { |o|
+          o.print source.read
+        }
+      }
     end
   end
 end
