@@ -1,0 +1,23 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionText
+    config:
+      titles:
+        - 'hugehuge'
+      urls:
+        - 'https://github.com'
+      feeds:
+        -
+          title: 'jenkins'
+          url:   'http://jenkins.id774.net/jenkins/'
+        -
+          title: 'Tumblr'
+          url:   'http://www.tumblr.com/dashboard'
+
+  - module: PublishConsole
