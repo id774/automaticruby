@@ -12,6 +12,7 @@ gem 'gcalapi'
 gem 'xml-simple'
 gem 'feedbag'
 gem 'nokogiri'
+gem 'twitter'
 
 group :test do
   gem 'rspec'
