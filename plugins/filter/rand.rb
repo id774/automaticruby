@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Filter::Rand
 # Author::    soramugi <http://soramugi.net>
+#             774 <http://id774.net>
 # Created::   Mar  6, 2013
-# Updated::   Mar  6, 2013
+# Updated::   Mar  7, 2013
 # Copyright:: soramugi Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -16,9 +17,9 @@ module Automatic::Plugin
 
     def run
       @return_feeds = []
-      @pipeline.each { |feed|
+      @pipeline.each {|feed|
         unless feed.nil?
-          @return_feeds << Automatic::FeedParser.create(feed.items.sort_by{rand})
+          @return_feeds << Automatic::FeedParser.create(feed.items.shuffle)
         end
       }
       @return_feeds
