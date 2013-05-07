@@ -41,7 +41,7 @@ describe Automatic::Plugin::FilterRand do
         elsif link1 != "http://bbb.png"
           link1.should_not == "http://bbb.png"
         elsif link2 != "http://ccc.png"
-          link1.should_not == "http://ccc.png"
+          link2.should_not == "http://ccc.png"
         else
           pending("Plugin returns the origin feed.")
           link3.should == "http://ddd.png"
