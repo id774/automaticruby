@@ -13,4 +13,8 @@ plugins:
 
   - module: FilterRand
 
-  - module: PublishConsole
+  - module: StorePermalink
+    config:
+      db: test_rand.db
+
+  # - module: PublishConsole

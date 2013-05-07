@@ -20,4 +20,8 @@ plugins:
           title: 'Tumblr'
           url:   'http://www.tumblr.com/dashboard'
 
-  - module: PublishConsole
+  - module: StorePermalink
+    config:
+      db: test_text2feed.db
+
+  # - module: PublishConsole
