@@ -15,4 +15,8 @@ plugins:
     config:
         pick: last
 
-  - module: PublishConsole
+  - module: StorePermalink
+    config:
+      db: test_one.db
+
+  # - module: PublishConsole
