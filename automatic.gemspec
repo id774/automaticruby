@@ -111,7 +111,7 @@ Gem::Specification.new do |s|
     "test/integration/test_tumblr2local.yml",
     "vendor/.gitkeep"
   ]
-  s.homepage = "http://github.com/id774/automaticruby"
+  s.homepage = "http://github.com/automaticruby/automaticruby"
   s.licenses = ["GPL"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"

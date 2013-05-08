@@ -29,7 +29,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "automatic"
-  gem.homepage = "http://github.com/id774/automaticruby"
+  gem.homepage = "http://github.com/automaticruby/automaticruby"
   gem.license = "GPL"
   gem.summary = %Q{Automatic Ruby}
   gem.description = %Q{Ruby General Automation Framework}
