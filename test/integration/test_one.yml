@@ -1,0 +1,18 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://blog.id774.net/post/feed/
+
+  - module: FilterOne
+    config:
+        pick: last
+
+  - module: PublishConsole
