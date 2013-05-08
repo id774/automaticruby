@@ -85,11 +85,11 @@ We need your help.
 
 **Repository**
 
-+ https://github.com/id774/automaticruby
++ https://github.com/automaticruby/automaticruby
 
 **Issues**
 
-+ https://github.com/id774/automaticruby/issues
++ https://github.com/automaticruby/automaticruby/issues
 
 **RubyFroge**
 
