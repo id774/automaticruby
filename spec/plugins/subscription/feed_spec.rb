@@ -34,7 +34,7 @@ describe Automatic::Plugin::SubscriptionFeed do
     subject {
       Automatic::Plugin::SubscriptionFeed.new(
         { 'feeds' => [
-            "https://github.com/id774/automaticruby/commits/master.atom"]
+            "https://github.com/automaticruby/automaticruby/commits/master.atom"]
         }
       )
     }
@@ -46,7 +46,7 @@ describe Automatic::Plugin::SubscriptionFeed do
     subject {
       Automatic::Plugin::SubscriptionFeed.new(
         { 'feeds' => [
-            "https://github.com/id774/automaticruby/commits/master.atom"],
+            "https://github.com/automaticruby/automaticruby/commits/master.atom"],
           'retry' => 3,
           'interval' => 5
         }

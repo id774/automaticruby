@@ -28,7 +28,7 @@ $ automatic -c ~/.automatic/config/example/feed2console.yml
 
 ``` html
 [Development]
-$ git clone git://github.com/id774/automaticruby.git
+$ git clone git://github.com/automaticruby/automaticruby.git
 $ cd automaticruby
 $ bundle install --path vendor/gems
 $ bin/automatic scaffold

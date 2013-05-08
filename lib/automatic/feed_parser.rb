@@ -32,7 +32,7 @@ module Automatic
         xss = maker.xml_stylesheets.new_xml_stylesheet
         maker.channel.title = "Automatic Ruby"
         maker.channel.description = "Automatic Ruby"
-        maker.channel.link = "https://github.com/id774/automaticruby"
+        maker.channel.link = "https://github.com/automaticruby/automaticruby"
         maker.items.do_sort = true
 
         unless feeds.nil?
@@ -61,7 +61,7 @@ module Automatic
         xss = maker.xml_stylesheets.new_xml_stylesheet
         maker.channel.title = "Automatic Ruby"
         maker.channel.description = "Automatic Ruby"
-        maker.channel.link = "https://github.com/id774/automaticruby"
+        maker.channel.link = "https://github.com/automaticruby/automaticruby"
         maker.items.do_sort = true
 
         doc = Nokogiri::HTML(html)
