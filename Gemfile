@@ -13,6 +13,7 @@ gem 'xml-simple'
 gem 'feedbag'
 gem 'nokogiri'
 gem 'twitter'
+gem 'weather_hacker'
 
 group :test do
   gem 'rspec'
