@@ -1,3 +1,15 @@
+=== 13.5.x / 2013-05-x
+
+* Added new plugins.
+
+  * Subscription::Text
+  * Filter::One
+  * Filter::Rand
+  * Pulish::Twitter
+
+* Move repository from id774/automaticruby to automaticruby/automaticruby.
+
+
 === 13.4.1 / 2013-04-10
 
 * Command automatic-config merged into automatic.
@@ -48,7 +60,7 @@
 
 * Bug fix
 
-  * It should be considered the case of the feed link including nil
+  * It should be considered the case of the feed link including nil.
 
 
 === 12.9.0 / 2012-09-18
