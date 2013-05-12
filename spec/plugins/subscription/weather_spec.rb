@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Subscription::weather
+# Name::      Automatic::Plugin::Subscription::Weather
 # Author::    soramugi <http://soramugi.net>
 # Created::   May  12, 2013
 # Updated::   May  12, 2013

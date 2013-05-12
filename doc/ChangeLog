@@ -3,6 +3,7 @@
 * Added new plugins.
 
   * Subscription::Text
+  * Subscription::Weather
   * Filter::One
   * Filter::Rand
   * Pulish::Twitter
