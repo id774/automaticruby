@@ -94,6 +94,45 @@ SubscriptionTwitter
       retry: RETRY_COUNT
 
 
+SubscriptionText
+----------------
+[Path]
+ /plugins/subscription/text.rb
+
+[Abstract]
+ Subscribe text.
+
+[Syntax]
+  - module: SubscriptionText
+    config:
+      titles:
+        - 'title'
+      urls:
+        - 'url'
+      feeds:
+        -
+          title: 'title'
+          url:   'url'
+        -
+          title: 'title'
+          url:   'url'
+
+
+SubscriptionWeather
+-------------------
+[Path]
+ /plugins/subscription/weather.rb
+
+[Abstract]
+ Subscribe weather (using gem weather_hacker).
+
+[Syntax]
+  - module: SubscriptionWeather
+    config:
+      zipcode: ZIPCODE (ex. 166-0003)
+      day:     DAY (ex. 'today', 'tomorrow')
+
+
 FilterSort
 ----------
 [Path]
@@ -152,6 +191,32 @@ FilterImageSource
 
 [Syntax]
   - module: FilterImageSource
+
+
+FilterOne
+---------
+[Path]
+ /plugins/filter/one.rb
+
+[Abstract]
+ Select a item from items.
+
+[Syntax]
+  - module: FilterOne
+    config:
+        pick: last (If none, pick the first item.)
+
+
+FilterRand
+----------
+[Path]
+ /plugins/filter/rand.rb
+
+[Abstract]
+ Randomize the array of the feed items.
+
+[Syntax]
+  - module: FilterRand
 
 
 FilterFullFeed
@@ -277,6 +342,26 @@ PublishHatenaBookmark
       username: HATENA_ID
       passowrd: PASSWORD
       interval: INTERVAL_FOR_BOOKMARK (in seconds.)
+
+
+PublishTwitter
+--------------
+[Path]
+ /plugins/publish/twitter.rb
+
+[Abstract]
+ Publish to twitter.
+
+[Syntax]
+  - module: PublishTwitter
+    config:
+      consumer_key:       'your_consumer_key'
+      consumer_secret:    'your_consumer_secret'
+      oauth_token:        'your_oauth_token'
+      oauth_token_secret: 'your_oauth_token_secret'
+      tweet_tmp:          'hugehuge {link}'
+      interval:           INTERVAL_FOR_RETRY (in seconds.)
+      retry:              RETRY_COUNT
 
 
 PublishInstapaper
