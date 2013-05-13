@@ -6,6 +6,8 @@
 #
 #  Maintainer: id774 <idnanashi@gmail.com>
 #
+#  v1.4 5/13,2013
+#       Fix bundler environment.
 #  v1.3 2/26,2013
 #       Remove script/bootstrap.
 #  v1.2 6/16,2012
@@ -33,7 +35,7 @@ exec_rspec() {
 run_test() {
     while [ $# -gt 0 ]
     do
-        $RACK_ROOT/bin/automatic -c $1
+        bundle exec $RACK_ROOT/bin/automatic -c $1
         test_subcommand log info $?
         shift
     done
