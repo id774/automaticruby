@@ -10,6 +10,55 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 require 'filter/ignore'
 
 describe Automatic::Plugin::FilterIgnore do
+
+  context "with exclusion by title" do
+    subject {
+      Automatic::Plugin::FilterIgnore.new({
+        'title' => [""],
+      },
+        AutomaticSpec.generate_pipeline {
+          feed { item "http://github.com", "foo" }
+          feed { item "http://google.com", "hi" }
+        })
+    }
+
+    describe "#run" do
+      its(:run) { should have(0).feeds }
+    end
+  end
+
+  context "with exclusion by title" do
+    subject {
+      Automatic::Plugin::FilterIgnore.new({
+        'title' => ["foo"],
+      },
+        AutomaticSpec.generate_pipeline {
+          feed { item "http://github.com", "foo" }
+          feed { item "http://google.com", "hi" }
+        })
+    }
+
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+    end
+  end
+
+  context "with exclusion by title" do
+    subject {
+      Automatic::Plugin::FilterIgnore.new({
+        'title' => ["o"],
+      },
+        AutomaticSpec.generate_pipeline {
+          feed { item "http://github.com", "foo" }
+          feed { item "http://google.com", "hi" }
+        })
+    }
+
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+    end
+  end
+
   context "with exclusion by links" do
     subject {
       Automatic::Plugin::FilterIgnore.new({
