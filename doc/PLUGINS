@@ -124,7 +124,7 @@ SubscriptionWeather
  /plugins/subscription/weather.rb
 
 [Abstract]
- Subscribe weather (using gem weather_hacker).
+ Subscribe weather (using gem weather_hacker) by zipcode.
 
 [Syntax]
   - module: SubscriptionWeather

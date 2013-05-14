@@ -100,7 +100,7 @@ SubscriptionWeather
  /plugins/subscription/weather.rb
 
 [概要]
- 郵便番号から天気情報の取得
+ 与えられた郵便番号に基づいて天気情報を取得する
 
 [レシピ記法]
   - module: SubscriptionWeather
