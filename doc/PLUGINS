@@ -100,7 +100,7 @@ SubscriptionText
  /plugins/subscription/text.rb
 
 [Abstract]
- Subscribe text.
+ Create new feeds from urls, titles, feeds on text.
 
 [Syntax]
   - module: SubscriptionText
@@ -131,6 +131,8 @@ SubscriptionWeather
     config:
       zipcode: ZIPCODE (ex. 166-0003)
       day:     DAY (ex. 'today', 'tomorrow')
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry: RETRY_COUNT
 
 
 FilterSort
@@ -359,7 +361,7 @@ PublishTwitter
       consumer_secret:    'your_consumer_secret'
       oauth_token:        'your_oauth_token'
       oauth_token_secret: 'your_oauth_token_secret'
-      tweet_tmp:          'hugehuge {link}'
+      tweet_tmp:          'tweet text {link}'
       interval:           INTERVAL_FOR_RETRY (in seconds.)
       retry:              RETRY_COUNT
 
