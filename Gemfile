@@ -14,6 +14,7 @@ gem 'feedbag'
 gem 'nokogiri'
 gem 'twitter'
 gem 'weather_hacker'
+gem 'pocket-ruby'
 
 group :test do
   gem 'rspec'

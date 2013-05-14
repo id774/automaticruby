@@ -366,6 +366,26 @@ PublishTwitter
       retry:              RETRY_COUNT
 
 
+PublishPocket
+-----------------
+[Path]
+ /plugins/publish/pocket.rb
+
+[Abstract]
+ Register an appointment to Pocket.
+
+[Description]
+ Submission to Pocket API. (using gem pocket-ruby)
+
+[Syntax]
+  - module: PublishPocket
+    config:
+      consumer_key: CONSUMER_KEY
+      access_token: ACCESS_TOKEN
+      interval: INTERVAL_FOR_RETRY (in seconds.)
+      retry: RETRY_COUNT
+
+
 PublishInstapaper
 -----------------
 [Path]

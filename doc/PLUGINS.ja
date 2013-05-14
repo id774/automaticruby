@@ -366,6 +366,26 @@ PublishTwitter
       retry: エラー時のリトライ回数 (回数, 省略時 0)
 
 
+PublishPocket
+-----------------
+[パス]
+ /plugins/publish/pocket.rb
+
+[概要]
+ Pocket に登録する
+
+[説明]
+ Pocket API へ送信する(gem pocket-rubyを使用)
+
+[レシピ記法]
+  - module: PublishPocket
+    config:
+      consumer_key: CONSUMER_KEY
+      access_token: ACCESS_TOKEN
+      interval: 複数の予定の投稿間隔, エラー時のリトライ間隔 (秒)
+      retry: エラー時のリトライ回数 (回数, 省略時 0)
+
+
 PublishInstapaper
 -----------------
 [パス]
