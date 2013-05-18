@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "13.4.1"
+  s.version = "13.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
-  s.date = "2013-04-10"
+  s.date = "2013-05-18"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
   s.executables = ["automatic"]
@@ -46,6 +46,8 @@ Gem::Specification.new do |s|
     "plugins/filter/ignore.rb",
     "plugins/filter/image.rb",
     "plugins/filter/image_source.rb",
+    "plugins/filter/one.rb",
+    "plugins/filter/rand.rb",
     "plugins/filter/sort.rb",
     "plugins/filter/tumblr_resize.rb",
     "plugins/notify/ikachan.rb",
@@ -54,7 +56,9 @@ Gem::Specification.new do |s|
     "plugins/publish/hatena_bookmark.rb",
     "plugins/publish/instapaper.rb",
     "plugins/publish/mail.rb",
+    "plugins/publish/pocket.rb",
     "plugins/publish/smtp.rb",
+    "plugins/publish/twitter.rb",
     "plugins/store/database.rb",
     "plugins/store/full_text.rb",
     "plugins/store/permalink.rb",
@@ -62,8 +66,10 @@ Gem::Specification.new do |s|
     "plugins/subscription/feed.rb",
     "plugins/subscription/google_reader_star.rb",
     "plugins/subscription/link.rb",
+    "plugins/subscription/text.rb",
     "plugins/subscription/tumblr.rb",
     "plugins/subscription/twitter.rb",
+    "plugins/subscription/weather.rb",
     "script/build",
     "spec/fixtures/sampleRecipe.yml",
     "spec/lib/automatic/pipeline_spec.rb",
@@ -75,6 +81,8 @@ Gem::Specification.new do |s|
     "spec/plugins/filter/ignore_spec.rb",
     "spec/plugins/filter/image_source_spec.rb",
     "spec/plugins/filter/image_spec.rb",
+    "spec/plugins/filter/one_spec.rb",
+    "spec/plugins/filter/rand_spec.rb",
     "spec/plugins/filter/sort_spec.rb",
     "spec/plugins/filter/tumblr_resize_spec.rb",
     "spec/plugins/notify/ikachan_spec.rb",
@@ -83,20 +91,25 @@ Gem::Specification.new do |s|
     "spec/plugins/publish/hatena_bookmark_spec.rb",
     "spec/plugins/publish/instapaper_spec.rb",
     "spec/plugins/publish/mail_spec.rb",
+    "spec/plugins/publish/pocket_spec.rb",
     "spec/plugins/publish/smtp_spec.rb",
+    "spec/plugins/publish/twitter_spec.rb",
     "spec/plugins/store/full_text_spec.rb",
     "spec/plugins/store/permalink_spec.rb",
     "spec/plugins/store/target_link_spec.rb",
     "spec/plugins/subscription/feed_spec.rb",
     "spec/plugins/subscription/google_reader_star_spec.rb",
     "spec/plugins/subscription/link_spec.rb",
+    "spec/plugins/subscription/text_spec.rb",
     "spec/plugins/subscription/tumblr_spec.rb",
     "spec/plugins/subscription/twitter_spec.rb",
+    "spec/plugins/subscription/weather_spec.rb",
     "spec/spec_helper.rb",
     "spec/user_dir/plugins/store/mock.rb",
     "test/fixtures/sampleOPML.xml",
     "test/integration/test_absoluteurl.yml",
     "test/integration/test_activerecord.yml",
+    "test/integration/test_add_pocket.yml",
     "test/integration/test_fulltext.yml",
     "test/integration/test_googlealert.yml",
     "test/integration/test_googlestar.yml",
@@ -106,9 +119,13 @@ Gem::Specification.new do |s|
     "test/integration/test_image2local.yml",
     "test/integration/test_instapaper.yml",
     "test/integration/test_link2local.yml",
+    "test/integration/test_one.yml",
+    "test/integration/test_rand.yml",
     "test/integration/test_sort.yml",
     "test/integration/test_svnlog.yml",
+    "test/integration/test_text2feed.yml",
     "test/integration/test_tumblr2local.yml",
+    "test/integration/test_weather.yml",
     "vendor/.gitkeep"
   ]
   s.homepage = "http://github.com/automaticruby/automaticruby"
@@ -130,6 +147,9 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<xml-simple>, [">= 0"])
       s.add_runtime_dependency(%q<feedbag>, [">= 0"])
       s.add_runtime_dependency(%q<nokogiri>, [">= 0"])
+      s.add_runtime_dependency(%q<twitter>, [">= 0"])
+      s.add_runtime_dependency(%q<weather_hacker>, [">= 0"])
+      s.add_runtime_dependency(%q<pocket-ruby>, [">= 0"])
       s.add_development_dependency(%q<cucumber>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
@@ -143,6 +163,9 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<xml-simple>, [">= 0"])
       s.add_dependency(%q<feedbag>, [">= 0"])
       s.add_dependency(%q<nokogiri>, [">= 0"])
+      s.add_dependency(%q<twitter>, [">= 0"])
+      s.add_dependency(%q<weather_hacker>, [">= 0"])
+      s.add_dependency(%q<pocket-ruby>, [">= 0"])
       s.add_dependency(%q<cucumber>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
@@ -157,6 +180,9 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<xml-simple>, [">= 0"])
     s.add_dependency(%q<feedbag>, [">= 0"])
     s.add_dependency(%q<nokogiri>, [">= 0"])
+    s.add_dependency(%q<twitter>, [">= 0"])
+    s.add_dependency(%q<weather_hacker>, [">= 0"])
+    s.add_dependency(%q<pocket-ruby>, [">= 0"])
     s.add_dependency(%q<cucumber>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
