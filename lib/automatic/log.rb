@@ -8,9 +8,19 @@
 
 module Automatic
   module Log
+    LOG_LEVELS = ['info', 'warn', 'error']
+
+    def self.level(level)
+      @level = level
+    end
+
     def self.puts(level, message)
+      if LOG_LEVELS.index(@level).to_i > LOG_LEVELS.index(level).to_i
+        return
+      end
       t = Time.now.strftime("%Y/%m/%d %X")
-      print "#{t} [#{level}] #{message}\n"
+      print log = "#{t} [#{level}] #{message}\n"
+      return log
     end
   end
 end
