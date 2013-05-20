@@ -135,6 +135,26 @@ SubscriptionWeather
       retry: RETRY_COUNT
 
 
+SubscriptionPocket
+----------------
+[Path]
+ /plugins/subscription/pocket.rb
+
+[Abstract]
+ Pocket API is struck and it is creation of feed.
+
+[Syntax]
+  - module: SubscriptionPocket
+    config:
+      consumer_key: 'your_consumer_key'
+      access_token: 'your_access_token'
+      optional:     # see http://getpocket.com/developer/docs/v3/retrieve
+        favorite: 1
+        count:    2
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry:    RETRY_COUNT
+
+
 FilterSort
 ----------
 [Path]

@@ -1,0 +1,21 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: warn
+
+plugins:
+  - module: SubscriptionPocket
+    config:
+      consumer_key: 'consumer_key'
+      access_token: 'access_token'
+      optional:
+        favorite: 1
+        count: 2
+
+  - module: StorePermalink
+    config:
+      db: test_pocket.db
+
+  #- module: PublishConsole
