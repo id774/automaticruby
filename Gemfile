@@ -4,10 +4,10 @@ source "http://rubygems.org"
 source "http://gems.github.com"
 
 gem 'sqlite3'
-gem 'activesupport', '~>3'
+gem 'activesupport', '~>3.2.13'
+gem 'activerecord', '~>3.2.13'
+gem 'actionmailer', '~>3.2.13'
 gem 'hashie'
-gem 'activerecord', '~>3'
-gem 'actionmailer', '~>3'
 gem 'gcalapi'
 gem 'xml-simple'
 gem 'feedbag'
