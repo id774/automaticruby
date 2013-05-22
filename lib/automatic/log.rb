@@ -8,7 +8,7 @@
 
 module Automatic
   module Log
-    LOG_LEVELS = ['info', 'warn', 'error']
+    LOG_LEVELS = ['info', 'warn', 'error', 'none']
 
     def self.level(level)
       @level = level
