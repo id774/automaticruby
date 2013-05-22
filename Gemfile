@@ -1,4 +1,4 @@
-# Version:20130322
+# Version:20130522
 
 source "http://rubygems.org"
 source "http://gems.github.com"
@@ -26,6 +26,7 @@ end
 
 group :development do
   gem "cucumber"
-  gem "bundler"
+  gem 'bundler', '~>1.3.5'
+  gem 'builder', '~>3.2.0'
   gem "jeweler"
 end
