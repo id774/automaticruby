@@ -11,19 +11,21 @@ require 'automatic'
 require 'automatic/log'
 
 describe Automatic::Log do
-  ['info', 'warn', 'error'].each {|level|
-    describe "with a #{level} log" do
-      it "puts" do
-        Automatic::Log.level('info')
-        Automatic::Log.puts(level, 'log spec').should_not == nil
-      end
+  context "with a puts" do
+    ['info', 'warn', 'error'].each {|level|
+      its (level) {
+        subject.level(level)
+        subject.puts(level, 'log spec').should_not == nil
+      }
+    }
+  end
 
-      if 'info' != level
-        it "not puts" do
-          Automatic::Log.level(level)
-          Automatic::Log.puts('info', 'log spec').should == nil
-        end
-      end
-    end
-  }
+  context "with a not puts" do
+    ['warn', 'error', 'none'].each {|level|
+      its (level) {
+        subject.level(level)
+        subject.puts('info', 'log spec').should == nil
+      }
+    }
+  end
 end

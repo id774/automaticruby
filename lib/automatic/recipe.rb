@@ -22,7 +22,8 @@ module Automatic
       dir = File.join((File.expand_path('~/.automatic/config/')), path)
       path = dir if File.exist?(dir)
       @procedure = Hashie::Mash.new(YAML.load(File.read(path)))
-      Automatic::Log.level(@procedure.global.log.level)
+      log_level = @procedure.global && @procedure.global.log && @procedure.global.log.level
+      Automatic::Log.level(log_level)
       Automatic::Log.puts("info", "Loading: #{path}")
       @procedure
     end
