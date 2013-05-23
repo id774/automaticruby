@@ -32,6 +32,7 @@ module Automatic::Plugin
         Automatic::Log.puts(:info, message)
       else
         Automatic::Log.puts(:error, "#{res.code} Error: #{url}")
+        raise
       end
     end
 
