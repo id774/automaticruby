@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::FullFeed
 # Author::    774 <http://id774.net>
 # Created::   Jan 24, 2013
-# Updated::   Mar 24, 2013
+# Updated::   May 23, 2013
 # Copyright:: 774 Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
