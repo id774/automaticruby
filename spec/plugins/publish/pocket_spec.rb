@@ -11,41 +11,41 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 require 'publish/pocket'
 
 describe Automatic::Plugin::PublishPocket do
-  subject {
-    Automatic::Plugin::PublishPocket.new(
-      { 'consumer_key' => "hugehuge",
-        'access_token' => "hogehoge",
-        'interval' => 1,
-        'retry' => 1
-      },
+  context 'return feed' do
+    subject {
+      Automatic::Plugin::PublishPocket.new(
+        { 'consumer_key' => "hugehuge",
+          'access_token' => "hogehoge",
+          'interval' => 1,
+          'retry' => 1
+    },
       AutomaticSpec.generate_pipeline{
-        feed { item "http://github.com" }
-      }
-    )
-  }
+      feed { item "http://github.com" }
+    }) }
 
-  it "should post the link in the feed" do
-    client = mock("client")
-    client.should_receive(:add).with(:url => 'http://github.com')
-    subject.instance_variable_set(:@client, client)
-    subject.run.should have(1).feed
+    it "should post the link in the feed" do
+      client = mock("client")
+      client.should_receive(:add).with(:url => 'http://github.com')
+      subject.instance_variable_set(:@client, client)
+      subject.run.should have(1).feed
+    end
+
+    it "should not post" do
+      subject.run.should have(1).feed
+    end
   end
-end
 
-describe Automatic::Plugin::PublishPocket do
-  subject {
-    Automatic::Plugin::PublishPocket.new(
-      { 'consumer_key' => "hugehuge",
-        'access_token' => "hogehoge",
-        'interval' => 1,
-        'retry' => 1
-      },
-      AutomaticSpec.generate_pipeline{
-      }
-    )
-  }
+  context 'not return feed' do
+    subject {
+      Automatic::Plugin::PublishPocket.new(
+        { 'consumer_key' => "hugehuge",
+          'access_token' => "hogehoge",
+          'interval' => 1,
+          'retry' => 1
+    })}
 
-  it "should un post" do
-    subject.run.should have(0).feed
+    it "should un post" do
+      subject.run.should have(0).feed
+    end
   end
 end

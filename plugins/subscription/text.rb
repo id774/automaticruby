@@ -67,16 +67,8 @@ module Automatic::Plugin
     end
 
     def run
-      retries = 0
-      begin
-        if @dummyfeeds != []
-          @pipeline << Automatic::FeedParser.create(@dummyfeeds)
-        end
-      rescue
-        retries += 1
-        Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{feed}")
-        sleep @config['interval'].to_i unless @config['interval'].nil?
-        retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+      if @dummyfeeds != []
+        @pipeline << Automatic::FeedParser.create(@dummyfeeds)
       end
 
       @pipeline

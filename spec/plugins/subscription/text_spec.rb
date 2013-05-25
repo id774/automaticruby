@@ -51,17 +51,4 @@ describe Automatic::Plugin::SubscriptionText do
     its(:run) { should have(1).feed }
   end
 
-  context "with retry to feeds whose invalid URL" do
-    subject {
-      Automatic::Plugin::SubscriptionText.new(
-        { 'titles' => [],
-          'retry' => 1,
-          'interval' => 1
-        }
-      )
-    }
-
-    its(:run) { should be_empty }
-  end
-
 end

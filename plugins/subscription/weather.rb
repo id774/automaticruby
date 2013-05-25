@@ -42,22 +42,14 @@ module Automatic::Plugin
     end
 
     def run
-      retries = 0
-      begin
-        weather = @weather.send(@day)['weather'] unless @weather.send(@day).nil?
-        if weather != nil
-          dummyfeed = WeatherFeed.new
-          dummyfeed.set_title(weather)
-          dummyfeed.set_link(dummyfeed.link + '.' + @day)
-          dummyfeeds = []
-          dummyfeeds << dummyfeed
-          @pipeline << Automatic::FeedParser.create(dummyfeeds)
-        end
-      rescue
-        retries += 1
-        Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{dummyfeed}")
-        sleep @config['interval'].to_i unless @config['interval'].nil?
-        retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+      weather = @weather.send(@day)['weather'] unless @weather.send(@day).nil?
+      if weather != nil
+        dummyfeed = WeatherFeed.new
+        dummyfeed.set_title(weather)
+        dummyfeed.set_link(dummyfeed.link + '.' + @day)
+        dummyfeeds = []
+        dummyfeeds << dummyfeed
+        @pipeline << Automatic::FeedParser.create(dummyfeeds)
       end
 
       @pipeline
