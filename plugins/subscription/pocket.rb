@@ -7,18 +7,6 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class DummyFeed
-    def initialize(link,title,description)
-      @title       = title
-      @link        = link
-      @description = description
-    end
-
-    def title() @title end
-    def link() @link end
-    def description() @description end
-  end
-
   class SubscriptionPocket
     require 'pocket'
 
@@ -50,9 +38,12 @@ module Automatic::Plugin
     def cleate_dummy_feed(retrieve)
       dummyFeeds = []
       retrieve['list'].each {|key,list|
-        dummyFeeds << DummyFeed.new(
-          list['given_url'], list['given_title'], list['excerpt']
-        )
+
+        dummy             = Hashie::Mash.new
+        dummy.title       = list['given_title']
+        dummy.link        = list['given_url']
+        dummy.description = list['excerpt']
+        dummyFeeds << dummy
       }
       dummyFeeds
     end

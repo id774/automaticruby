@@ -9,7 +9,6 @@
 module Automatic::Plugin
   class SubscriptionTwitterSearch
     require 'twitter'
-    require 'pp'
 
     def initialize(config, pipeline=[])
       @config   = config
@@ -28,13 +27,15 @@ module Automatic::Plugin
       begin
         feeds = []
         @client.search(@config['search'],@config['opt']).results.each do |status|
-          feeds << DummyFeed.new(
-            'Twitter Search',
-            "https://twitter.com/#{status.user['screen_name']}/status/#{status.id}",
-            status.text,
-            status.user['screen_name'],
-            status.created_at
-          )
+
+          dummy             = Hashie::Mash.new
+          dummy.title       = 'Twitter Search'
+          dummy.link        = "https://twitter.com/#{status.user['screen_name']}/status/#{status.id}"
+          dummy.description = status.text
+          dummy.author      = status.user['screen_name']
+          dummy.date        = status.created_at
+
+          feeds << dummy
         end
         @pipeline << Automatic::FeedParser.create(feeds)
       rescue
@@ -45,21 +46,5 @@ module Automatic::Plugin
       end
       @pipeline
     end
-  end
-
-  class DummyFeed
-    def initialize(title,link,description,author,date)
-      @title       = title
-      @link        = link
-      @description = description
-      @author      = author
-      @date        = date
-    end
-
-    def title() @title end
-    def link() @link end
-    def description() @description end
-    def author() @author end
-    def date() @date end
   end
 end

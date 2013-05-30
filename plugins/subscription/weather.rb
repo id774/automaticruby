@@ -7,29 +7,6 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class WeatherFeed
-    def initialize
-      @link  = 'http://weather.dummy'
-      @title = 'weather-dummy'
-    end
-
-    def link
-      @link
-    end
-
-    def title
-      @title
-    end
-
-    def set_link(link)
-      @link = link
-    end
-
-    def set_title(title)
-      @title = title
-    end
-  end
-
   class SubscriptionWeather
     require 'weather_hacker'
 
@@ -44,12 +21,11 @@ module Automatic::Plugin
     def run
       weather = @weather.send(@day)['weather'] unless @weather.send(@day).nil?
       if weather != nil
-        dummyfeed = WeatherFeed.new
-        dummyfeed.set_title(weather)
-        dummyfeed.set_link(dummyfeed.link + '.' + @day)
-        dummyfeeds = []
-        dummyfeeds << dummyfeed
-        @pipeline << Automatic::FeedParser.create(dummyfeeds)
+
+        dummy       = Hashie::Mash.new
+        dummy.title = weather
+        dummy.link  = 'http://weather.dummy.' + @day
+        @pipeline << Automatic::FeedParser.create([dummy])
       end
 
       @pipeline
