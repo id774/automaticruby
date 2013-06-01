@@ -22,7 +22,7 @@ module Automatic::Plugin
       @config['urls'].each {|url|
         retries = 0
         begin
-          create_rss(url)
+          create_rss(URI.encode(url))
         rescue
           retries += 1
           Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
