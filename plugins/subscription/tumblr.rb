@@ -44,7 +44,13 @@ module Automatic::Plugin
       Automatic::Log.puts("info", "Parsing: #{url}")
       html = open(url).read
       unless html.nil?
+        uri = URI.parse(url)
         rss = Automatic::FeedParser.parse(html)
+        rss.items.each {|item|
+           unless item.link =~ Regexp.new(uri.host)
+             item.link = nil
+           end
+        }
         sleep @config['interval'].to_i unless @config['interval'].nil?
         @return_feeds << rss
       end
