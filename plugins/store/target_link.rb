@@ -23,6 +23,7 @@ module Automatic::Plugin
           feeds.items.each {|feed|
             unless feed.link.nil?
               Automatic::Log.puts("info", "Downloading: #{feed.link}")
+              FileUtils.mkdir_p(@config['path']) unless FileTest.exist?(@config['path'])
               retries = 0
               begin
                 retries += 1
