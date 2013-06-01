@@ -17,7 +17,6 @@ module Automatic::Plugin
     def run
       @return_feeds = []
       @pipeline.each {|feeds|
-        return_feed_items = []
         unless feeds.nil?
           feeds.items.each {|feed|
             feed.link = rewrite(feed.link) unless feed.link.nil?
@@ -32,9 +31,14 @@ module Automatic::Plugin
     def rewrite(string)
       if /^http:\/\/.*$/ =~ string
         return string
-      else
-        return @config['url'] + string
       end
+
+      if /[^\/]$/ =~ @config['url']
+        @config['url'] = @config['url'] + '/'
+      end
+      string = @config['url'] + string.sub(/^\./,'').sub(/^\//,'')
+      string = URI.encode(string)
+      return string
     end
   end
 end
