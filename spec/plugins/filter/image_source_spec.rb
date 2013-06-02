@@ -54,7 +54,7 @@ describe Automatic::Plugin::FilterImageSource do
 end
 
 describe Automatic::Plugin::FilterImageSource do
-  context "with no data" do
+  context "with link to tag image" do
     subject {
       Automatic::Plugin::FilterImageSource.new({},
         AutomaticSpec.generate_pipeline {
@@ -64,12 +64,26 @@ describe Automatic::Plugin::FilterImageSource do
           }})}
 
     describe "#run" do
+      before do
+        subject.stub!(:rewrite_link).and_return(['http://huge.png'])
+      end
+
       its(:run) { should have(1).feeds }
       specify {
         subject.run
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
-        should nil
+        should == 'http://huge.png'
       }
+    end
+
+    describe "#imgs" do
+      before do
+        open = Hashie::Mash.new
+        open.read = '<img src="http://a.png"><br /><img src="http://b.png">'
+        subject.stub!(:open).and_return(open)
+      end
+
+      its(:run) { subject.run[0].items.length.should == 2 }
     end
   end
 end
