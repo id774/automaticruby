@@ -19,29 +19,52 @@ module Automatic::Plugin
     def run
       @return_feeds = []
       @pipeline.each {|feeds|
-        img_url = ""
+        dummyFeeds = Array.new
         unless feeds.nil?
           feeds.items.each {|feed|
-            arr = rewrite_link(feed.description)
+            arr = rewrite_link(feed)
             if arr.length > 0
-              feed.link = arr[0]
-            else
-              feed.link = nil
+              arr.each {|link|
+                Automatic::Log.puts("info", "Parsing: #{link}")
+                dummy = Hashie::Mash.new
+                dummy.title = 'FilterImageSource'
+                dummy.link = link
+                dummyFeeds << dummy
+              }
             end
           }
         end
-        @return_feeds << feeds
+        @return_feeds << Automatic::FeedParser.create(dummyFeeds)
       }
-      @return_feeds
+      @pipeline = @return_feeds
     end
 
     private
-    def rewrite_link(string)
+    def rewrite_link(feed)
       array = Array.new
-      string.scan(/<img src="(.*?)"/) { |matched|
+      feed.description.scan(/<img src="(.*?)"/) { |matched|
         array = array | matched
       }
+      if array.length === 0 && feed.link != nil
+        array = imgs(feed.link)
+      end
       array
+    end
+
+    def imgs(link)
+      images = Array.new
+      html = open(link).read
+      unless html.nil?
+        doc = Nokogiri::HTML(html)
+        (doc/:img).each {|img|
+          image = img[:src]
+          unless /^http/ =~ image
+            image = link.sub(/\/([^\/]+)$/, image.sub(/^\./,''))
+          end
+          images << image
+        }
+      end
+      images
     end
   end
 end
