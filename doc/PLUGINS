@@ -189,6 +189,25 @@ FilterIgnore
         - KEYWORD ...
 
 
+FilterAccept
+------------
+[Path]
+ /plugins/filter/accept.rb
+
+[Abstract]
+ Contain the OK word.
+
+[Syntax]
+  - module: FilterAccept
+    config:
+      link:
+        - KEYWORD
+        - KEYWORD ...
+      description:
+        - KEYWORD
+        - KEYWORD ...
+
+
 FilterImage
 -----------
 [Path]
