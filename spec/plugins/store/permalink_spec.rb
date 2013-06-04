@@ -10,12 +10,21 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 require 'store/permalink'
 require 'pathname'
 
+def db_cleate(db_name)
+  db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{db_name}"
+  db_path.delete if db_path.exist?
+  tmp_out = StringIO.new()
+  $stdout = tmp_out
+  Automatic::Plugin::StorePermalink.new({"db" => db_name}).run
+  $stdout = STDOUT
+  tmp_out.rewind()
+  Automatic::Log.puts("info", tmp_out.read())
+end
+
 describe Automatic::Plugin::StorePermalink do
   it "should store 1 record for the new link" do
     @db_filename = "test_permalink.db"
-    db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{@db_filename}"
-    db_path.delete if db_path.exist?
-    Automatic::Plugin::StorePermalink.new({"db" => @db_filename}).run
+    db_cleate(@db_filename)
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed { item "http://github.com" }
@@ -28,9 +37,7 @@ describe Automatic::Plugin::StorePermalink do
 
   it "should not store record for the existent link" do
     @db_filename = "test_permalink.db"
-    db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{@db_filename}"
-    db_path.delete if db_path.exist?
-    Automatic::Plugin::StorePermalink.new({"db" => @db_filename}).run
+    db_cleate(@db_filename)
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed { item "http://github.com" }
@@ -45,9 +52,7 @@ describe Automatic::Plugin::StorePermalink do
 
   it "should be considered the case of the feed link nil" do
     @db_filename = "test_permalink.db"
-    db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{@db_filename}"
-    db_path.delete if db_path.exist?
-    Automatic::Plugin::StorePermalink.new({"db" => @db_filename}).run
+    db_cleate(@db_filename)
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
@@ -74,9 +79,7 @@ describe Automatic::Plugin::StorePermalink do
 
   it "should be considered the case of duplicated links" do
     @db_filename = "test_permalink.db"
-    db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{@db_filename}"
-    db_path.delete if db_path.exist?
-    Automatic::Plugin::StorePermalink.new({"db" => @db_filename}).run
+    db_cleate(@db_filename)
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
@@ -103,9 +106,7 @@ describe Automatic::Plugin::StorePermalink do
 
   it "No feed should be generated when there is same feed." do
     @db_filename = "test_permalink.db"
-    db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{@db_filename}"
-    db_path.delete if db_path.exist?
-    Automatic::Plugin::StorePermalink.new({"db" => @db_filename}).run
+    db_cleate(@db_filename)
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
@@ -155,9 +156,7 @@ describe Automatic::Plugin::StorePermalink do
 
   it "Only new feed should be generated when there is new feed." do
     @db_filename = "test_permalink.db"
-    db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{@db_filename}"
-    db_path.delete if db_path.exist?
-    Automatic::Plugin::StorePermalink.new({"db" => @db_filename}).run
+    db_cleate(@db_filename)
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {

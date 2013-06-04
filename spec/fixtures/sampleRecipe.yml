@@ -3,7 +3,7 @@ global:
   cache:
     base: /tmp
   log:
-    level: info
+    level: none
 
 plugins:
   - module: SubscriptionFeed
