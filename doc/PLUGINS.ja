@@ -190,6 +190,25 @@ FilterIgnore
         - 無視キーワード ...
 
 
+FilterAccept
+------------
+[パス]
+ /plugins/filter/accept.rb
+
+[概要]
+ OK ワードのみにする
+
+[レシピ記法]
+  - module: FilterAccept
+    config:
+      link:
+        - キーワード
+        - キーワード ...
+      description:
+        - キーワード
+        - キーワード ...
+
+
 FilterImage
 -----------
 [パス]
