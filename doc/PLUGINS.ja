@@ -445,6 +445,30 @@ PublishGoogleCalendar
       interval: 複数の予定の投稿間隔 (秒)
 
 
+PublishHipchat
+---------------------
+[パス]
+ /plugins/publish/hipchat.rb
+
+[概要]
+ HipChat の room にメッセージを送信する
+
+[説明]
+ HipChat API (https://www.hipchat.com/docs/api) を利用して
+ item.description を任意の room にメッセージを送信する
+
+[レシピ記法]
+  - module: PublishHipchat
+    config:
+      api_token: HipChat の API token (省略不可)
+      room_id: ルームID、もしくはルーム名 (省略不可)
+      username: 送信元のユーザ名 (省略不可)
+      color: 背景の色 (省略時 'yellow')
+      notify: メッセージをルームの人々に notice するかどうか (0 => false, 1 => true, 省略時 0)
+      retry: エラー時のリトライ回数 (回数, 省略時 0)
+      interval: エラー時のリトライ間隔 (秒数, 省略可)
+
+
 NotifyIkachan
 -------------
 [パス]
