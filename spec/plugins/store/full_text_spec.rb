@@ -15,7 +15,12 @@ describe Automatic::Plugin::StoreFullText do
     @db_filename = "test_full_text.db"
     db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{@db_filename}"
     db_path.delete if db_path.exist?
+    tmp_out = StringIO.new()
+    $stdout = tmp_out
     Automatic::Plugin::StoreFullText.new({"db" => @db_filename}).run
+    $stdout = STDOUT
+    tmp_out.rewind()
+    Automatic::Log.puts("info", tmp_out.read())
   end
 
   it "should store 1 record for the new blog entry" do

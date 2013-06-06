@@ -93,7 +93,7 @@ describe Automatic::Plugin::FilterFullFeed do
         root_dir = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", ".."))
         dir = (File.expand_path('~/.automatic/assets/siteinfo'))
         if File.directory?(dir)
-          puts "Removing #{dir}"
+          Automatic::Log.puts(:info, "Removing #{dir}")
           FileUtils.rm_r(dir)
         end
         return dir, root_dir
