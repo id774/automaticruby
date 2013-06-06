@@ -28,7 +28,7 @@ module Automatic::Plugin
             retries = 0
             begin
               @client.send(@config['username'], feed.description, @options)
-              Automatic::Log.puts("info", "post: #{feed.description}")
+              Automatic::Log.puts("info", "post: #{feed.description.gsub(/[\r\n]/,'')[0..50]}...") rescue nil
             rescue => e
               retries += 1
               Automatic::Log.puts("error", "ErrorCount: #{retries}, #{e.message}")
