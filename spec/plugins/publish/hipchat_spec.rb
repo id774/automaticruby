@@ -31,25 +31,29 @@ describe Automatic::Plugin::PublishHipchat do
       described_class.new(config, pipeline)
     }
 
-    it "should passed proper argument to HipChat::Client" do
-      client = mock('client').as_null_object
-      HipChat::Client.should_receive(:new).with("bogus_api_token").and_return(client)
-      subject.run
+    context 'when successfully' do
+      it "should passed proper argument to HipChat::Client" do
+        client = mock('client').as_null_object
+        HipChat::Client.should_receive(:new).with("bogus_api_token").and_return(client)
+        subject.run
+      end
+
+      it "should post the link in the feed" do
+        client = mock("client")
+        client.should_receive(:send).with('bogus_bot', 'description', {"color"=>"yellow", "notify"=>false})
+        subject.instance_variable_set(:@client, client)
+        subject.run.should have(1).feed
+      end
     end
 
-    it "should post the link in the feed" do
-      client = mock("client")
-      client.should_receive(:send).with('bogus_bot', 'description', {"color"=>"yellow", "notify"=>false})
-      subject.instance_variable_set(:@client, client)
-      subject.run.should have(1).feed
-    end
-
-    it "should raise an error during post" do
-      client = mock("client")
-      client.stub(:send).and_raise
-      subject.instance_variable_set(:@client, client)
-      Automatic::Log.should_receive(:puts).twice
-      subject.run.should have(1).feed
+    context 'when raise an error during post' do
+      it do
+        client = mock("client")
+        client.stub(:send).and_raise
+        subject.instance_variable_set(:@client, client)
+        Automatic::Log.should_receive(:puts).twice
+        subject.run.should have(1).feed
+      end
     end
   end
 
