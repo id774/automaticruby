@@ -189,6 +189,25 @@ FilterIgnore
         - KEYWORD ...
 
 
+FilterAccept
+------------
+[Path]
+ /plugins/filter/accept.rb
+
+[Abstract]
+ Contain the OK word.
+
+[Syntax]
+  - module: FilterAccept
+    config:
+      link:
+        - KEYWORD
+        - KEYWORD ...
+      description:
+        - KEYWORD
+        - KEYWORD ...
+
+
 FilterImage
 -----------
 [Path]
@@ -457,6 +476,30 @@ PublishEject
   - module: PublishEject
     config:
       interval: INTERVAL
+
+
+PublishHipchat
+---------------------
+[Path]
+ /plugins/publish/hipchat.rb
+
+[Abstract]
+ Register a message to HipChat
+
+[Description]
+ Using HipChat API (https://www.hipchat.com/docs/api),
+ post a message to specific room.
+
+[Syntax]
+  - module: PublishHipchat
+    config:
+      api_token: API token of HipChat (required)
+      room_id: ID or name of the room. (required)
+      username: Name the message will appear be sent from. (required)
+      color: Background color for message (default: yellow)
+      notify: Whether or not this message should trigger a notification for people in the room (0 => false, 1 => true, default: 0)
+      interval: INTERVAL_FOR_RETRY (in seconds.)
+      retry: RETRY_COUNT
 
 
 NotifyIkachan
