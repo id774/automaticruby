@@ -445,6 +445,20 @@ PublishGoogleCalendar
       interval: INTERVAL
 
 
+PublishEject
+--------------
+[Path]
+ /plugins/publish/eject.rb
+
+[Abstract]
+ eject by the feed link count.
+
+[Syntax]
+  - module: PublishEject
+    config:
+      interval: INTERVAL
+
+
 NotifyIkachan
 -------------
 [Path]

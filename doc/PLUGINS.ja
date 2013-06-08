@@ -445,6 +445,20 @@ PublishGoogleCalendar
       interval: 複数の予定の投稿間隔 (秒)
 
 
+PublishEject
+--------------
+[パス]
+ /plugins/publish/eject.rb
+
+[概要]
+ Feedのリンク個数分だけeject
+
+[レシピ記法]
+  - module: PublishEject
+    config:
+      interval: 複数の予定の投稿間隔 (秒)
+
+
 NotifyIkachan
 -------------
 [パス]
