@@ -94,6 +94,27 @@ SubscriptionTwitter
       retry: エラー時のリトライ回数 (回数, 省略時 0)
 
 
+SubscriptionTwitterSearch
+-------------------
+[Path]
+ /plugins/subscription/twitter_search.rb
+
+[Abstract]
+ Twitterの検索結果を取得
+
+[Syntax]
+  - module: SubscriptionTwitterSearch
+    config:
+      search:             検索ワード
+      opt:                検索時に使用するオプション
+      consumer_key:       'your_consumer_key'
+      consumer_secret:    'your_consumer_secret'
+      oauth_token:        'your_oauth_token'
+      oauth_token_secret: 'your_oauth_token_secret'
+      interval: スクレイピングの間隔 (秒数, 省略可)
+      retry: エラー時のリトライ回数 (回数, 省略時 0)
+
+
 SubscriptionWeather
 -------------------
 [パス]

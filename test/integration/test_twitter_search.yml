@@ -1,0 +1,21 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: none
+
+plugins:
+  - module: SubscriptionTwitterSearch
+    config:
+      consumer_key:       'consumer_key'
+      consumer_secret:    'consumer_secret'
+      oauth_token:        'oauth_token'
+      oauth_token_secret: 'oauth_token_secret'
+      search:             'ruby'
+
+  - module: StorePermalink
+    config:
+      db: test_twitter_search.db
+
+  #- module: PublishConsole
