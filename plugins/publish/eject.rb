@@ -22,9 +22,8 @@ module Automatic::Plugin
               `#{eject_cmd}`
               Automatic::Log.puts('info', "Eject: #{feed.link}")
 
-              interval = 3
-              interval = @config['interval'].to_i unless @config['interval'].nil?
-              sleep interval
+              interval = @config['interval'].to_i unless @config['interval'].nil? unless @config.nil?
+              sleep 3 if interval.nil?
             end
           }
         end

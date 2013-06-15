@@ -17,6 +17,15 @@ describe Automatic::Plugin::PublishEject do
   end
 
   subject {
+    Automatic::Plugin::PublishEject.new({}, @pipeline)
+  }
+
+  it "should eject of feeds" do
+    subject.stub(:eject_cmd).and_return('echo')
+    subject.run.should have(1).items
+  end
+
+  subject {
     Automatic::Plugin::PublishEject.new({'interval' => 0}, @pipeline)
   }
 
