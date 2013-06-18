@@ -157,7 +157,7 @@ SubscriptionText
 
 
 SubscriptionPocket
-----------------
+------------------
 [パス]
  /plugins/subscription/pocket.rb
 
@@ -270,6 +270,32 @@ FilterFullFeed
       siteinfo: siteinfo ファイル名
 
 
+FilterOne
+---------
+[パス]
+ /plugins/filter/one.rb
+
+[概要]
+ アイテムをフィードから 1 件だけ取り出す
+
+[レシピ記法]
+  - module: FilterOne
+    config:
+      pick: last (省略時は先頭から)
+
+
+FilterRand
+----------
+[パス]
+ /plugins/filter/rand.rb
+
+[概要]
+ フィードの順番をランダムにする
+
+[レシピ記法]
+  - module: FilterRand
+
+
 FilterAbsoluteURI
 -----------------
 [パス]
@@ -298,32 +324,6 @@ FilterTumblrResize
 
 [レシピ記法]
   - module: FilterTumblrResize
-
-
-FilterOne
----------
-[パス]
- /plugins/filter/one.rb
-
-[概要]
- アイテムをフィードから 1 件だけ取り出す
-
-[レシピ記法]
-  - module: FilterOne
-    config:
-      pick: last (省略時は先頭から)
-
-
-FilterRand
-----------
-[パス]
- /plugins/filter/rand.rb
-
-[概要]
- フィードの順番をランダムにする
-
-[レシピ記法]
-  - module: FilterRand
 
 
 StorePermalink
@@ -359,7 +359,7 @@ StoreFullText
 
 
 StoreTargetLink
---------------
+---------------
 [パス]
  /plugins/store/target_link.rb
 
@@ -375,7 +375,7 @@ StoreTargetLink
 
 
 PublishConsole
-------------
+--------------
 [パス]
  /plugins/publish/console.rb
 
@@ -486,7 +486,7 @@ PublishGoogleCalendar
 
 
 PublishEject
---------------
+------------
 [パス]
  /plugins/publish/eject.rb
 
@@ -500,7 +500,7 @@ PublishEject
 
 
 PublishHipchat
----------------------
+--------------
 [パス]
  /plugins/publish/hipchat.rb
 

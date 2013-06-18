@@ -95,7 +95,7 @@ SubscriptionTwitter
 
 
 SubscriptionTwitterSearch
--------------------
+-------------------------
 [Path]
  /plugins/subscription/twitter_search.rb
 
@@ -111,6 +111,23 @@ SubscriptionTwitterSearch
       consumer_secret:    'your_consumer_secret'
       oauth_token:        'your_oauth_token'
       oauth_token_secret: 'your_oauth_token_secret'
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry: RETRY_COUNT
+
+
+SubscriptionWeather
+-------------------
+[Path]
+ /plugins/subscription/weather.rb
+
+[Abstract]
+ Subscribe weather (using gem weather_hacker) by zipcode.
+
+[Syntax]
+  - module: SubscriptionWeather
+    config:
+      zipcode: ZIPCODE (ex. 166-0003)
+      day:     DAY (ex. 'today', 'tomorrow')
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
       retry: RETRY_COUNT
 
@@ -139,25 +156,8 @@ SubscriptionText
           url:   'url'
 
 
-SubscriptionWeather
--------------------
-[Path]
- /plugins/subscription/weather.rb
-
-[Abstract]
- Subscribe weather (using gem weather_hacker) by zipcode.
-
-[Syntax]
-  - module: SubscriptionWeather
-    config:
-      zipcode: ZIPCODE (ex. 166-0003)
-      day:     DAY (ex. 'today', 'tomorrow')
-      interval: INTERVAL_FOR_SCRAPING (in seconds.)
-      retry: RETRY_COUNT
-
-
 SubscriptionPocket
-----------------
+------------------
 [Path]
  /plugins/subscription/pocket.rb
 
@@ -310,7 +310,7 @@ FilterAbsoluteURI
 
 
 FilterTumblrResize
---------------------
+------------------
 [Path]
  /plugins/filter/tumblr_resize.rb
 
@@ -427,7 +427,7 @@ PublishTwitter
 
 
 PublishPocket
------------------
+-------------
 [Path]
  /plugins/publish/pocket.rb
 
@@ -486,7 +486,7 @@ PublishGoogleCalendar
 
 
 PublishEject
---------------
+------------
 [Path]
  /plugins/publish/eject.rb
 
@@ -500,7 +500,7 @@ PublishEject
 
 
 PublishHipchat
----------------------
+--------------
 [Path]
  /plugins/publish/hipchat.rb
 
