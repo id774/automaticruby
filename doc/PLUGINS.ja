@@ -95,7 +95,7 @@ SubscriptionTwitter
 
 
 SubscriptionTwitterSearch
--------------------
+-------------------------
 [Path]
  /plugins/subscription/twitter_search.rb
 
@@ -256,20 +256,6 @@ FilterImageSource
   - module: FilterImageSource
 
 
-FilterFullFeed
---------------
-[パス]
- /plugins/filter/full_feed.rb
-
-[概要]
- フィードの全文を取得する
-
-[レシピ記法]
-  - module: FilterFeed
-    config:
-      siteinfo: siteinfo ファイル名
-
-
 FilterOne
 ---------
 [パス]
@@ -296,6 +282,20 @@ FilterRand
   - module: FilterRand
 
 
+FilterFullFeed
+--------------
+[パス]
+ /plugins/filter/full_feed.rb
+
+[概要]
+ フィードの全文を取得する
+
+[レシピ記法]
+  - module: FilterFeed
+    config:
+      siteinfo: siteinfo ファイル名
+
+
 FilterAbsoluteURI
 -----------------
 [パス]
@@ -311,7 +311,7 @@ FilterAbsoluteURI
 
 
 FilterTumblrResize
---------------------
+------------------
 [パス]
  /plugins/filter/tumblr_resize.rb
 
@@ -427,7 +427,7 @@ PublishTwitter
 
 
 PublishPocket
------------------
+-------------
 [パス]
  /plugins/publish/pocket.rb
 
