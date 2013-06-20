@@ -281,6 +281,22 @@ FilterRand
   - module: FilterRand
 
 
+FilterSanitize
+--------------
+[Path]
+ /plugins/filter/sanitize.rb
+
+[Abstract]
+ Strip the html tags.
+ Reference: https://github.com/rgrove/sanitize
+
+[Syntax]
+  - module: FilterSanitize
+    config:
+      mode: basic or relaxed or restricted
+            (default: restricted)
+
+
 FilterFullFeed
 --------------
 [Path]
