@@ -282,6 +282,22 @@ FilterRand
   - module: FilterRand
 
 
+FilterSanitize
+--------------
+[パス]
+ /plugins/filter/sanitize.rb
+
+[概要]
+ HTML タグを除去する
+ 参照 https://github.com/rgrove/sanitize
+
+[レシピ記法]
+  - module: FilterSanitize
+    config:
+      mode: basic or relaxed or restricted
+            (デフォルト restricted)
+
+
 FilterFullFeed
 --------------
 [パス]
