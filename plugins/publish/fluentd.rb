@@ -31,7 +31,7 @@ module Automatic::Plugin
                 :created_at => Time.now.strftime("%Y/%m/%d %X")
               })
             rescue
-              Automatic::Log.puts("warn", "Skip feed due to fault in save.")
+              Automatic::Log.puts("warn", "Skip feed due to fault in forward.")
             end
           }
         end
