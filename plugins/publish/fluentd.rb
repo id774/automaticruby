@@ -16,7 +16,6 @@ module Automatic::Plugin
     end
 
     def run
-      @fluentd = Fluent::Logger
       Fluent::Logger::FluentLogger.open(nil,
         host = @config['host'],
         port = @config['port'])
