@@ -402,6 +402,31 @@ PublishConsole
   - module: PublishConsole
 
 
+PublishFluentd
+--------------
+[パス]
+ /plugins/publish/fluentd.rb
+
+[概要]
+ fluentd にフィードを出力する
+
+[説明]
+ このプラグインは fluentd にフィードを出力する
+ 受け手側では以下のように fluentd を設定し起動しておく
+
+  <source>
+    type forward
+    port 9999
+  </source>
+
+[レシピ記法]
+  - module: PublishFluentd
+    config:
+      host: ホスト名
+      port: ポート番号
+      tag:  タグ (例 automatic.feed)
+
+
 PublishHatenaBookmark
 ---------------------
 [パス]
