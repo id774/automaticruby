@@ -440,7 +440,7 @@ PublishHatenaBookmark
  Hatena Bookmark API.
 
 [Syntax]
-  - Modu  - module: PublishHatenaBookmark
+  - module: PublishHatenaBookmark
     config:
       username: HATENA_ID
       passowrd: PASSWORD
