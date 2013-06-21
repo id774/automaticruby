@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Publish::Fluentd
+# Author::    774 <http://id774.net>
+# Created::   Jun 21, 2013
+# Updated::   Jun 21, 2013
+# Copyright:: 774 Copyright (c) 2013
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+
+module Automatic::Plugin
+  class PublishFluentd
+    require 'fluent-logger'
+
+    def initialize(config, pipeline=[])
+      @config = config
+      @pipeline = pipeline
+    end
+
+    def run
+      @fluentd = Fluent::Logger
+      Fluent::Logger::FluentLogger.open(nil,
+        host = @config['host'],
+        port = @config['port'])
+      @pipeline.each {|feeds|
+        unless feeds.nil?
+          feeds.items.each {|feed|
+            begin
+              Fluent::Logger.post(@config['tag'], {
+                :title => feed.title,
+                :link => feed.link,
+                :description => feed.description,
+                :content => feed.content_encoded,
+                :created_at => Time.now.strftime("%Y/%m/%d %X")
+              })
+            rescue
+              Automatic::Log.puts("warn", "Skip feed due to fault in save.")
+            end
+          }
+        end
+      }
+      @pipeline
+    end
+  end
+end

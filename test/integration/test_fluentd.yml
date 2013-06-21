@@ -1,0 +1,20 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://blog.id774.net/post/feed/
+
+  - module: PublishFluentd
+    config:
+      host: localhost
+      port: 3001
+      tag:  automatic.feed
+
+  # - module: PublishConsole

@@ -266,7 +266,7 @@ FilterOne
 [Syntax]
   - module: FilterOne
     config:
-        pick: last (If none, pick the first item.)
+      pick: last (If none, pick the first item.)
 
 
 FilterRand
@@ -400,6 +400,31 @@ PublishConsole
 
 [Syntax]
   - module: PublishConsole
+
+
+PublishFluentd
+--------------
+[Path]
+ /plugins/publish/fluentd.rb
+
+[Abstract]
+ Output to fluentd with fluent-logger.
+
+[Description]
+ This plugin outputs feed to fluentd.
+ Following fluentd config example.
+
+  <source>
+    type forward
+    port 9999
+  </source>
+
+[Syntax]
+  - module: PublishFluentd
+    config:
+      host: HOSTNAME
+      port: PORT_NUMBER
+      tag:  TAGS (example: automatic.feed)
 
 
 PublishHatenaBookmark
