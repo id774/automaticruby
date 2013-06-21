@@ -266,7 +266,7 @@ FilterOne
 [Syntax]
   - module: FilterOne
     config:
-        pick: last (If none, pick the first item.)
+      pick: last (If none, pick the first item.)
 
 
 FilterRand
