@@ -1,3 +1,19 @@
+=== 13.6.0 / 2013-06-xx
+
+* Added new plugins.
+
+  * Subscription::Pocket
+  * Subscription::TwitterSearch
+  * Filter::Accept
+  * Filter::Sanitize
+  * Filter::GithubFeed
+  * Publish::ConsoleLink
+  * Publish::Hipchat
+  * Publish::Fluentd
+
+* And other Improvements, bug fixes.
+
+
 === 13.5.0 / 2013-05-18
 
 * Added new plugins.
