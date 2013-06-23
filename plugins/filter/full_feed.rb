@@ -3,7 +3,7 @@
 # Author::    progd <http://d.hatena.ne.jp/progd/20120429/automatic_ruby_filter_full_feed>
 #             774 <http://id774.net>
 # Created::   Apr 29, 2012
-# Updated::   Apr  5, 2013
+# Updated::   Jun 23, 2013
 # Copyright:: progd
 #             774 Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
@@ -38,7 +38,7 @@ module Automatic::Plugin
 
     def get_siteinfo
       Automatic::Log.puts(:info, "Loading siteinfo from #{@config['siteinfo']}")
-      siteinfo = JSON.load(open(File.join(assets_dir, @config['siteinfo'])).read)
+      siteinfo = JSON.load(open(File.join(assets_dir, @config['siteinfo'])).read.force_encoding("UTF-8"))
       siteinfo.select! { |info| SITEINFO_TYPES.include? (info['data']['type']) }
       siteinfo.sort! { |a, b|
         atype, btype = a['data']['type'], b['data']['type']
