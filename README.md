@@ -123,7 +123,9 @@ This naming convention is to mimic Ubuntu.
 Developers
 ----------
 
-See doc/AUTHORS.
+See doc/AUTHORS or following link.
+
++ https://github.com/automaticruby?tab=members
 
 
 Author
