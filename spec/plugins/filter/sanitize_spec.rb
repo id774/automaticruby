@@ -125,4 +125,29 @@ describe Automatic::Plugin::FilterSanitize do
     end
   end
 
+  context "It should be sanitized" do
+    subject {
+      Automatic::Plugin::FilterSanitize.new(
+        {},
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://testsite.org", "hoge"
+          }
+        }
+      )
+    }
+
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+
+      specify {
+        subject.run
+        subject.instance_variable_get(:@return_feeds)[0].items.
+          count.should == 1
+        subject.instance_variable_get(:@return_feeds)[0].items[0].description.
+          should == ''
+      }
+    end
+  end
+
 end
