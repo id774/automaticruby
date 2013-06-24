@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::Sanitize
 # Author::    774 <http://id774.net>
 # Created::   Jun 20, 2013
-# Updated::   Jun 23, 2013
+# Updated::   Jun 24, 2013
 # Copyright:: 774 Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -28,6 +28,7 @@ module Automatic::Plugin
         feed.description = Sanitize.clean(feed.description, @mode) unless feed.description.nil?
         return feed
       rescue
+        Automatic::Log.puts("warn", "Undefined field detected in feed.")
         return feed
       end
     end
