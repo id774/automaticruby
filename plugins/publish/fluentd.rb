@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Publish::Fluentd
 # Author::    774 <http://id774.net>
 # Created::   Jun 21, 2013
-# Updated::   Jun 21, 2013
+# Updated::   Jun 25, 2013
 # Copyright:: 774 Copyright (c) 2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -13,17 +13,17 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
+      @fluentd = Fluent::Logger::FluentLogger.open(nil,
+        host = @config['host'],
+        port = @config['port'])
     end
 
     def run
-      Fluent::Logger::FluentLogger.open(nil,
-        host = @config['host'],
-        port = @config['port'])
       @pipeline.each {|feeds|
         unless feeds.nil?
           feeds.items.each {|feed|
             begin
-              Fluent::Logger.post(@config['tag'], {
+              @fluentd.post(@config['tag'], {
                 :title => feed.title,
                 :link => feed.link,
                 :description => feed.description,
