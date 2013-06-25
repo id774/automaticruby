@@ -427,6 +427,22 @@ PublishFluentd
       tag:  タグ (例 automatic.feed)
 
 
+PublishMemcached
+----------------
+[パス]
+ /plugins/publish/memcached.rb
+
+[概要]
+ フィードをハッシュに変換して memcached に出力する
+
+[レシピ記法]
+  - module: PublishMemcached
+    config:
+      host: ホスト名
+      port: ポート番号
+      key:  出力するキーの名称
+
+
 PublishHatenaBookmark
 ---------------------
 [パス]

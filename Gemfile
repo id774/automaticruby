@@ -1,4 +1,4 @@
-# Version:20130621
+# Version:20130625
 
 source "http://rubygems.org"
 source "http://gems.github.com"
@@ -18,6 +18,7 @@ gem 'weather_hacker'
 gem 'pocket-ruby'
 gem 'hipchat'
 gem 'fluent-logger'
+gem 'dalli'
 
 group :test do
   gem 'rspec'

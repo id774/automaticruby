@@ -427,6 +427,22 @@ PublishFluentd
       tag:  TAGS (example: automatic.feed)
 
 
+PublishMemcached
+----------------
+[Path]
+ /plugins/publish/memcached.rb
+
+[Abstract]
+ Output feeds converted hash to memcached with dalli.
+
+[Syntax]
+  - module: PublishMemcached
+    config:
+      host: HOSTNAME
+      port: PORT_NUMBER
+      key:  KEY
+
+
 PublishHatenaBookmark
 ---------------------
 [Path]
