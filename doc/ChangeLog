@@ -9,6 +9,7 @@
   * Filter::GithubFeed
   * Publish::ConsoleLink
   * Publish::Hipchat
+  * Publish::Memcached
   * Publish::Fluentd
 
 * And other Improvements, bug fixes.
