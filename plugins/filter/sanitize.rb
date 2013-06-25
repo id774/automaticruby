@@ -23,16 +23,6 @@ module Automatic::Plugin
       end
     end
 
-    def sanitize(feed)
-      begin
-        feed.description = Sanitize.clean(feed.description, @mode) unless feed.description.nil?
-        return feed
-      rescue
-        Automatic::Log.puts("warn", "Undefined field detected in feed.")
-        return feed
-      end
-    end
-
     def run
       @return_feeds = []
       @pipeline.each {|feeds|
@@ -47,5 +37,15 @@ module Automatic::Plugin
       @return_feeds
     end
 
+    private
+    def sanitize(feed)
+      begin
+        feed.description = Sanitize.clean(feed.description, @mode) unless feed.description.nil?
+        return feed
+      rescue
+        Automatic::Log.puts("warn", "Undefined field detected in feed.")
+        return feed
+      end
+    end
   end
 end
