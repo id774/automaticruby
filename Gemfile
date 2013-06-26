@@ -4,9 +4,9 @@ source "http://rubygems.org"
 source "http://gems.github.com"
 
 gem 'sqlite3'
-gem 'activesupport', '~>3.2.13'
-gem 'activerecord', '~>3.2.13'
-gem 'actionmailer', '~>3.2.13'
+gem 'activesupport', '~>4.0.0'
+gem 'activerecord', '~>4.0.0'
+gem 'actionmailer', '~>4.0.0'
 gem 'hashie'
 gem 'gcalapi'
 gem 'xml-simple'

@@ -38,7 +38,7 @@ module Automatic
         unless feeds.nil?
           feeds.each {|feed|
             unless feed.link.nil?
-              Automatic::Log.puts("info", "Creating: #{feed.link}")
+              Automatic::Log.puts("info", "Feed: #{feed.link}")
               item = maker.items.new_item
               item.title = feed.title
               item.link = feed.link
