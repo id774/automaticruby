@@ -31,6 +31,6 @@ end
 group :development do
   gem "cucumber"
   gem 'bundler'
-  gem 'builder'
+  gem 'builder', '~>3.1.0'
   gem "jeweler"
 end
