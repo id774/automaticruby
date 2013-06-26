@@ -4,8 +4,8 @@
 #             774 <http://id774.net>
 #             soramugi <http://soramugi.net>
 # Created::   Feb 27, 2012
-# Updated::   Dec 20, 2012
-# Copyright:: kzgs Copyright (c) 2012
+# Updated::   Jun 27, 2013
+# Copyright:: kzgs Copyright (c) 2012-2013
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'active_record'
@@ -14,7 +14,7 @@ module Automatic::Plugin
   module Database
     def for_each_new_feed
       prepare_database
-      existing_records = model_class.find(:all)
+      existing_records = model_class.all
       @return_feeds = []
       @pipeline.each {|feeds|
         unless feeds.nil?
