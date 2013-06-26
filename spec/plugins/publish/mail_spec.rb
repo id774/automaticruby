@@ -31,6 +31,7 @@ describe Automatic::Plugin::PublishMail do
   }
 
   it "should mail to smtp server" do
+    pending("Waiting for ActionMailer 4.0")
     smtpd = SMTPServer.new({
         :Port => 10025,
         :MailHook => lambda { |sender| sender.should == "<from@example.com>" },
