@@ -1,4 +1,4 @@
-=== 13.6.0 / 2013-06-xx
+=== 13.6.0 / 2013-06-28
 
 * Added new plugins.
 
@@ -13,6 +13,10 @@
   * Publish::Fluentd
 
 * And other Improvements, bug fixes.
+
+* Correspond to activesupport & activerecord 4.0.
+
+  * Mail plugins temporary removed (for actionmailer 4.0).
 
 * Ruby 1.8 support was outdated.
 
