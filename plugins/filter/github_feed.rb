@@ -3,7 +3,7 @@
 # Author::    Kohei Hasegawa <http://github.com/banyan>
 # Created::   Jun 6, 2013
 # Updated::   Jun 6, 2013
-# Copyright:: Kohei Hasegawa Copyright (c) 2013
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin

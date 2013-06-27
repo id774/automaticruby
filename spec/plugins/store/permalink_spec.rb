@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Store::Permalink
 # Author::    774 <http://id774.net>
 # Updated::   Dec 17, 2012
-# Copyright:: 774 Copyright (c) 2012
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')

@@ -4,8 +4,7 @@
 #             774 <http://id774.net>
 # Created::   Apr 29, 2012
 # Updated::   Jun 23, 2013
-# Copyright:: progd
-#             774 Copyright (c) 2012-2013
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin

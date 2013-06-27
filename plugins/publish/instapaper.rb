@@ -4,7 +4,7 @@
 #             774 <http://id774.net>
 # Created::   Feb  9, 2013
 # Updated::   Mar 23, 2013
-# Copyright:: soramugi Copyright (c) 2013
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin

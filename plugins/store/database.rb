@@ -5,7 +5,7 @@
 #             soramugi <http://soramugi.net>
 # Created::   Feb 27, 2012
 # Updated::   Jun 27, 2013
-# Copyright:: kzgs Copyright (c) 2012-2013
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'active_record'

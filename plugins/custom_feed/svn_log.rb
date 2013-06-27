@@ -3,7 +3,7 @@
 # Author::    kzgs
 # Created::   Feb 29, 2012
 # Updated::   Mar  3, 2012
-# Copyright:: kzgs Copyright (c) 2012
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'rss/maker'

@@ -3,7 +3,7 @@
 # Author::    soramugi <http://soramugi.net>
 # Created::   May 15, 2013
 # Updated::   May 15, 2013
-# Copyright:: soramugi Copyright (c) 2013
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')

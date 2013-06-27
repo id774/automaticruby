@@ -4,7 +4,7 @@
 #             774 <http://id774.net>
 # Created::   Mar  9, 2012
 # Updated::   May 19, 2013
-# Copyright:: kzgs Copyright (c) 2012-2013
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))

@@ -3,7 +3,7 @@
 # Author::    kzgs
 # Created::   Mar 17, 2012
 # Updated::   Mar 17, 2012
-# Copyright:: kzgs Copyright (c) 2012
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin

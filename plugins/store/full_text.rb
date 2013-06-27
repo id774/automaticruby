@@ -3,7 +3,7 @@
 # Author::    774 <http://id774.net>
 # Created::   Feb 26, 2012
 # Updated::   Jun 14, 2012
-# Copyright:: 774 Copyright (c) 2012
+# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'plugins/store/database'
