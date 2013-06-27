@@ -1,0 +1,18 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: none
+
+plugins:
+  - module: SubscriptionChanToru
+    config:
+      keyword: 'アニメ'
+      station: '地上波'
+
+  - module: StorePermalink
+    config:
+      db: test_chan_toru.db
+
+  #- module: PublishConsoleLink
