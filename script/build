@@ -6,6 +6,8 @@
 #
 #  Maintainer: id774 <idnanashi@gmail.com>
 #
+#  v1.5 6/28,2013
+#       Always using latest gems.
 #  v1.4 5/13,2013
 #       Fix bundler environment.
 #  v1.3 2/26,2013
@@ -29,6 +31,7 @@ kickstart() {
 exec_rspec() {
     $RACK_ROOT/bin/automatic -v
     bundle install --path vendor/gems
+    bundle update
     bundle exec rake simplecov
 }
 
