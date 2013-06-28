@@ -19,12 +19,12 @@ module Automatic::Plugin
 
     def run
       revisions = XmlSimple.xml_in(`svn log #{svn_log_argument}`)["logentry"]
-      @pipeline << RSS::Maker.make("1.0") { |maker|
+      @pipeline << RSS::Maker.make("1.0") {|maker|
         maker.channel.title = @config["title"] || ""
         maker.channel.about = ""
         maker.channel.description = ""
         maker.channel.link = base_url
-        revisions.each { |rev|
+        revisions.each {|rev|
           item = maker.items.new_item
           item.title = "#{rev["msg"]} by #{rev["author"]}"
           item.link = base_url+"/!svn/bc/#{rev["revision"]}"

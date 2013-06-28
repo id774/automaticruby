@@ -30,7 +30,7 @@ end
 describe Automatic::Plugin::Ikachan do
   describe "#post" do
     subject {
-      Automatic::Plugin::Ikachan.new.tap { |ikachan|
+      Automatic::Plugin::Ikachan.new.tap {|ikachan|
         ikachan.params = {
           "channels" => "#room",
           "url"      => "http://sample.com",
