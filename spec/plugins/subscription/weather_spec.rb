@@ -14,7 +14,7 @@ describe Automatic::Plugin::SubscriptionWeather do
   context "with empty zipcode" do
     subject {
       Automatic::Plugin::SubscriptionWeather.new(
-        { }
+        {}
       )
     }
 

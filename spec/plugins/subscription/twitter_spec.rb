@@ -14,7 +14,8 @@ describe Automatic::Plugin::SubscriptionTwitter do
   context "with empty URLs" do
     subject {
       Automatic::Plugin::SubscriptionTwitter.new(
-        { 'urls' => [] })
+        { 'urls' => [] }
+      )
     }
 
     its(:run) { should be_empty }

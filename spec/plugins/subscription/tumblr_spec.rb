@@ -14,7 +14,8 @@ describe Automatic::Plugin::SubscriptionTumblr do
   context "with empty URLs" do
     subject {
       Automatic::Plugin::SubscriptionTumblr.new(
-        { 'urls' => [] })
+        { 'urls' => [] }
+      )
     }
 
     its(:run) { should be_empty }
