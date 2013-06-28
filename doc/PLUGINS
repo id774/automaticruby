@@ -188,7 +188,7 @@ SubscriptionGGuide
   - module: SubscriptionGGuide
     config:
       keyword: 'anime' # search word
-      station: '地上波'
+      station: '地上波' # (It means terrestrial broadcasting in Japanese.)
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
       retry:    RETRY_COUNT
 
