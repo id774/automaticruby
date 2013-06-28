@@ -4,6 +4,8 @@
 
   * Subscription::Pocket
   * Subscription::TwitterSearch
+  * Subscription::GGuide
+  * Subscription::ChanToru
   * Filter::Accept
   * Filter::Sanitize
   * Filter::GithubFeed
