@@ -41,11 +41,10 @@ module Automatic::Plugin
     def sanitize(feed)
       begin
         feed.description = Sanitize.clean(feed.description, @mode) unless feed.description.nil?
-        return feed
       rescue
         Automatic::Log.puts("warn", "Undefined field detected in feed.")
-        return feed
       end
+      feed
     end
   end
 end
