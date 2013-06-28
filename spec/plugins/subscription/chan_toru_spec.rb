@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Subscription::g_guide
+# Name::      Automatic::Plugin::Subscription::ChanToru
 # Author::    soramugi <http://soramugi.net>
-# Created::   May 21, 2013
-# Updated::   May 21, 2013
+# Created::   Jun 28, 2013
+# Updated::   Jun 28, 2013
 # Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
