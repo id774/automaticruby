@@ -127,11 +127,7 @@ See doc/AUTHORS or following link.
 
 + https://github.com/automaticruby?tab=members
 
-
-Author
-------
-
-**774**
+Project created by
 
 + http://id774.net
 + http://github.com/id774
