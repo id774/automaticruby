@@ -194,19 +194,19 @@ SubscriptionGGuide
 
 
 SubscriptionChanToru
-------------------
+--------------------
 [Path]
  /plugins/subscription/chan_toru.rb
 
 [Abstract]
- search keyword to CHAN-TORU (information on a TV program) rss
+ Search keyword to CHAN-TORU (information on a TV program) rss
  (SubscriptionGGuide Plug-in dependence)
 
 [Syntax]
   - module: SubscriptionChanToru
     config:
       keyword: 'anime' # search word
-      station: '地上波'
+      station: '地上波' # (It means terrestrial broadcasting in Japanese.)
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
       retry:    RETRY_COUNT
 
