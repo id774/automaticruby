@@ -3,7 +3,7 @@
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
 # Created::   Feb 10, 2013
-# Updated::   Feb 17, 2013
+# Updated::   Jun 28, 2013
 # Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -46,7 +46,7 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.each {|feed|
             unless feed.link.href.nil?
-              Automatic::Log.puts("info", "Creating: #{feed.link.href}")
+              Automatic::Log.puts("info", "Feed: #{feed.link.href}")
               item       = maker.items.new_item
               item.title = feed.title.content # google reader feed
               item.link  = feed.link.href     # google reader feed
