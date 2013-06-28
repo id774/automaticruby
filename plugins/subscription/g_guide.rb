@@ -25,25 +25,24 @@ module Automatic::Plugin
         sleep @config['interval'].to_i unless @config['interval'].nil?
         retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
       end
-
       @pipeline
     end
 
     def feed_url
-        feed = G_GUIDE_RSS
-        unless @config['keyword'].nil?
-          feed += "condition.keyword=#{@config['keyword']}&"
-        end
-        feed += station_param
-        URI.encode(feed)
+      feed = G_GUIDE_RSS
+      unless @config['keyword'].nil?
+        feed += "condition.keyword=#{@config['keyword']}&"
+      end
+      feed += station_param
+      URI.encode(feed)
     end
 
     def station_param
-        station = 0
-        unless @config['station'].nil?
-          station = '1' if @config['station'] == '地上波'
-        end
-        "stationPlatformId=#{station}&"
+      station = 0
+      unless @config['station'].nil?
+        station = '1' if @config['station'] == '地上波'
+      end
+      "stationPlatformId=#{station}&"
     end
   end
 end

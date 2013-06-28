@@ -21,13 +21,11 @@ module Automatic::Plugin
     def run
       weather = @weather.send(@day)['weather'] unless @weather.send(@day).nil?
       if weather != nil
-
         dummy       = Hashie::Mash.new
         dummy.title = weather
         dummy.link  = 'http://weather.dummy.' + @day
         @pipeline << Automatic::FeedParser.create([dummy])
       end
-
       @pipeline
     end
   end

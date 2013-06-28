@@ -46,8 +46,8 @@ describe 'Automatic::Plugin::SubscriptionGGuide' do
       }
     end
   end
-  context 'when feed is empty' do
 
+  context 'when feed is empty' do
     describe 'attestation error' do
       subject { g_guide }
       before do
@@ -64,7 +64,6 @@ describe 'Automatic::Plugin::SubscriptionGGuide' do
       end
       its(:run) { should be_empty }
     end
-
   end
 
   context 'when feed' do
@@ -73,6 +72,5 @@ describe 'Automatic::Plugin::SubscriptionGGuide' do
       subject { g_guide(config) }
       its(:run) { should have(1).feed }
     end
-
   end
 end

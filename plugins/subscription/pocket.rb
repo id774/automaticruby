@@ -31,14 +31,12 @@ module Automatic::Plugin
         sleep @config['interval'].to_i unless @config['interval'].nil?
         retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
       end
-
       @pipeline
     end
 
     def cleate_dummy_feed(retrieve)
       dummyFeeds = []
       retrieve['list'].each {|key,list|
-
         dummy             = Hashie::Mash.new
         dummy.title       = list['given_title']
         dummy.link        = list['given_url']

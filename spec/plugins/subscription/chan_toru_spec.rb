@@ -16,7 +16,6 @@ end
 
 describe 'Automatic::Plugin::SubscriptionChanToru' do
   context 'when feed is empty' do
-
     describe 'attestation error' do
       subject { chan_toru }
       before do
@@ -36,7 +35,6 @@ describe 'Automatic::Plugin::SubscriptionChanToru' do
       end
       its(:run) { should be_empty }
     end
-
   end
 
   context 'when feed' do
@@ -54,6 +52,5 @@ describe 'Automatic::Plugin::SubscriptionChanToru' do
       end
       its(:run) { should have(1).feed }
     end
-
   end
 end

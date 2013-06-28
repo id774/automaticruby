@@ -70,7 +70,6 @@ module Automatic::Plugin
       if @dummyfeeds != []
         @pipeline << Automatic::FeedParser.create(@dummyfeeds)
       end
-
       @pipeline
     end
   end

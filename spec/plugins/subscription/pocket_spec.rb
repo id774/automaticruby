@@ -16,7 +16,6 @@ end
 
 describe 'Automatic::Plugin::SubscriptionPocket' do
   context 'when feed is empty' do
-
     describe 'attestation error' do
       subject { pocket }
 
@@ -29,11 +28,9 @@ describe 'Automatic::Plugin::SubscriptionPocket' do
 
       its(:run) { should be_empty }
     end
-
   end
 
   context 'when feed' do
-
     describe 'config optional' do
       config = { 'optional' => {
         'count' => 1,
@@ -56,6 +53,5 @@ describe 'Automatic::Plugin::SubscriptionPocket' do
 
       its(:run) { should have(1).item }
     end
-
   end
 end
