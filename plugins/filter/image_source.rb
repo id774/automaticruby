@@ -40,9 +40,10 @@ module Automatic::Plugin
     end
 
     private
+
     def rewrite_link(feed)
       array = Array.new
-      feed.description.scan(/<img src="(.*?)"/) { |matched|
+      feed.description.scan(/<img src="(.*?)"/) {|matched|
         array = array | matched
       }
       if array.length === 0 && feed.link != nil

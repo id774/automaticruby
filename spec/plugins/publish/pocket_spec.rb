@@ -19,9 +19,9 @@ describe Automatic::Plugin::PublishPocket do
           'interval' => 1,
           'retry' => 1
     },
-      AutomaticSpec.generate_pipeline{
+      AutomaticSpec.generate_pipeline {
       feed { item "http://github.com" }
-    }) }
+    })}
 
     it "should post the link in the feed" do
       client = mock("client")

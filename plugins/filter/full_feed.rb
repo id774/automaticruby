@@ -57,7 +57,7 @@ module Automatic::Plugin
 
     def fulltext(feed)
       return feed unless feed.link
-      @siteinfo.each { |info|
+      @siteinfo.each {|info|
         begin
           if feed.link.match(info['data']['url'])
             Automatic::Log.puts(:info, "Siteinfo matched: #{info['data']['url']}")

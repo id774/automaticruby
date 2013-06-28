@@ -20,11 +20,9 @@ describe Automatic::Plugin::PublishInstapaper do
           'interval' => 5,
           'retry' => 5
     },
-      AutomaticSpec.generate_pipeline{
+      AutomaticSpec.generate_pipeline {
       feed { item "http://github.com" }
-    }
-    )
-    }
+    })}
 
     it "should post the link in the feed" do
       instapaper = mock("instapaper")
@@ -42,11 +40,9 @@ describe Automatic::Plugin::PublishInstapaper do
           'interval' => 1,
           'retry' => 1
     },
-      AutomaticSpec.generate_pipeline{
+      AutomaticSpec.generate_pipeline {
       feed { item "http://github.com" }
-    }
-    )
-    }
+    })}
 
     its (:run) { subject.run.should have(1).feed }
   end
@@ -60,9 +56,7 @@ describe Automatic::Plugin::Instapaper do
           'password' => "pswd",
           'interval' => 5,
           'retry' => 5
-    }
-    )
-    }
+    })}
 
     url         = "http://www.google.com"
     title       = "automatic test"

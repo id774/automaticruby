@@ -15,9 +15,9 @@ module Automatic::Plugin
     end
 
     def run
-      @pipeline.each { |feeds|
+      @pipeline.each {|feeds|
         unless feeds.nil?
-          feeds.items.each { |feed|
+          feeds.items.each {|feed|
             unless feed.link.nil?
               `#{eject_cmd}`
               Automatic::Log.puts('info', "Eject: #{feed.link}")

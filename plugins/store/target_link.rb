@@ -44,7 +44,7 @@ module Automatic::Plugin
     private
     def wget(url)
       filename = url.split(/\//).last
-      open(url) { |source|
+      open(url) {|source|
         open(File.join(@config['path'], filename), "w+b") { |o|
           o.print source.read
         }

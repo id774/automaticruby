@@ -39,7 +39,7 @@ module Automatic::Plugin
     end
 
     def run
-      for_each_new_feed { |feed|
+      for_each_new_feed {|feed|
         Automatic::Log.puts("info", "Saving: #{feed.link}")
         begin
           Blog.create(

@@ -17,9 +17,9 @@ module Automatic::Plugin
     end
 
     def run
-      @pipeline.each { |feeds|
+      @pipeline.each {|feeds|
         unless feeds.nil?
-          feeds.items.each { |feed|
+          feeds.items.each {|feed|
             @output.puts("info", feed.link)
           }
         end
