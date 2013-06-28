@@ -30,8 +30,8 @@ kickstart() {
 
 exec_rspec() {
     $RACK_ROOT/bin/automatic -v
-    rm Gemfile.lock
     bundle install --path vendor/gems
+    bundle update
     bundle exec rake simplecov
 }
 
