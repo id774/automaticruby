@@ -16,3 +16,4 @@ plugins:
       db: test_chan_toru.db
 
   #- module: PublishConsoleLink
+
