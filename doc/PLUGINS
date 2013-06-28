@@ -176,6 +176,41 @@ SubscriptionPocket
       retry:    RETRY_COUNT
 
 
+SubscriptionGGuide
+------------------
+[Path]
+ /plugins/subscription/g_guide.rb
+
+[Abstract]
+ search keyword to the G guide (information on a TV program) rss
+
+[Syntax]
+  - module: SubscriptionGGuide
+    config:
+      keyword: 'anime' # search word
+      station: '地上波'
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry:    RETRY_COUNT
+
+
+SubscriptionChanToru
+------------------
+[Path]
+ /plugins/subscription/chan_toru.rb
+
+[Abstract]
+ search keyword to CHAN-TORU (information on a TV program) rss
+ (SubscriptionGGuide Plug-in dependence)
+
+[Syntax]
+  - module: SubscriptionChanToru
+    config:
+      keyword: 'anime' # search word
+      station: '地上波'
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry:    RETRY_COUNT
+
+
 FilterSort
 ----------
 [Path]
