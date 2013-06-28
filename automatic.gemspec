@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "13.5.0"
+  s.version = "13.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
-  s.date = "2013-05-18"
+  s.date = "2013-06-28"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
   s.executables = ["automatic"]
@@ -42,66 +42,86 @@ Gem::Specification.new do |s|
     "lib/automatic/recipe.rb",
     "plugins/custom_feed/svn_log.rb",
     "plugins/filter/absolute_uri.rb",
+    "plugins/filter/accept.rb",
     "plugins/filter/full_feed.rb",
+    "plugins/filter/github_feed.rb",
     "plugins/filter/ignore.rb",
     "plugins/filter/image.rb",
     "plugins/filter/image_source.rb",
     "plugins/filter/one.rb",
     "plugins/filter/rand.rb",
+    "plugins/filter/sanitize.rb",
     "plugins/filter/sort.rb",
     "plugins/filter/tumblr_resize.rb",
     "plugins/notify/ikachan.rb",
     "plugins/publish/console.rb",
+    "plugins/publish/console_link.rb",
+    "plugins/publish/eject.rb",
+    "plugins/publish/fluentd.rb",
     "plugins/publish/google_calendar.rb",
     "plugins/publish/hatena_bookmark.rb",
+    "plugins/publish/hipchat.rb",
     "plugins/publish/instapaper.rb",
-    "plugins/publish/mail.rb",
+    "plugins/publish/memcached.rb",
     "plugins/publish/pocket.rb",
-    "plugins/publish/smtp.rb",
     "plugins/publish/twitter.rb",
     "plugins/store/database.rb",
     "plugins/store/full_text.rb",
     "plugins/store/permalink.rb",
     "plugins/store/target_link.rb",
+    "plugins/subscription/chan_toru.rb",
     "plugins/subscription/feed.rb",
+    "plugins/subscription/g_guide.rb",
     "plugins/subscription/google_reader_star.rb",
     "plugins/subscription/link.rb",
+    "plugins/subscription/pocket.rb",
     "plugins/subscription/text.rb",
     "plugins/subscription/tumblr.rb",
     "plugins/subscription/twitter.rb",
+    "plugins/subscription/twitter_search.rb",
     "plugins/subscription/weather.rb",
     "script/build",
     "spec/fixtures/sampleRecipe.yml",
+    "spec/lib/automatic/log_spec.rb",
     "spec/lib/automatic/pipeline_spec.rb",
     "spec/lib/automatic/recipe_spec.rb",
     "spec/lib/automatic_spec.rb",
     "spec/plugins/custom_feed/svn_log_spec.rb",
     "spec/plugins/filter/absolute_uri_spec.rb",
+    "spec/plugins/filter/accept_spec.rb",
     "spec/plugins/filter/full_feed_spec.rb",
+    "spec/plugins/filter/github_feed_spec.rb",
     "spec/plugins/filter/ignore_spec.rb",
     "spec/plugins/filter/image_source_spec.rb",
     "spec/plugins/filter/image_spec.rb",
     "spec/plugins/filter/one_spec.rb",
     "spec/plugins/filter/rand_spec.rb",
+    "spec/plugins/filter/sanitize_spec.rb",
     "spec/plugins/filter/sort_spec.rb",
     "spec/plugins/filter/tumblr_resize_spec.rb",
     "spec/plugins/notify/ikachan_spec.rb",
     "spec/plugins/publish/console_spec.rb",
+    "spec/plugins/publish/eject_spec.rb",
+    "spec/plugins/publish/fluentd_spec.rb",
     "spec/plugins/publish/google_calendar_spec.rb",
     "spec/plugins/publish/hatena_bookmark_spec.rb",
+    "spec/plugins/publish/hipchat_spec.rb",
     "spec/plugins/publish/instapaper_spec.rb",
-    "spec/plugins/publish/mail_spec.rb",
+    "spec/plugins/publish/memcached_spec.rb",
     "spec/plugins/publish/pocket_spec.rb",
-    "spec/plugins/publish/smtp_spec.rb",
     "spec/plugins/publish/twitter_spec.rb",
     "spec/plugins/store/full_text_spec.rb",
     "spec/plugins/store/permalink_spec.rb",
     "spec/plugins/store/target_link_spec.rb",
+    "spec/plugins/subscription/chan_toru_spec.rb",
     "spec/plugins/subscription/feed_spec.rb",
+    "spec/plugins/subscription/g_guide_spec.rb",
     "spec/plugins/subscription/google_reader_star_spec.rb",
     "spec/plugins/subscription/link_spec.rb",
+    "spec/plugins/subscription/pocket_spec.rb",
     "spec/plugins/subscription/text_spec.rb",
     "spec/plugins/subscription/tumblr_spec.rb",
+    "spec/plugins/subscription/twitter_search_spec.rb",
     "spec/plugins/subscription/twitter_spec.rb",
     "spec/plugins/subscription/weather_spec.rb",
     "spec/spec_helper.rb",
@@ -110,6 +130,8 @@ Gem::Specification.new do |s|
     "test/integration/test_absoluteurl.yml",
     "test/integration/test_activerecord.yml",
     "test/integration/test_add_pocket.yml",
+    "test/integration/test_chan_toru.yml",
+    "test/integration/test_fluentd.yml",
     "test/integration/test_fulltext.yml",
     "test/integration/test_googlealert.yml",
     "test/integration/test_googlestar.yml",
@@ -120,11 +142,14 @@ Gem::Specification.new do |s|
     "test/integration/test_instapaper.yml",
     "test/integration/test_link2local.yml",
     "test/integration/test_one.yml",
+    "test/integration/test_pocket.yml",
     "test/integration/test_rand.yml",
+    "test/integration/test_sanitize.yml",
     "test/integration/test_sort.yml",
     "test/integration/test_svnlog.yml",
     "test/integration/test_text2feed.yml",
     "test/integration/test_tumblr2local.yml",
+    "test/integration/test_twitter_search.yml",
     "test/integration/test_weather.yml",
     "vendor/.gitkeep"
   ]
@@ -138,53 +163,71 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<json>, ["~> 1.7.7"])
       s.add_runtime_dependency(%q<sqlite3>, [">= 0"])
-      s.add_runtime_dependency(%q<activesupport>, ["~> 3"])
+      s.add_runtime_dependency(%q<activesupport>, ["~> 4.0.0"])
+      s.add_runtime_dependency(%q<activerecord>, ["~> 4.0.0"])
+      s.add_runtime_dependency(%q<actionmailer>, ["~> 4.0.0"])
       s.add_runtime_dependency(%q<hashie>, [">= 0"])
-      s.add_runtime_dependency(%q<activerecord>, ["~> 3"])
-      s.add_runtime_dependency(%q<actionmailer>, ["~> 3"])
       s.add_runtime_dependency(%q<gcalapi>, [">= 0"])
       s.add_runtime_dependency(%q<xml-simple>, [">= 0"])
       s.add_runtime_dependency(%q<feedbag>, [">= 0"])
       s.add_runtime_dependency(%q<nokogiri>, [">= 0"])
+      s.add_runtime_dependency(%q<sanitize>, [">= 0"])
       s.add_runtime_dependency(%q<twitter>, [">= 0"])
       s.add_runtime_dependency(%q<weather_hacker>, [">= 0"])
       s.add_runtime_dependency(%q<pocket-ruby>, [">= 0"])
+      s.add_runtime_dependency(%q<hipchat>, [">= 0"])
+      s.add_runtime_dependency(%q<fluent-logger>, [">= 0"])
+      s.add_runtime_dependency(%q<dalli>, [">= 0"])
       s.add_development_dependency(%q<cucumber>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, [">= 0"])
+      s.add_development_dependency(%q<bundler>, ["~> 1.3.5"])
+      s.add_development_dependency(%q<builder>, ["~> 3.1.0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
+      s.add_dependency(%q<json>, ["~> 1.7.7"])
       s.add_dependency(%q<sqlite3>, [">= 0"])
-      s.add_dependency(%q<activesupport>, ["~> 3"])
+      s.add_dependency(%q<activesupport>, ["~> 4.0.0"])
+      s.add_dependency(%q<activerecord>, ["~> 4.0.0"])
+      s.add_dependency(%q<actionmailer>, ["~> 4.0.0"])
       s.add_dependency(%q<hashie>, [">= 0"])
-      s.add_dependency(%q<activerecord>, ["~> 3"])
-      s.add_dependency(%q<actionmailer>, ["~> 3"])
       s.add_dependency(%q<gcalapi>, [">= 0"])
       s.add_dependency(%q<xml-simple>, [">= 0"])
       s.add_dependency(%q<feedbag>, [">= 0"])
       s.add_dependency(%q<nokogiri>, [">= 0"])
+      s.add_dependency(%q<sanitize>, [">= 0"])
       s.add_dependency(%q<twitter>, [">= 0"])
       s.add_dependency(%q<weather_hacker>, [">= 0"])
       s.add_dependency(%q<pocket-ruby>, [">= 0"])
+      s.add_dependency(%q<hipchat>, [">= 0"])
+      s.add_dependency(%q<fluent-logger>, [">= 0"])
+      s.add_dependency(%q<dalli>, [">= 0"])
       s.add_dependency(%q<cucumber>, [">= 0"])
-      s.add_dependency(%q<bundler>, [">= 0"])
+      s.add_dependency(%q<bundler>, ["~> 1.3.5"])
+      s.add_dependency(%q<builder>, ["~> 3.1.0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
     end
   else
+    s.add_dependency(%q<json>, ["~> 1.7.7"])
     s.add_dependency(%q<sqlite3>, [">= 0"])
-    s.add_dependency(%q<activesupport>, ["~> 3"])
+    s.add_dependency(%q<activesupport>, ["~> 4.0.0"])
+    s.add_dependency(%q<activerecord>, ["~> 4.0.0"])
+    s.add_dependency(%q<actionmailer>, ["~> 4.0.0"])
     s.add_dependency(%q<hashie>, [">= 0"])
-    s.add_dependency(%q<activerecord>, ["~> 3"])
-    s.add_dependency(%q<actionmailer>, ["~> 3"])
     s.add_dependency(%q<gcalapi>, [">= 0"])
     s.add_dependency(%q<xml-simple>, [">= 0"])
     s.add_dependency(%q<feedbag>, [">= 0"])
     s.add_dependency(%q<nokogiri>, [">= 0"])
+    s.add_dependency(%q<sanitize>, [">= 0"])
     s.add_dependency(%q<twitter>, [">= 0"])
     s.add_dependency(%q<weather_hacker>, [">= 0"])
     s.add_dependency(%q<pocket-ruby>, [">= 0"])
+    s.add_dependency(%q<hipchat>, [">= 0"])
+    s.add_dependency(%q<fluent-logger>, [">= 0"])
+    s.add_dependency(%q<dalli>, [">= 0"])
     s.add_dependency(%q<cucumber>, [">= 0"])
-    s.add_dependency(%q<bundler>, [">= 0"])
+    s.add_dependency(%q<bundler>, ["~> 1.3.5"])
+    s.add_dependency(%q<builder>, ["~> 3.1.0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
   end
 end
