@@ -28,12 +28,12 @@ describe 'Automatic::Plugin::SubscriptionGGuide' do
       config = { 'keyword' => 'anime' }
       subject { g_guide(config) }
 
-      its(:feed_url) {
-        should == URI.encode(
+      it 'feed_url' do
+        subject.feed_url(config['keyword']).should == URI.encode(
           Automatic::Plugin::SubscriptionGGuide::G_GUIDE_RSS +
             "condition.keyword=#{config['keyword']}&" +
             'stationPlatformId=0&')
-      }
+      end
     end
     describe 'station is 地上波' do
       config = { 'station' => '地上波' }
@@ -71,6 +71,12 @@ describe 'Automatic::Plugin::SubscriptionGGuide' do
       config = { 'keyword' => 'アニメ', 'station' => '地上波' }
       subject { g_guide(config) }
       its(:run) { should have(1).feed }
+    end
+
+    describe 'config keyword ","' do
+      config = { 'keyword' => 'おじゃる丸,忍たま', 'station' => '地上波' }
+      subject { g_guide(config) }
+      its(:run) { should have(2).feed }
     end
   end
 end

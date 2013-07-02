@@ -188,7 +188,7 @@ SubscriptionGGuide
 [レシピ記法]
   - module: SubscriptionGGuide
     config:
-      keyword: 'アニメ' # 検索ワード
+      keyword: 'アニメ,将棋' # 検索ワード(','区切りで複数検索)
       station: '地上波' # 衛星放送の区域(現在は地上波のみ対応)
       interval: スクレイピングの間隔 (秒数, 省略可)
       retry: エラー時のリトライ回数 (回数, 省略時 0)
@@ -206,7 +206,7 @@ SubscriptionChanToru
 [レシピ記法]
   - module: SubscriptionChanToru
     config:
-      keyword: 'アニメ' # 検索ワード
+      keyword: 'アニメ,将棋' # 検索ワード(','区切りで複数検索)
       station: '地上波' # 衛星放送の区域(現在は地上波のみ対応)
       interval: スクレイピングの間隔 (秒数, 省略可)
       retry: エラー時のリトライ回数 (回数, 省略時 0)

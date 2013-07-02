@@ -13,12 +13,19 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config   = config
       @pipeline = pipeline
+      unless @config['keyword'].nil? || @config['keyword'].index(',').nil?
+        @keywords = @config['keyword'].split(',')
+      else
+        @keywords = [@config['keyword']]
+      end
     end
 
     def run
       retries = 0
       begin
-        @pipeline << Automatic::FeedParser.get(feed_url)
+        @keywords.each {|keyword|
+          @pipeline << Automatic::FeedParser.get(feed_url keyword)
+        }
       rescue
         retries += 1
         Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{retries}")
@@ -28,10 +35,10 @@ module Automatic::Plugin
       @pipeline
     end
 
-    def feed_url
+    def feed_url keyword = nil
       feed = G_GUIDE_RSS
-      unless @config['keyword'].nil?
-        feed += "condition.keyword=#{@config['keyword']}&"
+      unless keyword.nil?
+        feed += "condition.keyword=#{keyword}&"
       end
       feed += station_param
       URI.encode(feed)
