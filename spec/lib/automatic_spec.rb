@@ -3,7 +3,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  9, 2012
-# Updated::   Jun 27, 2013
+# Updated::   Jul  3, 2013
 # Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -26,7 +26,7 @@ describe Automatic do
 
   describe "#version" do
     specify {
-      Automatic.const_get(:VERSION).should == "13.6.0"
+      Automatic.const_get(:VERSION).should == "13.6.0-devel"
     }
   end
 
