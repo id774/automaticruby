@@ -15,7 +15,7 @@ plugins:
     config:
       host: localhost
       port: 10000
-      tag:  automatic.debug
+      tag:  automatic_test.provide_fluentd
 
   # - module: PublishConsole
 

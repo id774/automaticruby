@@ -14,7 +14,8 @@ plugins:
   - module: PublishFluentd
     config:
       host: localhost
-      port: 9999
-      tag:  automatic.feed
+      port: 10000
+      tag:  automatic_test.publish_fluentd
 
   # - module: PublishConsole
+

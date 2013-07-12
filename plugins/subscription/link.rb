@@ -9,7 +9,6 @@
 module Automatic::Plugin
   class SubscriptionLink
     require 'open-uri'
-    require 'nokogiri'
     require 'rss'
 
     def initialize(config, pipeline=[])
