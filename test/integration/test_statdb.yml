@@ -1,0 +1,15 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionStatDb
+    config:
+      appid: your_app_id
+      params:
+        - cdArea=09003,22004&cdCat01=010920070&cdTimeFrom=2012000101&cdTimeTo=2013000303
+
+  - module: PublishConsole
