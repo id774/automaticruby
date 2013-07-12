@@ -13,14 +13,15 @@ require 'provide/fluentd'
 describe Automatic::Plugin::ProvideFluentd do
   context 'when feed' do
     describe 'should forward the feeds' do
-      feeds = []
       hash = {}
       hash['test1'] = "test2"
       hash['test3'] = "test4"
       expect = hash
+
+      feeds = []
       json = hash.to_json
       data = ActiveSupport::JSON.decode(json)
-      url = "http://id774.net"
+      url = "http://id774.net/test/xml/data"
       rss = Automatic::FeedParser.content_provide(url, data)
       feeds << rss
 
@@ -38,6 +39,7 @@ describe Automatic::Plugin::ProvideFluentd do
       its (:run) {
         fluentd = mock("fluentd")
         subject.run.should have(1).feed
+        subject.instance_variable_get(:@pipeline)[0].items[0].content_encoded.class == Hash
         subject.instance_variable_get(:@pipeline)[0].items[0].content_encoded.should == expect
       }
     end

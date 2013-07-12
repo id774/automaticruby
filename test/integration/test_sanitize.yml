@@ -20,3 +20,4 @@ plugins:
       db: test_sanitize.db
 
   # - module: PublishConsole
+

@@ -25,3 +25,4 @@ plugins:
       db: test_text2feed.db
 
   # - module: PublishConsole
+

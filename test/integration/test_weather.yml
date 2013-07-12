@@ -16,3 +16,4 @@ plugins:
       db: test_weather.db
 
   #- module: PublishConsole
+

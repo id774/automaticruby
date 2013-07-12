@@ -18,3 +18,4 @@ plugins:
       tag:  automatic_test.publish_fluentd
 
   # - module: PublishConsole
+
