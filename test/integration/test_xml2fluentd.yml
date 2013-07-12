@@ -14,7 +14,7 @@ plugins:
   - module: ProvideFluentd
     config:
       host: localhost
-      port: 9999
+      port: 10000
       tag:  automatic.debug
 
   # - module: PublishConsole
