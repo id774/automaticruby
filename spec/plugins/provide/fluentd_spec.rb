@@ -29,7 +29,7 @@ describe Automatic::Plugin::ProvideFluentd do
           {
             'host' => "localhost",
             'port' => "10000",
-            'tag'  => "automatic_test.provide_fluentd_spec"
+            'tag'  => "automatic_spec.provide_fluentd"
           },
           feeds
         )

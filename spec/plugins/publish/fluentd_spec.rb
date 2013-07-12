@@ -17,8 +17,8 @@ describe Automatic::Plugin::PublishFluentd do
         Automatic::Plugin::PublishFluentd.new(
           {
             'host' => "localhost",
-            'port' => "9999",
-            'tag'  => "debug.forward"
+            'port' => "10000",
+            'tag'  => "automatic_spec.publish_fluent"
           },
           AutomaticSpec.generate_pipeline{
             feed {
