@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Subscription::StatDb
+# Name::      Automatic::Plugin::Subscription::Xml
 # Author::    774 <http://id774.net>
 # Created::   Jul 12, 2013
 # Updated::   Jul 12, 2013
@@ -7,7 +7,7 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class SubscriptionStatDb
+  class SubscriptionXml
     require 'open-uri'
     require 'active_support'
     require 'active_support/core_ext'
@@ -20,8 +20,7 @@ module Automatic::Plugin
 
     def run
       @return_feeds = []
-      @config['params'].each {|param|
-        url = "http://statdb.nstac.go.jp/api/1.0b/app/getStatsData?appId=#{@config['appid']}&#{param}"
+      @config['urls'].each {|url|
         retries = 0
         begin
           create_rss(URI.encode(url))
@@ -38,29 +37,14 @@ module Automatic::Plugin
     private
     def create_rss(url)
       Automatic::Log.puts("info", "Parsing: #{url}")
-      hash = Hash.from_xml open(url).read
+      hash = Hash.from_xml(open(url).read)
       json = hash.to_json
       data = ActiveSupport::JSON.decode(json)
       unless data.nil?
-        rss = create(data, url)
+        rss = Automatic::FeedParser.content_provide(url, data)
         sleep @config['interval'].to_i unless @config['interval'].nil?
         @return_feeds << rss
       end
-    end
-
-    def create(data, url)
-      RSS::Maker.make("2.0") {|maker|
-        xss = maker.xml_stylesheets.new_xml_stylesheet
-        maker.channel.title = "Automatic Ruby"
-        maker.channel.description = "Automatic Ruby"
-        maker.channel.link = "https://github.com/automaticruby/automaticruby"
-        maker.items.do_sort = true
-        item = maker.items.new_item
-        item.title = "StatDB Feed by Automatic Ruby"
-        item.link = url
-        item.content_encoded = data
-        item.date = Time.now
-      }
     end
   end
 end
