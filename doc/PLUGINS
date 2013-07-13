@@ -38,6 +38,25 @@ SubscriptionLink
       retry: RETRY_COUNT
 
 
+SubscriptionXml
+---------------
+[Path]
+ /plugins/subscription/xml.rb
+
+[Abstract]
+ Subscribe XML API with GET method.
+ This plug-in store encoded XML in content_encoded of RSS feed.
+
+[Syntax]
+  - module: SubscriptionXml
+    config:
+      urls:
+        - URL
+        - URL ... (XML base API)
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry: RETRY_COUNT
+
+
 SubscriptionTumblr
 ------------------
 [Path]

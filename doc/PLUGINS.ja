@@ -38,6 +38,26 @@ SubscriptionLink
       retry: エラー時のリトライ回数 (回数, 省略時 0)
 
 
+SubscriptionXml
+---------------
+[パス]
+ /plugins/subscription/xml.rb
+
+[概要]
+ XML で提供された API を GET メソッドで購読する
+ このプラグインはエンコードされた XML を RSS フィードの
+ content_encoded に保存する
+
+[Syntax]
+  - module: SubscriptionXml
+    config:
+      urls:
+        - URL
+        - URL ... (XML base API)
+      interval: INTERVAL_FOR_SCRAPING (in seconds.)
+      retry: RETRY_COUNT
+
+
 SubscriptionTumblr
 ------------------
 [パス]
