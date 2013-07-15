@@ -463,6 +463,28 @@ PublishFluentd
       tag:  TAGS (example: automatic.feed)
 
 
+ProvideFluentd
+--------------
+[Path]
+ /plugins/provide/fluentd.rb
+
+[Abstract]
+ This plugin output content_encoded to fluentd.
+
+[Description]
+ Provide::Fluentd is different from Publish::Fluentd.
+
+ Publish::Fluentd -> Output feed to flulentd.
+ Provide::Fluentd -> Output content_encoded to fluentd.
+
+[Syntax]
+  - module: ProvideFluentd
+    config:
+      host: HOSTNAME
+      port: PORT_NUMBER
+      tag:  TAGS (example: automatic.feed)
+
+
 PublishMemcached
 ----------------
 [Path]

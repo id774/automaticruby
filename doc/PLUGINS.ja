@@ -465,6 +465,29 @@ PublishFluentd
       tag:  タグ (例 automatic.feed)
 
 
+ProvideFluentd
+--------------
+[パス]
+ /plugins/provide/fluentd.rb
+
+[概要]
+ fluentd に content_encoded の内容を出力する
+
+[説明]
+ このプラグインは Publish::Fluentd とは異なる
+
+ Publish::Fluentd -> フィード全体を fluentd に出力
+ Provide::Fluentd -> content_encoded の内容を fluentd に出力
+
+
+[レシピ記法]
+  - module: ProvideFluentd
+    config:
+      host: ホスト名
+      port: ポート番号
+      tag:  タグ (例 automatic.feed)
+
+
 PublishMemcached
 ----------------
 [パス]
