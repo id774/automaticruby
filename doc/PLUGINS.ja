@@ -479,7 +479,6 @@ ProvideFluentd
  Publish::Fluentd -> フィード全体を fluentd に出力
  Provide::Fluentd -> content_encoded の内容を fluentd に出力
 
-
 [レシピ記法]
   - module: ProvideFluentd
     config:
