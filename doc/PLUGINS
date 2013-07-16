@@ -188,7 +188,7 @@ SubscriptionGGuide
 [Syntax]
   - module: SubscriptionGGuide
     config:
-      keyword: 'anime' # search word
+      keyword: 'anime,shogi' # search word (',' dividing and coming out two or more search)
       station: '地上波' # (It means terrestrial broadcasting in Japanese.)
       interval: INTERVAL_FOR_SCRAPING (in seconds.)
       retry:    RETRY_COUNT
