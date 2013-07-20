@@ -1,3 +1,13 @@
+=== 13.7.0 / 2013-07-xx
+
+* Added new plugins.
+
+  * Subscription::Xml
+  * Provide::Fluentd
+
+* Fix other some problems.
+
+
 === 13.6.0 / 2013-06-28
 
 * Added new plugins.
