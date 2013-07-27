@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "automatic"
-  s.version = "13.6.0"
+  s.version = "13.7.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["id774"]
-  s.date = "2013-06-28"
+  s.date = "2013-07-27"
   s.description = "Ruby General Automation Framework"
   s.email = "idnanashi@gmail.com"
   s.executables = ["automatic"]
@@ -54,6 +54,7 @@ Gem::Specification.new do |s|
     "plugins/filter/sort.rb",
     "plugins/filter/tumblr_resize.rb",
     "plugins/notify/ikachan.rb",
+    "plugins/provide/fluentd.rb",
     "plugins/publish/console.rb",
     "plugins/publish/console_link.rb",
     "plugins/publish/eject.rb",
@@ -72,7 +73,6 @@ Gem::Specification.new do |s|
     "plugins/subscription/chan_toru.rb",
     "plugins/subscription/feed.rb",
     "plugins/subscription/g_guide.rb",
-    "plugins/subscription/google_reader_star.rb",
     "plugins/subscription/link.rb",
     "plugins/subscription/pocket.rb",
     "plugins/subscription/text.rb",
@@ -80,6 +80,7 @@ Gem::Specification.new do |s|
     "plugins/subscription/twitter.rb",
     "plugins/subscription/twitter_search.rb",
     "plugins/subscription/weather.rb",
+    "plugins/subscription/xml.rb",
     "script/build",
     "spec/fixtures/sampleRecipe.yml",
     "spec/lib/automatic/log_spec.rb",
@@ -100,6 +101,7 @@ Gem::Specification.new do |s|
     "spec/plugins/filter/sort_spec.rb",
     "spec/plugins/filter/tumblr_resize_spec.rb",
     "spec/plugins/notify/ikachan_spec.rb",
+    "spec/plugins/provide/fluentd_spec.rb",
     "spec/plugins/publish/console_spec.rb",
     "spec/plugins/publish/eject_spec.rb",
     "spec/plugins/publish/fluentd_spec.rb",
@@ -116,7 +118,6 @@ Gem::Specification.new do |s|
     "spec/plugins/subscription/chan_toru_spec.rb",
     "spec/plugins/subscription/feed_spec.rb",
     "spec/plugins/subscription/g_guide_spec.rb",
-    "spec/plugins/subscription/google_reader_star_spec.rb",
     "spec/plugins/subscription/link_spec.rb",
     "spec/plugins/subscription/pocket_spec.rb",
     "spec/plugins/subscription/text_spec.rb",
@@ -124,6 +125,7 @@ Gem::Specification.new do |s|
     "spec/plugins/subscription/twitter_search_spec.rb",
     "spec/plugins/subscription/twitter_spec.rb",
     "spec/plugins/subscription/weather_spec.rb",
+    "spec/plugins/subscription/xml_spec.rb",
     "spec/spec_helper.rb",
     "spec/user_dir/plugins/store/mock.rb",
     "test/fixtures/sampleOPML.xml",
@@ -134,7 +136,6 @@ Gem::Specification.new do |s|
     "test/integration/test_fluentd.yml",
     "test/integration/test_fulltext.yml",
     "test/integration/test_googlealert.yml",
-    "test/integration/test_googlestar.yml",
     "test/integration/test_hatenabookmark.yml",
     "test/integration/test_ignore.yml",
     "test/integration/test_ignore2.yml",
@@ -151,23 +152,23 @@ Gem::Specification.new do |s|
     "test/integration/test_tumblr2local.yml",
     "test/integration/test_twitter_search.yml",
     "test/integration/test_weather.yml",
+    "test/integration/test_xml2fluentd.yml",
     "vendor/.gitkeep"
   ]
   s.homepage = "http://github.com/automaticruby/automaticruby"
   s.licenses = ["GPL"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.24"
+  s.rubygems_version = "2.0.5"
   s.summary = "Automatic Ruby"
 
   if s.respond_to? :specification_version then
-    s.specification_version = 3
+    s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<json>, ["~> 1.7.7"])
       s.add_runtime_dependency(%q<sqlite3>, [">= 0"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 4.0.0"])
       s.add_runtime_dependency(%q<activerecord>, ["~> 4.0.0"])
-      s.add_runtime_dependency(%q<actionmailer>, ["~> 4.0.0"])
       s.add_runtime_dependency(%q<hashie>, [">= 0"])
       s.add_runtime_dependency(%q<gcalapi>, [">= 0"])
       s.add_runtime_dependency(%q<xml-simple>, [">= 0"])
@@ -189,7 +190,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<sqlite3>, [">= 0"])
       s.add_dependency(%q<activesupport>, ["~> 4.0.0"])
       s.add_dependency(%q<activerecord>, ["~> 4.0.0"])
-      s.add_dependency(%q<actionmailer>, ["~> 4.0.0"])
       s.add_dependency(%q<hashie>, [">= 0"])
       s.add_dependency(%q<gcalapi>, [">= 0"])
       s.add_dependency(%q<xml-simple>, [">= 0"])
@@ -212,7 +212,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<sqlite3>, [">= 0"])
     s.add_dependency(%q<activesupport>, ["~> 4.0.0"])
     s.add_dependency(%q<activerecord>, ["~> 4.0.0"])
-    s.add_dependency(%q<actionmailer>, ["~> 4.0.0"])
     s.add_dependency(%q<hashie>, [">= 0"])
     s.add_dependency(%q<gcalapi>, [">= 0"])
     s.add_dependency(%q<xml-simple>, [">= 0"])
