@@ -1,9 +1,9 @@
-# Version:20130628
+# Version:20130730
 
 source "http://rubygems.org"
 source "http://gems.github.com"
 
-gem 'json', '~> 1.7.7'
+gem 'json'
 gem 'sqlite3'
 gem 'activesupport', '~>4.0.0'
 gem 'activerecord', '~>4.0.0'
@@ -30,7 +30,7 @@ end
 
 group :development do
   gem "cucumber"
-  gem 'bundler', '~>1.3.5'
-  gem 'builder', '~>3.1.0'
+  gem 'bundler'
+  gem 'builder'
   gem "jeweler"
 end
