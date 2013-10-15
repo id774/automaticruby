@@ -28,31 +28,28 @@ module Automatic::Plugin
     end
 
     private
+    def detect_exclude(item, evaluation, reason)
+      if item.include?(evaluation)
+        Automatic::Log.puts("info", "Excluded by #{reason}: #{item}")
+        return true
+      end
+    end
 
     def exclude(items)
       detection = false
       unless @config['title'].nil?
         @config['title'].each {|e|
-          if items.title.include?(e.chomp)
-            detection = true
-            Automatic::Log.puts("info", "Excluded by title: #{items.link}")
-          end
+          detection = true if detect_exclude(items.title, e.chomp, 'title')
         }
       end
       unless @config['link'].nil?
         @config['link'].each {|e|
-          if items.link.include?(e.chomp)
-            detection = true
-            Automatic::Log.puts("info", "Excluded by link: #{items.link}")
-          end
+          detection = true if detect_exclude(items.link, e.chomp, 'link')
         }
       end
       unless @config['description'].nil?
         @config['description'].each {|e|
-          if items.description.include?(e.chomp)
-            detection = true
-            Automatic::Log.puts("info", "Excluded by description: #{items.link}")
-          end
+          detection = true if detect_exclude(items.description, e.chomp, 'description')
         }
       end
       detection
