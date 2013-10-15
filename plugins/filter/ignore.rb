@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::Ignore
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Apr  5, 2013
+# Updated::   Oct 15, 2013
 # Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -29,9 +29,14 @@ module Automatic::Plugin
 
     private
     def detect_exclude(item, evaluation, reason)
-      if item.include?(evaluation)
-        Automatic::Log.puts("info", "Excluded by #{reason}: #{item}")
-        return true
+      begin
+        if item.include?(evaluation)
+          Automatic::Log.puts("info", "Excluded by #{reason}: #{item}")
+          return true
+        end
+      rescue NoMethodError
+        Automatic::Log.puts("warn", "Invalid feed detected in ignore process with #{item}")
+        return false
       end
     end
 
