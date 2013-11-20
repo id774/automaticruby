@@ -1,4 +1,4 @@
-# Version:20130730
+# Version:20131120
 
 source "http://rubygems.org"
 source "http://gems.github.com"
@@ -13,7 +13,7 @@ gem 'xml-simple'
 gem 'feedbag'
 gem 'nokogiri'
 gem 'sanitize'
-gem 'twitter'
+gem 'twitter', '~>4.0.0'
 gem 'weather_hacker'
 gem 'pocket-ruby'
 gem 'hipchat'
