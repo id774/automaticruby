@@ -1,4 +1,4 @@
-# Version:20131120
+# Version:20131125
 
 source "http://rubygems.org"
 source "http://gems.github.com"
@@ -21,7 +21,7 @@ gem 'fluent-logger'
 gem 'dalli'
 
 group :test do
-  gem 'rspec'
+  gem 'rspec', '~> 2.14.0'
   gem 'rcov', :platforms => :mri_18
   gem 'simplecov'
   gem 'simplecov-rcov'

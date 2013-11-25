@@ -25,16 +25,22 @@ describe Automatic do
   end
 
   describe "#version" do
-    specify {
-      Automatic.const_get(:VERSION).should == "13.7.0-devel"
-    }
+    subject { Automatic.const_get(:VERSION) }
+
+    it { expect(subject).to eq "13.7.0-devel" }
   end
 
-  describe "#(root|config)_dir" do
-    specify {
-      Automatic.root_dir.should == APP_ROOT
-      Automatic.config_dir.should == APP_ROOT+"/config"
-    }
+  describe "#(root)_dir" do
+    subject { Automatic.root_dir }
+
+    it { expect(subject).to eq APP_ROOT }
+
+  end
+
+  describe "#(config)_dir" do
+    subject { Automatic.config_dir }
+
+    it { expect(subject).to eq APP_ROOT+"/config" }
   end
 
   describe "#user_dir= in test env" do
@@ -43,14 +49,18 @@ describe Automatic do
     end
 
     describe "#user_dir" do
+      subject { Automatic.user_dir }
+
       it "return valid value" do
-        Automatic.user_dir.should == File.join(APP_ROOT, "spec/user_dir")
+        expect(subject).to eq File.join(APP_ROOT, "spec/user_dir")
       end
     end
 
     describe "#user_plugins_dir" do
+      subject { Automatic.user_plugins_dir }
+
       it "return valid value" do
-        Automatic.user_plugins_dir.should == File.join(APP_ROOT, "spec/user_dir/plugins")
+        expect(subject).to eq File.join(APP_ROOT, "spec/user_dir/plugins")
       end
     end
 
@@ -66,14 +76,18 @@ describe Automatic do
     end
 
     describe "#user_dir" do
+      subject { Automatic.user_dir }
+
       it "return valid value" do
-        Automatic.user_dir.should == File.expand_path("~/") + "/.automatic"
+        expect(subject).to eq File.expand_path("~/") + "/.automatic"
       end
     end
 
     describe "#user_plugins_dir" do
+      subject { Automatic.user_plugins_dir }
+
       it "return valid value" do
-        Automatic.user_plugins_dir.should == File.expand_path("~/") + "/.automatic/plugins"
+        expect(subject).to eq File.expand_path("~/") + "/.automatic/plugins"
       end
     end
 
