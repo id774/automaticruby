@@ -3,7 +3,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  9, 2012
-# Updated::   Jul 30, 2013
+# Updated::   Nov 25, 2013
 # Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -14,13 +14,13 @@ require 'automatic'
 describe Automatic do
   describe "#run" do
     describe "with a root dir which has default recipe" do
-      specify {
-        lambda{
+      subject {
           Automatic.run(:recipe   => "",
                         :root_dir => APP_ROOT,
                         :user_dir => APP_ROOT + "/spec/user_dir")
-        }.should_not raise_exception(Errno::ENOENT)
       }
+
+      it { expect { subject }.to raise_error }
     end
   end
 
