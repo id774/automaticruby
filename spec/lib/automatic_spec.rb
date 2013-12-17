@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic
+# Name::      Automatic::Ruby
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  9, 2012
-# Updated::   Nov 25, 2013
+# Updated::   Dec 17, 2013
 # Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -27,7 +27,7 @@ describe Automatic do
   describe "#version" do
     subject { Automatic.const_get(:VERSION) }
 
-    it { expect(subject).to eq "13.7.0-devel" }
+    it { expect(subject).to eq "13.12.0" }
   end
 
   describe "#(root)_dir" do
