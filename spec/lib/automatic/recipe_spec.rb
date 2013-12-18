@@ -20,14 +20,19 @@ describe Automatic::Recipe do
       Automatic.user_dir = nil
     end
 
-    describe "with a normal recipe" do
-      it "correctly load recipe" do
+    context "with a normal recipe" do
+      subject {
         recipe = Automatic::Recipe.new(TEST_RECIPE)
-        expect =[{"module"=>"SubscriptionFeed",
-          "config"=>{"feeds"=>["http://blog.id774.net/post/feed/"]}},
-          {"module"=>"FilterIgnore", "config"=>{"link"=>["hoge"]}},
-          {"module"=>"StorePermalink", "config"=>{"db"=>"test_permalink.db"}}]
-        recipe.each_plugin{recipe}.should == expect
+        recipe.each_plugin{recipe}
+      }
+      let(:expected) { [{"module"=>"SubscriptionFeed",
+        "config"=>{"feeds"=>["http://blog.id774.net/post/feed/"]}},
+        {"module"=>"FilterIgnore", "config"=>{"link"=>["hoge"]}},
+        {"module"=>"StorePermalink", "config"=>{"db"=>"test_permalink.db"}}]
+      }
+
+      it "correctly load recipe" do
+        expect(subject).to eq expected
       end
     end
 
