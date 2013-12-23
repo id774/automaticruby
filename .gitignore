@@ -28,5 +28,6 @@ bin/tt
 pkg/
 vendor/gems/
 vendor/bundle/
+vendor/bundler/
 bin/httparty
 bin/weather
