@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Publish::Hipchat
 # Author::    Kohei Hasegawa <http://github.com/banyan>
-# Created::   Jun 6, 2013
-# Updated::   Jun 6, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Created::   Jun  6, 2013
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -32,10 +32,10 @@ module Automatic::Plugin
             rescue => e
               retries += 1
               Automatic::Log.puts("error", "ErrorCount: #{retries}, #{e.message}")
-              sleep @config['interval'].to_i unless @config['interval'].nil?
+              sleep ||= @config['interval'].to_i
               retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
             end
-            sleep @config['interval'].to_i unless @config['interval'].nil?
+            sleep ||= @config['interval'].to_i
           }
         end
       }

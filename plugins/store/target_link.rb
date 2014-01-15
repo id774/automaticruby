@@ -3,8 +3,8 @@
 # Name::      Automatic::Plugin::Store::TargetLink
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Feb  9, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'open-uri'
@@ -28,10 +28,10 @@ module Automatic::Plugin
               begin
                 retries += 1
                 wget(feed.link)
-                sleep @config['interval'].to_i unless @config['interval'].nil?
+                sleep ||= @config['interval'].to_i
               rescue
                 Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault during file download.")
-                sleep @config['interval'].to_i unless @config['interval'].nil?
+                sleep ||= @config['interval'].to_i
                 retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
               end
             end

@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Publish::HatenaBookmark
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Mar  7, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -89,7 +89,7 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             hb.post(rewrite(feed.link), nil)
-            sleep @config['interval'].to_i unless @config['interval'].nil?
+            sleep ||= @config['interval'].to_i
           }
         end
       }

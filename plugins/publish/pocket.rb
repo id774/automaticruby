@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Publish::Pocket
 # Author::    soramugi <http://soramugi.net>
 # Created::   May 15, 2013
-# Updated::   May 15, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -31,10 +31,10 @@ module Automatic::Plugin
             rescue
               retries += 1
               Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in publish to pocket.")
-              sleep @config['interval'].to_i unless @config['interval'].nil?
+              sleep ||= @config['interval'].to_i
               retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
             end
-            sleep @config['interval'].to_i unless @config['interval'].nil?
+            sleep ||= @config['interval'].to_i
           }
         end
       }

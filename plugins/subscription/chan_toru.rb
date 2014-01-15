@@ -33,7 +33,7 @@ module Automatic::Plugin
       rescue
         retries += 1
         Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{retries}")
-        sleep @config['interval'].to_i unless @config['interval'].nil?
+        sleep ||= @config['interval'].to_i
         retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
       end
 

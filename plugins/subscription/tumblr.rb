@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Apr  5, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -32,7 +32,7 @@ module Automatic::Plugin
         rescue
           retries += 1
           Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
-          sleep @config['interval'].to_i unless @config['interval'].nil?
+          sleep ||= @config['interval'].to_i
           retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
         end
       }
@@ -51,7 +51,7 @@ module Automatic::Plugin
              item.link = nil
            end
         }
-        sleep @config['interval'].to_i unless @config['interval'].nil?
+        sleep ||= @config['interval'].to_i
         @return_feeds << rss
       end
     end

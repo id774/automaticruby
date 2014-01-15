@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::SubscriptionFeed
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Feb  8, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -22,7 +22,7 @@ module Automatic::Plugin
         rescue
           retries += 1
           Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{feed}")
-          sleep @config['interval'].to_i unless @config['interval'].nil?
+          sleep ||= @config['interval'].to_i
           retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
         end
       }

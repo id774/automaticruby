@@ -75,7 +75,7 @@ module Automatic::Plugin
           feeds.items.each {|feed|
             Automatic::Log.puts("info", %Q(Ikachan: [#{feed.link}] sending with params #{ikachan.params.to_s}...))
             ikachan.post(feed.link, feed.title)
-            sleep @config['interval'].to_i unless @config['interval'].nil?
+            sleep ||= @config['interval'].to_i
           }
         end
       }

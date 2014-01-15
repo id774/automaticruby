@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Publish::Eject
 # Author::    soramugi <http://soramugi.net>
-# Created::   Jun 9, 2013
-# Updated::   Jun 9, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Created::   Jun  9, 2013
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -23,7 +23,7 @@ module Automatic::Plugin
               Automatic::Log.puts('info', "Eject: #{feed.link}")
 
               interval = @config['interval'].to_i unless @config['interval'].nil? unless @config.nil?
-              sleep 3 if interval.nil?
+              sleep ||= @config['interval'].to_i
             end
           }
         end

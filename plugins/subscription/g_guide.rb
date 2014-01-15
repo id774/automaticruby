@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Subscription::GGuide
 # Author::    soramugi <http://soramugi.net>
 # Created::   Jun 28, 2013
-# Updated::   Jun 28, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -29,7 +29,7 @@ module Automatic::Plugin
       rescue
         retries += 1
         Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{retries}")
-        sleep @config['interval'].to_i unless @config['interval'].nil?
+        sleep ||= @config['interval'].to_i
         retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
       end
       @pipeline
