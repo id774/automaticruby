@@ -25,6 +25,7 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             retries = 0
+            retry_max = @config['retry'].to_i || 0
             begin
               @client.add(:url => feed.link)
               Automatic::Log.puts("info", "add: #{feed.link}")
@@ -32,7 +33,7 @@ module Automatic::Plugin
               retries += 1
               Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in publish to pocket.")
               sleep ||= @config['interval'].to_i
-              retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+              retry if retries <= retry_max
             end
             sleep ||= @config['interval'].to_i
           }

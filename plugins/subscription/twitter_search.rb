@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Subscription::TwitterSearch
 # Author::    soramugi <http://soramugi.net>
 # Created::   May 30, 2013
-# Updated::   May 30, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Jan 15, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -24,6 +24,7 @@ module Automatic::Plugin
     def run
       @pipeline = []
       retries = 0
+      retry_max = @config['retry'].to_i || 0
       begin
         feeds = []
         @client.search(@config['search'],@config['opt']).results.each do |status|
@@ -42,7 +43,7 @@ module Automatic::Plugin
         retries += 1
         Automatic::Log.puts("error", "ErrorCount: #{retries}")
         sleep ||= @config['interval'].to_i
-        retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+        retry if retries <= retry_max
       end
       @pipeline
     end

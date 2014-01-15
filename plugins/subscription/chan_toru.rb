@@ -32,9 +32,10 @@ module Automatic::Plugin
         @pipeline = pipeline
       rescue
         retries += 1
+        retry_max = @config['retry'].to_i || 0
         Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{retries}")
         sleep ||= @config['interval'].to_i
-        retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+        retry if retries <= retry_max
       end
 
       @pipeline

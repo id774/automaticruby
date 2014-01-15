@@ -20,13 +20,14 @@ module Automatic::Plugin
       @return_feeds = []
       @config['urls'].each {|url|
         retries = 0
+        retry_max = @config['retry'].to_i || 0
         begin
           create_rss(URI.encode(url))
         rescue
           retries += 1
           Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
           sleep ||= @config['interval'].to_i
-          retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+          retry if retries <= retry_max
         end
       }
       @return_feeds

@@ -19,7 +19,8 @@ plugins:
     config:
       email:    your_email
       password: your_pass
-      interval: 5
+      interval: 2
+      retry:    2
 
   #- module: PublishConsole
 

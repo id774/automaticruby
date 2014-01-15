@@ -26,6 +26,7 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             retries = 0
+            retry_max = @config['retry'].to_i || 0
             begin
               @client.send(@config['username'], feed.description, @options)
               Automatic::Log.puts("info", "post: #{feed.description.gsub(/[\r\n]/,'')[0..50]}...") rescue nil
@@ -33,7 +34,7 @@ module Automatic::Plugin
               retries += 1
               Automatic::Log.puts("error", "ErrorCount: #{retries}, #{e.message}")
               sleep ||= @config['interval'].to_i
-              retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+              retry if retries <= retry_max
             end
             sleep ||= @config['interval'].to_i
           }

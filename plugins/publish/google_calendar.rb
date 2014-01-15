@@ -74,7 +74,7 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             @gc.add('今日 ' + feed.title)
-            sleep @config['interval'].to_i unless @config['interval'].nil?
+            sleep ||= @config['interval'].to_i
           }
         end
       }

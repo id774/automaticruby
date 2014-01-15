@@ -22,6 +22,7 @@ module Automatic::Plugin
 
     def run
       retries = 0
+      retry_max = @config['retry'].to_i || 0
       begin
         dummyfeeds = cleate_dummy_feed(@client.retrieve(@config['optional']))
         @pipeline << Automatic::FeedParser.create(dummyfeeds)
@@ -29,7 +30,7 @@ module Automatic::Plugin
         retries += 1
         Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{retries}")
         sleep ||= @config['interval'].to_i
-        retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+        retry if retries <= retry_max
       end
       @pipeline
     end

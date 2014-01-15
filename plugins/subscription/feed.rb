@@ -16,6 +16,7 @@ module Automatic::Plugin
     def run
       @config['feeds'].each {|feed|
         retries = 0
+        retry_max = @config['retry'].to_i || 0
         begin
           rss = Automatic::FeedParser.get(feed)
           @pipeline << rss
@@ -23,7 +24,7 @@ module Automatic::Plugin
           retries += 1
           Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{feed}")
           sleep ||= @config['interval'].to_i
-          retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+          retry if retries <= retry_max
         end
       }
       @pipeline

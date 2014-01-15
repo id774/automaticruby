@@ -36,6 +36,7 @@ module Automatic::Plugin
           feeds.items.each {|feed|
             Automatic::Log.puts("info", "tweet: #{feed.link}")
             retries = 0
+            retry_max = @config['retry'].to_i || 0
             begin
               tweet = @tweet_tmp.gsub(/\{(.+?)\}/) do |text|
                 feed.__send__($1)
@@ -45,7 +46,7 @@ module Automatic::Plugin
               retries += 1
               Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in publish to twitter.")
               sleep ||= @config['interval'].to_i
-              retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+              retry if retries <= retry_max
             end
             sleep ||= @config['interval'].to_i
           }

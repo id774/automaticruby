@@ -25,6 +25,7 @@ module Automatic::Plugin
               Automatic::Log.puts("info", "Downloading: #{feed.link}")
               FileUtils.mkdir_p(@config['path']) unless FileTest.exist?(@config['path'])
               retries = 0
+              retry_max = @config['retry'].to_i || 0
               begin
                 retries += 1
                 wget(feed.link)
@@ -32,7 +33,7 @@ module Automatic::Plugin
               rescue
                 Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault during file download.")
                 sleep ||= @config['interval'].to_i
-                retry if retries <= @config['retry'].to_i unless @config['retry'].nil?
+                retry if retries <= retry_max
               end
             end
           }
