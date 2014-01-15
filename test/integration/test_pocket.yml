@@ -11,7 +11,7 @@ plugins:
       consumer_key: 'consumer_key'
       access_token: 'access_token'
       optional:
-        favorite: 1
+        favorite: 3
         count: 2
 
   - module: StorePermalink
@@ -20,4 +20,3 @@ plugins:
 
   #- module: PublishConsole
 
- 

@@ -21,8 +21,8 @@ plugins:
     config:
       feeds:
         - http://blog.id774.net/post/feed/
-      interval: 5
-      retry: 5
+      interval: 2
+      retry: 2
 
   - module: FilterSort
     config:

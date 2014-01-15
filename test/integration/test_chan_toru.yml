@@ -8,8 +8,10 @@ global:
 plugins:
   - module: SubscriptionChanToru
     config:
-      keyword: 'アニメ'
-      station: '地上波'
+      keyword:  'アニメ'
+      station:  '地上波'
+      interval: 2
+      retry:    2
 
   - module: StorePermalink
     config:

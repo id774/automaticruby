@@ -21,8 +21,8 @@ plugins:
     config:
       urls:
         - http://reblog.id774.net
-      interval: 5
-      retry: 5
+      interval: 2
+      retry: 2
 
   - module: FilterImage
 

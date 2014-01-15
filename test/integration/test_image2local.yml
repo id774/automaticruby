@@ -23,7 +23,7 @@ plugins:
     config:
       path: /tmp
       retry: 2
-      interval: 4
+      interval: 2
 
   #- module: PublishConsole
 
