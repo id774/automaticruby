@@ -2,8 +2,8 @@
 # Name::      Automatic::Ruby
 # Author::    774 <http://id774.net>
 # Created::   Feb 18, 2012
-# Updated::   Dec 18, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Jan 24, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic
@@ -12,8 +12,8 @@ module Automatic
   require 'automatic/pipeline'
   require 'automatic/log'
   require 'automatic/feed_parser'
+  require 'automatic/version'
 
-  VERSION = "13.12.0-devel"
   USER_DIR = "/.automatic"
 
   class << self
