@@ -496,7 +496,7 @@ TODO
 Environment
 ===========
 
- Ruby 1.9 - 2.0.
+ Ruby 1.9 - 2.1.
 
  Depend on the packages that described in Gemfile.
 
