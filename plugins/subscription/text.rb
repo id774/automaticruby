@@ -25,45 +25,68 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config   = config
       @pipeline = pipeline
-
-      unless @config.nil?
-        @dummyfeeds = []
-        unless @config['titles'].nil?
-          @config['titles'].each {|title|
-            textFeed = TextFeed.new
-            textFeed.title = title
-            @dummyfeeds << textFeed
-          }
-        end
-
-        unless @config['urls'].nil?
-          @config['urls'].each {|url|
-            textFeed = TextFeed.new
-            textFeed.link = url
-            @dummyfeeds << textFeed
-          }
-        end
-
-        unless @config['feeds'].nil?
-          @config['feeds'].each {|feed|
-            textFeed = TextFeed.new
-            textFeed.title = feed['title'] unless feed['title'].nil?
-            textFeed.link = feed['url'] unless feed['url'].nil?
-            textFeed.description = feed['description'] unless feed['description'].nil?
-            textFeed.author = feed['author'] unless feed['author'].nil?
-            textFeed.comments = feed['comments'] unless feed['comments'].nil?
-            @dummyfeeds << textFeed
-          }
-        end
-
-      end
     end
 
     def run
+      create_feed
+
       if @dummyfeeds != []
         @pipeline << Automatic::FeedParser.create(@dummyfeeds)
       end
       @pipeline
     end
+
+    private
+
+    def generate_textfeed(feed)
+      textFeed = TextFeed.new
+      textFeed.title = feed['title'] unless feed['title'].nil?
+      textFeed.link = feed['url'] unless feed['url'].nil?
+      textFeed.description = feed['description'] unless feed['description'].nil?
+      textFeed.author = feed['author'] unless feed['author'].nil?
+      textFeed.comments = feed['comments'] unless feed['comments'].nil?
+      @dummyfeeds << textFeed
+    end
+
+    def create_feed
+      unless @config.nil?
+        @dummyfeeds = []
+        unless @config['titles'].nil?
+          @config['titles'].each {|title|
+            feed = {}
+            feed['title'] = title
+            generate_textfeed(feed)
+          }
+        end
+
+        unless @config['urls'].nil?
+          @config['urls'].each {|url|
+            feed = {}
+            feed['url'] = url
+            generate_textfeed(feed)
+          }
+        end
+
+        unless @config['feeds'].nil?
+          @config['feeds'].each {|feed|
+            generate_textfeed(feed)
+          }
+        end
+
+        unless @config['files'].nil?
+          @config['files'].each {|f|
+            open(File.expand_path(f)) do |file|
+              file.each_line do |line|
+                feed = {}
+                feed['title'], feed['url'], feed['description'], feed['author'],
+                feed['comments'] = line.force_encoding("utf-8").strip.split("\t")
+                generate_textfeed(feed)
+              end
+            end
+          }
+        end
+      end
+    end
+
   end
 end
