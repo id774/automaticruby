@@ -19,6 +19,14 @@ plugins:
         -
           title: 'Tumblr'
           url:   'http://www.tumblr.com/dashboard'
+          description: 'aaa'
+          comments: 'bbb'
+          author: 'ccc'
+      files:
+        - 'spec/fixtures/sampleFeeds.tsv'
+      files:
+        - 'spec/fixtures/sampleFeeds.tsv'
+        - 'spec/fixtures/sampleFeeds2.tsv'
 
   - module: StorePermalink
     config:

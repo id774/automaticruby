@@ -73,15 +73,17 @@ module Automatic::Plugin
           }
         end
 
-        unless @config['file'].nil?
-          open(@config['file']) do |file|
-            file.each_line do |line|
-              feed = {}
-              feed['title'], feed['link'], feed['description'], feed['author'],
-              feed['comments'] = line.force_encoding("utf-8").strip.split("\t")
-              generate_textfeed(feed)
+        unless @config['files'].nil?
+          @config['files'].each {|f|
+            open(File.expand_path(f)) do |file|
+              file.each_line do |line|
+                feed = {}
+                feed['title'], feed['url'], feed['description'], feed['author'],
+                feed['comments'] = line.force_encoding("utf-8").strip.split("\t")
+                generate_textfeed(feed)
+              end
             end
-          end
+          }
         end
       end
     end
