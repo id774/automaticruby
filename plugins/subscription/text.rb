@@ -8,25 +8,10 @@
 
 module Automatic::Plugin
   class TextFeed
+    attr_accessor :title, :link
     def initialize
       @link     = 'http://dummy'
       @title    = 'dummy'
-    end
-
-    def link
-      @link
-    end
-
-    def title
-      @title
-    end
-
-    def set_link(link)
-      @link = link
-    end
-
-    def set_title(title)
-      @title = title
     end
   end
 
@@ -41,7 +26,7 @@ module Automatic::Plugin
         unless @config['titles'].nil?
           @config['titles'].each {|title|
             textFeed = TextFeed.new
-            textFeed.set_title(title)
+            textFeed.title = title
             @dummyfeeds << textFeed
           }
         end
@@ -49,7 +34,7 @@ module Automatic::Plugin
         unless @config['urls'].nil?
           @config['urls'].each {|url|
             textFeed = TextFeed.new
-            textFeed.set_link(url)
+            textFeed.link = url
             @dummyfeeds << textFeed
           }
         end
@@ -57,8 +42,8 @@ module Automatic::Plugin
         unless @config['feeds'].nil?
           @config['feeds'].each {|feed|
             textFeed = TextFeed.new
-            textFeed.set_title(feed['title']) unless feed['title'].nil?
-            textFeed.set_link(feed['url']) unless feed['url'].nil?
+            textFeed.title = feed['title'] unless feed['title'].nil?
+            textFeed.link = feed['url'] unless feed['url'].nil?
             @dummyfeeds << textFeed
           }
         end
