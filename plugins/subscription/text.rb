@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::Text
 # Author::    soramugi <http://soramugi.net>
-# Created::   May 6, 2013
-# Updated::   May 6, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+#             774 <http://id774.net>
+# Created::   May  6, 2013
+# Updated::   Feb 19, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
   class TextFeed
-    attr_accessor :title, :link
+    attr_accessor :title, :link, :description, :author, :comments
+
     def initialize
-      @link     = 'http://dummy'
-      @title    = 'dummy'
+      @link        = 'http://dummy'
+      @title       = 'dummy'
+      @description = ''
+      @author      = ''
+      @comments    = ''
     end
   end
 
@@ -44,11 +49,14 @@ module Automatic::Plugin
             textFeed = TextFeed.new
             textFeed.title = feed['title'] unless feed['title'].nil?
             textFeed.link = feed['url'] unless feed['url'].nil?
+            textFeed.description = feed['description'] unless feed['description'].nil?
+            textFeed.author = feed['author'] unless feed['author'].nil?
+            textFeed.comments = feed['comments'] unless feed['comments'].nil?
             @dummyfeeds << textFeed
           }
         end
-      end
 
+      end
     end
 
     def run
