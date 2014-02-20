@@ -1,7 +1,7 @@
 Automatic Ruby
 ==============
 
-**Ruby General Automation Framework**
+**Ruby framework for the general-purpose automatic processing**
 
 
 Description
