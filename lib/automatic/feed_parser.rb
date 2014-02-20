@@ -12,6 +12,27 @@ module Automatic
     require 'uri'
     require 'nokogiri'
 
+    class FeedObject
+      attr_accessor :title, :link, :description, :author, :comments
+      def initialize
+        @link        = 'http://dummy'
+        @title       = 'dummy'
+        @description = ''
+        @author      = ''
+        @comments    = ''
+      end
+    end
+
+    def self.generate_feed(feed)
+      feed_object = FeedObject.new
+      feed_object.title = feed['title'] unless feed['title'].nil?
+      feed_object.link = feed['url'] unless feed['url'].nil?
+      feed_object.description = feed['description'] unless feed['description'].nil?
+      feed_object.author = feed['author'] unless feed['author'].nil?
+      feed_object.comments = feed['comments'] unless feed['comments'].nil?
+      feed_object
+    end
+
     def self.get(url)
       begin
         unless url.nil?
