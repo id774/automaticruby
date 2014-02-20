@@ -8,45 +8,20 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
-  class TextFeed
-    attr_accessor :title, :link, :description, :author, :comments
-
-    def initialize
-      @link        = 'http://dummy'
-      @title       = 'dummy'
-      @description = ''
-      @author      = ''
-      @comments    = ''
-    end
-  end
-
   class SubscriptionText
-
     def initialize(config, pipeline=[])
       @config   = config
       @pipeline = pipeline
+      @return_feeds = []
     end
 
     def run
       create_feed
-
-      if @dummyfeeds != []
-        @pipeline << Automatic::FeedParser.create(@dummyfeeds)
-      end
+      @pipeline << Automatic::FeedParser.create(@return_feeds) unless @return_feeds.length == 0
       @pipeline
     end
 
     private
-
-    def generate_textfeed(feed)
-      textFeed = TextFeed.new
-      textFeed.title = feed['title'] unless feed['title'].nil?
-      textFeed.link = feed['url'] unless feed['url'].nil?
-      textFeed.description = feed['description'] unless feed['description'].nil?
-      textFeed.author = feed['author'] unless feed['author'].nil?
-      textFeed.comments = feed['comments'] unless feed['comments'].nil?
-      @dummyfeeds << textFeed
-    end
 
     def create_feed
       unless @config.nil?
@@ -55,7 +30,7 @@ module Automatic::Plugin
           @config['titles'].each {|title|
             feed = {}
             feed['title'] = title
-            generate_textfeed(feed)
+            @return_feeds << Automatic::FeedParser.generate_feed(feed)
           }
         end
 
@@ -63,13 +38,13 @@ module Automatic::Plugin
           @config['urls'].each {|url|
             feed = {}
             feed['url'] = url
-            generate_textfeed(feed)
+            @return_feeds << Automatic::FeedParser.generate_feed(feed)
           }
         end
 
         unless @config['feeds'].nil?
           @config['feeds'].each {|feed|
-            generate_textfeed(feed)
+            @return_feeds << Automatic::FeedParser.generate_feed(feed)
           }
         end
 
@@ -80,7 +55,7 @@ module Automatic::Plugin
                 feed = {}
                 feed['title'], feed['url'], feed['description'], feed['author'],
                 feed['comments'] = line.force_encoding("utf-8").strip.split("\t")
-                generate_textfeed(feed)
+                @return_feeds << Automatic::FeedParser.generate_feed(feed)
               end
             end
           }
