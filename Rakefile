@@ -32,7 +32,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/automaticruby/automaticruby"
   gem.license = "GPL"
   gem.summary = %Q{Automatic Ruby}
-  gem.description = %Q{Ruby General Automation Framework}
+  gem.description = %Q{Ruby framework for the general-purpose automatic processing}
   gem.email = "idnanashi@gmail.com"
   gem.authors = ["id774"]
   # dependencies defined in Gemfile
