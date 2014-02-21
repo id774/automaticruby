@@ -412,16 +412,16 @@ StoreFullText
       db: SQLite3 DB 名
 
 
-StoreTargetLink
----------------
+StoreFile
+---------
 [パス]
- /plugins/store/target_link.rb
+ /plugins/store/file.rb
 
 [概要]
- リンク先のコンテンツをローカルに保存する
+ リンク先のコンテンツをローカルファイルシステムに保存する
 
 [レシピ記法]
-  - module: StoreTargetLink
+  - module: StoreFile
     config:
       path: 保存先のフォルダ
       retry: エラー時のリトライ回数 (回数, 省略時 0)

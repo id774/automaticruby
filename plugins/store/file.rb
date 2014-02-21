@@ -1,16 +1,16 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Store::TargetLink
+# Name::      Automatic::Plugin::Store::File
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Jan 15, 2014
+# Updated::   Feb 21, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'open-uri'
 
 module Automatic::Plugin
-  class StoreTargetLink
+  class StoreFile
 
     def initialize(config, pipeline=[])
       @config = config
