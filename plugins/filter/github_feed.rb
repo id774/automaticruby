@@ -29,7 +29,7 @@ module Automatic::Plugin
             new_feeds << hashie
           }
         end
-        @return_feeds << Automatic::FeedMaker.create_pipeline(feeds)
+        @return_feeds << Automatic::FeedMaker.create_pipeline(new_feeds)
       }
       @return_feeds
     end

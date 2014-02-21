@@ -3,8 +3,8 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  1, 2012
-# Updated::   Jun 14, 2012
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 21, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -25,7 +25,7 @@ describe Automatic::Plugin::FilterImageSource do
       its(:run) { should have(1).feeds }
       specify {
         subject.run
-        subject.instance_variable_get(:@pipeline)[0].items[0].link.
+        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
         should == "http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png"
       }
     end
@@ -46,7 +46,7 @@ describe Automatic::Plugin::FilterImageSource do
       its(:run) { should have(1).feeds }
       specify {
         subject.run
-        subject.instance_variable_get(:@pipeline)[0].items[0].link.
+        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
         should == "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg"
       }
     end
@@ -65,13 +65,13 @@ describe Automatic::Plugin::FilterImageSource do
 
     describe "#run" do
       before do
-        subject.stub!(:rewrite_link).and_return(['http://huge.png'])
+        subject.stub(:rewrite_link).and_return(['http://huge.png'])
       end
 
       its(:run) { should have(1).feeds }
       specify {
         subject.run
-        subject.instance_variable_get(:@pipeline)[0].items[0].link.
+        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
         should == 'http://huge.png'
       }
     end
@@ -80,7 +80,7 @@ describe Automatic::Plugin::FilterImageSource do
       before do
         open = Hashie::Mash.new
         open.read = '<img src="http://a.png"><br /><img src="http://b.png">'
-        subject.stub!(:open).and_return(open)
+        subject.stub(:open).and_return(open)
       end
 
       its(:run) { subject.run[0].items.length.should == 2 }
