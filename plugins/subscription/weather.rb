@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::Weather
 # Author::    soramugi <http://soramugi.net>
+#             774 <http://id774.net>
 # Created::   May 12, 2013
-# Updated::   May 12, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 21, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -21,10 +22,10 @@ module Automatic::Plugin
     def run
       weather = @weather.send(@day)['weather'] unless @weather.send(@day).nil?
       if weather != nil
-        dummy       = Hashie::Mash.new
-        dummy.title = weather
-        dummy.link  = 'http://weather.dummy.' + @day
-        @pipeline << Automatic::FeedParser.create([dummy])
+        hashie       = Hashie::Mash.new
+        hashie.title = weather
+        hashie.link  = 'http://weather.dummy.' + @day
+        @pipeline << Automatic::FeedMaker.create_pipeline([hashie])
       end
       @pipeline
     end

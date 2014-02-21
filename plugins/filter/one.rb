@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Filter::One
 # Author::    soramugi <http://soramugi.net>
+#             774 <http://id774.net>
 # Created::   May  8, 2013
-# Updated::   May  8, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 21, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -27,7 +28,7 @@ module Automatic::Plugin
           if item.count == 0
             item << feed.items.shift
           end
-          @return_feeds << Automatic::FeedParser.create(item)
+          @return_feeds << Automatic::FeedMaker.create_pipeline(item)
         end
       }
       @return_feeds

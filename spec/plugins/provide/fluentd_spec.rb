@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Provide::Fluentd
 # Author::    774 <http://id774.net>
 # Created::   Jul 12, 2013
-# Updated::   Jul 12, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 21, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -22,7 +22,7 @@ describe Automatic::Plugin::ProvideFluentd do
       json = hash.to_json
       data = ActiveSupport::JSON.decode(json)
       url = "http://id774.net/test/xml/data"
-      rss = Automatic::FeedParser.content_provide(url, data)
+      rss = Automatic::FeedMaker.content_provide(url, data)
       feeds << rss
 
       subject {

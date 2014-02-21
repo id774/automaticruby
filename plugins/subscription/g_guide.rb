@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::GGuide
 # Author::    soramugi <http://soramugi.net>
+#             774 <http://id774.net>
 # Created::   Jun 28, 2013
-# Updated::   Jan 15, 2014
+# Updated::   Feb 21, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -25,7 +26,7 @@ module Automatic::Plugin
       retry_max = @config['retry'].to_i || 0
       begin
         @keywords.each {|keyword|
-          @pipeline << Automatic::FeedParser.get(feed_url keyword)
+          @pipeline << Automatic::FeedParser.get_url(feed_url keyword)
         }
       rescue
         retries += 1

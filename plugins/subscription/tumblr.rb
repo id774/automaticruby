@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Jan 15, 2014
+# Updated::   Feb 21, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -46,7 +46,7 @@ module Automatic::Plugin
       html = open(url).read
       unless html.nil?
         uri = URI.parse(url)
-        rss = Automatic::FeedParser.parse(html)
+        rss = Automatic::FeedParser.parse_html(html)
         rss.items.each {|item|
            unless item.link =~ Regexp.new(uri.host)
              item.link = nil

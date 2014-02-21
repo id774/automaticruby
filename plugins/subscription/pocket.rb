@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::Pocket
 # Author::    soramugi <http://soramugi.net>
+#             774 <http://id774.net>
 # Created::   May 21, 2013
-# Updated::   Jan 15, 2014
+# Updated::   Feb 21, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -24,8 +25,8 @@ module Automatic::Plugin
       retries = 0
       retry_max = @config['retry'].to_i || 0
       begin
-        dummyfeeds = cleate_dummy_feed(@client.retrieve(@config['optional']))
-        @pipeline << Automatic::FeedParser.create(dummyfeeds)
+        return_feeds = generate_feed(@client.retrieve(@config['optional']))
+        @pipeline << Automatic::FeedMaker.create_pipeline(return_feeds)
       rescue
         retries += 1
         Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{retries}")
@@ -35,16 +36,16 @@ module Automatic::Plugin
       @pipeline
     end
 
-    def cleate_dummy_feed(retrieve)
-      dummyFeeds = []
+    def generate_feed(retrieve)
+      return_feeds = []
       retrieve['list'].each {|key,list|
-        dummy             = Hashie::Mash.new
-        dummy.title       = list['given_title']
-        dummy.link        = list['given_url']
-        dummy.description = list['excerpt']
-        dummyFeeds << dummy
+        hashie             = Hashie::Mash.new
+        hashie.title       = list['given_title']
+        hashie.link        = list['given_url']
+        hashie.description = list['excerpt']
+        return_feeds << hashie
       }
-      dummyFeeds
+      return_feeds
     end
   end
 end

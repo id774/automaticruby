@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Filter::ImageSource
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Apr  5, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 21, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -19,24 +19,24 @@ module Automatic::Plugin
     def run
       @return_feeds = []
       @pipeline.each {|feeds|
-        dummyFeeds = Array.new
+        new_feeds = Array.new
         unless feeds.nil?
           feeds.items.each {|feed|
             arr = rewrite_link(feed)
             if arr.length > 0
               arr.each {|link|
                 Automatic::Log.puts("info", "Parsing: #{link}")
-                dummy = Hashie::Mash.new
-                dummy.title = 'FilterImageSource'
-                dummy.link = link
-                dummyFeeds << dummy
+                hashie = Hashie::Mash.new
+                hashie.title = 'FilterImageSource'
+                hashie.link = link
+                new_feeds << hashie
               }
             end
           }
         end
-        @return_feeds << Automatic::FeedParser.create(dummyFeeds)
+        @return_feeds << Automatic::FeedMaker.create_pipeline(new_feeds)
       }
-      @pipeline = @return_feeds
+      @return_feeds
     end
 
     private

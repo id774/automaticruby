@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::TwitterSearch
 # Author::    soramugi <http://soramugi.net>
+#             774 <http://id774.net>
 # Created::   May 30, 2013
-# Updated::   Jan 15, 2014
+# Updated::   Feb 21, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -26,19 +27,17 @@ module Automatic::Plugin
       retries = 0
       retry_max = @config['retry'].to_i || 0
       begin
-        feeds = []
+        return_feeds = []
         @client.search(@config['search'],@config['opt']).results.each do |status|
-
-          dummy             = Hashie::Mash.new
-          dummy.title       = 'Twitter Search'
-          dummy.link        = "https://twitter.com/#{status.user['screen_name']}/status/#{status.id}"
-          dummy.description = status.text
-          dummy.author      = status.user['screen_name']
-          dummy.date        = status.created_at
-
-          feeds << dummy
+          hashie             = Hashie::Mash.new
+          hashie.title       = 'Twitter Search'
+          hashie.link        = "https://twitter.com/#{status.user['screen_name']}/status/#{status.id}"
+          hashie.description = status.text
+          hashie.author      = status.user['screen_name']
+          hashie.date        = status.created_at
+          return_feeds << hashie
         end
-        @pipeline << Automatic::FeedParser.create(feeds)
+        @pipeline << Automatic::FeedMaker.create_pipeline(return_feeds)
       rescue
         retries += 1
         Automatic::Log.puts("error", "ErrorCount: #{retries}")

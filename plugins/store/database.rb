@@ -4,8 +4,8 @@
 #             774 <http://id774.net>
 #             soramugi <http://soramugi.net>
 # Created::   Feb 27, 2012
-# Updated::   Jun 27, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 21, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'active_record'
@@ -27,7 +27,7 @@ module Automatic::Plugin
               end
             end
           }
-          @return_feeds << Automatic::FeedParser.create(new_feeds) if new_feeds.length > 0
+          @return_feeds << Automatic::FeedMaker.create_pipeline(new_feeds) if new_feeds.length > 0
         end
       }
       @return_feeds

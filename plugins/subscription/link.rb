@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Link
 # Author::    774 <http://id774.net>
 # Created::   Sep 18, 2012
-# Updated::   Jan 15, 2014
+# Updated::   Feb 21, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -34,11 +34,12 @@ module Automatic::Plugin
     end
 
     private
+
     def create_rss(url)
       Automatic::Log.puts("info", "Parsing: #{url}")
       html = open(url).read
       unless html.nil?
-        rss = Automatic::FeedParser.parse(html)
+        rss = Automatic::FeedParser.parse_html(html)
         sleep ||= @config['interval'].to_i
         @return_feeds << rss
       end
