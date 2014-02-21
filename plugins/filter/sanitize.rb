@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Filter::Sanitize
 # Author::    774 <http://id774.net>
 # Created::   Jun 20, 2013
-# Updated::   Jun 24, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 21, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -26,7 +26,6 @@ module Automatic::Plugin
     def run
       @return_feeds = []
       @pipeline.each {|feeds|
-        return_feed_items = []
         unless feeds.nil?
           feeds.items.each {|feed|
             feed = sanitize(feed)
