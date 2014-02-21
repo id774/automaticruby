@@ -38,13 +38,13 @@ module Automatic::Plugin
           @config['urls'].each {|url|
             feed = {}
             feed['url'] = url
-            @return_feeds << Automatic::FeedParser.generate_feed(feed)
+            @return_feeds << Automatic::FeedMaker.generate_feed(feed)
           }
         end
 
         unless @config['feeds'].nil?
           @config['feeds'].each {|feed|
-            @return_feeds << Automatic::FeedParser.generate_feed(feed)
+            @return_feeds << Automatic::FeedMaker.generate_feed(feed)
           }
         end
 
@@ -55,7 +55,7 @@ module Automatic::Plugin
                 feed = {}
                 feed['title'], feed['url'], feed['description'], feed['author'],
                 feed['comments'] = line.force_encoding("utf-8").strip.split("\t")
-                @return_feeds << Automatic::FeedParser.generate_feed(feed)
+                @return_feeds << Automatic::FeedMaker.generate_feed(feed)
               end
             end
           }
