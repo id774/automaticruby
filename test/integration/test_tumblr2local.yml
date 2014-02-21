@@ -33,5 +33,11 @@ plugins:
     config:
       db: test_tumblr.db
 
+  - module: StoreFile
+    config:
+      path: /tmp
+      retry: 2
+      interval: 2
+
   #- module: PublishConsole
 
