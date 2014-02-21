@@ -37,7 +37,7 @@ module Automatic
       RSS::Maker.make("2.0") {|maker|
         xss = maker.xml_stylesheets.new_xml_stylesheet
         maker.channel.title = "Automatic Ruby"
-        maker.channel.description = "Automatic Ruby"
+        maker.channel.description = "Automatic::FeedMaker"
         maker.channel.link = "https://github.com/automaticruby/automaticruby"
         maker.items.do_sort = true
 
@@ -66,7 +66,7 @@ module Automatic
       RSS::Maker.make("2.0") {|maker|
         xss = maker.xml_stylesheets.new_xml_stylesheet
         maker.channel.title = "Automatic Ruby"
-        maker.channel.description = "Automatic Ruby"
+        maker.channel.description = "Automatic::FeedMaker"
         maker.channel.link = "https://github.com/automaticruby/automaticruby"
         maker.items.do_sort = true
         item = maker.items.new_item

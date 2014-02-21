@@ -409,17 +409,17 @@ StoreFullText
       db: DB_NAME
 
 
-StoreTargetLink
----------------
+StoreFile
+---------
 [Path]
- /plugins/store/target_link.rb
+ /plugins/store/file.rb
 
 [Abstract]
- Store target locally.
+ Store target to local file system.
  This emulate "Right click to save".
 
 [Syntax]
-  - Module: StoreTargetLink
+  - Module: StoreFile
     config:
       path: SAVE_TO_PATH
       retry: RETRY_COUNT

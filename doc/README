@@ -112,7 +112,7 @@ plugins:
 
   - module: FilterTumblrResize
 
-  - module: StoreTargetLink
+  - module: StoreFile
     config:
       path: /Users/yourname/Desktop/
       interval: 1
@@ -121,7 +121,7 @@ In the case of sample this recipe.
 1. Subscribe to RSS feeds of Tumblr by SubScriptionFeed.
 2. Save permalink to database by StorePermalink.
 3. Specify the URL of the image by FilterImage and FilterTumblrResize.
-4. Downloading image file of Tumblr by StoreTargetLink.
+4. Downloading image file of Tumblr by StoreFile.
 
 
 Showing another example as follows.

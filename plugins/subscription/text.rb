@@ -17,7 +17,7 @@ module Automatic::Plugin
 
     def run
       create_feed
-      @pipeline << Automatic::FeedMaker.create_pipeline(@return_feeds) unless @return_feeds.length == 0
+      @pipeline << Automatic::FeedMaker.create_pipeline(@return_feeds) if @return_feeds.length > 0
       @pipeline
     end
 
@@ -30,7 +30,7 @@ module Automatic::Plugin
           @config['titles'].each {|title|
             feed = {}
             feed['title'] = title
-            @return_feeds << Automatic::FeedParser.generate_feed(feed)
+            @return_feeds << Automatic::FeedMaker.generate_feed(feed)
           }
         end
 

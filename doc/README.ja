@@ -117,7 +117,7 @@ plugins:
 
   - module: FilterTumblrResize
 
-  - module: StoreTargetLink
+  - module: StoreFile
     config:
       path: /Users/yourname/Desktop/
       interval: 1
@@ -126,7 +126,7 @@ plugins:
 1. Subscription Feed で Tumblr のフィードを購読し
 2. StorePermalink でパーマリンクをデータベースに保存し
 3  FilterImage と FilterTumblrResize で画像の URL を指定して
-4. StoreTargetLink で Tumblr の画像をダウンロードする
+4. StoreFile で Tumblr の画像をダウンロードする
 という一連の処理をプラグインの組み合わせで実現している。
 
 

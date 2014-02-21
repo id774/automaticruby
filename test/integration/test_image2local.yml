@@ -19,11 +19,15 @@ plugins:
     config:
       db: test_image.db
 
-  - module: StoreTargetLink
+  - module: StoreFile
     config:
       path: /tmp
       retry: 2
       interval: 2
 
-  #- module: PublishConsole
+  - module: StorePermalink
+    config:
+      db: test_image2.db
+
+  # - module: PublishConsole
 
