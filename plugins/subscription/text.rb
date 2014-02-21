@@ -3,7 +3,7 @@
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
 # Created::   May  6, 2013
-# Updated::   Feb 19, 2014
+# Updated::   Feb 21, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -17,7 +17,7 @@ module Automatic::Plugin
 
     def run
       create_feed
-      @pipeline << Automatic::FeedParser.create(@return_feeds) unless @return_feeds.length == 0
+      @pipeline << Automatic::FeedMaker.create_pipeline(@return_feeds) unless @return_feeds.length == 0
       @pipeline
     end
 

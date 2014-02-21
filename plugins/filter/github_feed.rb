@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Filter::GithubFeed
 # Author::    Kohei Hasegawa <http://github.com/banyan>
-# Created::   Jun 6, 2013
-# Updated::   Jun 6, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+#             774 <http://id774.net>
+# Created::   Jun  6, 2013
+# Updated::   Feb 21, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -17,20 +18,20 @@ module Automatic::Plugin
     def run
       @return_feeds = []
       @pipeline.each {|feeds|
-        dummyFeeds = []
+        new_feeds = []
         unless feeds.nil?
           feeds.items.each {|feed|
             Automatic::Log.puts("info", "Invoked: FilterGithubFeed")
-            dummy = Hashie::Mash.new
-            dummy.title       = feed.title.content
-            dummy.link        = feed.id.content
-            dummy.description = feed.content.content
-            dummyFeeds << dummy
+            hashie = Hashie::Mash.new
+            hashie.title       = feed.title.content
+            hashie.link        = feed.id.content
+            hashie.description = feed.content.content
+            new_feeds << hashie
           }
         end
-        @return_feeds << Automatic::FeedParser.create(dummyFeeds)
+        @return_feeds << Automatic::FeedMaker.create_pipeline(feeds)
       }
-      @pipeline = @return_feeds
+      @return_feeds
     end
   end
 end
