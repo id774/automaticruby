@@ -1,9 +1,9 @@
-# Version:20140124
+# Version:20140221
 
 source "http://rubygems.org"
 source "http://gems.github.com"
 
-gem 'json',           '~> 1.8.1'
+gem 'json',           '~> 1.7.7'
 gem 'sqlite3',        '~> 1.3.8'
 gem 'activesupport',  '~> 4.0.2'
 gem 'activerecord',   '~> 4.0.2'
