@@ -1,4 +1,4 @@
-# Version:20140221
+# Version:20140224
 
 source "http://rubygems.org"
 source "http://gems.github.com"
@@ -20,6 +20,7 @@ gem 'weather_hacker', '~> 0.1.7'
 gem 'hipchat',        '~> 1.0.1'
 gem 'fluent-logger',  '~> 0.4.7'
 gem 'dalli',          '~> 2.7.0'
+gem 'aws-sdk',        '~> 1.33.0'
 
 group :test do
   gem 'rspec', '~> 2.14.1'
