@@ -3,8 +3,8 @@
 # Author::    ainame
 #             774 <http://id774.net>
 # Created::   Mar 10, 2012
-# Updated::   Jun 16, 2012
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.join(File.dirname(__FILE__) ,'../../spec_helper'))
@@ -38,10 +38,10 @@ describe Automatic::Pipeline do
 
     describe "#run" do
       it "run a recipe with FilterIgnore module" do
-        plugin = mock("plugin")
+        plugin = double("plugin")
         plugin.should_receive(:module).and_return("FilterIgnore")
         plugin.should_receive(:config)
-        recipe = mock("recipe")
+        recipe = double("recipe")
         recipe.should_receive(:each_plugin).and_yield(plugin)
         Automatic::Pipeline.run(recipe).should == []
       end

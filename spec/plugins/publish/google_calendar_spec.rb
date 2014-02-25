@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::CustomFeed::SVNFLog
 # Author::    kzgs
 # Created::   Feb 26, 2012
-# Updated::   Mar  3, 2012
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -24,7 +24,7 @@ describe Automatic::Plugin::PublishGoogleCalendar do
   }
 
   it "should post the link in the feed" do
-    gc = mock("gc")
+    gc = double("gc")
     gc.should_receive(:add).with("今日 GitHub")
     subject.instance_variable_set(:@gc, gc)
     subject.run.should have(1).feed
@@ -50,7 +50,7 @@ describe Automatic::Plugin::Googlecalendar do
 end
 
 def all_day_event_mock(title, where, date=nil)
-  event = mock("event")
+  event = double("event")
   {
     :title => title,
     :st => date.nil? ? nil : Time.mktime(date.year, date.month, date.day),
@@ -69,7 +69,7 @@ def all_day_event_mock(title, where, date=nil)
 end
 
 def cal_mock(event_mock)
-  cal = mock("cal")
+  cal = double("cal")
   cal.should_receive(:create_event).and_return {
     event_mock
   }

@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Subscription::Pocket
 # Author::    soramugi <http://soramugi.net>
 # Created::   May 21, 2013
-# Updated::   May 21, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -44,7 +44,7 @@ describe 'Automatic::Plugin::SubscriptionPocket' do
           'given_title' => 'GitHub',
           'excerpt' => 'github'
         }}}
-        client = mock("client")
+        client = double("client")
         client.should_receive(:retrieve).
           with(config['optional']).
           and_return(retrieve)

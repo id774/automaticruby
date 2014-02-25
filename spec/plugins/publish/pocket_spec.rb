@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Publish::Pocket
 # Author::    soramugi <http://soramugi.net>
 # Created::   May 15, 2013
-# Updated::   May 15, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -24,7 +24,7 @@ describe Automatic::Plugin::PublishPocket do
     })}
 
     it "should post the link in the feed" do
-      client = mock("client")
+      client = double("client")
       client.should_receive(:add).with(:url => 'http://github.com')
       subject.instance_variable_set(:@client, client)
       subject.run.should have(1).feed

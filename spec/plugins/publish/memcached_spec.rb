@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Publish::Memcached
 # Author::    774 <http://id774.net>
 # Created::   Jun 25, 2013
-# Updated::   Jun 25, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -54,7 +54,7 @@ describe Automatic::Plugin::PublishMemcached do
       }
 
       its (:run) {
-        fluentd = mock("memcached")
+        fluentd = double("memcached")
         subject.run.should have(2).feed
       }
     end
