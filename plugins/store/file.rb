@@ -8,6 +8,7 @@
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'open-uri'
+require 'uri'
 
 module Automatic::Plugin
   class StoreFile
@@ -46,17 +47,19 @@ module Automatic::Plugin
     end
 
     private
+
     def wget(url)
-      filename = url.split(/\//).last
+      uri = URI.parse(url)
+      filename = File.basename(uri.path)
       filepath = File.join(@config['path'], filename)
       open(url) {|source|
         open(filepath, "w+b") { |o|
           o.print source.read
         }
       }
-      uri_scheme = "file://" + filepath
-      Automatic::Log.puts("info", "Saved: #{uri_scheme}")
-      uri_scheme
+      return_uri = URI.join("file://" + filepath)
+      Automatic::Log.puts("info", "Saved: #{return_uri.path}")
+      return_uri.path
     end
   end
 end
