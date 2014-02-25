@@ -63,7 +63,7 @@ describe Automatic::Plugin::Instapaper do
     description = "automatic test"
 
     specify {
-      res = stub("res")
+      res = double("res")
       res.should_receive(:code).and_return("201")
       subject.should_receive(:request).and_return(res)
       subject.add(url, title, description)
