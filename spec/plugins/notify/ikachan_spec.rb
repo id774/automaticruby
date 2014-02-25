@@ -44,7 +44,7 @@ describe Automatic::Plugin::Ikachan do
       link = "http://www.google.com"
 
       require 'net/http'
-      res = stub("res")
+      res = double("res")
       res.should_receive(:code).and_return("200")
       http = double("http")
       http.should_receive(:post).with("/join", "channel=#room")

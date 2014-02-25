@@ -106,7 +106,7 @@ describe Automatic::Plugin::HatenaBookmark do
       comment = "Can we trust them ?"
 
       require 'net/http'
-      res = stub("res")
+      res = double("res")
       res.should_receive(:code).and_return("201")
       http = double("http")
       http.should_receive(:post).with("/atom/post", subject.toXml(url, comment),
@@ -121,7 +121,7 @@ describe Automatic::Plugin::HatenaBookmark do
       comment = "Can we trust them ?"
 
       require 'net/http'
-      res = stub("res")
+      res = double("res")
       res.should_receive(:code).twice.and_return("400")
       http = double("http")
       http.should_receive(:post).with("/atom/post", subject.toXml(url, comment),
