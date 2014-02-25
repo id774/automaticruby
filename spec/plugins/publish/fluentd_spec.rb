@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Publish::Fluentd
 # Author::    774 <http://id774.net>
 # Created::   Jun 21, 2013
-# Updated::   Jun 21, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -18,7 +18,8 @@ describe Automatic::Plugin::PublishFluentd do
           {
             'host' => "localhost",
             'port' => "10000",
-            'tag'  => "automatic_spec.publish_fluent"
+            'tag'  => "automatic_spec.publish_fluent",
+            'mode' => "test"
           },
           AutomaticSpec.generate_pipeline{
             feed {
@@ -30,7 +31,7 @@ describe Automatic::Plugin::PublishFluentd do
       }
 
       its (:run) {
-        fluentd = mock("fluentd")
+        fluentd = double("fluentd")
         subject.run.should have(1).feed
       }
     end

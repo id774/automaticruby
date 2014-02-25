@@ -13,9 +13,10 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
+      @mode = @config['mode']
       @fluentd = Fluent::Logger::FluentLogger.open(nil,
         host = @config['host'],
-        port = @config['port'])
+        port = @config['port']) unless @mode == 'test'
     end
 
     def run
@@ -29,7 +30,7 @@ module Automatic::Plugin
                 :description => feed.description,
                 :content => feed.content_encoded,
                 :created_at => Time.now.strftime("%Y/%m/%d %X")
-              })
+              }) unless @mode == 'test'
             rescue
               Automatic::Log.puts("warn", "Skip feed due to fault in forward.")
             end

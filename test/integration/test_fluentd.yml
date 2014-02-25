@@ -16,6 +16,7 @@ plugins:
       host: localhost
       port: 10000
       tag:  automatic_test.publish_fluentd
+      mode: test
 
   # - module: PublishConsole
 
