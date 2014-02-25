@@ -3,7 +3,7 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  4, 2012
-# Updated::   Feb 21, 2014
+# Updated::   Feb 25, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -35,7 +35,7 @@ describe Automatic::Plugin::StoreFile do
           feed { item "aaa" }
         }
       )
-      instance.run.should have(1).feed
+      instance.run.should have(0).feed
     end
   end
 
@@ -51,7 +51,7 @@ describe Automatic::Plugin::StoreFile do
           feed { item "aaa" }
         }
       )
-      instance.run.should have(1).feed
+      instance.run.should have(0).feed
     end
   end
 
