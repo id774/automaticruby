@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Publish::HatenaBookmark
 # Author::    774 <http://id774.net>
 # Created::   Feb 22, 2012
-# Updated::   Mar  7, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -21,7 +21,7 @@ describe Automatic::Plugin::PublishHatenaBookmark do
   }
 
   it "should post the link with prefix 'http' in the feed" do
-    hb = mock("hb")
+    hb = double("hb")
     hb.should_receive(:post).with("http://github.com", nil)
     subject.instance_variable_set(:@hb, hb)
     subject.run.should have(1).feed
@@ -39,7 +39,7 @@ describe Automatic::Plugin::PublishHatenaBookmark do
   }
 
   it "should post the link with prefix '//...' in the feed" do
-    hb = mock("hb")
+    hb = double("hb")
     hb.should_receive(:post).with("http://github.com", nil)
     subject.instance_variable_set(:@hb, hb)
     subject.run.should have(1).feed
@@ -57,7 +57,7 @@ describe Automatic::Plugin::PublishHatenaBookmark do
   }
 
   it "should post the link with prefix 'https' in the feed" do
-    hb = mock("hb")
+    hb = double("hb")
     hb.should_receive(:post).with("https://github.com", nil)
     subject.instance_variable_set(:@hb, hb)
     subject.run.should have(1).feed
@@ -75,7 +75,7 @@ describe Automatic::Plugin::PublishHatenaBookmark do
   }
 
   it "should post the link with others in the feed" do
-    hb = mock("hb")
+    hb = double("hb")
     hb.should_receive(:post).with("http://github.com", nil)
     subject.instance_variable_set(:@hb, hb)
     subject.run.should have(1).feed
@@ -108,7 +108,7 @@ describe Automatic::Plugin::HatenaBookmark do
       require 'net/http'
       res = stub("res")
       res.should_receive(:code).and_return("201")
-      http = mock("http")
+      http = double("http")
       http.should_receive(:post).with("/atom/post", subject.toXml(url, comment),
         subject.wsse("", "")).and_return(res)
       http.should_receive(:start).and_yield(http)
@@ -123,7 +123,7 @@ describe Automatic::Plugin::HatenaBookmark do
       require 'net/http'
       res = stub("res")
       res.should_receive(:code).twice.and_return("400")
-      http = mock("http")
+      http = double("http")
       http.should_receive(:post).with("/atom/post", subject.toXml(url, comment),
         subject.wsse("", "")).and_return(res)
       http.should_receive(:start).and_yield(http)

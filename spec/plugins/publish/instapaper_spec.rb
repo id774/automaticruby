@@ -2,9 +2,9 @@
 # Name::      Automatic::Plugin::Publish::Instapaper
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
-# Created::   Feb 9, 2013
-# Updated::   Mar 22, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Created::   Feb 9,  2013
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -25,7 +25,7 @@ describe Automatic::Plugin::PublishInstapaper do
     })}
 
     it "should post the link in the feed" do
-      instapaper = mock("instapaper")
+      instapaper = double("instapaper")
       instapaper.should_receive(:add).with("http://github.com", nil, '')
       subject.instance_variable_set(:@instapaper, instapaper)
       subject.run.should have(1).feed
@@ -72,7 +72,7 @@ describe Automatic::Plugin::Instapaper do
 
     it 'raise error' do
       lambda{
-        res = mock("res")
+        res = double("res")
         res.should_receive(:code).twice.and_return("403")
         subject.should_receive(:request).and_return(res)
         subject.add(url, title, description)

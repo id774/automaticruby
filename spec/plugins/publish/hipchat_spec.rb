@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Publish::Hipchat
 # Author::    Kohei Hasegawa <http://github.com/banyan>
-# Created::   Jun 5, 2013
-# Updated::   Jun 5, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Created::   Jun 5,  2013
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -33,13 +33,13 @@ describe Automatic::Plugin::PublishHipchat do
 
     context 'when successfully' do
       it "should passed proper argument to HipChat::Client" do
-        client = mock('client').as_null_object
+        client = double('client').as_null_object
         HipChat::Client.should_receive(:new).with("bogus_api_token").and_return(client)
         subject.run
       end
 
       it "should post the link in the feed" do
-        client = mock("client")
+        client = double("client")
         client.should_receive(:send).with('bogus_bot', 'description', {"color"=>"yellow", "notify"=>false})
         subject.instance_variable_set(:@client, client)
         subject.run.should have(1).feed
@@ -48,7 +48,7 @@ describe Automatic::Plugin::PublishHipchat do
 
     context 'when raise an error during post' do
       it do
-        client = mock("client")
+        client = double("client")
         client.stub(:send).and_raise
         subject.instance_variable_set(:@client, client)
         Automatic::Log.should_receive(:puts).twice

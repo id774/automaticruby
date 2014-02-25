@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Publish::Twitter
 # Author::    soramugi <http://soramugi.net>
 # Created::   May  5, 2013
-# Updated::   May  5, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -21,7 +21,7 @@ describe Automatic::Plugin::PublishTwitter do
       })}
 
       its (:run) {
-        twitter = mock("twitter")
+        twitter = double("twitter")
         twitter.should_receive(:update).with(" http://github.com")
         subject.instance_variable_set(:@twitter, twitter)
         subject.run.should have(1).feed
@@ -37,7 +37,7 @@ describe Automatic::Plugin::PublishTwitter do
       })}
 
       its (:run) {
-        twitter = mock("twitter")
+        twitter = double("twitter")
         twitter.should_receive(:update).with("publish-twitter")
         subject.instance_variable_set(:@twitter, twitter)
         subject.run.should have(1).feed

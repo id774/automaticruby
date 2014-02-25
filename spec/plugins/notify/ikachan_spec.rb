@@ -19,7 +19,7 @@ describe Automatic::Plugin::NotifyIkachan do
   }
 
   it "should post title and link in the feed" do
-    ikachan = mock("ikachan")
+    ikachan = double("ikachan")
     ikachan.should_receive(:post).with("http://github.com", "GitHub")
     ikachan.should_receive(:params)
     subject.instance_variable_set(:@ikachan, ikachan)
@@ -46,7 +46,7 @@ describe Automatic::Plugin::Ikachan do
       require 'net/http'
       res = stub("res")
       res.should_receive(:code).and_return("200")
-      http = mock("http")
+      http = double("http")
       http.should_receive(:post).with("/join", "channel=#room")
       http.should_receive(:post).with(
         "/notice", "channel=#room&message=#{link}").and_return(res)

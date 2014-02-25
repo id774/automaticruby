@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Publish::Console
 # Author::    774 <http://id774.net>
-# Updated::   Jun 14, 2012
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Feb 25, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -21,7 +21,7 @@ describe Automatic::Plugin::PublishConsole do
   }
 
   it "should output pretty inspect of feeds" do
-    output = mock("output")
+    output = double("output")
     output.should_receive(:puts).
       with("info", @pipeline[0].items[0].pretty_inspect)
     subject.instance_variable_set(:@output, output)

@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Provide::Fluentd
 # Author::    774 <http://id774.net>
 # Created::   Jul 12, 2013
-# Updated::   Feb 21, 2014
+# Updated::   Feb 25, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -37,7 +37,7 @@ describe Automatic::Plugin::ProvideFluentd do
       }
 
       its (:run) {
-        fluentd = mock("fluentd")
+        fluentd = double("fluentd")
         subject.run.should have(1).feed
         subject.instance_variable_get(:@pipeline)[0].items[0].content_encoded.class == Hash
         subject.instance_variable_get(:@pipeline)[0].items[0].content_encoded.should == expect
