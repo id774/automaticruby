@@ -30,7 +30,8 @@ describe Automatic::Plugin::ProvideFluentd do
           {
             'host' => "localhost",
             'port' => "10000",
-            'tag'  => "automatic_spec.provide_fluentd"
+            'tag'  => "automatic_spec.provide_fluentd",
+            'mode' => "test"
           },
           feeds
         )
