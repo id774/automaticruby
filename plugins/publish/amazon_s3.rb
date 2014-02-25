@@ -19,6 +19,7 @@ module Automatic::Plugin
         :secret_access_key => @config['secret_key']
       )
       @bucket = s3.buckets[@config['bucket_name']]
+      @mode = @config['mode']
     end
 
     def run
@@ -49,8 +50,9 @@ module Automatic::Plugin
       target = File.join(target_path, File.basename(filename))
       object = @bucket.objects[target]
       source = Pathname.new(filename)
-      object.write(source)
+      object.write(source) unless @mode == "test"
       Automatic::Log.puts("info", "Uploaded file #{source} to the bucket #{target} on #{@bucket.name}.")
+      return source, target
     end
   end
 end
