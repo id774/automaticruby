@@ -430,6 +430,9 @@ StoreFile
       path: 保存先のフォルダ
       retry: エラー時のリトライ回数 (回数, 省略時 0)
       interval: 保存する間隔 (秒)
+      access_key: アクセスキー (S3 使用時のみ)
+      secret_key: シークレットアクセスキー (S3 使用時のみ)
+      bucket_name: S3 のバケット名 (S3 使用時のみ)
 
 
 PublishConsole

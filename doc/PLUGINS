@@ -430,6 +430,9 @@ StoreFile
       path: SAVE_TO_PATH
       retry: RETRY_COUNT
       interval: INTERVAL_FOR_DOWNLOAD (in seconds.)
+      access_key: ACCESS_KEY_ID (Only using S3)
+      secret_key: SECRET_ACCESS_KEY (Only using S3)
+      bucket_name: AMAZONS3_BUCKET_NAME (Only using S3)
 
 
 PublishConsole
