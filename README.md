@@ -75,7 +75,7 @@ For more info, refer to the document (doc/README).
 Environment
 -----------
 
-Ruby 1.9 - 2.1. See Gemfile.
+After Ruby 1.9. See Gemfile.
 
 
 Development
