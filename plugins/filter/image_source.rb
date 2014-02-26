@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::ImageSource
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Feb 21, 2014
+# Updated::   Feb 26, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -25,7 +25,7 @@ module Automatic::Plugin
             arr = rewrite_link(feed)
             if arr.length > 0
               arr.each {|link|
-                Automatic::Log.puts("info", "Parsing: #{link}")
+                Automatic::Log.puts("info", "Extract Image: #{link}")
                 hashie = Hashie::Mash.new
                 hashie.title = 'FilterImageSource'
                 hashie.link = link
