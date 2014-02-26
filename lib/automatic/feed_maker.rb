@@ -2,7 +2,7 @@
 # Name::      Automatic::FeedMaker
 # Author::    774 <http://id774.net>
 # Created::   Feb 21, 2014
-# Updated::   Feb 21, 2014
+# Updated::   Feb 26, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -44,7 +44,7 @@ module Automatic
         unless feeds.nil?
           feeds.each {|feed|
             unless feed.link.nil?
-              Automatic::Log.puts("info", "Feed: #{feed.link}")
+              Automatic::Log.puts("info", "Create Pipeline: #{feed.link}")
               item = maker.items.new_item
               item.title = feed.title
               item.link = feed.link

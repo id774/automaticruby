@@ -42,7 +42,7 @@ module Automatic::Plugin
           Permalink.create(
             :url => feed.link,
             :created_at => Time.now.strftime("%Y/%m/%d %X"))
-          Automatic::Log.puts("info", "Saving: #{feed.link}")
+          Automatic::Log.puts("info", "Saving Permalink: #{feed.link}")
         end
       }
     end

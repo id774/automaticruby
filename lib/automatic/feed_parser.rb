@@ -2,7 +2,7 @@
 # Name::      Automatic::FeedParser
 # Author::    774 <http://id774.net>
 # Created::   Feb 19, 2012
-# Updated::   Feb 21, 2014
+# Updated::   Feb 26, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -15,7 +15,7 @@ module Automatic
     def self.get_url(url)
       begin
         unless url.nil?
-          Automatic::Log.puts("info", "Parsing: #{url}")
+          Automatic::Log.puts("info", "Parsing Feed: #{url}")
           feed = URI.parse(url).normalize
           open(feed) {|http|
             response = http.read

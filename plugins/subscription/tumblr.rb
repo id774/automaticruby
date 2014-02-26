@@ -42,7 +42,7 @@ module Automatic::Plugin
 
     private
     def create_rss(url)
-      Automatic::Log.puts("info", "Parsing: #{url}")
+      Automatic::Log.puts("info", "Parsing Tumblr: #{url}")
       html = open(url).read
       unless html.nil?
         uri = URI.parse(url)

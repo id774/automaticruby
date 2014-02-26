@@ -40,7 +40,7 @@ module Automatic::Plugin
 
     def run
       for_each_new_feed {|feed|
-        Automatic::Log.puts("info", "Saving: #{feed.link}")
+        Automatic::Log.puts("info", "Saving FullText: #{feed.link}")
         begin
           Blog.create(
             :title => feed.title,

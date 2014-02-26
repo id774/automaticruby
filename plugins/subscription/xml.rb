@@ -38,7 +38,7 @@ module Automatic::Plugin
     private
 
     def create_rss(url)
-      Automatic::Log.puts("info", "Parsing: #{url}")
+      Automatic::Log.puts("info", "Parsing XML: #{url}")
       hash = Hash.from_xml(open(url).read)
       json = hash.to_json
       data = ActiveSupport::JSON.decode(json)

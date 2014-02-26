@@ -36,7 +36,7 @@ module Automatic::Plugin
     private
 
     def create_rss(url)
-      Automatic::Log.puts("info", "Parsing: #{url}")
+      Automatic::Log.puts("info", "Parsing Link: #{url}")
       html = open(url).read
       unless html.nil?
         rss = Automatic::FeedParser.parse_html(html)

@@ -37,7 +37,7 @@ module Automatic::Plugin
     private
 
     def create_rss(url)
-      Automatic::Log.puts("info", "Parsing: #{url}")
+      Automatic::Log.puts("info", "Parsing Twitter: #{url}")
       html = open(url).read
       unless html.nil?
         rss = RSS::Maker.make("2.0") {|maker|

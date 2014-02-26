@@ -29,7 +29,7 @@ module Automatic::Plugin
             retry_max = @config['retry'].to_i || 0
             begin
               @client.send(@config['username'], feed.description, @options)
-              Automatic::Log.puts("info", "post: #{feed.description.gsub(/[\r\n]/,'')[0..50]}...") rescue nil
+              Automatic::Log.puts("info", "Hipchat post: #{feed.description.gsub(/[\r\n]/,'')[0..50]}...") rescue nil
             rescue => e
               retries += 1
               Automatic::Log.puts("error", "ErrorCount: #{retries}, #{e.message}")

@@ -37,8 +37,8 @@ module Automatic::Plugin
         end
       end
 
-      Automatic::Log.puts("info", "日付     ： #{date}")
-      Automatic::Log.puts("info", "タイトル ： #{text}")
+      Automatic::Log.puts("info", "Date  ： #{date}")
+      Automatic::Log.puts("info", "Title ： #{text}")
 
       # Register to calendar
       require 'rubygems'

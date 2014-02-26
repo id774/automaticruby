@@ -54,7 +54,7 @@ module Automatic::Plugin
 
     def prepare_database
       db = File.join(db_dir, @config['db'])
-      Automatic::Log.puts("info", "Database: #{db}")
+      Automatic::Log.puts("info", "Using Database: #{db}")
       ActiveRecord::Base.establish_connection(
         :adapter  => "sqlite3",
         :database => db)

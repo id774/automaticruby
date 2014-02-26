@@ -24,7 +24,7 @@ module Automatic
       @procedure = Hashie::Mash.new(YAML.load(File.read(path)))
       log_level = @procedure.global && @procedure.global.log && @procedure.global.log.level
       Automatic::Log.level(log_level)
-      Automatic::Log.puts("info", "Loading: #{path}")
+      Automatic::Log.puts("info", "Loading Recipe: #{path}")
       @procedure
     end
 

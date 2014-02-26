@@ -32,7 +32,7 @@ module Automatic::Plugin
         unless feeds.nil?
           feeds.items.each {|feed|
             unless feed.link.nil?
-              Automatic::Log.puts("info", "Downloading: #{feed.link}")
+              Automatic::Log.puts("info", "Downloading File: #{feed.link}")
               FileUtils.mkdir_p(@config['path']) unless FileTest.exist?(@config['path'])
               retries = 0
               retry_max = @config['retry'].to_i || 0
@@ -65,7 +65,7 @@ module Automatic::Plugin
       else
         return_path = wget(uri, url)
       end
-      Automatic::Log.puts("info", "Saved: #{return_path}")
+      Automatic::Log.puts("info", "Saved File: #{return_path}")
       "file://" + return_path
     end
 
