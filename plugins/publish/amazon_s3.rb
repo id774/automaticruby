@@ -51,7 +51,7 @@ module Automatic::Plugin
       object = @bucket.objects[target]
       source = Pathname.new(filename)
       object.write(source) unless @mode == "test"
-      Automatic::Log.puts("info", "Uploaded file #{source} to the bucket #{target} on #{@bucket.name}.")
+      Automatic::Log.puts("info", "Uploaded: file #{source} to the bucket #{target} on #{@bucket.name}.")
       return source, target
     end
   end

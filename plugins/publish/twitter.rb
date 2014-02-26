@@ -34,7 +34,7 @@ module Automatic::Plugin
       @pipeline.each {|feeds|
         unless feeds.nil?
           feeds.items.each {|feed|
-            Automatic::Log.puts("info", "tweet: #{feed.link}")
+            Automatic::Log.puts("info", "Publish Tweet: #{feed.link}")
             retries = 0
             retry_max = @config['retry'].to_i || 0
             begin
