@@ -1,3 +1,30 @@
+=== 14.2.0 / 2014-02-26
+
+* Added new plugins.
+
+  * Publish::AmazonS3
+
+* Improvement File Saving Plugin
+
+  * Store::TargetLink rename to Store::File.
+  * Store::File rewrite link to file URI scheme.
+  * Enable file URI scheme in RSS 2.0 Feed.
+  * Store::File enable get file from Amazon S3.
+
+* Improvement Subscription::Text
+
+  * Read text from TSV formatted files.
+  * Add fields description, author, comments to RSS 2.0 Feed.
+
+* Into details Log messages.
+
+* Use 'double' instead of 'mock', 'stub' for rspec-mocks.
+
+* Improvement CI with network connection.
+
+* Refactoring to divide Feed::Parser to Feed::Maker.
+
+
 === 14.1.0 / 2014-01-24
 
 * Fix dependency conflict.
