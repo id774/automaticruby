@@ -141,6 +141,7 @@ SubscriptionText
 
 [概要]
  テキストベースの urls, titles, feeds から新規のフィードを作成する
+ タブ区切りの TSV 形式のファイルからフィードの情報を読み込む
 
 [レシピ記法]
   - module: SubscriptionText
@@ -154,8 +155,9 @@ SubscriptionText
         -
           title: TITLE
           url:   URL ...
-      interval: スクレイピングの間隔 (秒数, 省略可)
-      retry: エラー時のリトライ回数 (回数, 省略時 0)
+      files:
+        - 'somefile1.tsv'
+        - 'somefile2.tsv' ...
 
 
 SubscriptionPocket
@@ -419,6 +421,8 @@ StoreFile
 
 [概要]
  リンク先のコンテンツをローカルファイルシステムに保存する
+ s3n:// で始まる場合は Amazon S3 からファイルを取得する
+ リンクを保存したファイルのパス (file スキーム) に書き換えてフィードを返す
 
 [レシピ記法]
   - module: StoreFile
@@ -438,6 +442,27 @@ PublishConsole
 
 [レシピ記法]
   - module: PublishConsole
+
+
+PublishAmazonS3
+---------------
+[パス]
+ /plugins/publish/amazon_s3.rb
+
+[概要]
+ Amazon S3 にファイルをアップロードする
+
+[説明]
+ フィードのリンクにあるファイルを Amazon S3 にアップする
+ リンクが file URI スキームであることが前提である
+
+[レシピ記法]
+  - module: PublishAmazonS3
+    config:
+      access_key: アクセスキー
+      secret_key: シークレットアクセスキー
+      bucket_name: S3 のバケット名
+      target_path: バケット上でのファイルのパス
 
 
 PublishFluentd
