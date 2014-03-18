@@ -1,4 +1,4 @@
-# Version:20140224
+# Version:20140318
 
 source "http://rubygems.org"
 source "http://gems.github.com"
@@ -11,7 +11,7 @@ gem 'hashie',         '~> 2.0.5'
 gem 'gcalapi',        '~> 0.1.2'
 gem 'xml-simple',     '~> 1.1.3'
 gem 'feedbag',        '~> 0.9.2'
-gem 'nokogiri',       '~> 1.6.1'
+gem 'nokogiri',       '~> 1.5.11'
 gem 'sanitize',       '~> 2.1.0'
 gem 'faraday',        '~> 0.8.9'
 gem 'twitter',        '~> 4.8.1'
