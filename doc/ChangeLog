@@ -1,3 +1,7 @@
+=== 14.3.0 / 2014-03-22
+
+* Downgrade nokogiri version for OS X.
+
 === 14.2.0 / 2014-02-26
 
 * Added new plugins.
