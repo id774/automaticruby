@@ -10,7 +10,7 @@ module Automatic::Plugin
   class SubscriptionXml
     require 'open-uri'
     require 'active_support'
-    require 'active_support/core_ext'
+    require 'active_support/deprecation'
     require 'rss'
 
     def initialize(config, pipeline=[])
