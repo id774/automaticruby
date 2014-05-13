@@ -6,7 +6,8 @@
 # Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
-require 'active_support/core_ext'
+require 'active_support'
+require 'active_support/deprecation'
 
 module Automatic
   module Plugin end
