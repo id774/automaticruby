@@ -23,14 +23,14 @@
 kickstart() {
     export RACK_ROOT="."
     export RACK_ENV="test"
-    export DATABASE_URL="$RACK_ROOT/db"
+    #export DATABASE_URL="$RACK_ROOT/db"
     ruby -v
     test_subcommand log info started.
 }
 
 exec_rspec() {
     $RACK_ROOT/bin/automatic -v
-    bundle install --path vendor/gems
+    #bundle install --path vendor/gems
     bundle update
     bundle exec rake simplecov
 }
