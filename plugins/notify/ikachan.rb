@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require 'active_support'
+require 'active_support/core_ext'
 require 'active_support/deprecation'
 
 module Automatic::Plugin

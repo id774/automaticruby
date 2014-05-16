@@ -2,14 +2,13 @@
 # Name::      Automatic::Plugin::Provide::Fluentd
 # Author::    774 <http://id774.net>
 # Created::   Jul 12, 2013
-# Updated::   Feb 25, 2014
+# Updated::   May 16, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
   class ProvideFluentd
     require 'fluent-logger'
-    require 'active_support'
 
     def initialize(config, pipeline=[])
       @config = config
