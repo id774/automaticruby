@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Xml
 # Author::    774 <http://id774.net>
 # Created::   Jul 12, 2013
-# Updated::   Feb 21, 2014
+# Updated::   May 16, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -10,6 +10,7 @@ module Automatic::Plugin
   class SubscriptionXml
     require 'open-uri'
     require 'active_support'
+    require 'active_support/core_ext'
     require 'active_support/deprecation'
     require 'rss'
 
