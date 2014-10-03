@@ -21,7 +21,7 @@ describe Automatic::Plugin::FilterDescriptionLink do
           feed {
             item "http://test1.id774.net",
             "dummy title",
-            "aaa bbb ccc http://test2.id774.net",
+            "aaa bbb ccc http://test2.id774.net ddd eee",
             "Mon, 07 Mar 2011 15:54:11 +0900"
           }
         }
@@ -36,7 +36,7 @@ describe Automatic::Plugin::FilterDescriptionLink do
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
         should == "http://test2.id774.net"
         subject.instance_variable_get(:@pipeline)[0].items[0].description.
-        should == "aaa bbb ccc http://test2.id774.net"
+        should == "aaa bbb ccc http://test2.id774.net ddd eee"
       }
     end
   end
@@ -51,7 +51,7 @@ describe Automatic::Plugin::FilterDescriptionLink do
           feed {
             item "http://test1.id774.net",
             "dummy title",
-            "aaa bbb ccc http://test2.id774.net",
+            "aaa bbb ccc http://test2.id774.net ddd eee",
             "Mon, 07 Mar 2011 15:54:11 +0900"
           }
         }
@@ -67,6 +67,70 @@ describe Automatic::Plugin::FilterDescriptionLink do
         should == "http://test2.id774.net"
         subject.instance_variable_get(:@pipeline)[0].items[0].description.
         should == ""
+      }
+    end
+  end
+
+  context "It should be got title if get_title specified" do
+
+    subject {
+      Automatic::Plugin::FilterDescriptionLink.new({
+          'get_title' => 1,
+        },
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://test1.id774.net",
+            "dummy title",
+            "aaa bbb ccc http://blog.id774.net/post/2014/10/01/531/ ddd eee",
+            "Mon, 07 Mar 2011 15:54:11 +0900"
+          }
+        }
+      )
+    }
+
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+
+      specify {
+        subject.run
+        subject.instance_variable_get(:@pipeline)[0].items[0].link.
+        should == "http://blog.id774.net/post/2014/10/01/531/"
+        subject.instance_variable_get(:@pipeline)[0].items[0].title.
+        should == "二穂様は俺の嫁 | 774::Blog"
+        subject.instance_variable_get(:@pipeline)[0].items[0].description.
+        should == "aaa bbb ccc http://blog.id774.net/post/2014/10/01/531/ ddd eee"
+      }
+    end
+  end
+
+  context "It should be handling error if 404 Not Found" do
+
+    subject {
+      Automatic::Plugin::FilterDescriptionLink.new({
+          'get_title' => 1,
+        },
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://test1.id774.net",
+            "dummy title",
+            "aaa bbb ccc http://blog.id774.net/post/2014/10/01/532/ ddd eee",
+            "Mon, 07 Mar 2011 15:54:11 +0900"
+          }
+        }
+      )
+    }
+
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+
+      specify {
+        subject.run
+        subject.instance_variable_get(:@pipeline)[0].items[0].link.
+        should == "http://blog.id774.net/post/2014/10/01/532/"
+        subject.instance_variable_get(:@pipeline)[0].items[0].title.
+        should == "dummy title"
+        subject.instance_variable_get(:@pipeline)[0].items[0].description.
+        should == "aaa bbb ccc http://blog.id774.net/post/2014/10/01/532/ ddd eee"
       }
     end
   end
