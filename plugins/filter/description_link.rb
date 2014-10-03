@@ -34,6 +34,11 @@ module Automatic::Plugin
     def rewrite_link(feed)
       new_link = URI.extract(feed.description, %w{http https}).uniq.last
       feed.link = new_link unless new_link.nil?
+
+      if @config['clear_description'] == 1
+        feed.description = ""
+      end
+
       feed
     end
   end
