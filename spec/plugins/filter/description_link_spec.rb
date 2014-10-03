@@ -35,6 +35,38 @@ describe Automatic::Plugin::FilterDescriptionLink do
         subject.run
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
         should == "http://test2.id774.net"
+        subject.instance_variable_get(:@pipeline)[0].items[0].description.
+        should == "aaa bbb ccc http://test2.id774.net"
+      }
+    end
+  end
+
+  context "It should be empty description if clear_description specified" do
+
+    subject {
+      Automatic::Plugin::FilterDescriptionLink.new({
+          'clear_description' => 1,
+        },
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://test1.id774.net",
+            "dummy title",
+            "aaa bbb ccc http://test2.id774.net",
+            "Mon, 07 Mar 2011 15:54:11 +0900"
+          }
+        }
+      )
+    }
+
+    describe "#run" do
+      its(:run) { should have(1).feeds }
+
+      specify {
+        subject.run
+        subject.instance_variable_get(:@pipeline)[0].items[0].link.
+        should == "http://test2.id774.net"
+        subject.instance_variable_get(:@pipeline)[0].items[0].description.
+        should == ""
       }
     end
   end
