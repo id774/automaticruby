@@ -381,6 +381,22 @@ FilterTumblrResize
   - module: FilterTumblrResize
 
 
+FilterDescriptionLink
+---------------------
+[Path]
+ /plugins/filter/sort.rb
+
+[Abstract]
+ Pickup http or https URL from description.
+ Re-write link to the URL.
+
+[Syntax]
+  - module: FilterDescriptionLink
+    config:
+      clear_description: 1 # Set empty to description.
+      get_title: 1 # Get title after re-write link.
+
+
 StorePermalink
 --------------
 [Path]
