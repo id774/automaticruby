@@ -382,6 +382,22 @@ FilterTumblrResize
   - module: FilterTumblrResize
 
 
+FilterDescriptionLink
+---------------------
+[パス]
+ /plugins/filter/description_link.rb
+
+[概要]
+ 日付の昇順にソートする
+ もし config で sort に desc が指定されると
+ 昇順ではなく降順にソートする
+
+[レシピ記法]
+  - module: FilterSort
+    config:
+      sort: asc or desc
+
+
 StorePermalink
 --------------
 [パス]
