@@ -9,6 +9,7 @@
 module Automatic::Plugin
   class FilterDescriptionLink
     require 'uri'
+    require 'nkf'
 
     def initialize(config, pipeline=[])
       @config = config
