@@ -21,7 +21,12 @@ module Automatic::Plugin
           new_feeds = []
           feeds.items.each {|feed|
             unless feed.link.nil?
-              unless existing_records.detect {|b| b.try(unique_key) == feed.link }
+              if unique_keys.length > 1
+                detection = existing_records.detect {|b| b.try(unique_keys[0]) == feed.link || b.try(unique_keys[1]) == feed.title }
+              else
+                detection = existing_records.detect {|b| b.try(unique_keys[0]) == feed.link }
+              end
+              unless detection
                 yield(feed)
                 new_feeds << feed
               end
