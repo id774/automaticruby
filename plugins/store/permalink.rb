@@ -28,8 +28,8 @@ module Automatic::Plugin
       }
     end
 
-    def unique_key
-      :url
+    def unique_keys
+      [:url]
     end
 
     def model_class

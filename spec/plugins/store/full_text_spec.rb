@@ -26,7 +26,12 @@ describe Automatic::Plugin::StoreFullText do
   it "should store 1 record for the new blog entry" do
     instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
-        feed { item "http://blog.id774.net/blogs/feed/" }
+        feed {
+          item "http://blog.id774.net/blogs/feed/",
+          "dummy title",
+          "aaa bbb ccc http://test2.id774.net ddd eee",
+          "Mon, 07 Mar 2011 15:54:11 +0900"
+        }
       }
     )
 

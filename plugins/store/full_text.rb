@@ -30,8 +30,8 @@ module Automatic::Plugin
       }
     end
 
-    def unique_key
-      :link
+    def unique_keys
+      [:link, :title]
     end
 
     def model_class
