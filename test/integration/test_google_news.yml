@@ -1,0 +1,21 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://news.google.com/news?hl=ja&ned=us&ie=UTF-8&oe=UTF-8&output=rss
+
+  - module: FilterGoogleNews
+
+  - module: StorePermalink
+    config:
+      db: test_google_news.db
+
+  - module: PublishConsole
+
