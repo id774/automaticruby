@@ -384,7 +384,7 @@ FilterTumblrResize
 FilterDescriptionLink
 ---------------------
 [Path]
- /plugins/filter/sort.rb
+ /plugins/filter/description_link.rb
 
 [Abstract]
  Pickup http or https URL from description.
@@ -395,6 +395,18 @@ FilterDescriptionLink
     config:
       clear_description: 1 # Set empty to description.
       get_title: 1 # Get title after re-write link.
+
+
+FilterGoogleNews
+----------------
+[Path]
+ /plugins/filter/google_news.rb
+
+[Abstract]
+ Re-write Google News link to a new link of the redirect.
+
+[Syntax]
+  - module: FilterGoogleNews
 
 
 StorePermalink
