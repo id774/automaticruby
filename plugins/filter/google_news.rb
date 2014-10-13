@@ -34,10 +34,12 @@ module Automatic::Plugin
 
     def rewrite_link(feed)
       if feed.link.index("http://news.google.com")
-        matched = feed.link.match(/(&url=)/)
-        unless matched.nil?
-          new_link = matched.post_match
-          feed.link = new_link unless new_link.nil?
+        if feed.link.class == String
+          matched = feed.link.match(/(&url=)/)
+          unless matched.nil?
+            new_link = matched.post_match
+            feed.link = new_link unless new_link.nil?
+          end
         end
       end
 
