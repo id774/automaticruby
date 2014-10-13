@@ -393,9 +393,23 @@ FilterDescriptionLink
  昇順ではなく降順にソートする
 
 [レシピ記法]
-  - module: FilterSort
+  - module: FilterDescriptionLink
     config:
-      sort: asc or desc
+      clear_description: 1 # Set empty to description.
+      get_title: 1 # Get title after re-write link.
+
+
+FilterGoogleNews
+----------------
+[パス]
+ /plugins/filter/google_news.rb
+
+[概要]
+ Google News のリンクを
+ リダイレクト先のものに書き換える
+
+[レシピ記法]
+  - module: FilterGoogleNews
 
 
 StorePermalink
