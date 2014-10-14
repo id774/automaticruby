@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::GoogleNews
 # Author::    774 <http://id774.net>
 # Created::   Oct 12, 2014
-# Updated::   Oct 12, 2014
+# Updated::   Oct 14, 2014
 # Copyright:: Copyright (c) 2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -33,8 +33,8 @@ module Automatic::Plugin
     private
 
     def rewrite_link(feed)
-      if feed.link.index("http://news.google.com")
-        if feed.link.class == String
+      if feed.link.class == String
+        if feed.link.index("http://news.google.com")
           matched = feed.link.match(/(&url=)/)
           unless matched.nil?
             new_link = matched.post_match
