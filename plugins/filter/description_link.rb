@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::DescriptionLink
 # Author::    774 <http://id774.net>
 # Created::   Oct 03, 2014
-# Updated::   Oct 14, 2014
+# Updated::   Oct 15, 2014
 # Copyright:: Copyright (c) 2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -57,7 +57,11 @@ module Automatic::Plugin
       if @config['get_title'] == 1
         begin
           new_title = get_title(feed.link)
-          feed.title = new_title unless new_title.nil?
+          unless new_title.nil?
+            if new_title.class == String
+              feed.title = new_title
+            end
+          end
         rescue OpenURI::HTTPError
           Automatic::Log.puts("warn", "404 Not Found in get title process.")
         end
