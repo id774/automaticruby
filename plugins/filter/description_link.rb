@@ -52,16 +52,18 @@ module Automatic::Plugin
       new_link = URI.extract(feed.description, %w{http https}).uniq.last
       feed.link = new_link unless new_link.nil?
 
-      if @config['clear_description'] == 1
-        feed.description = ""
-      end
+      if @config.class == Hash
+        if @config['clear_description'] == 1
+          feed.description = ""
+        end
 
-      if @config['get_title'] == 1
-        begin
-          new_title = get_title(feed.link)
-          feed.title = new_title unless new_title.nil?
-        rescue OpenURI::HTTPError
-          Automatic::Log.puts("warn", "404 Not Found in get title process.")
+        if @config['get_title'] == 1
+          begin
+            new_title = get_title(feed.link)
+            feed.title = new_title unless new_title.nil?
+          rescue OpenURI::HTTPError
+            Automatic::Log.puts("warn", "404 Not Found in get title process.")
+          end
         end
       end
 
