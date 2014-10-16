@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::DescriptionLink
 # Author::    774 <http://id774.net>
 # Created::   Oct 03, 2014
-# Updated::   Oct 15, 2014
+# Updated::   Oct 16, 2014
 # Copyright:: Copyright (c) 2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -33,17 +33,19 @@ module Automatic::Plugin
     private
 
     def get_title(url)
+      new_title = nil
       if url.class == String
         url.gsub!(Regexp.new("[^#{URI::PATTERN::ALNUM}\/\:\?\=&~,\.\(\)#]")) {|match| ERB::Util.url_encode(match)}
         begin
           read_data = NKF.nkf("--utf8", open(url).read)
-          Nokogiri::HTML.parse(read_data, nil, 'utf8').xpath('//title').text
+          get_text = Nokogiri::HTML.parse(read_data, nil, 'utf8').xpath('//title').text
+          new_title = get_text if get_text.class == String
         rescue
           Automatic::Log.puts("warn", "Failed in get title for: #{url}")
         end
-      else
-        nil
       end
+
+      new_title
     end
 
     def rewrite_link(feed)
@@ -57,11 +59,7 @@ module Automatic::Plugin
       if @config['get_title'] == 1
         begin
           new_title = get_title(feed.link)
-          unless new_title.nil?
-            if new_title.class == String
-              feed.title = new_title
-            end
-          end
+          feed.title = new_title unless new_title.nil?
         rescue OpenURI::HTTPError
           Automatic::Log.puts("warn", "404 Not Found in get title process.")
         end
