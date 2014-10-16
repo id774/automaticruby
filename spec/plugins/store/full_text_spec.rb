@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Store::FullText
 # Author::    774 <http://id774.net>
-# Updated::   Oct 15, 2014
+# Updated::   Oct 16, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -63,7 +63,17 @@ describe Automatic::Plugin::StoreFullText do
       AutomaticSpec.generate_pipeline {
         feed {
           item "http://blog.id774.net/post/100",
-          "#{rand(10000000)}",
+          "dummy title 1",
+          "aaa bbb ccc http://test2.id774.net ddd eee",
+          "Mon, 07 Mar 2011 15:54:11 +0900"
+        }
+      }
+    )
+    instance2 = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
+      AutomaticSpec.generate_pipeline {
+        feed {
+          item "http://blog.id774.net/post/100",
+          "dummy title 2",
           "aaa bbb ccc http://test2.id774.net ddd eee",
           "Mon, 07 Mar 2011 15:54:11 +0900"
         }
@@ -73,9 +83,9 @@ describe Automatic::Plugin::StoreFullText do
     Automatic::Plugin::Blog.count.should eq 0
     instance.run.should have(1).feed
     lambda {
-      instance.run.should have(0).feed
+      instance2.run.should have(0).feed
     }.should change(Automatic::Plugin::Blog, :count).by(0)
-    instance.run.should have(0).feed
+    instance2.run.should have(0).feed
     Automatic::Plugin::Blog.count.should eq 1
   end
 
@@ -83,8 +93,18 @@ describe Automatic::Plugin::StoreFullText do
     instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
-          item "http://blog.id774.net/post/#{rand(1000000)}",
-          "dummy",
+          item "http://blog.id774.net/post/100",
+          "dummy title 1",
+          "aaa bbb ccc http://test2.id774.net ddd eee",
+          "Mon, 07 Mar 2011 15:54:11 +0900"
+        }
+      }
+    )
+    instance2 = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
+      AutomaticSpec.generate_pipeline {
+        feed {
+          item "http://blog.id774.net/post/200",
+          "dummy title 1",
           "aaa bbb ccc http://test2.id774.net ddd eee",
           "Mon, 07 Mar 2011 15:54:11 +0900"
         }
@@ -94,10 +114,39 @@ describe Automatic::Plugin::StoreFullText do
     Automatic::Plugin::Blog.count.should eq 0
     instance.run.should have(1).feed
     lambda {
-      instance.run.should have(0).feed
+      instance2.run.should have(0).feed
     }.should change(Automatic::Plugin::Blog, :count).by(0)
-    instance.run.should have(0).feed
+    instance2.run.should have(0).feed
     Automatic::Plugin::Blog.count.should eq 1
   end
 
+  it "should store 2 records for the independent entries" do
+    instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
+      AutomaticSpec.generate_pipeline {
+        feed {
+          item "http://blog.id774.net/post/100",
+          "dummy title 1",
+          "aaa bbb ccc http://test2.id774.net ddd eee",
+          "Mon, 07 Mar 2011 15:54:11 +0900"
+        }
+      }
+    )
+    instance2 = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
+      AutomaticSpec.generate_pipeline {
+        feed {
+          item "http://blog.id774.net/post/200",
+          "dummy title 2",
+          "aaa bbb ccc http://test2.id774.net ddd eee",
+          "Mon, 07 Mar 2011 15:54:11 +0900"
+        }
+      }
+    )
+
+    Automatic::Plugin::Blog.count.should eq 0
+    instance.run.should have(1).feed
+    lambda {
+      instance2.run.should have(1).feed
+    }.should change(Automatic::Plugin::Blog, :count).by(1)
+    Automatic::Plugin::Blog.count.should eq 2
+  end
 end
