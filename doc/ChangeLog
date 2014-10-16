@@ -1,3 +1,17 @@
+=== 14.10.0 / 2014-10-xx
+
+* Using Logger
+
+* Improvement File Saving Plugin
+
+  * Store::FullText will ignore duplicated titled entry.
+
+* Added new plugins.
+
+  * Filter::GoogleNews
+  * Filter::DescriptionLink
+
+
 === 14.5.0 / 2014-05-31
 
 * Update to activesupport/record 4.1.
