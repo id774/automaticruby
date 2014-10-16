@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Filter::GoogleNews
 # Author::    774 <http://id774.net>
 # Created::   Oct 12, 2014
-# Updated::   Oct 14, 2014
+# Updated::   Oct 16, 2014
 # Copyright:: Copyright (c) 2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -25,7 +25,7 @@ module Automatic::Plugin
             new_feeds << rewrite_link(feed) unless feed.link.nil?
           }
         end
-        @return_feeds << Automatic::FeedMaker.create_pipeline(new_feeds)
+        @return_feeds << new_feeds
       }
       @return_feeds
     end
