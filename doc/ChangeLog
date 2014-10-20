@@ -8,6 +8,7 @@
 
 * Added new plugins.
 
+  * Filter::Clear
   * Filter::GoogleNews
   * Filter::DescriptionLink
 
