@@ -216,6 +216,18 @@ SubscriptionChanToru
       retry: エラー時のリトライ回数 (回数, 省略時 0)
 
 
+FilterClear
+-----------
+[パス]
+ /plugins/filter/clear.rb
+
+[概要]
+ パイプラインをカラにする
+
+[レシピ記法]
+  - module: FilterClear
+
+
 FilterSort
 ----------
 [パス]

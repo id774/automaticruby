@@ -216,6 +216,18 @@ SubscriptionChanToru
       retry:    RETRY_COUNT
 
 
+FilterClear
+-----------
+[Path]
+ /plugins/filter/clear.rb
+
+[Abstract]
+ Clear Pipeline.
+
+[Syntax]
+  - module: FilterClear
+
+
 FilterSort
 ----------
 [Path]
