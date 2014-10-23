@@ -27,7 +27,7 @@ describe Automatic do
   describe "#version" do
     subject { Automatic.const_get(:VERSION) }
 
-    it { expect(subject).to eq "14.10.0" }
+    it { expect(subject).to eq "14.10.1" }
   end
 
   describe "#(root)_dir" do
