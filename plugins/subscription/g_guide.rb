@@ -3,7 +3,7 @@
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
 # Created::   Jun 28, 2013
-# Updated::   Feb 21, 2014
+# Updated::   Oct 29, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -43,7 +43,7 @@ module Automatic::Plugin
         feed += "condition.keyword=#{keyword}&"
       end
       feed += station_param
-      URI.encode(feed)
+      URI::Parser.new.escape(feed)
     end
 
     def station_param

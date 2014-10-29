@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Filter::AbsoluteURI
 # Author::    774 <http://id774.net>
 # Created::   Jun 20, 2012
-# Updated::   Apr  5, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Oct 29, 2014
+# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -37,7 +37,7 @@ module Automatic::Plugin
         @config['url'] = @config['url'] + '/'
       end
       string = @config['url'] + string.sub(/^\./,'').sub(/^\//,'')
-      string = URI.encode(string)
+      string = URI::Parser.new.escape(string)
       return string
     end
   end

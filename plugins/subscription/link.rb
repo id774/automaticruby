@@ -2,7 +2,7 @@
 # Name::      Automatic::Plugin::Subscription::Link
 # Author::    774 <http://id774.net>
 # Created::   Sep 18, 2012
-# Updated::   Feb 21, 2014
+# Updated::   Oct 29, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
@@ -22,7 +22,7 @@ module Automatic::Plugin
         retries = 0
         retry_max = @config['retry'].to_i || 0
         begin
-          create_rss(URI.encode(url))
+          create_rss(URI::Parser.new.escape(url))
         rescue
           retries += 1
           Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
