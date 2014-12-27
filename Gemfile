@@ -1,4 +1,4 @@
-# Version:20141226
+# Version:20141227
 
 source "http://rubygems.org"
 source "http://gems.github.com"
@@ -14,11 +14,11 @@ gem 'feedbag'
 gem 'nokogiri'
 gem 'sanitize'
 gem 'faraday'
-gem 'twitter',        '~> 4.8'
+gem 'twitter', '~> 4.8'
 gem 'pocket-ruby'
 gem 'weather_hacker'
 gem 'hipchat'
-gem 'fluent-logger',  '~> 0.4'
+gem 'fluent-logger', '~> 0.4'
 gem 'dalli'
 gem 'aws-sdk'
 
