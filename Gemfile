@@ -1,12 +1,12 @@
-# Version:20141227
+# Version:20150103
 
 source "http://rubygems.org"
 source "http://gems.github.com"
 
 gem 'json'
 gem 'sqlite3'
-gem 'activesupport'
-gem 'activerecord'
+gem 'activesupport', '~> 4.1.0'
+gem 'activerecord', '~> 4.1.0'
 gem 'hashie'
 gem 'gcalapi'
 gem 'xml-simple'
