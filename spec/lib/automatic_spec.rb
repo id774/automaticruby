@@ -3,8 +3,8 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  9, 2012
-# Updated::   Dec 30, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Jan  3, 2015
+# Copyright:: Copyright (c) 2012-2015 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
@@ -27,7 +27,7 @@ describe Automatic do
   describe "#version" do
     subject { Automatic.const_get(:VERSION) }
 
-    it { expect(subject).to eq "14.12.0-devel" }
+    it { expect(subject).to eq "14.12.1" }
   end
 
   describe "#(root)_dir" do
