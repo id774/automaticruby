@@ -1,3 +1,3 @@
 module Automatic
-  VERSION = "14.12.0-devel"
+  VERSION = "14.12.1"
 end
