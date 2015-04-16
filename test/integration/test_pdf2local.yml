@@ -1,0 +1,22 @@
+global:
+  timezone: Asia/Tokyo
+  cache:
+    base: /tmp
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://webapi.yanoshin.jp/webapi/tdnet/list/recent.rss
+
+  - module: FilterSort
+    config:
+      sort: desc
+
+  - module: StoreFile
+    config:
+      path: /tmp
+      retry: 3
+      interval: 3
