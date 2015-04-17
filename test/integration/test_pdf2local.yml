@@ -15,6 +15,10 @@ plugins:
     config:
       sort: desc
 
+  - module: StorePermalink
+    config:
+      db: test_pdf2local.db
+
   - module: StoreFile
     config:
       path: /tmp
