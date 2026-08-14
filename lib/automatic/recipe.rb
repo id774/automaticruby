@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Recipe
-# Author: ainame
-# Source Code: https://github.com/id774/automaticruby
-# License: The GPL version 3, or LGPL version 3 (Dual License).
-# Contact: idnanashi@gmail.com
-# Created::   Feb 18, 2012
-# Updated::   Aug 14, 2026
-# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
+# Name::        Automatic::Recipe
+# Author:       ainame
+# Source Code:: https://github.com/id774/automaticruby
+# License::     The GPL version 3, or LGPL version 3 (Dual License).
+# Contact::     idnanashi@gmail.com
+# Created::     Feb 18, 2012
+# Updated::     Aug 14, 2026
+# Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # Turns a Recipe file into something the pipeline can iterate. The format is
 # specified in doc/PLUGINS.md section 2.

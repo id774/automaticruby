@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::AbsoluteURI
-# Author: id774 (More info: http://id774.net)
-# Source Code: https://github.com/id774/automaticruby
-# License: The GPL version 3, or LGPL version 3 (Dual License).
-# Contact: idnanashi@gmail.com
-# Created::   Jun 20, 2012
-# Updated::   Sep 18, 2012
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Name::        Automatic::Plugin::Filter::AbsoluteURI
+# Author:       id774 (More info: http://id774.net)
+# Source Code:: https://github.com/id774/automaticruby
+# License::     The GPL version 3, or LGPL version 3 (Dual License).
+# Contact::     idnanashi@gmail.com
+# Created::     Jun 20, 2012
+# Updated::     Sep 18, 2012
+# Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 

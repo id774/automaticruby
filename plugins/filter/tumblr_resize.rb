@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::TumblrResize
-# Author: id774 (More info: http://id774.net)
-# Source Code: https://github.com/id774/automaticruby
-# License: The GPL version 3, or LGPL version 3 (Dual License).
-# Contact: idnanashi@gmail.com
-# Created::   Feb 28, 2012
-# Updated::   Apr  5, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Name::        Automatic::Plugin::Filter::TumblrResize
+# Author:       id774 (More info: http://id774.net)
+# Source Code:: https://github.com/id774/automaticruby
+# License::     The GPL version 3, or LGPL version 3 (Dual License).
+# Contact::     idnanashi@gmail.com
+# Created::     Feb 28, 2012
+# Updated::     Apr  5, 2013
+# Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class FilterTumblrResize

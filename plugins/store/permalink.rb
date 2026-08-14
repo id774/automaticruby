@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Store::Permalink
-# Author: id774 (More info: http://id774.net)
-# Source Code: https://github.com/id774/automaticruby
-# License: The GPL version 3, or LGPL version 3 (Dual License).
-# Contact: idnanashi@gmail.com
-# Created::   Feb 22, 2012
-# Updated::   Aug 14, 2026
-# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
+# Name::        Automatic::Plugin::Store::Permalink
+# Author:       id774 (More info: http://id774.net)
+# Source Code:: https://github.com/id774/automaticruby
+# License::     The GPL version 3, or LGPL version 3 (Dual License).
+# Contact::     idnanashi@gmail.com
+# Created::     Feb 22, 2012
+# Updated::     Aug 14, 2026
+# Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require_relative 'database'
 
