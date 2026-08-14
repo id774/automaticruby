@@ -558,6 +558,7 @@ this repository. No document here defers to another repository.
 | [`doc/VERSIONS`](doc/VERSIONS) | The release history, from 2012 |
 | [`doc/LICENSE.md`](doc/LICENSE.md) | The licence |
 | [`doc/COPYING`](doc/COPYING) | The GPLv3 text |
+| [`doc/COPYING.LESSER`](doc/COPYING.LESSER) | The LGPLv3 text |
 | [`doc/AUTHORS`](doc/AUTHORS) | Contributors |
 
 `doc/README.ja` and `doc/PLUGINS.ja` are the historical Japanese documentation,
@@ -585,12 +586,14 @@ store databases — is listed in [`doc/POLICY.md`](doc/POLICY.md) section 7.
 
 ## 17. License
 
-Licensed under the
-[GNU General Public License, Version 3](https://www.gnu.org/licenses/gpl-3.0.html).
+Automatic Ruby is dual-licensed under the
+[GNU General Public License, Version 3](https://www.gnu.org/licenses/gpl-3.0.html)
+or the
+[GNU Lesser General Public License, Version 3](https://www.gnu.org/licenses/lgpl-3.0.html).
+You may choose either license at your discretion.
 
-**This software is NOT under the terms of the Lesser GPL.**
-
-See [`doc/LICENSE.md`](doc/LICENSE.md) and [`doc/COPYING`](doc/COPYING).
+See [`doc/LICENSE.md`](doc/LICENSE.md), [`doc/COPYING`](doc/COPYING) and
+[`doc/COPYING.LESSER`](doc/COPYING.LESSER) for the full license texts.
 
 Project created by [id774](http://id774.net). Contributors are listed in
 [`doc/AUTHORS`](doc/AUTHORS).

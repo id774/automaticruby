@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::FeedParser
-# Author::    774 <http://id774.net>
+# Author: id774 (More info: http://id774.net)
+# Source Code: https://github.com/id774/automaticruby
+# License: The GPL version 3, or LGPL version 3 (Dual License).
+# Contact: idnanashi@gmail.com
 # Created::   Feb 19, 2012
 # Updated::   Aug 14, 2026
 # Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
-# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 #
 # Fetching and parsing, on the way into the pipeline. What leaves here has the
 # shape described in doc/PLUGINS.md section 3.4.

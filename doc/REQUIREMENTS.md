@@ -495,6 +495,7 @@ its keep by not changing.
 
 ## 24. Licence
 
-GNU General Public License, version 3, and not the Lesser GPL. The distinction
-was stated deliberately in the original README and is preserved. See
-[`LICENSE.md`](LICENSE.md) and [`COPYING`](COPYING).
+Automatic Ruby is dual-licensed under the GNU General Public License, version 3,
+or the GNU Lesser General Public License, version 3. A user may choose either
+license at their discretion. See [`LICENSE.md`](LICENSE.md),
+[`COPYING`](COPYING) and [`COPYING.LESSER`](COPYING.LESSER).
