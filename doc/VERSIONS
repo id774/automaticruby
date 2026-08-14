@@ -3,73 +3,16 @@ automaticruby Repository Version History
 
 v26.08 (Release Date: TBD)
 --------------------------
-- Standardize source file header alignment and metadata labels.
-- Standardize Source Code metadata on the `Source Code::` form.
-- Standardize project copyright notices on Automatic Ruby Developers.
-- Restore original third-party author attribution in source headers after the header standardization.
-- Change the license from GPLv3-only to a GPLv3 or LGPLv3 dual license, selectable by the user.
-- Add the official LGPLv3 license text and include both license texts and the license explanation in the gem.
-- Align source headers and RubyGems metadata with the dual-license policy.
-- Raise the minimum Ruby to 3.2 and test on 3.2 through 3.4, replacing the "after Ruby 1.9" claim.
-- Refresh the supported matrix to maintained Ruby 3.3 through 3.5.
-- Replace Kernel#open with URI.open throughout, so fetching a URL works on Ruby 3, and read local files with File.open.
-- Replace File.exists? with File.exist? in the plugin loader and the Bundler setup.
-- Load Recipes with YAML.safe_load, so a Recipe cannot name a Ruby class to instantiate; aliases stay permitted.
-- Refuse a Recipe that is not a mapping or carries no plugins sequence, with the new Automatic::InvalidRecipeError.
-- Give the framework an Automatic::Error base class, which NoRecipeError, NoPluginError and InvalidRecipeError derive from.
-- Accept both a String and a Symbol as a log level, which plugins have always passed, and treat an unknown level as info instead of raising mid-run.
-- Move the command line out of bin/automatic into Automatic::CLI, which returns an exit status and never calls exit, so it can be tested.
-- Add -v and --version, and make --help and --version exit 0 instead of 1; a failed run exits 1 and a rejected command line exits 2.
-- Report a missing or unreadable Recipe as one line on standard error instead of a backtrace.
-- Load a subcommand's libraries inside that subcommand, so feedbag and the OPML parser are loaded only by the subcommands that use them.
-- Stop scaffold creating ~/.automatic/plugins/. and ~/.automatic/plugins/.. from the directory listing.
-- Stop the framework calling Bundler.require, which imposed this repository's bundle on any program requiring the library; the Gemfile setup now applies to a source checkout only.
-- Require each plugin's own libraries in its own file, and keep gems used by one plugin out of the gem's runtime dependencies.
-- Require aws-sdk inside the S3 branch of StoreFile, so downloading over HTTP no longer needs the AWS SDK installed.
-- Require the plugin-internal files of the store and ChanToru plugins relatively, instead of through a load path entry.
-- Call Sanitize.fragment in FilterSanitize, replacing Sanitize.clean, which the sanitize gem removed.
-- Parse the fulltext siteinfo with JSON.parse over File.read, replacing JSON.load over an implicit Kernel#open.
-- Verify TLS certificates in PublishInstapaper, which disabled verification outright.
-- Stop PublishConsole and PublishConsoleLink printing a stray "info" line before each item, a leftover from the logging signature.
-- Narrow the ActiveSupport requires of the pipeline, NotifyIkachan and SubscriptionXml to the extensions they use.
-- Drop the unused NKF require from FilterGoogleNews, and declare nkf, which stopped being a default gem in Ruby 3.4.
-- Replace the Jeweler-generated gemspec with a hand-maintained one, stating required_ruby_version, the licence, the homepage, the source URL and the metadata links, and deriving files from Git.
-- Stop shipping the Gemfile and the Rakefile in the gem, so an installed copy no longer looks like a source checkout to environment.rb.
-- Move the gem source to https://rubygems.org and drop gems.github.com, which has not existed since 2014.
-- Split the dependencies into framework runtime gems, optional plugin gems and development gems, and drop the pins from 2015.
-- Remove the dependencies on gcalapi, weather_hacker, twitter, pocket-ruby, hipchat, faraday, json and xml-simple, which the framework does not use and which belong to unsupported or optional plugins.
-- Remove the development dependencies on jeweler, rcov, simplecov-rcov, cucumber, builder and koseki-mocksmtpd, none of which anything committed here used.
-- Drop the Jeweler and rcov tasks from the Rakefile, keeping spec, spec:lib, spec:plugins and coverage under COVERAGE=on.
-- Move the specs to RSpec 3 with rspec-its and rspec-collection_matchers, and load the framework by name rather than by path.
-- Skip a plugin spec whose gem is absent, naming the missing gem, instead of aborting the whole suite on a load error.
-- Tag the specs that reach real hosts :network and exclude them from the default suite; run them with AUTOMATIC_NETWORK_SPECS=1.
-- Stop the FilterFullFeed spec deleting the real ~/.automatic/assets/siteinfo, by redirecting HOME to a temporary directory.
-- Replace the FilterRand spec's assertion on one shuffle, which failed at random, with the contract it meant to state.
-- Assert that VERSION and Automatic::VERSION agree, rather than asserting a literal version string, and drop the -devel suffix.
-- Add specs for Automatic::CLI covering the exit statuses, help, version, an unknown subcommand and a failing recipe.
-- Add specs for what Automatic::Recipe accepts and refuses, including a document naming a Ruby class.
-- Add .github/workflows/ci.yml running bundle install, a gem build, the CLI and the test suite on Ruby 3.2, 3.3 and 3.4, with no credential configured.
-- Rewrite script/build around the current tooling, and stop it running bundle update and unscaffolding a real user directory.
-- Remove the references to Jenkins, RubyForge, the git:// clone URL and the automaticruby organization, none of which still resolve.
-- Add doc/REQUIREMENTS.md, doc/BASIC_DESIGN.md, doc/POLICY.md, doc/PLUGINS.md, doc/DEPLOYMENT.md, doc/LICENSE.md and this file.
-- Specify the Recipe format in doc/PLUGINS.md, including that global.timezone and global.cache are read by nothing and stay that way.
-- Specify the plugin contract in doc/PLUGINS.md, to the point where a new plugin can be written from it.
-- Catalogue every shipped plugin as Supported, Supported (external), Needs rework or Unsupported, with the reason, and record that a dead plugin is never simulated into passing a test.
-- State that a Recipe is trusted local configuration, and that credentials live in it, in the requirements, the design and the policy.
-- Rewrite README.md around the current repository, and move the release history from doc/ChangeLog into this file without changing an entry or a date.
-- Remove doc/README and doc/PLUGINS, whose content is now in README.md, doc/BASIC_DESIGN.md and doc/PLUGINS.md.
-- Keep doc/README.ja and doc/PLUGINS.ja as historical Japanese documentation, marked as describing the software as it was.
-- Add PublishMarkdown, which renders the pipeline as a Markdown document to a file or to standard output, needing no service and no credential; forty-five plugins now ship, twenty-three of them Supported.
-- Require in doc/REQUIREMENTS.md that a run can publish a portable document, name Markdown as the standard publication format for that, and state that an output format is never a second pipeline representation and that RSS and Atom stay input formats.
-- Place PublishMarkdown in doc/BASIC_DESIGN.md as a serializer at the Publish boundary, keeping Markdown out of the framework, out of the pipeline value and out of any implicit step, and record how the log and a document share standard output.
-- Specify PublishMarkdown in doc/PLUGINS.md: a level-2 heading per item, a metadata list of the fields it carries, content_encoded before description, HTML reduced to text with nokogiri rather than translated, deterministic output, and the file and mode settings.
-- Add config/feed2markdown.yml, collecting a feed, filtering it, de-duplicating with StorePermalink and appending what is new to a Markdown file.
-- Simplify the Quick Start to collect the public Ruby news feed, de-duplicate it and publish Markdown.
-- Add concise Quick Start and plugin development guides whose examples are covered without network access.
-- Document Markdown output for unattended use in doc/DEPLOYMENT.md: the output path, append and overwrite semantics, file permissions, and keeping the log out of the document with global.log.level.
-- State in doc/POLICY.md that converting the pipeline into another representation is a Publish plugin's work and that the result stays inside the plugin.
-- Rewrite the README's opening example and quick start around Markdown output, so that collect, filter, de-duplicate and write a document reads as an ordinary use of the framework.
-- Exclude generated gem archives from the package file list, so CLI and test commands remain usable after a local gem build.
+- Support Ruby 3.3 through 3.5 and modernize the codebase for current Ruby and maintained library APIs.
+- Harden Recipe loading with safe YAML parsing, structural validation and framework-specific errors.
+- Restructure the CLI with help and version options, predictable error reporting and documented exit statuses.
+- Verify TLS certificates when publishing to Instapaper instead of accepting an unverified connection.
+- Modernize gem packaging and dependency policy, isolating optional plugin dependencies and excluding development and generated files.
+- Classify every shipped plugin by its current support status rather than simulating obsolete services in tests.
+- Rebuild the test and CI strategy for current RSpec and Ruby, with deterministic isolation from user data and external services.
+- Add Markdown as the primary service-independent publication format, with a documented and tested first-run workflow.
+- Rebuild the maintained documentation around current usage, architecture, policy, plugins and deployment, and remove superseded historical documents.
+- Offer the project under either GPLv3 or LGPLv3, retaining third-party attribution and shipping both licence texts.
 
 v14.12.2 (2015-01-04)
 ---------------------
@@ -231,6 +174,11 @@ Notes on this record
 
 Version History Guidelines
 ==========================
+- Record externally meaningful or architecturally significant outcomes, not a
+  diary of implementation work.
+- Omit development-time corrections and intermediate states that were reverted
+  or superseded before release; Git history retains that detail.
+- Summarize related low-level changes under their substantive outcome.
 - Write one coherent change per physical line, as a rule.
 - Keep entries near 100 columns where practical. Necessary file names, module
   names, plugin names, option names, and configuration names may extend an entry

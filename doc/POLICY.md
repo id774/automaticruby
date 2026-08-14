@@ -510,11 +510,6 @@ behaviour breaks nothing.
 - **Documents are in English**, as are code, comments and commit messages.
   Japanese appears only where it is data: a search keyword in an example, a
   broadcast station name in a plugin's settings.
-  - `doc/README.ja` and `doc/PLUGINS.ja` are the historical Japanese
-    documentation, kept as a record and for readers who prefer it. They describe
-    the software as it was, they are not maintained against the current code,
-    and they say so at their head. They are not the source of truth for
-    anything, and they are not deleted.
 - Markdown documents may assume a renderer. `VERSIONS`, `COPYING`, `COPYING.LESSER` and `AUTHORS`
   are plain text and keep their extensionless names, which are the names they
   are published and linked under.
@@ -651,6 +646,15 @@ agree rather than asserting a literal.
 not a transcription of the commit log: the commits record how the work happened,
 the version history records what it amounts to.
 
+- Record externally meaningful or architecturally significant outcomes, such
+  as compatibility, security, public interfaces, major features, packaging,
+  licensing, documentation architecture and test strategy.
+- Omit development-time corrections, implementation details and intermediate
+  states that were reverted or superseded before release. Git history retains
+  that process.
+- Summarize related low-level changes under their substantive outcome instead
+  of listing each method, dependency, test or file separately.
+
 - Each entry opens with `vX.YY (YYYY-MM-DD)`, or `vX.YY (Release Date: TBD)`
   while unreleased, underlined with `-`, followed by one `-` bullet per change.
   Newest first. UTF-8.
@@ -679,7 +683,8 @@ the version history records what it amounts to.
   so that a version reads as a coherent whole. An independent change belonging
   with nothing already listed is appended to the end of the current entry.
 - Order within a version serves the reader, not the commit history.
-- Bullets written before this rule are left as they stand.
+- Released entries retain their substantive history even when their wording or
+  level of detail predates these rules.
 - `doc/VERSIONS` carries these guidelines again at its foot.
 
 ### 10.5 The historical record
