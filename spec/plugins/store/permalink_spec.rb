@@ -16,10 +16,14 @@ require 'pathname'
 def db_cleate(db_name)
   db_path = Pathname(AutomaticSpec.db_dir).cleanpath+"#{db_name}"
   db_path.delete if db_path.exist?
-  tmp_out = StringIO.new()
-  $stdout = tmp_out
-  Automatic::Plugin::StorePermalink.new({"db" => db_name}).run
-  $stdout = STDOUT
+  tmp_out = StringIO.new
+  original_stdout = $stdout
+  begin
+    $stdout = tmp_out
+    Automatic::Plugin::StorePermalink.new({"db" => db_name}).run
+  ensure
+    $stdout = original_stdout
+  end
   tmp_out.rewind()
   Automatic::Log.puts("info", tmp_out.read())
 end
