@@ -3,6 +3,11 @@
 A plugin is a small Ruby class with `initialize` and `run`. It needs no registry,
 framework edit or dependency-injection container.
 
+To add or change a plugin in this repository, first follow the
+[source checkout setup](../README.md#from-a-checkout), including `bundle
+install` and the default test suite. User plugins under `~/.automatic` do not
+require a framework checkout.
+
 ## Naming and location
 
 The class name combines a category and a name. The file path separates them:

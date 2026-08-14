@@ -32,16 +32,10 @@ nothing to stop.
   a version between them is supported and is simply not checked on every commit,
   and a Ruby newer than 4.0 is permitted rather than refused. See
   [`REQUIREMENTS.md`](REQUIREMENTS.md) section 20.
-- A build environment for native extensions, because `nokogiri` and `sqlite3`
-  may build from source:
-
-  ```sh
-  # Debian or Ubuntu
-  sudo apt install build-essential ruby-dev libsqlite3-dev
-
-  # macOS, with the Xcode command line tools installed
-  xcode-select --install
-  ```
+- A build environment may be needed if a dependency such as `nokogiri` or
+  `sqlite3` has to build a native extension on your platform. Start with the
+  normal installation below; install platform-specific build tools only if the
+  gem installation reports that they are required.
 
 - Optional gems for particular plugins, listed in the table under
   "Optional plugin dependencies" below. None is needed to install or to run a
@@ -68,15 +62,17 @@ git clone https://github.com/id774/automaticruby.git
 cd automaticruby
 bundle install
 bundle exec bin/automatic --version
+bundle exec rake
 ```
 
-`bundle install` installs into your default gem path. To keep it inside the
-checkout instead:
+`bundle install` resolves the runtime and development dependencies in `Gemfile`
+and `automatic.gemspec`. It installs what is needed to run the checkout and its
+test suite. If the `bundle` command is unavailable, install Bundler first with
+`gem install bundler`.
 
-```sh
-bundle config set --local path vendor/bundle
-bundle install
-```
+The default bundle does not install the optional `plugins` group. See
+"Optional plugin dependencies" below and [`PLUGINS.md`](PLUGINS.md) before
+installing anything for a particular plugin.
 
 Everything below that says `automatic` becomes `bundle exec bin/automatic` in a
 checkout.
