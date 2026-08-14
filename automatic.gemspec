@@ -74,7 +74,8 @@ Gem::Specification.new do |spec|
   # installed gem impose its own bundle on the program requiring it.
   excluded = %w[.gitignore .github Gemfile Rakefile script spec test vendor]
   spec.files = tracked.reject { |path|
-    excluded.any? { |prefix| path == prefix || path.start_with?("#{prefix}/") }
+    path.end_with?('.gem') ||
+      excluded.any? { |prefix| path == prefix || path.start_with?("#{prefix}/") }
   }.select { |path| File.file?(File.join(__dir__, path)) }
 
   spec.bindir             = 'bin'
