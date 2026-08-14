@@ -3,8 +3,8 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  9, 2012
-# Updated::   Jan 24, 2015
-# Copyright:: Copyright (c) 2012-2015 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
@@ -13,21 +13,30 @@ require 'automatic'
 
 describe Automatic do
   describe "#run" do
-    describe "with a root dir which has default recipe" do
+    describe "without a recipe" do
       subject {
-          Automatic.run(:recipe   => "",
-                        :root_dir => APP_ROOT,
-                        :user_dir => APP_ROOT + "/spec/user_dir")
+        Automatic.run(:recipe   => nil,
+                      :root_dir => APP_ROOT,
+                      :user_dir => APP_ROOT + "/spec/user_dir")
       }
 
-      it { expect { subject }.to raise_error }
+      it { expect { subject }.to raise_error Automatic::NoRecipeError }
     end
   end
 
   describe "#version" do
     subject { Automatic.const_get(:VERSION) }
 
-    it { expect(subject).to eq "14.12.2-devel" }
+    # The VERSION file and the constant are one number recorded twice, and
+    # doc/POLICY.md section 10.2 requires them to be changed together. This
+    # asserts that they agree rather than pinning a literal.
+    it "agrees with the VERSION file" do
+      expect(subject).to eq File.read(File.join(APP_ROOT, "VERSION")).strip
+    end
+
+    it "is a year.month release number" do
+      expect(subject).to match(/\A\d{2}\.\d{2}(\.\d+)?\z/)
+    end
   end
 
   describe "#(root)_dir" do

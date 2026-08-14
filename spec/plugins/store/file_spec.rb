@@ -3,8 +3,8 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  4, 2012
-# Updated::   Feb 25, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -14,7 +14,7 @@ require 'tmpdir'
 require 'pathname'
 
 describe Automatic::Plugin::StoreFile do
-  it "should store the target link" do
+  it "should store the target link", :network do
     Dir.mktmpdir do |dir|
       instance = Automatic::Plugin::StoreFile.new(
         { "path" => dir },

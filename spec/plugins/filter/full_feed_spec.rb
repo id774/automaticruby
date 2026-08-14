@@ -2,16 +2,18 @@
 # Name::      Automatic::Plugin::Filter::FullFeed
 # Author::    774 <http://id774.net>
 # Created::   Jan 24, 2013
-# Updated::   May 23, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'filter/full_feed'
+require 'fileutils'
+require 'tmpdir'
 
 describe Automatic::Plugin::FilterFullFeed do
-  context "It should be matched by siteinfo" do
+  context "It should be matched by siteinfo", :network do
     subject {
       Automatic::Plugin::FilterFullFeed.new(
         {
@@ -89,20 +91,19 @@ describe Automatic::Plugin::FilterFullFeed do
           }})}
 
     describe "#run" do
-      def cleanup_dir
-        root_dir = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", ".."))
-        dir = (File.expand_path('~/.automatic/assets/siteinfo'))
-        if File.directory?(dir)
-          Automatic::Log.puts(:info, "Removing #{dir}")
-          FileUtils.rm_r(dir)
-        end
-        return dir, root_dir
-      end
-
+      # This exercises the plugin's preference for ~/.automatic/assets over the
+      # installation's own. HOME is redirected to a temporary directory for the
+      # duration: the previous version of this spec deleted the real
+      # ~/.automatic/assets/siteinfo, so running the suite destroyed whatever
+      # siteinfo the developer had put there.
       before do
-        dir, root_dir = cleanup_dir
+        @real_home = ENV['HOME']
+        @tmp_home = Dir.mktmpdir('automatic-spec-home')
+        ENV['HOME'] = @tmp_home
+
+        dir = File.expand_path('~/.automatic/assets/siteinfo')
         FileUtils.mkdir_p(dir)
-        FileUtils.cp_r(root_dir + '/assets/siteinfo/items_all.json', dir)
+        FileUtils.cp(File.join(APP_ROOT, 'assets/siteinfo/items_all.json'), dir)
       end
 
       its(:run) { should have(1).feeds }
@@ -122,7 +123,8 @@ describe Automatic::Plugin::FilterFullFeed do
       }
 
       after do
-        cleanup_dir
+        ENV['HOME'] = @real_home
+        FileUtils.rm_rf(@tmp_home)
       end
     end
   end

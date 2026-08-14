@@ -3,8 +3,8 @@
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
 # Created::   Feb  9, 2013
-# Updated::   Jan 15, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -44,7 +44,7 @@ module Automatic::Plugin
       request.set_form_data(params)
       http             = Net::HTTP.new('www.instapaper.com', 443)
       http.use_ssl     = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
       http.start { http.request(request) }
     end
   end

@@ -2,17 +2,17 @@
 # Name::      Automatic::Plugin::Subscription::Xml
 # Author::    774 <http://id774.net>
 # Created::   Jul 12, 2013
-# Updated::   Oct 29, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
   class SubscriptionXml
+    require 'active_support/core_ext/hash/conversions'
+    require 'active_support/json'
     require 'open-uri'
-    require 'active_support'
-    require 'active_support/core_ext'
-    require 'active_support/deprecation'
     require 'rss'
+    require 'uri'
 
     def initialize(config, pipeline=[])
       @config = config
@@ -40,7 +40,7 @@ module Automatic::Plugin
 
     def create_rss(url)
       Automatic::Log.puts("info", "Parsing XML: #{url}")
-      hash = Hash.from_xml(open(url).read)
+      hash = Hash.from_xml(URI.open(url).read)
       json = hash.to_json
       data = ActiveSupport::JSON.decode(json)
       unless data.nil?

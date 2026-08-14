@@ -1,0 +1,1043 @@
+# Recipes and plugins
+
+## 1. What this document is
+
+This is the specification of the two things outside this repository that depend
+on it: the **Recipe** format, which operators write, and the **plugin
+contract**, which plugin authors implement. It also catalogues the plugins
+shipped in the gem, with what each one accepts and whether it still works.
+
+The system these two interfaces belong to is described in
+[`REQUIREMENTS.md`](REQUIREMENTS.md); the machinery that implements them is in
+[`BASIC_DESIGN.md`](BASIC_DESIGN.md); the rules for changing them are in
+[`POLICY.md`](POLICY.md).
+
+It stands on its own. Nothing in it is completed by a document kept in another
+repository.
+
+---
+
+## 2. The Recipe
+
+### 2.1 What a Recipe is
+
+A Recipe is a YAML file describing one job: which plugins run, in what order,
+and with what settings. It is the whole of the job's definition — there is no
+other configuration file and no environment to set.
+
+```sh
+automatic -c ~/.automatic/config/example/feed2console.yml
+```
+
+### 2.2 Structure
+
+```yaml
+global:                       # optional
+  log:
+    level: info               # info | warn | error | none
+
+plugins:                      # required
+  - module: SubscriptionFeed  # required
+    config:                   # optional
+      feeds:
+        - https://example.com/feed
+
+  - module: FilterIgnore
+    config:
+      link:
+        - example.net
+
+  - module: PublishConsole    # a plugin needing no settings omits config
+```
+
+The document is a mapping with two keys at the top level.
+
+### 2.3 `plugins`
+
+A sequence of plugin entries, run in the order written. Required: a Recipe with
+no `plugins` sequence is refused with `Automatic::InvalidRecipeError`.
+
+Each entry is a mapping:
+
+| Key | Required | Type | Meaning |
+| --- | --- | --- | --- |
+| `module` | yes | string | The plugin class name, in CamelCase |
+| `config` | no | mapping | Passed to that plugin and read by nothing else |
+
+- `module` names a class in `Automatic::Plugin`. How the name is resolved to a
+  file is section 3.2. A name that resolves to nothing raises
+  `Automatic::NoPluginError` **before any plugin runs**, so a typo costs
+  nothing.
+- `config` is handed to the plugin untouched. The framework does not validate
+  it, does not apply defaults to it and does not know what any key means. What
+  a given plugin accepts is section 6.
+- An entry may name the same module more than once. Two `FilterIgnore` entries
+  with different keywords is ordinary use.
+
+### 2.4 `global`
+
+Optional, and almost empty on purpose. One key is read:
+
+| Key | Values | Meaning |
+| --- | --- | --- |
+| `global.log.level` | `info`, `warn`, `error`, `none` | The log threshold for this run. Default `info`. |
+
+`global.timezone` and `global.cache` appear in the example Recipes and in
+Recipes written years ago. **Nothing reads them.** They are inert, they are kept
+so that existing Recipes are not edited for no reason, and they are recorded
+here so that no one gives them a meaning by accident. A Recipe that sets them
+behaves exactly as one that does not.
+
+An unrecognised key anywhere in `global` is ignored.
+
+### 2.5 How `-c` is resolved
+
+The value of `-c` is looked for in `~/.automatic/config` first, and used as a
+path as given if it is not there:
+
+```sh
+automatic -c blog.yml            # ~/.automatic/config/blog.yml, if it exists
+automatic -c ./recipes/blog.yml  # otherwise, exactly this path
+automatic -c /etc/automatic/blog.yml
+```
+
+A path that resolves to nothing fails with the exit status `1` and a message
+naming the file.
+
+### 2.6 Types
+
+Recipe values are ordinary YAML scalars, sequences and mappings, and the
+framework loads them **safely**: a Recipe may not name a Ruby class to
+instantiate, and a document that tries to is refused. YAML aliases are
+permitted, so a block of settings can be shared:
+
+```yaml
+plugins:
+  - module: SubscriptionFeed
+    config: &retrying
+      retry: 3
+      interval: 5
+      feeds:
+        - https://example.com/feed
+
+  - module: StoreFile
+    config:
+      <<: *retrying
+      path: /var/tmp/automatic
+```
+
+Note what the plugins do with types, because it is not always what YAML implies:
+
+- `retry` and `interval` are read through `to_i`. An absent value is `0`, which
+  means one attempt and no pause. A quoted `"3"` and a bare `3` behave alike.
+- Keyword lists (`link`, `title`, `description`) are sequences of strings, and
+  matching is a **substring** test, not a pattern and not a whole-word match.
+  An empty string therefore matches everything, which is a way to drop
+  everything and is occasionally used deliberately.
+- Booleans are usually spelled `1` and `0` rather than `true` and `false`, and
+  the plugins that do this compare against `1` exactly. This is inherited and is
+  noted per plugin in section 6.
+
+### 2.6.1 Setting names that collide
+
+The Recipe is wrapped in `Hashie::Mash`, which is what lets a plugin entry answer
+to `plugin.module` and `plugin.config`. The cost is that a setting name which is
+also a method of `Hash` or `Enumerable` — `count`, `first`, `key`, `max`, `min`,
+`select`, `size`, `sort`, `zip` — makes it log a warning on every run:
+
+```text
+You are setting a key that conflicts with a built-in method Hashie::Mash#sort
+defined in Enumerable. This can cause unexpected behavior when accessing the
+key as a property. You can still access the key via the #[] method.
+```
+
+The value is stored and is read correctly, because plugins read their settings
+by string key rather than as a property. This is noise, not breakage, and a
+Recipe using such a key needs no change.
+
+Two shipped plugins have such a name, from before this was understood, and they
+keep it: `FilterSort`'s `sort` and `PublishMemcached`'s `key`. Renaming them
+would break every Recipe using them, which is not a trade worth making for a
+warning. **A new plugin should not introduce one**: prefer `max_length` to
+`max`, `item_count` to `count`, `cache_key` to `key`.
+
+### 2.7 Failure
+
+| Situation | Result |
+| --- | --- |
+| The file does not exist | Exit `1`, the path is named |
+| The file is not valid YAML | Exit `1`, the parser's message is shown |
+| The document is not a mapping | `Automatic::InvalidRecipeError`, exit `1` |
+| No `plugins` sequence | `Automatic::InvalidRecipeError`, exit `1` |
+| `module` names an unknown plugin | `Automatic::NoPluginError`, exit `1`, nothing has run |
+| A plugin raises during `run` | The run ends there. Exit `1`. Earlier plugins' effects stand. |
+
+The last row is the one to design Recipes around: there is no rollback and no
+resume. A Recipe that must not repeat its effect on the next run puts a store
+plugin in front of the plugin with the effect. See
+[`REQUIREMENTS.md`](REQUIREMENTS.md) section 12.
+
+### 2.8 Compatibility
+
+A Recipe that worked with an earlier release keeps working. Recipes live outside
+this repository and cannot be migrated by it, so removing a key, renaming a key,
+changing a default so that an unchanged Recipe does something else, or changing
+how a value is interpreted are breaking changes. They are made deliberately and
+recorded in [`VERSIONS`](VERSIONS). Adding an optional key whose default
+preserves current behaviour is not one.
+
+---
+
+## 3. The plugin contract
+
+### 3.1 The whole of it
+
+A plugin is a Ruby class in the `Automatic::Plugin` namespace that can be built
+with two arguments and answers one method:
+
+```ruby
+module Automatic::Plugin
+  class FilterExample
+    def initialize(config, pipeline = [])
+      @config   = config
+      @pipeline = pipeline
+    end
+
+    def run
+      # ... work ...
+      @pipeline
+    end
+  end
+end
+```
+
+- `config` is the entry's `config` mapping, or `nil` when the entry had none.
+  **A plugin that can be used without settings must tolerate `nil`.**
+- `pipeline` is the value returned by the previous plugin, or `[]` for the
+  first.
+- `run` returns the pipeline for the next plugin. Its return value is the whole
+  of its output to the framework.
+
+There is no `setup`, no `teardown`, no registration call, no base class and no
+mixin to include. A class with those two methods, in a file the loader can find,
+is a plugin.
+
+### 3.2 Naming and location
+
+The class name and the file path are the same fact written twice, and the loader
+converts between them:
+
+```text
+Automatic::Plugin::SubscriptionFeed
+                   |
+                   | underscore
+                   v
+              subscription_feed
+                   |
+                   | split on the category directory name
+                   v
+          subscription / feed.rb
+```
+
+So the rules are:
+
+- The class name is `CamelCase` and begins with its category: `Subscription`,
+  `CustomFeed`, `Filter`, `Store`, `Provide`, `Notify` or `Publish`.
+- The file is `<category>/<rest>.rb`, where both parts are `snake_case`.
+- The file defines exactly that class, inside `module Automatic::Plugin`.
+
+Examples, including the ones that are easy to get wrong:
+
+| Class | File |
+| --- | --- |
+| `SubscriptionFeed` | `subscription/feed.rb` |
+| `FilterAbsoluteURI` | `filter/absolute_uri.rb` |
+| `CustomFeedSVNLog` | `custom_feed/svn_log.rb` |
+| `PublishHatenaBookmark` | `publish/hatena_bookmark.rb` |
+| `SubscriptionTwitterSearch` | `subscription/twitter_search.rb` |
+
+The category directory is not decoration: it is half of the lookup key. A file
+in a directory whose name is not a prefix of the underscored class name is never
+found.
+
+### 3.3 Discovery and precedence
+
+Two search roots, in this order:
+
+1. `~/.automatic/plugins/<category>/<rest>.rb`
+2. `<installation>/plugins/<category>/<rest>.rb`
+
+The first match wins, so **a plugin in the user directory shadows a shipped
+plugin of the same name.** That is the supported way to change a shipped
+plugin's behaviour without editing the installation.
+
+Creating a new category is creating a directory. `~/.automatic/plugins/mine/`
+plus a class named `MineSomething` works with no change to the framework, though
+staying inside the seven categories is preferred, because their names tell a
+reader where in a pipeline the plugin belongs.
+
+Loading is lazy: the loader registers an `autoload`, so the file is read when
+the constant is first used. A syntax error in a plugin therefore surfaces when
+that plugin's entry is reached, not when the Recipe is loaded.
+
+### 3.4 The pipeline value
+
+Everything a plugin receives and returns has one shape:
+
+> an `Array` of feed objects, where a feed object answers `#items`, and an item
+> answers `#title`, `#link`, `#description`, `#date`, `#author`, `#comments`,
+> `#source`, `#enclosure` and `#content_encoded`.
+
+The elements are RSS objects, from `RSS::Parser` or built by `RSS::Maker`. A
+plugin whose source is not a feed converts it, and `Automatic::FeedMaker` is how:
+
+```ruby
+items = rows.map do |row|
+  Automatic::FeedMaker.generate_feed(
+    'title' => row[:title], 'url' => row[:url], 'description' => row[:body]
+  )
+end
+@pipeline << Automatic::FeedMaker.create_pipeline(items)
+@pipeline
+```
+
+`FeedMaker.generate_feed` takes a hash with any of `title`, `url`,
+`description`, `author`, `comments` — note `url`, not `link` — and returns one
+item. `FeedMaker.create_pipeline` takes a list of items and returns one feed
+object. A plugin that produces items ends with those two calls.
+
+Rules that follow from the shape:
+
+- **Return the shape, always.** Returning `nil`, a string or a bare array of
+  items ends the pipeline for everything after it.
+- **`link` may be `nil`, and so may any other field.** Filters signal "not
+  applicable" by setting `link` to `nil`, so a plugin that dereferences a field
+  without checking will be handed `nil` sooner or later.
+- **Guard the feed itself.** `@pipeline.each { |feeds| next if feeds.nil? }` is
+  the prevailing idiom, because a subscription plugin that failed may have put a
+  `nil` in the array.
+- **A dropped item means a rebuilt feed.** RSS objects are not conveniently
+  filtered in place, so a plugin that removes items collects the survivors and
+  calls `FeedMaker.create_pipeline` on them.
+- The field names are RSS names used for values that are not RSS. `title` may
+  hold a weather condition. This is a known cost of one shape and it is
+  accepted.
+
+### 3.5 Settings
+
+- Read from `@config`, by string key: `@config['interval']`.
+- Assume nothing. `@config` itself may be `nil`, and any key may be missing.
+- Follow the established names: `retry` for an attempt count, `interval` for
+  seconds between attempts, `db` for a database file, `path` for a directory.
+- Do not choose a setting name that is a method of `Hash` or `Enumerable`; see
+  section 2.6.1.
+- Do not read the environment, and do not read a file other than one named in
+  the settings. The `config` mapping is the plugin's entire input besides the
+  pipeline.
+
+### 3.6 Errors, retrying and logging
+
+A plugin owns its own transient failures. The shape used throughout:
+
+```ruby
+retries   = 0
+retry_max = @config['retry'].to_i
+begin
+  # ... the attempt ...
+rescue => e
+  retries += 1
+  Automatic::Log.puts('error', "ErrorCount: #{retries}, #{e.message}")
+  sleep @config['interval'].to_i
+  retry if retries <= retry_max
+end
+```
+
+- **A failure is logged.** Whatever the plugin decides to do about an error, the
+  log is the only record an unattended run leaves. Swallowing an error silently
+  is a defect; so is logging it at `info`.
+- **Raising is allowed, and it ends the run.** The framework does not catch
+  plugin exceptions. Raise when continuing would be wrong; rescue when the
+  Recipe should carry on with less data.
+- **Log through `Automatic::Log`, not `puts`.** The exception is a plugin whose
+  purpose is to write to the terminal, which holds an output object in an
+  instance variable so that a test can substitute it.
+
+### 3.7 Credentials
+
+Credentials arrive as ordinary settings, which makes the Recipe holding them a
+secret file. A plugin therefore:
+
+- never logs a credential, and never logs `@config` wholesale;
+- never writes one into a pipeline item, where a later publishing plugin would
+  send it somewhere;
+- verifies TLS certificates. Disabling verification is not acceptable, whatever
+  a service's certificate is doing.
+
+### 3.8 Dependencies
+
+A plugin requires its own libraries at the top of its own file:
+
+```ruby
+module Automatic::Plugin
+  class PublishMemcached
+    require 'dalli'
+```
+
+That is what keeps a gem needed by one plugin out of everyone else's
+installation. A gem used by a single plugin is not added to the framework's
+runtime dependencies; see [`POLICY.md`](POLICY.md) section 9.
+
+Where a plugin has an optional capability that needs a heavier library — S3
+support in `StoreFile`, for instance — the `require` goes inside the branch that
+uses it, so the plugin loads and its ordinary path works without that gem
+installed.
+
+### 3.9 Testing a plugin
+
+Construct it, run it, assert on what came back:
+
+```ruby
+require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
+require 'filter/example'
+
+describe Automatic::Plugin::FilterExample do
+  subject do
+    described_class.new({ 'key' => 'value' },
+      AutomaticSpec.generate_pipeline do
+        feed { item 'https://example.com/a', 'A' }
+        feed { item 'https://example.com/b', 'B' }
+      end)
+  end
+
+  its(:run) { should have(1).feeds }
+end
+```
+
+`AutomaticSpec.generate_pipeline` builds a pipeline; `feed` opens a feed object
+and `item url, title, description, date, author, source, enclosure` adds one
+item to it.
+
+A plugin test reaches no network and needs no credential. A plugin that cannot
+be tested without one is tested for what it can be — its settings handling, its
+message construction — and the rest is left to the integration Recipes under
+`test/integration`, which are run by hand.
+
+### 3.10 Where a plugin goes
+
+| Category | It should | It should not |
+| --- | --- | --- |
+| `Subscription` | Acquire from outside and produce a pipeline | Publish |
+| `CustomFeed` | Build a feed from a source that is not one | Filter |
+| `Filter` | Select, reorder, rewrite; return a pipeline | Have side effects outside the pipeline |
+| `Store` | Persist, and drop what has been seen before | Send anything outward |
+| `Provide` | Emit `content_encoded` elsewhere | Alter the pipeline |
+| `Notify` | Send a notification, return the pipeline unchanged | Alter the pipeline |
+| `Publish` | Send the result out, or print it; return the pipeline | Alter the pipeline |
+
+Nothing enforces this. It is what makes a Recipe readable, and it is what a
+reviewer will ask about.
+
+---
+
+## 4. Writing a plugin, end to end
+
+```sh
+automatic scaffold                       # creates ~/.automatic and its categories
+$EDITOR ~/.automatic/plugins/filter/short_title.rb
+```
+
+```ruby
+# -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Filter::ShortTitle
+# Description:: Keep only items whose title is at most `max` characters.
+
+module Automatic::Plugin
+  class FilterShortTitle
+    DEFAULT_MAX_LENGTH = 40
+
+    def initialize(config, pipeline = [])
+      @config   = config || {}
+      @pipeline = pipeline
+      @max      = (@config['max_length'] || DEFAULT_MAX_LENGTH).to_i
+    end
+
+    def run
+      @pipeline.each_with_object([]) do |feeds, returned|
+        next if feeds.nil?
+
+        kept = feeds.items.select { |item| item.title.to_s.length <= @max }
+        Automatic::Log.puts('info', "ShortTitle: kept #{kept.size} of #{feeds.items.size}")
+        returned << Automatic::FeedMaker.create_pipeline(kept) unless kept.empty?
+      end
+    end
+  end
+end
+```
+
+```yaml
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - https://example.com/feed
+  - module: FilterShortTitle
+    config:
+      max_length: 30
+  - module: PublishConsole
+```
+
+```sh
+automatic -c ~/.automatic/config/short.yml
+```
+
+Nothing was registered and no framework file was touched. Naming the class
+`FilterShortTitle` and putting it in `filter/short_title.rb` is the whole of the
+wiring.
+
+---
+
+## 5. Reading the catalogue
+
+Section 6 lists every plugin shipped in the gem. Each carries a status:
+
+| Status | Meaning |
+| --- | --- |
+| **Supported** | Works on the supported Ruby versions with the current dependencies. Covered by the default test suite where it can be. |
+| **Supported (external)** | The plugin is current, but it needs something the operator provides — a running service, an installed command, a data file. |
+| **Needs rework** | The service or API still exists, but this plugin speaks an interface that has been replaced. It will not work as written. |
+| **Unsupported** | The service has shut down, or its API is no longer reachable in the way this plugin uses it. Kept as history, not expected to work. |
+
+Two rules govern this table, and they are the reason it exists at all:
+
+- **Nothing is faked.** A plugin in the last two rows is not stubbed, mocked or
+  simulated to make a test pass or a catalogue entry look better. Its specs are
+  excluded from the default suite because its gem is absent or its service is
+  gone, and that absence is the honest signal.
+- **Nothing is deleted for being old.** These plugins are the record of what the
+  framework was used for, and several remain useful as templates for a
+  replacement. Removal is a separate, deliberate decision.
+
+**This classification is a snapshot taken in August 2026,** based on the
+published status of each service and on what each plugin's code actually calls.
+The statuses in the "external service" rows depend on the outside world and can
+change without any commit here. Where a status was reached from published
+information rather than from a live check, the entry says so. To verify one
+yourself, run its Recipe from `test/integration` by hand; those are not part of
+CI and never will be.
+
+Restoring a **Needs rework** plugin is a self-contained piece of work and a good
+first contribution. It is not part of this stage of the modernization.
+
+---
+
+## 6. The plugins
+
+### 6.1 Subscription
+
+Acquire from outside; produce a pipeline. Called first in a Recipe.
+
+#### SubscriptionFeed — **Supported**
+
+`subscription/feed.rb`. Fetches and parses feeds. The plugin most Recipes start
+with.
+
+```yaml
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - https://example.com/feed
+        - https://example.org/rss
+      retry: 3
+      interval: 5
+```
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `feeds` | sequence | Feed URLs, fetched in order. Required. |
+| `retry` | integer | Attempts after the first, per feed. Default `0`. |
+| `interval` | integer | Seconds between attempts. Default `0`. |
+
+A feed that fails after its retries is logged and skipped; the others still run.
+
+#### SubscriptionLink — **Supported**
+
+`subscription/link.rb`. Fetches pages and makes an item of every `<a href>`.
+For sites that publish no feed. Returns only what it fetched, discarding any
+incoming pipeline.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `urls` | sequence | Page URLs. Required. |
+| `retry` | integer | Attempts after the first. Default `0`. |
+| `interval` | integer | Seconds between requests. Default `0`. |
+
+Set `interval` when fetching several pages from one host.
+
+#### SubscriptionXml — **Supported**
+
+`subscription/xml.rb`. `GET`s an XML endpoint, converts the document to a hash,
+and puts it in one item's `content_encoded`. Pair with `ProvideFluentd` to move
+an XML API into a log pipeline. Needs `activesupport`.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `urls` | sequence | XML endpoints. Required. |
+| `retry` | integer | Attempts after the first. Default `0`. |
+| `interval` | integer | Seconds between requests. Default `0`. |
+
+#### SubscriptionText — **Supported**
+
+`subscription/text.rb`. Builds a feed from literal values or TSV files. Reaches
+no network, which makes it the plugin to test a Recipe's later half with.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `titles` | sequence | One item per title, no link |
+| `urls` | sequence | One item per URL, no title |
+| `feeds` | sequence | Mappings of `title`, `url`, `description`, `author`, `comments` |
+| `files` | sequence | TSV paths; columns are title, url, description, author, comments |
+
+The TSV separator is a tab, the file is read as UTF-8, and `~` is expanded. Any
+combination of the four keys may be given.
+
+#### SubscriptionTumblr — **Supported (external)**
+
+`subscription/tumblr.rb`. Fetches a Tumblr blog's pages, takes the links, and
+drops any that leave the blog's own host. `pages` walks `/page/2` and onward.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `urls` | sequence | Blog URLs. Required. |
+| `pages` | integer | How many pages back to walk. Default `1`. |
+| `retry` | integer | Attempts after the first. Default `0`. |
+| `interval` | integer | Seconds between requests. Default `0`. |
+
+It reads HTML written for a browser, so it depends on the theme a given blog
+uses and on Tumblr's page structure. Verify against the blog you mean to follow
+before putting it in `cron`, and set `interval`.
+
+#### SubscriptionTwitter — **Unsupported**
+
+`subscription/twitter.rb`. Scraped `twitter.com` by matching CSS class names as
+they were in 2014 (`js-tweet-text`, `tweet-timestamp js-permalink js-nav`). The
+site is now X, the markup is gone, and a timeline is not served to an
+unauthenticated client at all. Nothing in this plugin can match.
+
+#### SubscriptionTwitterSearch — **Unsupported**
+
+`subscription/twitter_search.rb`. Calls `Twitter::Client.new(...).search(...)`,
+the interface of the `twitter` gem version 4. The gem's current major version
+does not have that class, and search on the current API is not available on the
+free tier. Restoring it means a new plugin against the current API and a paid
+plan, not a dependency bump.
+
+#### SubscriptionPocket — **Unsupported**
+
+`subscription/pocket.rb`. Reads the Pocket v3 `retrieve` endpoint through the
+`pocket-ruby` gem. Pocket was shut down by Mozilla in July 2025 and the API is
+gone. The gem remains on RubyGems; the service does not.
+
+#### SubscriptionWeather — **Unsupported**
+
+`subscription/weather.rb`. Uses the `weather_hacker` gem against livedoor
+Weather Hacks, which was terminated in 2020. The gem was last published in 2013.
+
+#### SubscriptionGGuide — **Unsupported**
+
+`subscription/g_guide.rb`. Searches a Japanese television schedule RSS at
+`tv.so-net.ne.jp`, over plain HTTP. The service is no longer operating at that
+address. Reported status, not a live check.
+
+#### SubscriptionChanToru — **Unsupported**
+
+`subscription/chan_toru.rb`. Runs `SubscriptionGGuide` and rewrites each link to
+a So-net "CHAN-TORU" recording URL. It cannot work while `SubscriptionGGuide`
+does not, and the target service is likewise gone. This is also the one plugin
+that depends on another plugin, which is noted in
+[`BASIC_DESIGN.md`](BASIC_DESIGN.md) section 4.9 and is not a pattern to copy.
+
+### 6.2 CustomFeed
+
+#### CustomFeedSVNLog — **Supported (external)**
+
+`custom_feed/svn_log.rb`. Runs `svn log --xml` against a repository and makes a
+feed of the revisions. Needs the `svn` command and the `xml-simple` gem, neither
+of which is installed by this gem.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `target` | string | Repository URL. Required. |
+| `fetch_items` | integer | Revisions to fetch. Default `30`. |
+| `title` | string | Channel title. Default empty. |
+
+`target` is interpolated into a shell command. Point it at a repository URL you
+control and nothing else.
+
+### 6.3 Filter
+
+Select, reorder or rewrite. No side effects outside the pipeline.
+
+#### FilterIgnore — **Supported**
+
+`filter/ignore.rb`. Drops items containing any listed keyword. Matching is a
+substring test, so an empty string drops everything.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `title` | sequence | Drop when the title contains any of these |
+| `link` | sequence | Drop when the link contains any of these |
+| `description` | sequence | Drop when the description contains any of these |
+
+All three are optional and combine as "or". An item whose field is missing is
+kept, with a warning.
+
+#### FilterAccept — **Supported**
+
+`filter/accept.rb`. The complement of `FilterIgnore`: keeps only items that
+match. Same three keys, same substring rule.
+
+#### FilterSort — **Supported**
+
+`filter/sort.rb`. Sorts each feed's items by date.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `sort` | string | `asc` sorts oldest first. Anything else, including absent, sorts newest first. |
+
+Items must carry a date; a feed built from a source without one will fail here.
+
+`sort` collides with a `Hashie::Mash` built-in and logs a warning per run. The
+setting works; see section 2.6.1.
+
+#### FilterOne — **Supported**
+
+`filter/one.rb`. Reduces each feed to a single item.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `pick` | string | `last` takes the last item. Anything else, including absent, takes the first. |
+
+#### FilterRand — **Supported**
+
+`filter/rand.rb`. Shuffles each feed's items. Combined with `FilterOne`, picks
+one at random. No settings.
+
+#### FilterClear — **Supported**
+
+`filter/clear.rb`. Returns an empty pipeline. Used to end a Recipe after a store
+plugin has done the work, so that later plugins publish nothing. No settings.
+
+#### FilterImage — **Supported**
+
+`filter/image.rb`. Sets `link` to `nil` unless it ends in `.jpg`, `.jpeg`,
+`.gif`, `.png` or `.tiff`. Note that it does not remove the items — it blanks
+their links, and the plugins after it skip items whose link is `nil`. No
+settings.
+
+#### FilterImageSource — **Supported**
+
+`filter/image_source.rb`. Replaces each item with one item per image found: the
+`<img src>` values in the description, or, if there are none, the images on the
+page the link points at. Fetching pages means network access. No settings.
+
+#### FilterAbsoluteURI — **Supported**
+
+`filter/absolute_uri.rb`. Rewrites relative links to absolute ones.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `url` | string | The base. A trailing slash is added if absent. Required. |
+
+#### FilterSanitize — **Supported**
+
+`filter/sanitize.rb`. Strips HTML from descriptions, using the `sanitize` gem.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `mode` | string | `basic`, `relaxed`, or `restricted`. Default `restricted`. |
+
+#### FilterTumblrResize — **Supported**
+
+`filter/tumblr_resize.rb`. Rewrites a Tumblr image link to the 1280-pixel
+variant, by substituting the size suffix. Assumes `FilterImage` or
+`FilterImageSource` has already put an image URL in the link. No settings.
+
+#### FilterDescriptionLink — **Supported**
+
+`filter/description_link.rb`. Takes the last HTTP or HTTPS URL out of the
+description and makes it the link. For feeds that carry the real destination in
+the body.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `clear_description` | `1` | Empty the description afterwards. Any other value leaves it. |
+| `get_title` | `1` | Fetch the new link and use its `<title>`. Any other value skips it. |
+
+`get_title` makes one request per item; use `FilterOne` or a store plugin before
+it on a large feed.
+
+#### FilterFullFeed — **Supported (external)**
+
+`filter/full_feed.rb`. Replaces a summary with the article body, by matching the
+link against a "siteinfo" database of URL patterns and XPaths and fetching the
+page.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `siteinfo` | string | File name under the assets directory. Required. |
+
+The shipped `assets/siteinfo/items_all.json` is a snapshot of the LDRFullFeed
+database taken from `wedata.net`, which no longer operates, so the file cannot
+be refreshed from its origin and its newest entries are from 2013. The plugin
+works; how well it works depends on whether the sites you read are in that
+snapshot and still laid out the same way. Supplying your own file in
+`~/.automatic/assets/siteinfo/` is the way to keep it useful.
+
+#### FilterGithubFeed — **Supported**
+
+`filter/github_feed.rb`. Converts Atom entries — where `title`, `id` and
+`content` are elements with a `.content` — into the flat items the rest of the
+pipeline expects. Needed because GitHub publishes Atom, not RSS. No settings.
+
+#### FilterGoogleNews — **Needs rework**
+
+`filter/google_news.rb`. Rewrites a Google News link to its destination by
+taking whatever follows `&url=`. It matches `http://news.google.com` over plain
+HTTP, and the redirect format it parses is no longer what Google News emits. The
+plugin runs without error and simply matches nothing.
+
+### 6.4 Store
+
+Persist, and drop what has already been seen. A store plugin is what makes a
+Recipe safe to run repeatedly.
+
+#### StorePermalink — **Supported**
+
+`store/permalink.rb`. Records each item's link in SQLite and passes on only the
+links not already recorded. The usual guard against publishing the same item
+twice.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `db` | string | Database file name, under `~/.automatic/db`. Required. |
+
+The file is created on first use, as is the table. Deleting it makes everything
+look new again.
+
+#### StoreFullText — **Supported**
+
+`store/full_text.rb`. Records title, link, description and `content_encoded`,
+and passes on only what is new. Deduplicates on link **or** title, so a
+republished article with a new URL is not stored twice. Pair with
+`FilterFullFeed` to archive article bodies.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `db` | string | Database file name, under `~/.automatic/db`. Required. |
+
+#### StoreFile — **Supported**, with an S3 path that **needs rework**
+
+`store/file.rb`. Downloads what each link points at and rewrites the link to a
+`file://` URI, which is how `PublishAmazonS3` later knows it has a local file.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `path` | string | Directory to save into; created if absent. Required. |
+| `retry` | integer | Attempts after the first. Default `0`. |
+| `interval` | integer | Seconds between downloads. Default `0`. |
+| `access_key` | string | S3 only |
+| `secret_key` | string | S3 only |
+| `bucket_name` | string | S3 only |
+
+HTTP and HTTPS downloads work. A link with the `s3n://` scheme is fetched from
+S3 through an interface of AWS SDK for Ruby version 1, which the current SDK
+does not provide; that path needs rework. The `aws-sdk` requirement is made
+lazily, inside the S3 branch, so the ordinary download path works without the
+gem installed.
+
+Set `interval` when downloading a series from one host.
+
+### 6.5 Provide
+
+#### ProvideFluentd — **Supported (external)**
+
+`provide/fluentd.rb`. Posts each item's `content_encoded` to Fluentd. Distinct
+from `PublishFluentd`, which posts the item's fields. Pair with
+`SubscriptionXml` to move an XML API into Fluentd. Needs the `fluent-logger`
+gem and a Fluentd instance.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `host` | string | Fluentd host |
+| `port` | integer | Fluentd port |
+| `tag` | string | Tag, for example `automatic.feed` |
+| `mode` | string | `test` builds no connection and sends nothing |
+
+`content_encoded` must be something Fluentd accepts as a record; a plain string
+is logged as an error and skipped.
+
+### 6.6 Notify
+
+#### NotifyIkachan — **Supported (external)**
+
+`notify/ikachan.rb`. Posts each item to an IRC channel through an `ikachan`
+HTTP-to-IRC gateway, joining the channel first. The gateway is software the
+operator runs; there is no service to be shut down.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `url` | string | Gateway base URL. Required. |
+| `port` | integer | Gateway port. Default `4979`. |
+| `channels` | string | Comma-separated; a leading `#` is added if absent. Required. |
+| `command` | string | `notice` or `privmsg`. Default `notice`. |
+| `interval` | integer | Seconds between posts. Default `0`. |
+
+Honours a `PROXY` environment variable, on port 8080.
+
+### 6.7 Publish
+
+Send the result outward, or print it. Normally last in a Recipe.
+
+#### PublishConsole — **Supported**
+
+`publish/console.rb`. Prints each item with `pretty_inspect`. The plugin to end
+a Recipe with while writing it. No settings.
+
+#### PublishConsoleLink — **Supported**
+
+`publish/console_link.rb`. Prints each item's link, one per line, and nothing
+else. Useful in a pipe. No settings.
+
+#### PublishEject — **Supported (external)**
+
+`publish/eject.rb`. Opens and closes the optical drive once per item, using
+`eject` on GNU/Linux or `drutil` on macOS. A physical notification. Needs the
+command to exist.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `interval` | integer | Seconds between items. Default `0`. |
+
+#### PublishMemcached — **Supported (external)**
+
+`publish/memcached.rb`. Collects the whole pipeline into one hash keyed by link
+and stores it under a single key. Needs the `dalli` gem and a memcached server.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `host` | string | memcached host. Required. |
+| `port` | string | memcached port. Required. |
+| `key` | string | The key to store under. Required. |
+
+It writes one key per run, replacing the previous value. `key` collides with a
+`Hashie::Mash` built-in and logs a warning per run; the setting works, see
+section 2.6.1.
+
+#### PublishFluentd — **Supported (external)**
+
+`publish/fluentd.rb`. Posts each item's title, link, description,
+`content_encoded` and a timestamp to Fluentd. Needs the `fluent-logger` gem and
+a Fluentd instance.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `host` | string | Fluentd host |
+| `port` | integer | Fluentd port |
+| `tag` | string | Tag, for example `automatic.feed` |
+| `mode` | string | `test` builds no connection and sends nothing |
+
+#### PublishInstapaper — **Supported (external)**, verify before relying on it
+
+`publish/instapaper.rb`. Adds each item to Instapaper through its Simple API,
+with HTTP basic authentication.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `email` | string | Account. Required. |
+| `password` | string | Password; may be empty for an account without one. |
+| `retry` | integer | Attempts after the first. Default `0`. |
+| `interval` | integer | Seconds between posts. Default `0`. |
+
+The service and this API are believed to be operating, but this was not verified
+against the live service for this release; treat the status as provisional and
+check before putting it in `cron`. This plugin previously disabled TLS
+certificate verification, which has been corrected.
+
+#### PublishAmazonS3 — **Needs rework**
+
+`publish/amazon_s3.rb`. Uploads files whose link is a `file://` URI to S3,
+normally after `StoreFile`. Written against `AWS::S3` from AWS SDK for Ruby
+version 1; the current SDK exposes `Aws::S3` with a different interface, so the
+plugin does not run as written. S3 itself is unaffected — this is a client
+library migration, and a self-contained one.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `access_key` | string | Access key ID |
+| `secret_key` | string | Secret access key |
+| `bucket_name` | string | Bucket |
+| `target_path` | string | Prefix within the bucket |
+| `mode` | string | `test` logs the upload without performing it |
+
+#### PublishHatenaBookmark — **Needs rework**
+
+`publish/hatena_bookmark.rb`. Bookmarks each link to Hatena Bookmark by posting
+an Atom entry with WSSE authentication to `http://b.hatena.ne.jp/atom/post`.
+
+Two problems, independent of each other: the request is made over plain HTTP,
+which sends a password digest unencrypted, and the WSSE AtomPub interface has
+been superseded by OAuth. Reported status; not verified live for this release.
+Restoring it means the current API and the current authentication.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `username` | string | Hatena ID |
+| `password` | string | Password |
+| `interval` | integer | Seconds between posts. Default `0`. |
+
+#### PublishTwitter — **Unsupported**
+
+`publish/twitter.rb`. Posts each item using `Twitter.configure` and
+`Twitter.update`, the module-level interface of the `twitter` gem version 4,
+which no longer exists. Posting on the current API also requires a paid tier.
+
+`tweet_tmp` is a template in which `{title}` and `{link}` are replaced by
+calling the named method on the item; the default is `{title} {link}`. The
+template is worth keeping in mind if you write a replacement.
+
+#### PublishPocket — **Unsupported**
+
+`publish/pocket.rb`. Adds each link to Pocket, which was shut down in July 2025.
+
+#### PublishHipchat — **Unsupported**
+
+`publish/hipchat.rb`. Posts each item's description to a HipChat room. Atlassian
+discontinued HipChat and shut the service down; there is no endpoint to talk to.
+
+#### PublishGoogleCalendar — **Unsupported**
+
+`publish/google_calendar.rb`. Creates an all-day event per item through the
+`gcalapi` gem, which speaks the Google Calendar GData API version 2 and
+authenticates with ClientLogin. Both were withdrawn by Google around 2014 and
+2015; the gem was last published in 2009.
+
+The plugin has an additional defect from before that, recorded because it shows
+how long it has been unused: it stores the account under the key `hatena_id`,
+while the code that authenticates reads `username`, so the account was never
+passed through even when the API existed.
+
+---
+
+## 7. Summary
+
+| Status | Count | Plugins |
+| --- | --- | --- |
+| Supported | 22 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreFile`, `PublishConsole`, `PublishConsoleLink` |
+| Supported (external) | 9 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper` |
+| Needs rework | 3 | `FilterGoogleNews`, `PublishAmazonS3`, `PublishHatenaBookmark` |
+| Unsupported | 10 | `SubscriptionTwitter`, `SubscriptionTwitterSearch`, `SubscriptionPocket`, `SubscriptionWeather`, `SubscriptionGGuide`, `SubscriptionChanToru`, `PublishTwitter`, `PublishPocket`, `PublishHipchat`, `PublishGoogleCalendar` |
+
+Forty-four plugins, of which the S3 path of `StoreFile` is counted with the
+Supported row and noted separately in section 6.4.
+
+A Recipe using only the first two rows is a Recipe that can be expected to run.

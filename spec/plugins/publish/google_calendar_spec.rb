@@ -2,14 +2,20 @@
 # Name::      Automatic::Plugin::CustomFeed::SVNFLog
 # Author::    kzgs
 # Created::   Feb 26, 2012
-# Updated::   Feb 25, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'publish/google_calendar'
-require 'gcalapi'
+# The Google Calendar GData API v2 and ClientLogin were withdrawn by Google, and
+# the gcalapi gem was last published in 2009; doc/PLUGINS.md section 6.7
+# classifies PublishGoogleCalendar as Unsupported.
+#
+# The gem is not a dependency of this project, so this spec is skipped rather
+# than stubbed; see doc/POLICY.md section 4.
+return unless AutomaticSpec.plugin_available?('publish/google_calendar')
+return unless AutomaticSpec.plugin_available?('gcalapi')
 
 describe Automatic::Plugin::PublishGoogleCalendar do
   subject {

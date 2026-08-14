@@ -2,13 +2,18 @@
 # Name::      Automatic::Plugin::CustomFeed::SVNFLog
 # Author::    kzgs
 # Created::   Feb 29, 2012
-# Updated::   Nov  3, 2012
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'custom_feed/svn_log'
+# CustomFeedSVNLog needs the optional xml-simple gem and the svn command;
+# doc/PLUGINS.md section 6.2 classifies it as Supported (external).
+#
+# The gem is not a dependency of this project, so this spec is skipped rather
+# than stubbed; see doc/POLICY.md section 4.
+return unless AutomaticSpec.plugin_available?('custom_feed/svn_log')
 
 describe Automatic::Plugin::CustomFeedSVNLog do
   context "with feeds whose valid URL" do

@@ -1,0 +1,52 @@
+name: CI
+
+# Installs the bundle and runs the test suite on every supported Ruby version.
+#
+# No credential is configured here and nothing reaches an external service: the
+# suite must need neither (doc/POLICY.md Invariant 6). Specs tagged :network
+# are excluded by default and are not run here.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep this in step with required_ruby_version in automatic.gemspec
+        # and with the supported environment section of README.md.
+        ruby: ['3.2', '3.3', '3.4']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Show versions
+        run: |
+          ruby -v
+          bundle -v
+
+      - name: Check that the gemspec is valid and buildable
+        run: gem build automatic.gemspec
+
+      - name: Check that the CLI runs
+        run: |
+          bundle exec bin/automatic --version
+          bundle exec bin/automatic --help
+
+      - name: Run the test suite
+        run: bundle exec rake spec

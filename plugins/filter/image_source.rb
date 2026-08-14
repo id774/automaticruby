@@ -2,14 +2,17 @@
 # Name::      Automatic::Plugin::Filter::ImageSource
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Feb 26, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
   class FilterImageSource
-    require 'net/http'
     require 'kconv'
+    require 'net/http'
+    require 'nokogiri'
+    require 'open-uri'
+    require 'uri'
 
     def initialize(config, pipeline=[])
       @config = config
@@ -54,7 +57,7 @@ module Automatic::Plugin
 
     def imgs(link)
       images = Array.new
-      html = open(link).read
+      html = URI.open(link).read
       unless html.nil?
         doc = Nokogiri::HTML(html)
         (doc/:img).each {|img|

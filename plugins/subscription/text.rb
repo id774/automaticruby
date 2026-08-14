@@ -3,8 +3,8 @@
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
 # Created::   May  6, 2013
-# Updated::   Feb 21, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -50,7 +50,7 @@ module Automatic::Plugin
 
         unless @config['files'].nil?
           @config['files'].each {|f|
-            open(File.expand_path(f)) do |file|
+            File.open(File.expand_path(f)) do |file|
               file.each_line do |line|
                 feed = {}
                 feed['title'], feed['url'], feed['description'], feed['author'],

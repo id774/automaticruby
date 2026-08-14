@@ -2,11 +2,11 @@
 # Name::      Automatic::Plugin::Subscription::ChanToru
 # Author::    soramugi <http://soramugi.net>
 # Created::   Jun 28, 2013
-# Updated::   Jan 15, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
-require File.expand_path(File.dirname(__FILE__) + '/g_guide')
+require_relative 'g_guide'
 
 module Automatic::Plugin
   class SubscriptionChanToru

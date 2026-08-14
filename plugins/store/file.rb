@@ -3,13 +3,13 @@
 # Name::      Automatic::Plugin::Store::File
 # Author::    774 <http://id774.net>
 # Created::   Feb 28, 2012
-# Updated::   Feb 25, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
+require 'fileutils'
 require 'open-uri'
 require 'uri'
-require 'aws-sdk'
 
 module Automatic::Plugin
   class StoreFile
@@ -17,7 +17,12 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
+      # The AWS SDK is required here rather than at the top of the file, so
+      # that downloading over HTTP needs neither the gem nor a bucket. This
+      # branch is written against AWS SDK for Ruby v1 and needs rework for the
+      # current SDK; see doc/PLUGINS.md section 6.4.
       unless @config['bucket_name'].nil?
+        require 'aws-sdk'
         s3 = AWS::S3.new(
           :access_key_id => @config['access_key'],
           :secret_access_key => @config['secret_key']
@@ -72,8 +77,8 @@ module Automatic::Plugin
     def wget(uri, url)
       filename = File.basename(uri.path)
       filepath = File.join(@config['path'], filename)
-      open(url) {|source|
-        open(filepath, "w+b") { |o|
+      URI.open(url) {|source|
+        File.open(filepath, "w+b") { |o|
           o.print(source.read)
         }
       }

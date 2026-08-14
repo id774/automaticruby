@@ -2,30 +2,59 @@
 # Name::      Automatic::Log
 # Author::    774 <http://id774.net>
 # Created::   Feb 20, 2012
-# Updated::   Oct 09, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+#
+# One log, to standard output, behind a level filter set per Recipe by
+# global.log.level. See doc/BASIC_DESIGN.md section 4.7.
 
 require 'logger'
 
 module Automatic
   module Log
-    LOG_LEVELS = ['info', 'warn', 'error', 'none']
+    # In increasing order of severity. 'none' is the threshold that admits
+    # nothing; it is never used as the level of a message.
+    LOG_LEVELS = %w[info warn error none].freeze
 
-    def self.level(level)
-      @level = level
-    end
+    DEFAULT_LEVEL = 'info'
 
-    def self.logger
-      @logger ||= Logger.new(STDOUT)
-    end
-
-    def self.puts(level = :info, message)
-      if LOG_LEVELS.index(@level).to_i > LOG_LEVELS.index(level).to_i
-        return
+    class << self
+      # Set the threshold. An unrecognised name, including nil, means the
+      # default: an unattended run should not be silenced by a typo in a
+      # Recipe, nor should it raise in the middle of a job.
+      def level(level = nil)
+        @level = normalize(level, DEFAULT_LEVEL)
       end
-      logger.send(level, message)
-    end
 
+      def logger
+        @logger ||= Logger.new($stdout)
+      end
+
+      # Replace the logger. Used by the specs; a plugin has no business
+      # calling this.
+      attr_writer :logger
+
+      # Emit a message at the given level, if the threshold admits it.
+      # Both 'info' and :info are accepted, because plugins pass both.
+      def puts(level, message)
+        name = normalize(level, DEFAULT_LEVEL)
+        return if name == 'none'
+        return if LOG_LEVELS.index(name) < LOG_LEVELS.index(current_level)
+
+        logger.public_send(name, message)
+      end
+
+      private
+
+      def current_level
+        @level ||= DEFAULT_LEVEL
+      end
+
+      def normalize(level, fallback)
+        name = level.to_s
+        LOG_LEVELS.include?(name) ? name : fallback
+      end
+    end
   end
 end
