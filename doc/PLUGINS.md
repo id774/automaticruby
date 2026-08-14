@@ -388,7 +388,9 @@ module Automatic::Plugin
 
 That is what keeps a gem needed by one plugin out of everyone else's
 installation. A gem used by a single plugin is not added to the framework's
-runtime dependencies; see [`POLICY.md`](POLICY.md) section 9.
+runtime dependencies; it goes in the `Gemfile`'s optional `:plugins` group and
+the operator who uses the plugin installs it. See [`POLICY.md`](POLICY.md)
+section 9.
 
 Where a plugin has an optional capability that needs a heavier library — S3
 support in `StoreFile`, for instance — the `require` goes inside the branch that
@@ -519,6 +521,14 @@ Two rules govern this table, and they are the reason it exists at all:
 - **Nothing is deleted for being old.** These plugins are the record of what the
   framework was used for, and several remain useful as templates for a
   replacement. Removal is a separate, deliberate decision.
+
+**Supported is not the same as covered by CI.** A Supported plugin whose gem is
+an optional plugin dependency — `FilterSanitize` and `FilterDescriptionLink` —
+works, and is simply not part of what a green build guarantees, because the
+default bundle does not install that gem. Its entry says so, and installing the
+gem runs its spec as part of the ordinary suite. Nothing here is classified by
+what CI happens to run; a plugin is not demoted for needing a gem, and is not
+promoted by a test that CI never executes.
 
 **This classification is a snapshot taken in August 2026,** based on the
 published status of each service and on what each plugin's code actually calls.
@@ -759,6 +769,11 @@ page the link points at. Fetching pages means network access. No settings.
 | --- | --- | --- |
 | `mode` | string | `basic`, `relaxed`, or `restricted`. Default `restricted`. |
 
+Needs the `sanitize` gem, which is an optional plugin dependency and is not
+installed with the framework. Its spec is therefore outside the default suite
+and outside CI; installing the gem brings the spec back into the ordinary run.
+See [`DEPLOYMENT.md`](DEPLOYMENT.md).
+
 #### FilterTumblrResize — **Supported**
 
 `filter/tumblr_resize.rb`. Rewrites a Tumblr image link to the 1280-pixel
@@ -778,6 +793,12 @@ the body.
 
 `get_title` makes one request per item; use `FilterOne` or a store plugin before
 it on a large feed.
+
+Needs the `nkf` gem, which the plugin uses to normalize a fetched page's
+encoding. `nkf` left the standard library after Ruby 3.3 and is an optional
+plugin dependency rather than a framework one, so it is not installed with the
+framework, and this plugin's spec is outside the default suite and outside CI.
+See [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 #### FilterFullFeed — **Supported (external)**
 
@@ -997,11 +1018,14 @@ arbitrary markup back into equivalent Markdown — tables, nested lists, inline
 links, images — is a large job with a large library behind it, and a library
 that size does not become a dependency for one plugin
 ([`POLICY.md`](POLICY.md) section 9.1). Reducing markup to text needs nothing
-that is not already installed: `nokogiri` is a runtime dependency, used by the
-framework's own feed adapters. The result is defined by its two ends — the
-text survives, the markup does not — which is what both a reader and a program
-reading the file want from it. A link inside a body becomes its own text; the
-item's own link is in the metadata list, where nothing loses it.
+beyond `nokogiri`, which `gem install automatic` installs: it is a runtime
+dependency of this gem precisely so that the Supported plugins an installed gem
+must be able to run — this one, and `FeedParser.parse_html` for
+`SubscriptionLink` and `SubscriptionTumblr` — work with nothing else added.
+Requiring `automatic` itself loads no HTML parser. The result is defined by its
+two ends — the text survives, the markup does not — which is what both a reader
+and a program reading the file want from it. A link inside a body becomes its
+own text; the item's own link is in the metadata list, where nothing loses it.
 
 Where a different treatment is wanted, the pipeline already has the means:
 `FilterSanitize` before this plugin decides what markup survives into the

@@ -10,7 +10,6 @@
 
 module Automatic::Plugin
   class FilterImageSource
-    require 'kconv'
     require 'net/http'
     require 'nokogiri'
     require 'open-uri'

@@ -160,14 +160,23 @@ The full account is [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md).
 
 ## 4. Supported environment
 
-- **Ruby 3.3 or later.** Tested on 3.3, 3.4 and 3.5.
+- **Ruby 3.3 through 4.0.** CI validates 3.3, 3.4 and 4.0.
 - A Unix-like system. GNU/Linux and macOS are what it is used on. Windows is not
   supported.
 - A compiler, if `nokogiri` or `sqlite3` build from source on your platform.
 
 Ruby 3.3 is the floor: it is the oldest maintained release the dependencies are
-resolved and tested against. Nothing older is tested or supported. A newer Ruby than
-the matrix covers is permitted by the gemspec, which sets a lower bound only.
+resolved and tested against. Nothing older is tested or supported.
+
+Two statements, and they are not the same one:
+
+- **Supported range.** The code is written for Ruby 3.3 through 4.0, using APIs
+  the whole range shares. `required_ruby_version` is `>= 3.3.0` and has no upper
+  bound, so a Ruby newer than the matrix is permitted rather than refused.
+- **Continuously validated versions.** CI runs the ends of the range and the
+  release in the middle — 3.3, 3.4 and 4.0 — rather than every intermediate
+  release. A version's absence from the matrix means it is not verified on every
+  commit; it does not mean it is expected to fail.
 
 ## 5. Installation
 
@@ -463,6 +472,15 @@ COVERAGE=on bundle exec rake spec
   AUTOMATIC_NETWORK_SPECS=1 bundle exec rake spec
   ```
 
+- A plugin whose gem the Gemfile declares in its optional `:plugins` group is
+  **not verified by the default suite**, because that group is not installed.
+  Install it to run those specs as part of the ordinary suite:
+
+  ```sh
+  BUNDLE_WITH=plugins bundle install
+  bundle exec rake
+  ```
+
 - A spec whose plugin needs a gem that is not installed is skipped, and says
   which gem is missing. That absence is the signal; a plugin whose service no
   longer exists is never stubbed into passing.
@@ -471,8 +489,11 @@ COVERAGE=on bundle exec rake spec
   in CI. Most need a credential, a dead service, or both — read one before
   running it.
 
-CI runs `bundle install` and the suite on every supported Ruby version, from
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+CI installs the bundle, builds the gem, loads the library, runs the CLI and runs
+the default suite on each validated Ruby version, from
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml). It configures no secret
+and installs no optional plugin gem, so no plugin's own dependency is a
+condition of a green build.
 
 ## 13. Development
 

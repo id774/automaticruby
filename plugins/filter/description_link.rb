@@ -16,6 +16,12 @@ module Automatic::Plugin
     require 'open-uri'
     require 'uri'
 
+    # URI.extract and URI::PATTERN answer through the RFC 3986 parser that
+    # URI::Parser became in Ruby 3.4, which reports both as obsolete. The RFC
+    # 2396 parser is what they were always reaching, it is spelled the same way
+    # on every supported Ruby, and it is named here directly.
+    PARSER = URI::RFC2396_Parser.new
+
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
@@ -40,7 +46,7 @@ module Automatic::Plugin
     def get_title(url)
       new_title = nil
       if url.class == String
-        url.gsub!(Regexp.new("[^#{URI::PATTERN::ALNUM}\/\:\?\=&~,\.\(\)#]")) {|match| ERB::Util.url_encode(match)}
+        url.gsub!(Regexp.new("[^#{URI::RFC2396_Parser::PATTERN::ALNUM}\/\:\?\=&~,\.\(\)#]")) {|match| ERB::Util.url_encode(match)}
         begin
           read_data = NKF.nkf("--utf8", URI.open(url).read)
           get_text = Nokogiri::HTML.parse(read_data, nil, 'utf8').xpath('//title').text
@@ -54,7 +60,7 @@ module Automatic::Plugin
     end
 
     def rewrite_link(feed)
-      new_link = URI.extract(feed.description, %w{http https}).uniq.last
+      new_link = PARSER.extract(feed.description, %w{http https}).uniq.last
       feed.link = new_link unless new_link.nil?
 
       if @config.class == Hash

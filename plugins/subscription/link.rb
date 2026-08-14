@@ -24,7 +24,7 @@ module Automatic::Plugin
         retries = 0
         retry_max = @config['retry'].to_i || 0
         begin
-          create_rss(URI::Parser.new.escape(url))
+          create_rss(URI::RFC2396_Parser.new.escape(url))
         rescue
           retries += 1
           Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")

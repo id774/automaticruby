@@ -439,20 +439,39 @@ plugin knows to upload a local file rather than a remote one.
 
 ## 20. Supported Ruby
 
+Two statements are made here, and they are deliberately different.
+
+**The supported range** is **Ruby 3.3 through Ruby 4.0**.
+
 - The floor is **Ruby 3.3**: the oldest maintained release the dependency set is
   resolved and tested against. Nothing older is tested or supported.
-- The versions upstream currently maintains are the recommended ones. The
-  supported set is what the CI matrix runs, which at the time of writing is
-  3.3, 3.4 and 3.5.
-- The gemspec's `required_ruby_version` is a lower bound and not an upper one, so
-  a newer Ruby is permitted before it has been added to the matrix. Adding one
-  to the matrix is the act of supporting it.
+- The code shall be written against APIs the whole range shares. Where a Ruby
+  release deprecates or removes one, the replacement that works on the whole
+  range is used, rather than a `RUBY_VERSION` branch; see
+  [`POLICY.md`](POLICY.md) section 2.4.
+- The gemspec's `required_ruby_version` is a lower bound and not an upper one,
+  so a Ruby newer than the range is permitted rather than refused. Refusing one
+  would need a new release of this gem to lift.
 - The floor shall not be lowered to accommodate an unmaintained Ruby, and shall
   not be raised to the newest release for its own sake. It moves when a
   dependency the project needs moves it, or when the version drops out of the
   distributions the project is used on.
-- One statement of the supported range lives in the gemspec, and the README, the
-  CI matrix and the documents agree with it.
+
+**The continuously validated versions** are **3.3, 3.4 and 4.0** — the ends of
+the range and the release in the middle.
+
+- CI runs representative versions rather than every intermediate release. The
+  cost of a matrix entry is paid on every commit, and a third entry between two
+  that pass says little about a range whose code shares one set of APIs.
+- **A version's absence from the matrix is not a statement that it fails.** It
+  is a statement that it is not verified on every commit. Nothing is written to
+  be deliberately incompatible with a supported Ruby that the matrix omits.
+- Adding a released Ruby to the matrix is how support for it becomes continuous,
+  and is a small change.
+
+One statement of the supported range lives in the gemspec, one statement of the
+validated set lives in the CI matrix, and the README and the documents agree
+with both.
 
 ## 21. Portability
 

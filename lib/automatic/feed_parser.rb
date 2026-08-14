@@ -13,7 +13,6 @@
 
 module Automatic
   module FeedParser
-    require 'nokogiri'
     require 'open-uri'
     require 'rss'
     require 'uri'
@@ -32,7 +31,13 @@ module Automatic
 
     # Build a feed whose items are the links of an HTML document. This is how
     # a page that publishes no feed enters the pipeline.
+    #
+    # nokogiri is required here rather than at the top of the file: it is the
+    # only thing in the framework that wants an HTML parser, and requiring
+    # `automatic` should not load one. See doc/POLICY.md section 2.5.
     def self.parse_html(html)
+      require 'nokogiri'
+
       RSS::Maker.make('2.0') do |maker|
         maker.xml_stylesheets.new_xml_stylesheet
         maker.channel.title = 'Automatic Ruby'

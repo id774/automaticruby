@@ -3,11 +3,11 @@ automaticruby Repository Version History
 
 v26.08 (Release Date: TBD)
 --------------------------
-- Support Ruby 3.3 through 3.5 and modernize the codebase for current Ruby and maintained library APIs.
+- Support Ruby 3.3 through 4.0 and modernize the codebase for current Ruby and maintained library APIs, validating representative versions in CI.
 - Harden Recipe loading with safe YAML parsing, structural validation and framework-specific errors.
 - Restructure the CLI with help and version options, predictable error reporting and documented exit statuses.
 - Verify TLS certificates when publishing to Instapaper instead of accepting an unverified connection.
-- Modernize gem packaging and dependency policy, isolating optional plugin dependencies and excluding development and generated files.
+- Modernize gem packaging and dependency policy, isolating optional plugin dependencies outside the framework and the default test path, and excluding development and generated files.
 - Classify every shipped plugin by its current support status rather than simulating obsolete services in tests.
 - Rebuild the test and CI strategy for current RSpec and Ruby, with deterministic isolation from user data and external services.
 - Add Markdown as the primary service-independent publication format, with a documented and tested first-run workflow.

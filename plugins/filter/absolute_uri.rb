@@ -5,11 +5,12 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jun 20, 2012
-# Updated::     Oct 29, 2014
+# Updated::     Aug 14, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class FilterAbsoluteURI
+    require 'uri'
 
     def initialize(config, pipeline=[])
       @config = config
@@ -39,7 +40,7 @@ module Automatic::Plugin
         @config['url'] = @config['url'] + '/'
       end
       string = @config['url'] + string.sub(/^\./,'').sub(/^\//,'')
-      string = URI::Parser.new.escape(string)
+      string = URI::RFC2396_Parser.new.escape(string)
       return string
     end
   end
