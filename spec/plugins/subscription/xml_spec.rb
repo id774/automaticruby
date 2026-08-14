@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Subscription::Xml
 # Author::    774 <http://id774.net>
 # Created::   Jul 12, 2013
-# Updated::   Jul 12, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -30,7 +30,7 @@ describe Automatic::Plugin::SubscriptionXml do
     its(:run) { should be_empty }
   end
 
-  context "with URLs whose invalid Xml" do
+  context "with URLs whose invalid Xml", :network do
     subject {
       Automatic::Plugin::SubscriptionXml.new(
         { 'urls' => [
@@ -42,7 +42,7 @@ describe Automatic::Plugin::SubscriptionXml do
     its(:run) { should be_empty }
   end
 
-  context "with URLs whose valid XML" do
+  context "with URLs whose valid XML", :network do
     subject {
       Automatic::Plugin::SubscriptionXml.new(
         { 'urls' => [
@@ -55,7 +55,7 @@ describe Automatic::Plugin::SubscriptionXml do
     its(:run) { should have(1).item }
   end
 
-  context "with retry to URLs whose valid XML" do
+  context "with retry to URLs whose valid XML", :network do
     subject {
       Automatic::Plugin::SubscriptionXml.new(
         { 'urls' => [

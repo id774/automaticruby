@@ -2,14 +2,17 @@
 # Name::      Automatic::Plugin::Filter::DescriptionLink
 # Author::    774 <http://id774.net>
 # Created::   Oct 03, 2014
-# Updated::   Oct 16, 2014
-# Copyright:: Copyright (c) 2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2014-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
   class FilterDescriptionLink
-    require 'uri'
+    require 'erb'
     require 'nkf'
+    require 'nokogiri'
+    require 'open-uri'
+    require 'uri'
 
     def initialize(config, pipeline=[])
       @config = config
@@ -37,7 +40,7 @@ module Automatic::Plugin
       if url.class == String
         url.gsub!(Regexp.new("[^#{URI::PATTERN::ALNUM}\/\:\?\=&~,\.\(\)#]")) {|match| ERB::Util.url_encode(match)}
         begin
-          read_data = NKF.nkf("--utf8", open(url).read)
+          read_data = NKF.nkf("--utf8", URI.open(url).read)
           get_text = Nokogiri::HTML.parse(read_data, nil, 'utf8').xpath('//title').text
           new_title = get_text if get_text.class == String
         rescue

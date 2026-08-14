@@ -3,50 +3,52 @@
 # Author::    soramugi <http://soramugi.net>
 #             774 <http://id774.net>
 # Created::   May  6, 2013
-# Updated::   Mar  7, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'filter/rand'
 
+LINKS = %w[http://aaa.png http://bbb.png http://ccc.png http://ddd.png].freeze
+
+def rand_plugin
+  Automatic::Plugin::FilterRand.new(
+    {},
+    AutomaticSpec.generate_pipeline {
+      feed {
+        LINKS.each { |link| item link }
+      }
+    }
+  )
+end
+
 describe Automatic::Plugin::FilterRand do
   context "It should be rand" do
-    subject {
-      Automatic::Plugin::FilterRand.new(
-        {},
-        AutomaticSpec.generate_pipeline {
-          feed {
-            item "http://aaa.png"
-            item "http://bbb.png"
-            item "http://ccc.png"
-            item "http://ddd.png"
-          }
-        }
-      )
-    }
+    subject { rand_plugin }
 
     describe "#run" do
       its(:run) { should have(1).feeds }
 
-      specify {
+      # The contract is that the same items come back in some order. Asserting
+      # a particular order would be asserting a particular shuffle, which was
+      # what the previous version of this example did: it branched on the
+      # outcome and fell through to a pending block on the one permutation in
+      # twenty-four where nothing moved, so it failed at random.
+      specify "returns exactly the input items" do
         subject.run
-        link0 = subject.instance_variable_get(:@return_feeds)[0].items[0].link
-        link1 = subject.instance_variable_get(:@return_feeds)[0].items[1].link
-        link2 = subject.instance_variable_get(:@return_feeds)[0].items[2].link
-        link3 = subject.instance_variable_get(:@return_feeds)[0].items[3].link
-        if link0 != "http://aaa.png"
-          link0.should_not == "http://aaa.png"
-        elsif link1 != "http://bbb.png"
-          link1.should_not == "http://bbb.png"
-        elsif link2 != "http://ccc.png"
-          link2.should_not == "http://ccc.png"
-        else
-          pending("Plugin returns the origin feed.")
-          link3.should == "http://ddd.png"
-        end
-      }
+        links = subject.instance_variable_get(:@return_feeds)[0].items.map(&:link)
+        links.sort.should == LINKS.sort
+      end
+
+      # That it shuffles at all is a statement about many runs, not one. With
+      # four items there are twenty-four orders, so twenty runs landing on the
+      # same one has a probability of about 24 * (1/24)**20.
+      specify "does not always return the input order" do
+        orders = 20.times.map { rand_plugin.run[0].items.map(&:link) }
+        orders.uniq.length.should be > 1
+      end
     end
   end
 end

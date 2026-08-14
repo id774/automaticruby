@@ -1,0 +1,233 @@
+automaticruby Repository Version History
+========================================
+
+v26.08 (Release Date: TBD)
+--------------------------
+- Raise the minimum Ruby to 3.2 and test on 3.2 through 3.4, replacing the "after Ruby 1.9" claim.
+- Replace Kernel#open with URI.open throughout, so fetching a URL works on Ruby 3, and read local files with File.open.
+- Replace File.exists? with File.exist? in the plugin loader and the Bundler setup.
+- Load Recipes with YAML.safe_load, so a Recipe cannot name a Ruby class to instantiate; aliases stay permitted.
+- Refuse a Recipe that is not a mapping or carries no plugins sequence, with the new Automatic::InvalidRecipeError.
+- Give the framework an Automatic::Error base class, which NoRecipeError, NoPluginError and InvalidRecipeError derive from.
+- Accept both a String and a Symbol as a log level, which plugins have always passed, and treat an unknown level as info instead of raising mid-run.
+- Move the command line out of bin/automatic into Automatic::CLI, which returns an exit status and never calls exit, so it can be tested.
+- Add -v and --version, and make --help and --version exit 0 instead of 1; a failed run exits 1 and a rejected command line exits 2.
+- Report a missing or unreadable Recipe as one line on standard error instead of a backtrace.
+- Load a subcommand's libraries inside that subcommand, so feedbag and the OPML parser are loaded only by the subcommands that use them.
+- Stop scaffold creating ~/.automatic/plugins/. and ~/.automatic/plugins/.. from the directory listing.
+- Stop the framework calling Bundler.require, which imposed this repository's bundle on any program requiring the library; the Gemfile setup now applies to a source checkout only.
+- Require each plugin's own libraries in its own file, and keep gems used by one plugin out of the gem's runtime dependencies.
+- Require aws-sdk inside the S3 branch of StoreFile, so downloading over HTTP no longer needs the AWS SDK installed.
+- Require the plugin-internal files of the store and ChanToru plugins relatively, instead of through a load path entry.
+- Call Sanitize.fragment in FilterSanitize, replacing Sanitize.clean, which the sanitize gem removed.
+- Parse the fulltext siteinfo with JSON.parse over File.read, replacing JSON.load over an implicit Kernel#open.
+- Verify TLS certificates in PublishInstapaper, which disabled verification outright.
+- Stop PublishConsole and PublishConsoleLink printing a stray "info" line before each item, a leftover from the logging signature.
+- Narrow the ActiveSupport requires of the pipeline, NotifyIkachan and SubscriptionXml to the extensions they use.
+- Drop the unused NKF require from FilterGoogleNews, and declare nkf, which stopped being a default gem in Ruby 3.4.
+- Replace the Jeweler-generated gemspec with a hand-maintained one, stating required_ruby_version, the licence, the homepage, the source URL and the metadata links, and deriving files from Git.
+- Stop shipping the Gemfile and the Rakefile in the gem, so an installed copy no longer looks like a source checkout to environment.rb.
+- Move the gem source to https://rubygems.org and drop gems.github.com, which has not existed since 2014.
+- Split the dependencies into framework runtime gems, optional plugin gems and development gems, and drop the pins from 2015.
+- Remove the dependencies on gcalapi, weather_hacker, twitter, pocket-ruby, hipchat, faraday, json and xml-simple, which the framework does not use and which belong to unsupported or optional plugins.
+- Remove the development dependencies on jeweler, rcov, simplecov-rcov, cucumber, builder and koseki-mocksmtpd, none of which anything committed here used.
+- Drop the Jeweler and rcov tasks from the Rakefile, keeping spec, spec:lib, spec:plugins and coverage under COVERAGE=on.
+- Move the specs to RSpec 3 with rspec-its and rspec-collection_matchers, and load the framework by name rather than by path.
+- Skip a plugin spec whose gem is absent, naming the missing gem, instead of aborting the whole suite on a load error.
+- Tag the specs that reach real hosts :network and exclude them from the default suite; run them with AUTOMATIC_NETWORK_SPECS=1.
+- Stop the FilterFullFeed spec deleting the real ~/.automatic/assets/siteinfo, by redirecting HOME to a temporary directory.
+- Replace the FilterRand spec's assertion on one shuffle, which failed at random, with the contract it meant to state.
+- Assert that VERSION and Automatic::VERSION agree, rather than asserting a literal version string, and drop the -devel suffix.
+- Add specs for Automatic::CLI covering the exit statuses, help, version, an unknown subcommand and a failing recipe.
+- Add specs for what Automatic::Recipe accepts and refuses, including a document naming a Ruby class.
+- Add .github/workflows/ci.yml running bundle install, a gem build, the CLI and the test suite on Ruby 3.2, 3.3 and 3.4, with no credential configured.
+- Rewrite script/build around the current tooling, and stop it running bundle update and unscaffolding a real user directory.
+- Remove the references to Jenkins, RubyForge, the git:// clone URL and the automaticruby organization, none of which still resolve.
+- Add doc/REQUIREMENTS.md, doc/BASIC_DESIGN.md, doc/POLICY.md, doc/PLUGINS.md, doc/DEPLOYMENT.md, doc/LICENSE.md and this file.
+- Specify the Recipe format in doc/PLUGINS.md, including that global.timezone and global.cache are read by nothing and stay that way.
+- Specify the plugin contract in doc/PLUGINS.md, to the point where a new plugin can be written from it.
+- Catalogue every shipped plugin as Supported, Supported (external), Needs rework or Unsupported, with the reason, and record that a dead plugin is never simulated into passing a test.
+- State that a Recipe is trusted local configuration, and that credentials live in it, in the requirements, the design and the policy.
+- Rewrite README.md around the current repository, and move the release history from doc/ChangeLog into this file without changing an entry or a date.
+- Remove doc/README and doc/PLUGINS, whose content is now in README.md, doc/BASIC_DESIGN.md and doc/PLUGINS.md.
+- Keep doc/README.ja and doc/PLUGINS.ja as historical Japanese documentation, marked as describing the software as it was.
+
+v14.12.2 (2015-01-04)
+---------------------
+- Pin every gem in the Gemfile to an exact minor version.
+
+v14.12.1 (2015-01-03)
+---------------------
+- Depend on activerecord 4.1.
+
+v14.12.0 (2014-12-27)
+---------------------
+- Rewrite obsolete methods.
+- Update Gemfile.
+
+v14.10.1 (2014-10-23)
+---------------------
+- Version-only release. No change beyond the version number is recorded for it.
+
+v14.10.0 (2014-10-23)
+---------------------
+- Use Logger for log output.
+- Store::FullText ignores an entry whose title is already stored.
+- Add the plugins Filter::Clear, Filter::GoogleNews and Filter::DescriptionLink.
+
+v14.5.0 (2014-05-31)
+--------------------
+- Update to activesupport and activerecord 4.1.
+
+v14.3.0 (2014-03-23)
+--------------------
+- Downgrade the nokogiri version for OS X.
+
+v14.2.0 (2014-02-26)
+--------------------
+- Add the plugin Publish::AmazonS3.
+- Rename Store::TargetLink to Store::File, and have it rewrite the link to a file URI scheme.
+- Enable the file URI scheme in an RSS 2.0 feed, and let Store::File fetch a file from Amazon S3.
+- Read text from TSV formatted files in Subscription::Text, and add the description, author and comments fields to the RSS 2.0 feed.
+- Give the log messages more detail.
+- Use 'double' instead of 'mock' and 'stub' for rspec-mocks.
+- Improve CI with a network connection.
+- Divide Feed::Parser into Feed::Maker.
+
+v14.1.0 (2014-01-24)
+--------------------
+- Fix a dependency conflict.
+- Refactor the error retry handling.
+
+v13.12.0 (2013-12-17)
+---------------------
+- Fix the twitter gem version.
+
+v13.7.0 (2013-07-28)
+--------------------
+- Add the plugins Subscription::Xml and Provide::Fluentd.
+- Fix some problems.
+
+v13.6.0 (2013-06-28)
+--------------------
+- Add the plugins Subscription::Pocket, Subscription::TwitterSearch, Subscription::GGuide, Subscription::ChanToru, Filter::Accept, Filter::Sanitize, Filter::GithubFeed, Publish::ConsoleLink, Publish::Hipchat, Publish::Memcached and Publish::Fluentd.
+- Correspond to activesupport and activerecord 4.0, temporarily removing the mail plugins for actionmailer 4.0.
+- Ruby 1.8 support was outdated.
+- And other improvements and bug fixes.
+
+v13.5.0 (2013-05-18)
+--------------------
+- Add the plugins Subscription::Text, Subscription::Weather, Filter::One, Filter::Rand, Publish::Twitter and Publish::Pocket.
+- Move the repository from id774/automaticruby to automaticruby/automaticruby.
+
+v13.4.1 (2013-04-10)
+--------------------
+- Merge the command automatic-config into automatic.
+- Improve the retry functions.
+- Run the tests on Ruby 2.0.
+
+v13.2.0 (2013-02-13)
+--------------------
+- Implement the retry function in all subscription and download plugins.
+- Plugin Filter::Ignore has become an item-based filter.
+- Rename the plugin Filter::Reverse to Filter::Sort.
+- Add the plugins Subscription::GoogleReaderStar, Filter::FullFeed and Publish::Instapaper.
+- Improve the tests.
+- And other minor bug fixes.
+
+v13.1.0 (2013-01-08)
+--------------------
+- Fix the interval bugs.
+- Improve the timing of logging.
+- Return only a new feed.
+- Refactoring.
+
+v12.10.0 (2012-10-16)
+---------------------
+- Add the plugin Subscription::Tumblr.
+
+v12.9.1 (2012-09-18)
+--------------------
+- Consider the case of a feed link including nil.
+
+v12.9.0 (2012-09-18)
+--------------------
+- Unify the format of the pipeline to a feed object, an array of feeds; some plugins lost backward compatibility.
+- Add the plugins Subscription::Link, Subscription::Twitter, Filter::Image and Filter::AbsoluteURI.
+- Remove the obsolete plugins Subscription::URI, Extract::Link, Filter::ImageLink, Store::Link and Store::Target.
+
+v12.6.0 (2012-06-18)
+--------------------
+- Add the plugins Subscription::URI, Extract::Link, Filter::ImageLink, Store::Link and Store::Target.
+- Make scaffold create the config and db directories, and add the unscaffold subcommand to automatic-config.
+- Search the user directory's config when given -c with a simple filename, and use the user's db directory when it exists.
+- Show the recipe and db name in the log.
+- Refactor the plug-in names and the header fields.
+- Add tests, taking RSpec code coverage over 99%, and add the all option to script/build.
+
+v12.4.0 (2012-04-30)
+--------------------
+- Add the inspect subcommand to automatic-config.
+- Add the plugins Filter::Reverse, Publish::SMTP and Publish::Mail.
+- Run all integration tests with CI.
+
+v12.3.1 (2012-03-16)
+--------------------
+- Write the English documents doc/README and doc/PLUGINS.
+- Let a user who installed the gem package create their own plugins, under ~/.automatic/plugins.
+- Merge the utilities into the automatic-config command, adding the subcommands scaffold, autodiscovery, opmlparser, feedparser and log.
+- Add the integration test script script/build for CI.
+
+v12.03 (2012-03-07)
+-------------------
+- Distribute as a gem library.
+- Add the plugins CustomFeed::SVNLog, Notify::Ikachan, Filter::TumblrResize, Filter::Image and Store::TargetLink.
+- Add the CI and build script script/bootstrap.
+- Significant refactoring.
+
+v12.02.1 (2012-02-25)
+---------------------
+- Point release: a large refactoring of the core, a reorganization of the namespace, and a few plugins added.
+
+v12.02 (2012-02-18)
+-------------------
+- First release: the scratch of this script, with a plugin existing only for Hatena Bookmark.
+
+
+Notes on this record
+====================
+- Entries from v12.02 to v14.12.0 were moved here from doc/ChangeLog, which this
+  file replaces. No entry and no date was changed in the move; the wording was
+  brought to one bullet per change, and nothing was added or dropped.
+- v14.10.1, v14.12.1 and v14.12.2 were released and are recorded in the commit
+  log, but were never written into doc/ChangeLog. Their entries above were
+  reconstructed from the commits that bumped the version.
+- No Git tag exists for any release before v26.08. The version numbers above are
+  those recorded in the VERSION file at the time, and the commit log is the only
+  other record of them.
+- Between v14.12.2 and v26.08 the only committed change was the addition of the
+  integration recipe test/integration/test_pdf2local.yml in April 2015. It is
+  part of the v26.08 entry's repository state and took no version of its own.
+
+
+Version History Guidelines
+==========================
+- Write one coherent change per physical line, as a rule.
+- Keep entries near 100 columns where practical. Necessary file names, module
+  names, plugin names, option names, and configuration names may extend an entry
+  to approximately 120 columns.
+- When a version history already exists, balance a new entry against the length
+  of the existing lines, so that the whole file stays consistent.
+- When an entry becomes substantially longer, omit or abstract implementation
+  details, examples, reasons, and secondary effects where possible.
+- Preserve the changed target, externally observable behavior, compatibility
+  or security impact, and important option or configuration names.
+- Combine related changes within the same version, especially changes to the
+  same file or feature.
+- Place closely related entries near each other.
+- Append an independent new change to the end of the current version entry.
+- Past entries and their dates are a record. Do not rewrite, renumber or merge
+  them, and do not merge two releases that actually existed because they share
+  a date.
+- This file records the history of the repository. A change that is not
+  observable from outside does not need an entry here.

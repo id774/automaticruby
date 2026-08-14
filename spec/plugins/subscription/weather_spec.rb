@@ -2,13 +2,18 @@
 # Name::      Automatic::Plugin::Subscription::Weather
 # Author::    soramugi <http://soramugi.net>
 # Created::   May  12, 2013
-# Updated::   May  12, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'subscription/weather'
+# livedoor Weather Hacks was terminated in 2020;
+# doc/PLUGINS.md section 6.1 classifies SubscriptionWeather as Unsupported.
+#
+# The gem is not a dependency of this project, so this spec is skipped rather
+# than stubbed; see doc/POLICY.md section 4.
+return unless AutomaticSpec.plugin_available?('subscription/weather')
 
 describe Automatic::Plugin::SubscriptionWeather do
   context "with empty zipcode" do

@@ -1,33 +1,21 @@
+# Bundler resolves dependencies per environment; this is a library, so the
+# lock file is not committed. See doc/POLICY.md section 9.4.
 Gemfile.lock
-db/*.db
-coverage
-.bundle
-.rbenv-version
-tags
-bin/autospec
-bin/cdiff
-bin/cucumber
-bin/decolor
-bin/erubis
-bin/feedbag
-bin/htmldiff
-bin/jeweler
-bin/ldiff
-bin/mocksmtpd
-bin/nokogiri
-bin/rackup
-bin/rcov
-bin/rdoc
-bin/ri
-bin/rspec
-bin/rake
-bin/sow
-bin/sprockets
-bin/tilt
-bin/tt
-pkg/
-vendor/gems/
+.bundle/
 vendor/bundle/
-vendor/bundler/
-bin/httparty
-bin/weather
+vendor/gems/
+
+# Build output
+pkg/
+
+# Test and coverage output
+coverage/
+.rspec-status
+
+# Databases written by the store plugins when ~/.automatic/db is absent
+db/*.db
+
+# Editor and tooling
+tags
+.rbenv-version
+.ruby-version

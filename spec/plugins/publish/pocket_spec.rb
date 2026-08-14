@@ -2,13 +2,18 @@
 # Name::      Automatic::Plugin::Publish::Pocket
 # Author::    soramugi <http://soramugi.net>
 # Created::   May 15, 2013
-# Updated::   Feb 25, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'publish/pocket'
+# Pocket was shut down in July 2025;
+# doc/PLUGINS.md section 6.7 classifies PublishPocket as Unsupported.
+#
+# The gem is not a dependency of this project, so this spec is skipped rather
+# than stubbed; see doc/POLICY.md section 4.
+return unless AutomaticSpec.plugin_available?('publish/pocket')
 
 describe Automatic::Plugin::PublishPocket do
   context 'return feed' do

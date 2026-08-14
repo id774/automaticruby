@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Subscription::Tumblr
 # Author::    774 <http://id774.net>
 # Created::   Oct 16, 2012
-# Updated::   Feb  8, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -31,7 +31,7 @@ describe Automatic::Plugin::SubscriptionTumblr do
     its(:run) { should be_empty }
   end
 
-  context "with URLs whose valid URL" do
+  context "with URLs whose valid URL", :network do
     subject {
       Automatic::Plugin::SubscriptionTumblr.new(
         { 'urls' => [
@@ -43,7 +43,7 @@ describe Automatic::Plugin::SubscriptionTumblr do
     its(:run) { should have(1).item }
   end
 
-  context "with URLs and Pages" do
+  context "with URLs and Pages", :network do
     subject {
       Automatic::Plugin::SubscriptionTumblr.new(
         { 'urls' => [

@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
+# Name::      Automatic::Plugin::Notify::Ikachan
+# Author::    774 <http://id774.net>
+# Created::   Mar  7, 2012
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
+# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+#
+# Description:: Posts each item to an IRC channel through an ikachan
+#               HTTP-to-IRC gateway, which the operator runs themselves.
 
-require 'active_support'
-require 'active_support/core_ext'
-require 'active_support/deprecation'
+require 'active_support/core_ext/object/blank'
 
 module Automatic::Plugin
   class Ikachan

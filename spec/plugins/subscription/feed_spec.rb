@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::Feed
 # Author::    774 <http://id774.net>
-# Updated::   Feb  8, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -30,11 +30,11 @@ describe Automatic::Plugin::SubscriptionFeed do
     its(:run) { should be_empty }
   end
 
-  context "with feeds whose valid URL" do
+  context "with feeds whose valid URL", :network do
     subject {
       Automatic::Plugin::SubscriptionFeed.new(
         { 'feeds' => [
-            "https://github.com/automaticruby/automaticruby/commits/master.atom"]
+            "https://github.com/id774/automaticruby/commits/master.atom"]
         }
       )
     }
@@ -42,11 +42,11 @@ describe Automatic::Plugin::SubscriptionFeed do
     its(:run) { should have(1).feed }
   end
 
-  context "with retry to feeds whose valid URL" do
+  context "with retry to feeds whose valid URL", :network do
     subject {
       Automatic::Plugin::SubscriptionFeed.new(
         { 'feeds' => [
-            "https://github.com/automaticruby/automaticruby/commits/master.atom"],
+            "https://github.com/id774/automaticruby/commits/master.atom"],
           'retry' => 3,
           'interval' => 5
         }

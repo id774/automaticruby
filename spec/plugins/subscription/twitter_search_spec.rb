@@ -2,13 +2,18 @@
 # Name::      Automatic::Plugin::Subscription::TwitterSearch
 # Author::    soramugi <http://soramugi.net>
 # Created::   May 30, 2013
-# Updated::   Feb 25, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'subscription/twitter_search'
+# SubscriptionTwitterSearch uses the twitter gem's v4 interface, which no longer
+# exists; doc/PLUGINS.md section 6.1 classifies it as Unsupported.
+#
+# The gem is not a dependency of this project, so this spec is skipped rather
+# than stubbed; see doc/POLICY.md section 4.
+return unless AutomaticSpec.plugin_available?('subscription/twitter_search')
 
 def twitter_search(config = {}, pipeline = [])
   Automatic::Plugin::SubscriptionTwitterSearch.new(config,pipeline)

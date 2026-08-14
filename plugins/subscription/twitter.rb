@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Subscription::Twitter
 # Author::    774 <http://id774.net>
 # Created::   Sep  9, 2012
-# Updated::   Jan 15, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -38,7 +38,7 @@ module Automatic::Plugin
 
     def create_rss(url)
       Automatic::Log.puts("info", "Parsing Twitter: #{url}")
-      html = open(url).read
+      html = URI.open(url).read
       unless html.nil?
         rss = RSS::Maker.make("2.0") {|maker|
           xss = maker.xml_stylesheets.new_xml_stylesheet

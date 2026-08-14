@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Filter::Sanitize
 # Author::    774 <http://id774.net>
 # Created::   Jun 20, 2013
-# Updated::   Feb 21, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -39,7 +39,7 @@ module Automatic::Plugin
     private
     def sanitize(feed)
       begin
-        feed.description = Sanitize.clean(feed.description, @mode) unless feed.description.nil?
+        feed.description = Sanitize.fragment(feed.description, @mode) unless feed.description.nil?
       rescue
         Automatic::Log.puts("warn", "Undefined field detected in feed.")
       end

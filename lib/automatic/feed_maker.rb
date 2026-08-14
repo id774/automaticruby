@@ -2,8 +2,8 @@
 # Name::      Automatic::FeedMaker
 # Author::    774 <http://id774.net>
 # Created::   Feb 21, 2014
-# Updated::   Feb 26, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic
@@ -38,7 +38,7 @@ module Automatic
         xss = maker.xml_stylesheets.new_xml_stylesheet
         maker.channel.title = "Automatic Ruby"
         maker.channel.description = "Automatic::FeedMaker"
-        maker.channel.link = "https://github.com/automaticruby/automaticruby"
+        maker.channel.link = "https://github.com/id774/automaticruby"
         maker.items.do_sort = true
 
         unless feeds.nil?
@@ -67,7 +67,7 @@ module Automatic
         xss = maker.xml_stylesheets.new_xml_stylesheet
         maker.channel.title = "Automatic Ruby"
         maker.channel.description = "Automatic::FeedMaker"
-        maker.channel.link = "https://github.com/automaticruby/automaticruby"
+        maker.channel.link = "https://github.com/id774/automaticruby"
         maker.items.do_sort = true
         item = maker.items.new_item
         item.title = "Automatic Ruby"

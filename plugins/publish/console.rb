@@ -2,8 +2,8 @@
 # Name::      Automatic::Plugin::Publish::Console
 # Author::    774 <http://id774.net>
 # Created::   Feb 23, 2012
-# Updated::   Feb 24, 2012
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
@@ -13,14 +13,14 @@ module Automatic::Plugin
     def initialize(config, pipeline=[])
       @config = config
       @pipeline = pipeline
-      @output = STDOUT
+      @output = $stdout
     end
 
     def run
       @pipeline.each {|feeds|
         unless feeds.nil?
           feeds.items.each {|feed|
-            @output.puts("info", feed.pretty_inspect)
+            @output.puts(feed.pretty_inspect)
           }
         end
       }

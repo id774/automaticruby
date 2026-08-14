@@ -1,11 +1,22 @@
 #!/bin/sh
 #
 ########################################################################
-# Integration Build Script
-#  $1 = all (Run integration tests)
+# Local build script
+#
+#  Runs what CI runs, and optionally the integration recipes, which CI
+#  does not run and never will: they reach real services, several of
+#  which no longer exist. See doc/PLUGINS.md section 6.
+#
+#  Usage:
+#    script/build          Run the test suite and the CLI checks.
+#    script/build all      Also run the integration recipes by hand.
 #
 #  Maintainer: id774 <idnanashi@gmail.com>
 #
+#  v2.0 8/14,2026
+#       Replace the Jenkins-era workflow: drop bundle update and the
+#       simplecov rake task, use the -v option the CLI now has, and
+#       stop unscaffolding a real user directory.
 #  v1.5 6/28,2013
 #       Always using latest gems.
 #  v1.4 5/13,2013
@@ -20,65 +31,42 @@
 #       First.
 ########################################################################
 
-kickstart() {
-    export RACK_ROOT="."
-    export RACK_ENV="test"
-    #export DATABASE_URL="$RACK_ROOT/db"
+set -e
+
+ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+cd "$ROOT_DIR"
+
+automatic() {
+    bundle exec bin/automatic "$@"
+}
+
+unit_tests() {
     ruby -v
-    test_subcommand log info started.
+    bundle -v
+    bundle install
+    automatic --version
+    automatic --help > /dev/null
+    bundle exec rake spec
 }
 
-exec_rspec() {
-    $RACK_ROOT/bin/automatic -v
-    #bundle install --path vendor/gems
-    bundle update
-    bundle exec rake simplecov
-}
-
-run_test() {
-    while [ $# -gt 0 ]
+# The integration recipes reach real services and are run deliberately.
+# Most need a credential, a service that has shut down, or both; read the
+# recipe before running it.
+integration_tests() {
+    for recipe in "$ROOT_DIR"/test/integration/test_*.yml
     do
-        bundle exec $RACK_ROOT/bin/automatic -c $1
-        test_subcommand log info $?
-        shift
+        echo "=== $recipe ==="
+        automatic -c "$recipe" || echo "FAILED: $recipe"
     done
-}
 
-load_tests() {
-    for YAML_FILE in "$RACK_ROOT/test/integration/test_*.yml"
-    do
-        run_test $YAML_FILE
-    done
-    unset YAML_FILE
-}
-
-test_subcommand() {
-    $RACK_ROOT/bin/automatic $*
-}
-
-test_scaffold() {
-    test_subcommand scaffold
-    test_subcommand unscaffold
-}
-
-added_tests() {
-    test -f $HOME/.automatic || test_scaffold
-    test_subcommand autodiscovery http://blog.id774.net/blogs/
-    test_subcommand opmlparser "$RACK_ROOT/test/fixtures/sampleOPML.xml"
-    test_subcommand feedparser http://blog.id774.net/blogs/feed/ > /dev/null
-    test_subcommand log info finished.
-}
-
-integration() {
-    load_tests
-    added_tests
+    automatic opmlparser "$ROOT_DIR/test/fixtures/sampleOPML.xml" > /dev/null
+    automatic log info finished.
 }
 
 main() {
-    kickstart
-    exec_rspec
-    test -n "$1" && integration
+    unit_tests
+    test -n "$1" && integration_tests
+    exit 0
 }
 
-set -ex
-main $*
+main "$@"

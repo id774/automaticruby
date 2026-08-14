@@ -2,13 +2,18 @@
 # Name::      Automatic::Plugin::Publish::AmazonS3
 # Author::    774 <http://id774.net>
 # Created::   Feb 25, 2014
-# Updated::   Feb 25, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-require 'publish/amazon_s3'
+# PublishAmazonS3 is written against AWS SDK for Ruby v1;
+# doc/PLUGINS.md section 6.7 classifies it as Needs rework.
+#
+# The gem is not a dependency of this project, so this spec is skipped rather
+# than stubbed; see doc/POLICY.md section 4.
+return unless AutomaticSpec.plugin_available?('publish/amazon_s3')
 
 describe Automatic::Plugin::PublishAmazonS3 do
   context 'when feed' do

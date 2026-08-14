@@ -3,8 +3,8 @@
 # Author::    kzgs
 #             774 <http://id774.net>
 # Created::   Mar  1, 2012
-# Updated::   Feb 21, 2014
-# Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -78,9 +78,9 @@ describe Automatic::Plugin::FilterImageSource do
 
     describe "#imgs" do
       before do
-        open = Hashie::Mash.new
-        open.read = '<img src="http://a.png"><br /><img src="http://b.png">'
-        subject.stub(:open).and_return(open)
+        response = Hashie::Mash.new
+        response.read = '<img src="http://a.png"><br /><img src="http://b.png">'
+        URI.stub(:open).and_return(response)
       end
 
       its(:run) { subject.run[0].items.length.should == 2 }

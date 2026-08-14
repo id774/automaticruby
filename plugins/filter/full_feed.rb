@@ -3,14 +3,17 @@
 # Author::    progd <http://d.hatena.ne.jp/progd/20120429/automatic_ruby_filter_full_feed>
 #             774 <http://id774.net>
 # Created::   Apr 29, 2012
-# Updated::   Jun 23, 2013
-# Copyright:: Copyright (c) 2012-2013 Automatic Ruby Developers.
+# Updated::   Aug 14, 2026
+# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
 # License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
 
   class FilterFullFeed
+    require 'json'
     require 'nokogiri'
+    require 'open-uri'
+    require 'uri'
 
     SITEINFO_TYPES = %w[SBM INDIVIDUAL IND SUBGENERAL SUB GENERAL GEN]
 
@@ -37,7 +40,7 @@ module Automatic::Plugin
 
     def get_siteinfo
       Automatic::Log.puts(:info, "Loading siteinfo from #{@config['siteinfo']}")
-      siteinfo = JSON.load(open(File.join(assets_dir, @config['siteinfo'])).read.force_encoding("UTF-8"))
+      siteinfo = JSON.parse(File.read(File.join(assets_dir, @config['siteinfo']), :encoding => "UTF-8"))
       siteinfo.select! { |info| SITEINFO_TYPES.include? (info['data']['type']) }
       siteinfo.sort! { |a, b|
         atype, btype = a['data']['type'], b['data']['type']
@@ -61,7 +64,7 @@ module Automatic::Plugin
         begin
           if feed.link.match(info['data']['url'])
             Automatic::Log.puts(:info, "Siteinfo matched: #{info['data']['url']}")
-            html = Nokogiri::HTML.parse(open(feed.link))
+            html = Nokogiri::HTML.parse(URI.open(feed.link))
             body = html.xpath(info['data']['xpath'])
             feed.description = body.to_html.encode('UTF-8', :undef => :replace)
             return feed
