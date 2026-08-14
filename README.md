@@ -189,18 +189,31 @@ automatic --version
 
 ### From a checkout
 
+Use a checkout to try the current development version, change the source,
+develop a plugin or verify changes before a release:
+
 ```sh
 git clone https://github.com/id774/automaticruby.git
 cd automaticruby
 bundle install
 bundle exec bin/automatic --version
+bundle exec rake
 ```
 
-In a checkout, every `automatic` below becomes `bundle exec bin/automatic`.
+`bundle install` resolves the runtime and development dependencies declared by
+`Gemfile` and `automatic.gemspec`, and installs the gems needed to run and test
+the checkout. If the `bundle` command is unavailable, install Bundler first
+with `gem install bundler`.
 
-Some plugins need a gem that is **not** installed with the framework —
-`fluent-logger`, `dalli`, `xml-simple` and a few others. Install one only if you
-use the plugin; the table is in [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md).
+In a checkout, every `automatic` below becomes `bundle exec bin/automatic`.
+Use `bundle exec rake` to verify the development environment by running the
+test suite.
+
+The core development setup does not install the optional `plugins` bundle
+group. Some plugins need their own gem or external service; install those only
+for the plugin being used or developed. Check the plugin catalogue in
+[`doc/PLUGINS.md`](doc/PLUGINS.md) and the dependency table in
+[`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md).
 
 ## 6. Quick start
 
@@ -558,7 +571,7 @@ Two rules worth knowing before you start:
 │   ├── fixtures/            Fixtures for the manual tests
 │   └── integration/         Recipes run by hand against real services
 ├── script/build             Runs what CI runs, plus the integration recipes
-├── vendor/                  Where `bundle config set --local path vendor/bundle` puts gems
+├── vendor/                  Legacy placeholder; the normal setup does not install gems here
 ├── doc/                     See below
 ├── automatic.gemspec        Hand-maintained
 ├── Gemfile

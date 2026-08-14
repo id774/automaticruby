@@ -93,8 +93,12 @@ Automatic Ruby runs once and exits; `cron` supplies the schedule.
 
 ## From a source checkout
 
+The normal installation above remains the quickest way to use Automatic Ruby.
+To try the development version or change the source, first follow
+[README's checkout setup](../README.md#from-a-checkout). Then run the same flow
+through the checkout's executable:
+
 ```sh
-bundle install
 bundle exec bin/automatic scaffold
 bundle exec bin/automatic -c ~/.automatic/config/example/feed2markdown.yml
 ```
