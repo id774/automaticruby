@@ -11,6 +11,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '../../spec_helper'))
 
 require 'automatic/cli'
+require 'fileutils'
 require 'stringio'
 require 'tmpdir'
 
@@ -122,6 +123,35 @@ describe Automatic::CLI do
         File.write(path, "global:\n  log:\n    level: none\n")
         expect(run("-c", path)).to eq Automatic::CLI::EXIT_FAILURE
         expect(err.string).to match(/no plugins sequence/)
+      end
+    end
+
+    # A plugin's optional gem is installed by the operator who uses the plugin
+    # (doc/POLICY.md section 9.1), so not having one is an ordinary situation
+    # with an answer. It is reported as a message naming the gem and the
+    # plugin, not as a backtrace.
+    it "reports a plugin's missing optional gem as a message" do
+      # The user plugin directory of the redirected HOME, named here rather
+      # than asked of Automatic, so that this writes into the spec's temporary
+      # home whatever another example has left the user directory set to.
+      plugins = File.join(File.expand_path("~"), ".automatic", "plugins", "filter")
+      FileUtils.mkdir_p(plugins)
+      File.write(File.join(plugins, "needs_gem.rb"), <<~RUBY)
+        module Automatic::Plugin
+          class FilterNeedsGem
+            Automatic.require_optional('automatic_no_such_gem',
+                                       needed_by: 'FilterNeedsGem')
+          end
+        end
+      RUBY
+
+      Dir.mktmpdir do |dir|
+        path = File.join(dir, "recipe.yml")
+        File.write(path, "plugins:\n  - module: FilterNeedsGem\n")
+        expect(run("-c", path)).to eq Automatic::CLI::EXIT_FAILURE
+        expect(err.string).to match(/`automatic_no_such_gem` gem is not installed/)
+        expect(err.string).to match(/FilterNeedsGem/)
+        expect(err.string).to match(/gem install automatic_no_such_gem/)
       end
     end
 

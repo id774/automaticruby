@@ -11,7 +11,7 @@
 module Automatic::Plugin
   class SubscriptionTwitter
     require 'open-uri'
-    require 'nokogiri'
+    Automatic.require_optional('nokogiri', needed_by: 'SubscriptionTwitter')
     require 'rss'
 
     def initialize(config, pipeline=[])

@@ -10,6 +10,11 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
+# SubscriptionTwitter reads HTML with nokogiri, which the Gemfile declares in
+# its optional :plugins group. The default suite and CI do not install it, so
+# this spec runs only where the operator has. See doc/POLICY.md section 5.
+return unless AutomaticSpec.optional_dependency?('nokogiri')
+
 require 'subscription/twitter'
 
 describe Automatic::Plugin::SubscriptionTwitter do

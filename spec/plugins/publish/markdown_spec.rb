@@ -118,6 +118,52 @@ describe Automatic::Plugin::PublishMarkdown do
     end
   end
 
+  # nokogiri is an optional dependency: the plugin uses it where it is
+  # installed and reduces the body itself where it is not, so that a plain
+  # `gem install automatic` can run the Quick Start. See doc/PLUGINS.md
+  # section 6.7. The default suite runs the substitute, this run of it is
+  # explicit, and where the optional gem is installed the last example holds
+  # the two to the same answer.
+  describe 'a body reduced without an HTML parser' do
+    def publish_without_parser(config, pipeline)
+      output = StringIO.new
+      plugin = Automatic::Plugin::PublishMarkdown.new(config, pipeline)
+      plugin.instance_variable_set(:@output, output)
+      plugin.instance_variable_set(:@html_parser, false)
+      plugin.run
+      output.string
+    end
+
+    before do
+      @pipeline = AutomaticSpec.generate_pipeline {
+        feed {
+          item 'https://example.com/a', 'A title',
+               "<div>\n  <p>First &amp; second.</p>\n" \
+               "  <script>alert(1)</script>\n  <p>Third<br>fourth</p>\n" \
+               "  <!-- a comment -->\n  <p>Fifth &mdash; sixth</p>\n</div>"
+        }
+      }
+    end
+
+    it 'reduces the markup to text' do
+      document = publish_without_parser({}, @pipeline)
+      document.should include("First & second.\n\nThird\nfourth\n")
+      document.should_not include('<p>')
+      document.should_not include('alert(1)')
+      document.should_not include('a comment')
+    end
+
+    it 'decodes a named entity beyond the five of XML' do
+      publish_without_parser({}, @pipeline).should include('Fifth — sixth')
+    end
+
+    if AutomaticSpec.optional_dependency?('nokogiri')
+      it 'reduces it to what the parser reduces it to' do
+        publish_without_parser({}, @pipeline).should == publish({}, @pipeline)
+      end
+    end
+  end
+
   describe 'content_encoded' do
     before do
       @pipeline = AutomaticSpec.generate_pipeline {

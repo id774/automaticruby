@@ -11,8 +11,13 @@ name: CI
 #
 # No credential is configured here and nothing reaches an external service: the
 # suite must need neither (doc/POLICY.md Invariant 6). Examples tagged :network
-# are excluded by default, and the Gemfile's optional :plugins group is not
+# are excluded by default, and none of the Gemfile's optional groups is
 # installed, so no plugin's own gem is a condition of this workflow passing.
+#
+# This is the required check, and it is deliberately the minimal configuration:
+# what it proves on every commit is that the framework needs nothing but its
+# four runtime dependencies. The all-plugins configuration is a separate,
+# non-required workflow, plugins.yml.
 
 on:
   push:

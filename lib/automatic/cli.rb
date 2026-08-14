@@ -103,6 +103,11 @@ module Automatic
       EXIT_FAILURE
     end
 
+    # A LoadError is one of the failures reported as a message here: a Recipe
+    # naming a plugin whose optional gem is not installed is an operator's
+    # mistake with an answer, and the answer is in the message rather than in a
+    # backtrace. What the plugin itself raises is left alone; see
+    # doc/PLUGINS.md section 2.7.
     def run_recipe(path)
       unless File.exist?(resolve_recipe(path))
         @stderr.puts "automatic: no such recipe: #{path}"
@@ -111,7 +116,7 @@ module Automatic
 
       Automatic.run(recipe: Automatic::Recipe.new(path), root_dir: @root_dir)
       EXIT_SUCCESS
-    rescue Automatic::Error, Psych::Exception, SystemCallError, IOError => e
+    rescue Automatic::Error, Psych::Exception, SystemCallError, IOError, LoadError => e
       @stderr.puts "automatic: #{e.message}"
       EXIT_FAILURE
     end
@@ -134,7 +139,7 @@ module Automatic
 
       handler.call(argv)
       EXIT_SUCCESS
-    rescue Automatic::Error, SystemCallError, IOError => e
+    rescue Automatic::Error, SystemCallError, IOError, LoadError => e
       @stderr.puts "automatic: #{e.message}"
       EXIT_FAILURE
     end
@@ -146,6 +151,11 @@ module Automatic
 
     # Each subcommand requires what it needs, so that `automatic --version`
     # loads neither a feed parser nor an OPML parser.
+    #
+    # `feedbag` is an optional dependency: two subcommands out of seven use it,
+    # and neither running a Recipe nor any other subcommand does. It is
+    # required through Automatic.require_optional, so that not having it is a
+    # sentence rather than a backtrace. See doc/POLICY.md section 9.1.
     def subcommands
       {
         'scaffold'      => method(:scaffold),
@@ -189,7 +199,7 @@ module Automatic
     end
 
     def autodiscovery(argv)
-      require 'feedbag'
+      Automatic.require_optional('feedbag', needed_by: 'the autodiscovery subcommand')
       require 'pp'
       url = argv.shift || missing_argument('autodiscovery')
       @stdout.puts Feedbag.find(url).pretty_inspect
@@ -204,7 +214,7 @@ module Automatic
 
     def inspect_url(argv)
       require 'automatic/feed_parser'
-      require 'feedbag'
+      Automatic.require_optional('feedbag', needed_by: 'the inspect subcommand')
       require 'pp'
       url = argv.shift || missing_argument('inspect')
       feeds = Feedbag.find(url)

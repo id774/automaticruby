@@ -10,10 +10,11 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-# FilterDescriptionLink needs the nkf gem, which the Gemfile declares in its
-# optional :plugins group. The default suite and CI do not install it, so this
-# spec runs only where the operator has. See doc/POLICY.md section 5.
-if AutomaticSpec.optional_dependency?('nkf')
+# FilterDescriptionLink needs the nkf and nokogiri gems, which the Gemfile
+# declares in its optional :plugins group. The default suite and CI do not
+# install them, so this spec runs only where the operator has. See
+# doc/POLICY.md section 5.
+if AutomaticSpec.optional_dependency?('nkf') && AutomaticSpec.optional_dependency?('nokogiri')
   require 'filter/description_link'
 
   describe Automatic::Plugin::FilterDescriptionLink do

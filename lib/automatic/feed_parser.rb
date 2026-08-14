@@ -33,10 +33,17 @@ module Automatic
     # a page that publishes no feed enters the pipeline.
     #
     # nokogiri is required here rather than at the top of the file: it is the
-    # only thing in the framework that wants an HTML parser, and requiring
-    # `automatic` should not load one. See doc/POLICY.md section 2.5.
+    # only thing in the framework that wants an HTML parser, it is an optional
+    # dependency rather than a runtime one, and requiring `automatic` must
+    # neither load one nor need one installed. Only the plugins that call this
+    # method -- SubscriptionLink and SubscriptionTumblr -- do.
+    # See doc/POLICY.md sections 2.5 and 9.1.
     def self.parse_html(html)
-      require 'nokogiri'
+      Automatic.require_optional(
+        'nokogiri',
+        needed_by: 'Automatic::FeedParser.parse_html, used by SubscriptionLink ' \
+                   'and SubscriptionTumblr'
+      )
 
       RSS::Maker.make('2.0') do |maker|
         maker.xml_stylesheets.new_xml_stylesheet

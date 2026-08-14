@@ -418,7 +418,9 @@ Requirements: ActiveRecord is used as a library and this is not a Rails
 application; nothing shall introduce one. Equally, ActiveRecord shall not be
 replaced by a hand-written database layer merely because it is a large
 dependency — it is what the existing databases were written by, and operators
-have those files.
+have those files. It is the store plugins' dependency and not the framework's:
+`activerecord` and `sqlite3` shall be installed by the operator who uses those
+plugins, and a Recipe that stores nothing shall run without either.
 
 **The filesystem.** `StoreFile` downloads what the pipeline points at and
 rewrites the item's link to a `file://` URI, which is how a later publishing

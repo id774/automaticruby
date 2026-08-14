@@ -5,14 +5,16 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 29, 2012
-# Updated::     Mar  3, 2012
+# Updated::     Aug 14, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require 'rss/maker'
 
 module Automatic::Plugin
   class CustomFeedSVNLog
-    require 'xmlsimple'
+    Automatic.require_optional('xmlsimple',
+                               gem_name: 'xml-simple',
+                               needed_by: 'CustomFeedSVNLog')
 
     def initialize(config, pipeline=[])
       @config = config

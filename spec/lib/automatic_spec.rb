@@ -106,4 +106,36 @@ describe Automatic do
     end
   end
 
+  # How a plugin requires a gem that only it needs. The framework's own
+  # dependencies are not required this way; these are the optional ones, which
+  # the operator who uses the plugin installs (doc/POLICY.md section 9.1).
+  describe "#require_optional" do
+    it "requires the library, as require does" do
+      expect {
+        Automatic.require_optional("tmpdir", needed_by: "a spec")
+      }.not_to raise_error
+      expect(defined?(Dir.mktmpdir)).to eq "method"
+    end
+
+    it "names the gem, what needs it and how to install it when it is absent" do
+      expect {
+        Automatic.require_optional("automatic_no_such_gem", needed_by: "FilterExample")
+      }.to raise_error(LoadError, /`automatic_no_such_gem` gem is not installed/)
+    end
+
+    it "reports the gem's name where it differs from the path required" do
+      expect {
+        Automatic.require_optional("automatic_no_such_gem",
+                                   gem_name: "automatic-no-such-gem",
+                                   needed_by: "CustomFeedExample")
+      }.to raise_error(LoadError, /gem install automatic-no-such-gem/)
+    end
+
+    it "names what needed it" do
+      expect {
+        Automatic.require_optional("automatic_no_such_gem", needed_by: "FilterExample")
+      }.to raise_error(LoadError, /needed by FilterExample/)
+    end
+  end
+
 end

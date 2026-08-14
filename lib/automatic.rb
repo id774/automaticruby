@@ -40,6 +40,27 @@ module Automatic
   class << self
     attr_accessor :root_dir
 
+    # Require a gem that only one plugin, or one optional path, needs, and turn
+    # its absence into a message naming the gem, what wanted it and how to get
+    # it. Nothing here resolves, installs or tracks a dependency: the `require`
+    # is the plugin's own, made where the plugin makes it, and this only
+    # replaces `cannot load such file -- nkf` with a sentence an operator can
+    # act on. See doc/POLICY.md section 9.1 and doc/PLUGINS.md section 3.8.
+    #
+    #   Automatic.require_optional('sanitize', needed_by: 'FilterSanitize')
+    #
+    # `gem_name` is given where it differs from the path required, as
+    # `xmlsimple` does from the `xml-simple` gem.
+    def require_optional(feature, needed_by:, gem_name: feature)
+      require feature
+    rescue LoadError => e
+      raise LoadError,
+            "The `#{gem_name}` gem is not installed. It is needed by #{needed_by}. " \
+            "Install it with `gem install #{gem_name}`, or in a source checkout add " \
+            'its group to the bundle; see the optional plugin dependencies in ' \
+            "doc/DEPLOYMENT.md. (#{e.message})"
+    end
+
     # Run one Recipe. root_dir is the installation root; user_dir is honoured
     # only under AUTOMATIC_RUBY_ENV=test, which is how the specs point the
     # plugin loader at a fixture directory.

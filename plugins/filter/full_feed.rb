@@ -12,7 +12,7 @@ module Automatic::Plugin
 
   class FilterFullFeed
     require 'json'
-    require 'nokogiri'
+    Automatic.require_optional('nokogiri', needed_by: 'FilterFullFeed')
     require 'open-uri'
     require 'uri'
 
