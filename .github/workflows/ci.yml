@@ -24,7 +24,7 @@ jobs:
       matrix:
         # Keep this in step with required_ruby_version in automatic.gemspec
         # and with the supported environment section of README.md.
-        ruby: ['3.2', '3.3', '3.4']
+        ruby: ['3.3', '3.4', '3.5']
 
     steps:
       - uses: actions/checkout@v4

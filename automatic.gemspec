@@ -38,11 +38,11 @@ Gem::Specification.new do |spec|
     'rubygems_mfa_required' => 'true'
   }
 
-  # Ruby 3.2 is the floor: the oldest release the dependencies below are
+  # Ruby 3.3 is the floor: the oldest maintained release the dependencies are
   # resolved and tested against. This is a lower bound only, so a newer Ruby is
   # permitted before it reaches the CI matrix. See doc/REQUIREMENTS.md
   # section 20.
-  spec.required_ruby_version = '>= 3.2.0'
+  spec.required_ruby_version = '>= 3.3.0'
 
   # Shipped files. Derived from what Git sees, so that the list cannot drift
   # from the repository; the Dir fallback is for building outside a checkout.

@@ -34,6 +34,13 @@ repository.
 
 ## 3. Composition
 
+A typical run is a short, linear flow. Markdown is one publisher at the edge,
+not a second pipeline representation:
+
+```text
+source plugins -> shared pipeline -> optional filters / stores -> publishers
+```
+
 ```text
 bin/automatic                 process entry point; exit status only
         |

@@ -12,12 +12,7 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - https://example.com/feed
-
-  - module: FilterIgnore
-    config:
-      link:
-        - example.net
+        - https://www.ruby-lang.org/en/feeds/news.rss
 
   - module: StorePermalink
     config:
@@ -32,12 +27,15 @@ plugins:
 automatic -c my_recipe.yml
 ```
 
-Fetch some feeds, drop what you do not want, remember what you have already
-seen, and write the rest into a Markdown file: readable by people, reusable by
+Fetch a public feed, remember what has already been seen, and write the new
+items into a Markdown file: readable by people, reusable by
 tools, ready to hand to an AI. Change the last plugin and the same pipeline
 prints to the terminal instead, or downloads the images, or forwards them to
 Fluentd, or writes them to a database. Write your own plugin and it composes
 with all the others.
+
+**[Follow the Quick Start](doc/QUICKSTART.md)** to install the gem, scaffold the
+example, and produce Markdown from the public Ruby news feed.
 
 ---
 
@@ -162,15 +160,14 @@ The full account is [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md).
 
 ## 4. Supported environment
 
-- **Ruby 3.2 or later.** Tested on 3.2, 3.3 and 3.4.
+- **Ruby 3.3 or later.** Tested on 3.3, 3.4 and 3.5.
 - A Unix-like system. GNU/Linux and macOS are what it is used on. Windows is not
   supported.
 - A compiler, if `nokogiri` or `sqlite3` build from source on your platform.
 
-Ruby 3.2 is the floor: it is the oldest release the dependencies are resolved
-and tested against, and the Ruby that long-term-support distributions still in
-service ship. Nothing older is tested or supported. A newer Ruby than the matrix
-covers is permitted by the gemspec, which sets a lower bound only.
+Ruby 3.3 is the floor: it is the oldest maintained release the dependencies are
+resolved and tested against. Nothing older is tested or supported. A newer Ruby than
+the matrix covers is permitted by the gemspec, which sets a lower bound only.
 
 ## 5. Installation
 
@@ -198,6 +195,8 @@ use the plugin; the table is in [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md).
 
 ## 6. Quick start
 
+The complete first-run guide is [`doc/QUICKSTART.md`](doc/QUICKSTART.md).
+
 ```sh
 automatic scaffold
 automatic -c ~/.automatic/config/example/feed2markdown.yml
@@ -207,8 +206,8 @@ automatic -c ~/.automatic/config/example/feed2markdown.yml
 `assets/`, and copies the example Recipes into `~/.automatic/config/example`.
 It never overwrites anything already there.
 
-That Recipe fetches one blog's feed, skips what it has published before, and
-appends the rest to `~/.automatic/markdown/feeds.md`. Run it twice: the second
+That Recipe fetches the public Ruby news feed, skips what it has published
+before, and appends the rest to `~/.automatic/markdown/feeds.md`. Run it twice: the second
 run leaves the file alone, because the store plugin has seen it all. Read the
 file, `grep` it, put it in a repository, or hand it to whatever reads text next.
 `feed2console.yml` beside it is the same pipeline printing to the terminal.
@@ -304,6 +303,9 @@ end
 Save it as `~/.automatic/plugins/filter/short_title.rb` and a Recipe can name
 `FilterShortTitle`. Nothing was registered: the class name and the file path are
 the same fact written twice, and the loader converts between them.
+
+For a smaller complete example, including testing guidance, see
+[`doc/PLUGIN_DEVELOPMENT.md`](doc/PLUGIN_DEVELOPMENT.md).
 
 | Category | Directory | Role |
 | --- | --- | --- |
@@ -550,6 +552,8 @@ this repository. No document here defers to another repository.
 
 | Document | What it holds |
 | --- | --- |
+| [`doc/QUICKSTART.md`](doc/QUICKSTART.md) | The shortest path from installation to a Markdown result |
+| [`doc/PLUGIN_DEVELOPMENT.md`](doc/PLUGIN_DEVELOPMENT.md) | A complete user plugin and practical testing guidance |
 | [`doc/REQUIREMENTS.md`](doc/REQUIREMENTS.md) | What the system is for, what it guarantees, where its responsibility ends |
 | [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md) | How it is composed: the parts, their responsibilities, the flow of a run |
 | [`doc/PLUGINS.md`](doc/PLUGINS.md) | The Recipe format, the plugin contract, and the catalogue of all 45 plugins |

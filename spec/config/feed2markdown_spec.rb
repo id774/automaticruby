@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+
+require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
+
+require 'yaml'
+
+RSpec.describe 'the Quick Start Recipe' do
+  let(:path) { File.join(APP_ROOT, 'config', 'feed2markdown.yml') }
+  let(:recipe) { YAML.safe_load(File.read(path)) }
+
+  it 'uses the short supported pipeline documented by the Quick Start' do
+    modules = recipe.fetch('plugins').map { |plugin| plugin.fetch('module') }
+    expect(modules).to eq %w[SubscriptionFeed StorePermalink PublishMarkdown]
+  end
+
+  it 'uses a public HTTPS source and needs no credential' do
+    source = recipe.fetch('plugins').first.fetch('config').fetch('feeds').first
+    expect(source).to start_with('https://')
+    expect(recipe.to_s).not_to match(/password|token|api[_-]?key/i)
+  end
+
+  it 'names plugins that ship at their loader-derived paths' do
+    recipe.fetch('plugins').each do |plugin|
+      underscored = plugin.fetch('module').underscore
+      category, name = underscored.split('_', 2)
+      expect(File).to exist(File.join(APP_ROOT, 'plugins', category, "#{name}.rb"))
+    end
+  end
+
+  it 'writes the Markdown file described by the Quick Start' do
+    publisher = recipe.fetch('plugins').last.fetch('config')
+    expect(publisher).to include(
+      'file' => '~/.automatic/markdown/feeds.md',
+      'mode' => 'append'
+    )
+  end
+end

@@ -15,6 +15,9 @@ The system these two interfaces belong to is described in
 It stands on its own. Nothing in it is completed by a document kept in another
 repository.
 
+Plugin authors can start with the complete user-plugin example in
+[`PLUGIN_DEVELOPMENT.md`](PLUGIN_DEVELOPMENT.md).
+
 ---
 
 ## 2. The Recipe
