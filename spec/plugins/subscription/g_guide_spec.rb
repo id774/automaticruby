@@ -31,7 +31,7 @@ describe 'Automatic::Plugin::SubscriptionGGuide' do
       subject { g_guide(config) }
 
       it 'feed_url' do
-        subject.feed_url(config['keyword']).should == URI::Parser.new.escape(
+        subject.feed_url(config['keyword']).should == URI::RFC2396_Parser.new.escape(
           Automatic::Plugin::SubscriptionGGuide::G_GUIDE_RSS +
             "condition.keyword=#{config['keyword']}&" +
             'stationPlatformId=0&')
@@ -42,7 +42,7 @@ describe 'Automatic::Plugin::SubscriptionGGuide' do
       subject { g_guide(config) }
 
       its(:feed_url) {
-        should == URI::Parser.new.escape(
+        should == URI::RFC2396_Parser.new.escape(
           Automatic::Plugin::SubscriptionGGuide::G_GUIDE_RSS +
             'stationPlatformId=1&')
       }

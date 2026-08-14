@@ -39,9 +39,12 @@ Gem::Specification.new do |spec|
   }
 
   # Ruby 3.3 is the floor: the oldest maintained release the dependencies are
-  # resolved and tested against. This is a lower bound only, so a newer Ruby is
-  # permitted before it reaches the CI matrix. See doc/REQUIREMENTS.md
-  # section 20.
+  # resolved and tested against. The code is written for Ruby 3.3 through 4.0.
+  #
+  # A lower bound only, and deliberately so. An upper bound would refuse a Ruby
+  # this code has every reason to work on, on the day it is released, and the
+  # only way to lift it would be a new release of this gem. What CI validates
+  # is a separate and narrower statement; see doc/REQUIREMENTS.md section 20.
   spec.required_ruby_version = '>= 3.3.0'
 
   # Shipped files. Derived from what Git sees, so that the list cannot drift
@@ -83,24 +86,28 @@ Gem::Specification.new do |spec|
   spec.require_paths      = ['lib']
   spec.extra_rdoc_files   = ['README.md', 'doc/LICENSE.md']
 
-  # Runtime dependencies: what the framework itself needs, plus the store
-  # plugins, which nearly every Recipe uses to avoid repeating its work.
+  # Runtime dependencies: what the framework itself needs, plus what the
+  # documented primary workflow needs — the store plugins, which nearly every
+  # Recipe uses to avoid repeating its work, and the Markdown publisher.
   #
   # A gem needed by a single plugin is NOT declared here. It is required inside
   # that plugin's own file and installed by the operator who uses the plugin.
   # See doc/POLICY.md section 9.1 and doc/DEPLOYMENT.md.
+  #
+  # rexml, rss and nkf left the standard library and became gems over the 3.x
+  # series. Each one listed here is listed because something committed here
+  # requires it, not because a Ruby release moved it.
   spec.add_dependency 'activerecord',  '>= 7.1', '< 9.0'   # store plugins
   spec.add_dependency 'activesupport', '>= 7.1', '< 9.0'   # plugin loader, XML subscription
   spec.add_dependency 'feedbag',       '>= 1.0', '< 2.0'   # autodiscovery subcommand
   spec.add_dependency 'hashie',        '>= 4.0', '< 6.0'   # Recipe
-  # nkf stopped being a default gem in Ruby 3.4 and is needed by
-  # FilterDescriptionLink, which is a Supported plugin; it is a standard
-  # library extraction with no transitive dependencies.
-  spec.add_dependency 'nkf',           '>= 0.1', '< 1.0'    # FilterDescriptionLink
-  spec.add_dependency 'nokogiri',      '>= 1.15', '< 2.0'  # HTML parsing
+  # Used by no framework file on the way in: requiring `automatic` loads no
+  # HTML parser. It is here because Supported plugins that an installed gem
+  # must be able to run need it -- PublishMarkdown, and FeedParser.parse_html
+  # for SubscriptionLink and SubscriptionTumblr.
+  spec.add_dependency 'nokogiri',      '>= 1.15', '< 2.0'  # HTML parsing, in plugins
   spec.add_dependency 'rexml',         '>= 3.2', '< 4.0'   # OPML parser
   spec.add_dependency 'rss',           '>= 0.3', '< 1.0'   # the pipeline value
-  spec.add_dependency 'sanitize',      '>= 6.0', '< 8.0'   # FilterSanitize
   spec.add_dependency 'sqlite3',       '>= 1.7', '< 3.0'   # store plugins
 
   spec.add_development_dependency 'rake',                      '~> 13.0'

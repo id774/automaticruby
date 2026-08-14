@@ -12,7 +12,6 @@ module Automatic
   module FeedMaker
     require 'rss'
     require 'uri'
-    require 'nokogiri'
 
     class FeedObject
       attr_accessor :title, :link, :description, :author, :comments

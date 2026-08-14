@@ -2,11 +2,11 @@
 
 This guide takes public information through one short Automatic Ruby pipeline
 and leaves it as Markdown. It needs no account, credential, paid service or
-database server.
+database server, and no gem beyond the ones `gem install automatic` brings.
 
 ## 1. Install
 
-Use Ruby 3.3, 3.4 or 3.5 on a Unix-like system:
+Use Ruby 3.3 through 4.0 on a Unix-like system:
 
 ```sh
 ruby -v

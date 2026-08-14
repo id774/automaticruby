@@ -28,8 +28,10 @@ nothing to stop.
 
 - A Unix-like system. GNU/Linux and macOS are what this is used on; Windows is
   not supported.
-- **Ruby 3.3 or later.** Check with `ruby -v`. The supported versions are 3.3,
-  3.4 and 3.5.
+- **Ruby 3.3 through 4.0.** Check with `ruby -v`. CI validates 3.3, 3.4 and 4.0;
+  a version between them is supported and is simply not checked on every commit,
+  and a Ruby newer than 4.0 is permitted rather than refused. See
+  [`REQUIREMENTS.md`](REQUIREMENTS.md) section 20.
 - A build environment for native extensions, because `nokogiri` and `sqlite3`
   may build from source:
 
@@ -395,6 +397,8 @@ several of these plugins talk to services that no longer exist.
 
 | Plugin | Needs | Status |
 | --- | --- | --- |
+| `FilterSanitize` | `sanitize` | Supported |
+| `FilterDescriptionLink` | `nkf` | Supported |
 | `CustomFeedSVNLog` | `xml-simple`, and the `svn` command | Supported (external) |
 | `ProvideFluentd`, `PublishFluentd` | `fluent-logger`, and a Fluentd instance | Supported (external) |
 | `PublishMemcached` | `dalli`, and a memcached server | Supported (external) |
@@ -409,6 +413,8 @@ several of these plugins talk to services that no longer exist.
 | `SubscriptionWeather` | — | Unsupported |
 
 ```sh
+gem install sanitize             # for FilterSanitize
+gem install nkf                  # for FilterDescriptionLink
 gem install fluent-logger        # for the Fluentd plugins
 gem install dalli                # for PublishMemcached
 gem install xml-simple           # for CustomFeedSVNLog
@@ -420,8 +426,16 @@ They call `AWS::S3`, which AWS SDK for Ruby version 1 provided and the current
 need rework. `StoreFile` makes that requirement lazily, so its ordinary HTTP
 download path works with no AWS gem installed at all.
 
-In a checkout, uncomment the `plugins` group in the `Gemfile` instead and run
-`bundle install`.
+In a checkout, install the `Gemfile`'s optional `plugins` group instead —
+uncommenting the entry first, where the gem is one of the commented ones:
+
+```sh
+BUNDLE_WITH=plugins bundle install
+```
+
+That group is not installed by default and is not installed in CI, so these
+plugins are outside what the default test suite verifies. Installing it also
+brings their specs into the ordinary `bundle exec rake` run.
 
 ## Your own plugins
 

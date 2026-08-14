@@ -83,13 +83,23 @@ module AutomaticSpec
     FileUtils.remove_entry(TEST_HOME) if File.directory?(TEST_HOME)
   end
 
+  # Gems the Gemfile declares in its optional :plugins group. They are not
+  # runtime dependencies of the framework, `bundle install` does not install
+  # them, and the default suite therefore does not verify the plugins that need
+  # them. Which plugin needs which is in doc/PLUGINS.md section 6.
+  #
+  # This is a declared list rather than something inferred from a load failure:
+  # what the default suite does not cover is decided here, in one place, and a
+  # spec that names a gem absent from this list is a mistake and says so.
+  OPTIONAL_PLUGIN_GEMS = %w[nkf sanitize].freeze
+
   class << self
     # Load a plugin, or report that its dependency is absent.
     #
-    # A plugin whose gem is not installed -- because the gem is optional, or
-    # because the service it talks to no longer exists -- is never stubbed into
-    # passing (doc/POLICY.md Invariant 7). Its spec is skipped instead, and the
-    # reason is printed, which is the honest signal.
+    # A plugin whose gem is not installed -- because the service it talks to no
+    # longer exists, and no currently published gem speaks to it -- is never
+    # stubbed into passing (doc/POLICY.md Invariant 7). Its spec is skipped
+    # instead, and the reason is printed, which is the honest signal.
     def plugin_available?(path)
       require path
       true
@@ -99,8 +109,38 @@ module AutomaticSpec
       false
     end
 
+    # Whether an optional plugin gem is in this bundle. A spec whose plugin
+    # needs one guards its whole file with this, because the plugin's own
+    # `require` runs when the file loads.
+    #
+    #   if AutomaticSpec.optional_dependency?('sanitize')
+    #     require 'filter/sanitize'
+    #     describe ... do ... end
+    #   end
+    #
+    # Installing the group is what runs these:
+    #
+    #   BUNDLE_WITH=plugins bundle install
+    def optional_dependency?(gem_name)
+      unless OPTIONAL_PLUGIN_GEMS.include?(gem_name)
+        raise ArgumentError,
+              "#{gem_name} is not one of the optional plugin gems the Gemfile declares"
+      end
+
+      return true if Gem::Specification.find_all_by_name(gem_name).any?
+
+      skipped_optional << gem_name
+      warn "[automatic] not verified by this run: the optional plugin gem " \
+           "#{gem_name} is not installed (BUNDLE_WITH=plugins bundle install)"
+      false
+    end
+
     def skipped_plugins
       @skipped_plugins ||= []
+    end
+
+    def skipped_optional
+      @skipped_optional ||= []
     end
 
     def generate_pipeline(&block)

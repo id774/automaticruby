@@ -336,8 +336,17 @@ repository level only; see section 10.
 ### 2.4 Ruby version compatibility
 
 - The supported range is stated in one place, `automatic.gemspec`
-  (`required_ruby_version`), and the README, the CI matrix and the documents
-  agree with it.
+  (`required_ruby_version`), and the README and the documents agree with it. The
+  set CI validates is a narrower statement and lives in the matrix; section 11
+  says how the two relate.
+- **Compatibility is written in the range's common API.** Where a Ruby release
+  deprecates or removes something, the replacement chosen is the one that works
+  unchanged on every supported version. `URI::Parser#escape` becoming obsolete
+  is answered by naming `URI::RFC2396_Parser`, which means the same thing on all
+  of them — not by a `RUBY_VERSION` branch.
+- **A `RUBY_VERSION` conditional is a last resort**, for a difference that has
+  no common expression. Two implementations of one behaviour cost more than the
+  compatibility they buy: the branch not taken is the branch not tested.
 - **Code for an unsupported Ruby is removed, not kept for safety.** A
   `RUBY_VERSION` comparison against 1.8 or 1.9, a branch for an interpreter that
   cannot install the dependencies, and a shim for a method that has been in core
@@ -346,6 +355,12 @@ repository level only; see section 10.
 - A method removed by Ruby is replaced by its supported equivalent, and that is
   a compatibility fix rather than a refactor: `Kernel#open` on a URL becomes
   `URI.open`, `File.exists?` becomes `File.exist?`.
+- **A library leaving the standard library is not by itself a reason to declare
+  it.** Ruby moves libraries to default and then to bundled gems as it goes.
+  Each one is judged on what actually requires it: the framework's own
+  requirement becomes a runtime dependency, a plugin's becomes an optional one
+  (section 9.1), and a requirement left over from code that no longer uses it is
+  deleted.
 
 ### 2.5 Requiring
 
@@ -426,9 +441,27 @@ Plugins outlive the services they talk to. The policy for what happens then:
   that no longer serve what they expect, which is a further reason not to make
   them a gate. A new example that reaches a host is tagged; one that does not is
   never given the tag to make a failure go away.
+- **The default suite does not depend on an optional plugin gem.** A gem the
+  `Gemfile` declares in its optional `:plugins` group is not installed by
+  `bundle install`, so the plugins that need it are not verified by the default
+  suite or by CI. That is a decision, taken here, and not something a failure
+  discovers: the gems it applies to are the declared list
+  `AutomaticSpec::OPTIONAL_PLUGIN_GEMS`, a spec whose plugin needs one guards
+  its file with `AutomaticSpec.optional_dependency?`, and naming a gem that is
+  not on the list raises rather than skipping. Installing the group with
+  `BUNDLE_WITH=plugins bundle install` runs those specs as part of the ordinary
+  suite.
 - A spec whose plugin's gem is not installed is skipped by
   `AutomaticSpec.plugin_available?`, which names the missing gem. That is the
   intended behaviour and is not worked around by faking the gem.
+- **The default suite is kept small and reliable rather than large.** It reaches
+  no network, needs no credential, needs no external daemon, writes outside no
+  temporary directory of its own, redirects `HOME`, and does not depend on
+  filesystem ordering, on the clock or on a random seed. A test that cannot be
+  made repeatable does not belong in it. Guaranteeing fewer things reliably is
+  the better trade, and it is not the same as weakening a test: `|| true`,
+  `continue-on-error` and a rescue that swallows a failure are forbidden, and
+  the tests that remain are held strictly.
 - **A spec does not write outside its own temporary directory.** Where a plugin
   resolves a path under the home directory, the spec redirects `HOME` to a
   temporary directory rather than operating on the developer's real
@@ -530,12 +563,23 @@ not an accident:
 
 **Runtime dependencies** — declared in `automatic.gemspec`, installed by `gem
 install automatic`. A gem is here only if the framework itself uses it, or if a
-plugin that the majority of Recipes use needs it.
+plugin that the majority of Recipes use — or that the documented primary
+workflow runs — needs it. A gem that reached this list because of a plugin that
+no longer uses it, or because a Ruby release moved a library out of the standard
+library, is moved back out.
 
 **Optional dependencies** — used by one plugin or a few, required inside the
-plugin's own file, and **not declared as runtime dependencies**. An operator who
-uses that plugin installs the gem. This is Invariant 4, and it is why installing
-this gem does not install an AWS SDK.
+plugin's own file, declared in the `Gemfile`'s optional `:plugins` group, and
+**not declared as runtime dependencies**. An operator who uses that plugin
+installs the gem. This is Invariant 4, and it is why installing this gem does
+not install an AWS SDK.
+
+- **An unsupported or optional integration does not decide a framework-wide
+  dependency.** Where one plugin needs a gem, that gem is the plugin's, however
+  useful the plugin is.
+- Being in this group has a consequence that is intended: the default suite and
+  CI do not install it, so those plugins are not part of what a green build
+  guarantees. See section 5.
 
 **Development dependencies** — the test and build tooling.
 
@@ -704,11 +748,25 @@ the version history records what it amounts to.
 ## 11. Continuous integration
 
 - CI runs on GitHub Actions, from `.github/workflows/ci.yml`.
-- It installs the bundle and runs the default test suite on each supported Ruby
-  version. A version in the matrix and a version in `required_ruby_version` are
-  the same set.
+- **CI validates representative supported Ruby versions rather than every
+  intermediate release.** The matrix runs the ends of the supported range and
+  the release in the middle. The matrix and `required_ruby_version` are
+  therefore *not* the same set, and neither is wrong: the gemspec states what
+  the code is written for, the matrix states what is checked on every commit.
+  [`REQUIREMENTS.md`](REQUIREMENTS.md) section 20 states both.
+- Removing a version from the matrix is not a statement that it fails, and no
+  incompatibility is introduced to make it one.
+- What CI does is: install the bundle, build the gem, load the library, run the
+  command line, run the default suite. It is deliberately short, and an optional
+  integration is not added to it.
 - **CI holds no secret and reaches no external service.** No credential is
   configured, and no integration test against a third-party API is run there.
+- **CI installs no optional plugin gem**, so no plugin's own dependency is a
+  condition of a green build. Where an optional integration is worth testing at
+  all, it is tested separately from the required workflow; section 5 says how.
+- **A failure is fixed, not silenced.** `|| true`, `continue-on-error` and a
+  step that hides its exit status are not how a build is made green. Narrowing
+  what is guaranteed is a legitimate answer; pretending to guarantee it is not.
 - The Jenkins instance the project used until 2015 is gone. References to it
   have been removed and are not to be reintroduced.
 - A red build is fixed or reverted. It is not left red.

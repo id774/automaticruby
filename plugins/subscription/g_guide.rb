@@ -5,11 +5,13 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jun 28, 2013
-# Updated::     Oct 29, 2014
+# Updated::     Aug 14, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class SubscriptionGGuide
+    require 'uri'
+
     G_GUIDE_RSS = 'http://tv.so-net.ne.jp/rss/schedulesBySearch.action?'
 
     def initialize(config, pipeline=[])
@@ -44,7 +46,7 @@ module Automatic::Plugin
         feed += "condition.keyword=#{keyword}&"
       end
       feed += station_param
-      URI::Parser.new.escape(feed)
+      URI::RFC2396_Parser.new.escape(feed)
     end
 
     def station_param

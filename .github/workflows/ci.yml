@@ -1,10 +1,18 @@
 name: CI
 
-# Installs the bundle and runs the test suite on every supported Ruby version.
+# Installs the bundle, builds the gem and runs the default test suite on the
+# Ruby versions this project validates continuously.
+#
+# The supported range and the validated set are two different statements. The
+# code is written for Ruby 3.3 through 4.0, which is what required_ruby_version
+# says; the matrix below runs the ends of that range and the release in the
+# middle, rather than every intermediate release. See doc/POLICY.md section 11
+# and doc/REQUIREMENTS.md section 20.
 #
 # No credential is configured here and nothing reaches an external service: the
-# suite must need neither (doc/POLICY.md Invariant 6). Specs tagged :network
-# are excluded by default and are not run here.
+# suite must need neither (doc/POLICY.md Invariant 6). Examples tagged :network
+# are excluded by default, and the Gemfile's optional :plugins group is not
+# installed, so no plugin's own gem is a condition of this workflow passing.
 
 on:
   push:
@@ -22,9 +30,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Keep this in step with required_ruby_version in automatic.gemspec
-        # and with the supported environment section of README.md.
-        ruby: ['3.3', '3.4', '3.5']
+        # The continuously validated versions. Keep this in step with the
+        # supported environment section of README.md; the floor here and
+        # required_ruby_version in automatic.gemspec are the same version.
+        ruby: ['3.3', '3.4', '4.0']
 
     steps:
       - uses: actions/checkout@v4
@@ -42,6 +51,9 @@ jobs:
 
       - name: Check that the gemspec is valid and buildable
         run: gem build automatic.gemspec
+
+      - name: Check that the library loads
+        run: bundle exec ruby -Ilib -e "require 'automatic'"
 
       - name: Check that the CLI runs
         run: |

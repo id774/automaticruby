@@ -220,7 +220,9 @@ module Automatic
       end # each_outline
 
       def read_text
-        text = ""
+        # +'' rather than "": this string is appended to below, and a literal
+        # is on its way to being frozen.
+        text = +''
         while event = @p.pull
           case event.event_type
           when :end_element
