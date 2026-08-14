@@ -1,0 +1,55 @@
+name: Optional plugin dependencies
+
+# Installs the Gemfile's optional `plugins` group and runs the same suite, so
+# that the second documented way of setting up a checkout is checked as well as
+# described: the group resolves, and the plugin specs it brings in pass.
+#
+# This is not the required check. ci.yml is, and it installs none of this: what
+# has to hold on every commit is that the framework runs on its own runtime
+# dependencies (doc/POLICY.md sections 9.1 and 11). This workflow is the other
+# half of that statement, and it is held to the same standard — a failure here
+# is a real failure, to be fixed rather than silenced.
+#
+# One Ruby version, not the matrix. This checks the dependency configuration,
+# which the required workflow already checks across versions without it.
+#
+# Still no credential and no external service: the optional gems of the plugins
+# that need a running service are in their own groups, outside `plugins`, and
+# are not installed here.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  plugins:
+    name: All supported optional plugin dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: Select the optional plugin group
+        run: bundle config set --local with plugins
+
+      - name: Install the bundle, including the optional plugin group
+        run: bundle install --jobs 4
+
+      - name: Check that the optional gems are in the bundle
+        run: |
+          bundle exec ruby -e "require 'nokogiri'; require 'active_record'; \
+            require 'sqlite3'; require 'sanitize'; require 'feedbag'; \
+            puts 'optional plugin dependencies present'"
+
+      - name: Run the test suite
+        run: bundle exec rake spec

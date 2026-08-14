@@ -110,11 +110,14 @@ plainly which of its plugins still work. See [`doc/VERSIONS`](doc/VERSIONS).
 - **Your plugins override the shipped ones.** `~/.automatic/plugins` is searched
   first, so a shipped plugin can be replaced without touching the installation.
 - **De-duplication built in.** The store plugins keep a SQLite record of what
-  has been seen, which is what makes a Recipe safe to run every hour.
+  has been seen, which is what makes a Recipe safe to run every hour. Their
+  gems are installed when you use them, not before.
 - **Retry and interval** on everything that reaches the network, configured per
   plugin in the Recipe.
 - **A small installation.** A gem needed by one plugin is not a dependency of
-  the framework, so installing this does not install an AWS SDK.
+  the framework: `gem install automatic` brings four pure-Ruby gems and the
+  command, and installs neither an HTML parser nor a database — let alone an
+  AWS SDK.
 - **Honest about what is broken.** Every plugin is classified, with its reason,
   in [`doc/PLUGINS.md`](doc/PLUGINS.md). Nothing dead is stubbed into looking
   alive.
@@ -163,7 +166,9 @@ The full account is [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md).
 - **Ruby 3.3 through 4.0.** CI validates 3.3, 3.4 and 4.0.
 - A Unix-like system. GNU/Linux and macOS are what it is used on. Windows is not
   supported.
-- A compiler, if `nokogiri` or `sqlite3` build from source on your platform.
+- A compiler only if you install an optional plugin gem that builds from source
+  on your platform, such as `nokogiri` or `sqlite3`. The framework's own
+  dependencies are pure Ruby.
 
 Ruby 3.3 is the floor: it is the oldest maintained release the dependencies are
 resolved and tested against. Nothing older is tested or supported.
@@ -187,33 +192,49 @@ gem install automatic
 automatic --version
 ```
 
+That installs the framework, the command and four pure-Ruby dependencies.
+A gem that only one plugin needs is not among them: install it when you use
+that plugin, with `gem install nokogiri` or `gem install activerecord sqlite3`.
+[`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md) lists which plugin needs which.
+
 ### From a checkout
 
 Use a checkout to try the current development version, change the source,
-develop a plugin or verify changes before a release:
+develop a plugin or verify changes before a release. There are three ways to
+set one up; start with the first.
 
 ```sh
 git clone https://github.com/id774/automaticruby.git
 cd automaticruby
+
+# Minimal: the framework and its test suite. No optional plugin gem.
 bundle install
+
+# All supported optional plugin dependencies, for plugin work.
+bundle config set --local with plugins
+bundle install
+
+# Or start minimal and add one group at a time, as you use its plugins.
+bundle config set --local with store
+bundle install
+```
+
+```sh
 bundle exec bin/automatic --version
 bundle exec rake
 ```
 
-`bundle install` resolves the runtime and development dependencies declared by
-`Gemfile` and `automatic.gemspec`, and installs the gems needed to run and test
-the checkout. If the `bundle` command is unavailable, install Bundler first
-with `gem install bundler`.
+A plain `bundle install` resolves the runtime dependencies declared by
+`automatic.gemspec` and the development ones, and installs no optional plugin
+gem: those are optional Bundler groups, which are installed only when asked
+for. If the `bundle` command is unavailable, install Bundler first with
+`gem install bundler`.
 
-In a checkout, every `automatic` below becomes `bundle exec bin/automatic`.
-Use `bundle exec rake` to verify the development environment by running the
-test suite.
-
-The core development setup does not install the optional `plugins` bundle
-group. Some plugins need their own gem or external service; install those only
-for the plugin being used or developed. Check the plugin catalogue in
-[`doc/PLUGINS.md`](doc/PLUGINS.md) and the dependency table in
-[`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md).
+In a checkout, every `automatic` below becomes `bundle exec bin/automatic`, and
+`bundle exec` sees only the bundle — so a plugin's gem is added with a group
+rather than with `gem install`. The group names, and which plugin needs which
+gem, are in [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md); what each plugin does is
+in [`doc/PLUGINS.md`](doc/PLUGINS.md).
 
 ## 6. Quick start
 
@@ -228,11 +249,13 @@ automatic -c ~/.automatic/config/example/feed2markdown.yml
 `assets/`, and copies the example Recipes into `~/.automatic/config/example`.
 It never overwrites anything already there.
 
-That Recipe fetches the public Ruby news feed, skips what it has published
-before, and appends the rest to `~/.automatic/markdown/feeds.md`. Run it twice: the second
-run leaves the file alone, because the store plugin has seen it all. Read the
-file, `grep` it, put it in a repository, or hand it to whatever reads text next.
-`feed2console.yml` beside it is the same pipeline printing to the terminal.
+That Recipe fetches the public Ruby news feed and appends its items to
+`~/.automatic/markdown/feeds.md`, using nothing but the framework and what
+`gem install automatic` brought. Read the file, `grep` it, put it in a
+repository, or hand it to whatever reads text next. `feed2console.yml` beside
+it is the same pipeline printing to the terminal. Adding a store plugin, so
+that a second run appends only what is new, is step 5 of the Quick Start and
+the point at which the first optional gems are installed.
 
 To check the framework without any network, write this instead:
 
@@ -485,12 +508,13 @@ COVERAGE=on bundle exec rake spec
   AUTOMATIC_NETWORK_SPECS=1 bundle exec rake spec
   ```
 
-- A plugin whose gem the Gemfile declares in its optional `:plugins` group is
-  **not verified by the default suite**, because that group is not installed.
-  Install it to run those specs as part of the ordinary suite:
+- A plugin whose gem the Gemfile declares in an optional group is **not
+  verified by the default suite**, because no optional group is installed.
+  Install them to run those specs as part of the ordinary suite:
 
   ```sh
-  BUNDLE_WITH=plugins bundle install
+  bundle config set --local with plugins
+  bundle install
   bundle exec rake
   ```
 
@@ -502,11 +526,16 @@ COVERAGE=on bundle exec rake spec
   in CI. Most need a credential, a dead service, or both — read one before
   running it.
 
-CI installs the bundle, builds the gem, loads the library, runs the CLI and runs
-the default suite on each validated Ruby version, from
+The required check installs the bundle, builds the gem, loads the library, runs
+the CLI and runs the default suite on each validated Ruby version, from
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml). It configures no secret
 and installs no optional plugin gem, so no plugin's own dependency is a
-condition of a green build.
+condition of a change being merged — and what it proves on every commit is that
+the framework needs nothing but its own runtime dependencies. A separate,
+non-required workflow,
+[`.github/workflows/plugins.yml`](.github/workflows/plugins.yml), installs the
+`plugins` group and runs the same suite, which is how the all-plugins setup is
+checked.
 
 ## 13. Development
 

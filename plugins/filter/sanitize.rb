@@ -10,7 +10,7 @@
 
 module Automatic::Plugin
   class FilterSanitize
-    require 'sanitize'
+    Automatic.require_optional('sanitize', needed_by: 'FilterSanitize')
 
     def initialize(config, pipeline=[])
       @config = config

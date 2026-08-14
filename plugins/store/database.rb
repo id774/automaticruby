@@ -5,10 +5,18 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 27, 2012
-# Updated::     Oct 09, 2014
+# Updated::     Aug 14, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
+#
+# The SQLite storage the store plugins share. ActiveRecord and sqlite3 are the
+# store plugins' own dependencies, not the framework's: a Recipe that stores
+# nothing runs without them. See doc/POLICY.md section 9.1.
 
-require 'active_record'
+Automatic.require_optional('active_record',
+                           gem_name: 'activerecord',
+                           needed_by: 'the store plugins StorePermalink and StoreFullText')
+Automatic.require_optional('sqlite3',
+                           needed_by: 'the store plugins StorePermalink and StoreFullText')
 
 module Automatic::Plugin
   module Database

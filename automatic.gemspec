@@ -86,31 +86,26 @@ Gem::Specification.new do |spec|
   spec.require_paths      = ['lib']
   spec.extra_rdoc_files   = ['README.md', 'doc/LICENSE.md']
 
-  # Runtime dependencies: what the framework itself needs, plus what the
-  # documented primary workflow needs — the store plugins, which nearly every
-  # Recipe uses to avoid repeating its work, and the Markdown publisher.
+  # Runtime dependencies: what the framework in lib/ requires, and nothing
+  # else. Requiring `automatic`, loading a Recipe, loading a plugin, running a
+  # pipeline and the CLI's own work are what these four are for.
   #
-  # A gem needed by a single plugin is NOT declared here. It is required inside
-  # that plugin's own file and installed by the operator who uses the plugin.
-  # See doc/POLICY.md section 9.1 and doc/DEPLOYMENT.md.
+  # A gem needed by a plugin is NOT declared here, however useful that plugin
+  # is. It is required inside the plugin's own file and installed by the
+  # operator who uses the plugin: `gem install automatic` therefore installs no
+  # HTML parser, no database and no service client. The optional gems, which
+  # plugin needs which, and how to install them are in the Gemfile's optional
+  # groups, doc/DEPLOYMENT.md and doc/POLICY.md section 9.1.
   #
   # rexml and rss left the standard library and became gems over the 3.x
   # series, and nkf followed after 3.3. Each gem listed here is listed because
-  # something committed here requires it, and a library's move out of the
-  # standard library is not by itself a reason to declare it: nkf is a plugin's
-  # dependency and is in the Gemfile's optional group instead.
-  spec.add_dependency 'activerecord',  '>= 7.1', '< 9.0'   # store plugins
+  # a file in lib/ requires it, and a library's move out of the standard
+  # library is not by itself a reason to declare it: nkf is a plugin's
+  # dependency and is in the Gemfile's optional groups instead.
   spec.add_dependency 'activesupport', '>= 7.1', '< 9.0'   # plugin loader, XML subscription
-  spec.add_dependency 'feedbag',       '>= 1.0', '< 2.0'   # autodiscovery subcommand
   spec.add_dependency 'hashie',        '>= 4.0', '< 6.0'   # Recipe
-  # Used by no framework file on the way in: requiring `automatic` loads no
-  # HTML parser. It is here because Supported plugins that an installed gem
-  # must be able to run need it -- PublishMarkdown, and FeedParser.parse_html
-  # for SubscriptionLink and SubscriptionTumblr.
-  spec.add_dependency 'nokogiri',      '>= 1.15', '< 2.0'  # HTML parsing, in plugins
   spec.add_dependency 'rexml',         '>= 3.2', '< 4.0'   # OPML parser
   spec.add_dependency 'rss',           '>= 0.3', '< 1.0'   # the pipeline value
-  spec.add_dependency 'sqlite3',       '>= 1.7', '< 3.0'   # store plugins
 
   spec.add_development_dependency 'rake',                      '~> 13.0'
   spec.add_development_dependency 'rspec',                     '~> 3.13'

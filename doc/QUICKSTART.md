@@ -2,7 +2,8 @@
 
 This guide takes public information through one short Automatic Ruby pipeline
 and leaves it as Markdown. It needs no account, credential, paid service or
-database server, and no gem beyond the ones `gem install automatic` brings.
+database server, and no gem beyond the four `gem install automatic` brings —
+no HTML parser, no database, nothing to build.
 
 ## 1. Install
 
@@ -35,10 +36,6 @@ plugins:
       feeds:
         - https://www.ruby-lang.org/en/feeds/news.rss
 
-  - module: StorePermalink
-    config:
-      db: feed2markdown.db
-
   - module: PublishMarkdown
     config:
       file: ~/.automatic/markdown/feeds.md
@@ -51,9 +48,9 @@ Run the scaffolded copy:
 automatic -c ~/.automatic/config/example/feed2markdown.yml
 ```
 
-`SubscriptionFeed` acquires the public Ruby news feed. `StorePermalink` keeps a
-local SQLite record and passes on only unseen items. `PublishMarkdown` appends
-those items to a plain-text document.
+`SubscriptionFeed` acquires the public Ruby news feed. `PublishMarkdown`
+appends those items to a plain-text document, reducing the HTML in each item's
+body to text as it goes.
 
 ## 4. Read the result
 
@@ -72,10 +69,46 @@ Each item is a level-2 heading followed by available metadata and a text body:
 Item body.
 ```
 
-Run the Recipe again. Items already recorded by `StorePermalink` are not
-appended again.
+Run the Recipe again, and the same items are appended a second time: nothing in
+this Recipe remembers what it has already published. The next step is what
+fixes that.
 
-## 5. Run it from cron
+## 5. Collect only what is new
+
+A store plugin records what has been published and passes on only what has not.
+`StorePermalink` keeps that record in SQLite through ActiveRecord, and those two
+gems are the store plugins' own dependencies rather than the framework's, so
+they are installed when they are wanted:
+
+```sh
+gem install activerecord sqlite3
+```
+
+Then put the plugin between the two the Recipe already has:
+
+```yaml
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - https://www.ruby-lang.org/en/feeds/news.rss
+
+  - module: StorePermalink
+    config:
+      db: feed2markdown.db
+
+  - module: PublishMarkdown
+    config:
+      file: ~/.automatic/markdown/feeds.md
+      mode: append
+```
+
+Run it twice. The second run appends nothing, which is what makes the Recipe
+safe to run from `cron` — and, in general, what to do before any plugin with an
+effect. Other plugins have optional dependencies of their own, all listed in
+[`DEPLOYMENT.md`](DEPLOYMENT.md).
+
+## 6. Run it from cron
 
 Create the log directory once, then use the absolute path reported by
 `command -v automatic`:
@@ -102,6 +135,11 @@ through the checkout's executable:
 bundle exec bin/automatic scaffold
 bundle exec bin/automatic -c ~/.automatic/config/example/feed2markdown.yml
 ```
+
+A checkout resolves gems through Bundler rather than through RubyGems, so step 5
+is done differently there: `bundle config set --local with store` and
+`bundle install`, instead of `gem install activerecord sqlite3`. See
+[`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 The Recipe is ordinary YAML. Change the feed URL, insert a supported Filter, or
 change the Markdown path without changing the framework. To write a small

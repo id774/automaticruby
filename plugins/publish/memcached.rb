@@ -5,12 +5,12 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jun 25, 2013
-# Updated::     Jun 25, 2013
+# Updated::     Aug 14, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class PublishMemcached
-    require 'dalli'
+    Automatic.require_optional('dalli', needed_by: 'PublishMemcached')
 
     def initialize(config, pipeline=[])
       @config = config

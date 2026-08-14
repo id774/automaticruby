@@ -32,14 +32,15 @@ nothing to stop.
   a version between them is supported and is simply not checked on every commit,
   and a Ruby newer than 4.0 is permitted rather than refused. See
   [`REQUIREMENTS.md`](REQUIREMENTS.md) section 20.
-- A build environment may be needed if a dependency such as `nokogiri` or
-  `sqlite3` has to build a native extension on your platform. Start with the
-  normal installation below; install platform-specific build tools only if the
-  gem installation reports that they are required.
-
 - Optional gems for particular plugins, listed in the table under
-  "Optional plugin dependencies" below. None is needed to install or to run a
-  Recipe that does not use the plugin.
+  "Optional plugin dependencies" below. None is needed to install Automatic
+  Ruby, to run the Quick Start, or to run a Recipe that does not use the
+  plugin.
+- A build environment may be needed for one of those optional gems — `nokogiri`
+  and `sqlite3` build a native extension where no binary package matches your
+  platform. The framework's own dependencies are pure Ruby, so the normal
+  installation needs no build tools; install them only if installing an
+  optional gem reports that they are required.
 
 ## Install
 
@@ -50,12 +51,29 @@ gem install automatic
 automatic --version
 ```
 
-That installs the framework, its runtime dependencies and the `automatic`
-command.
+That installs the framework, the `automatic` command and four pure-Ruby
+runtime dependencies: `activesupport`, `hashie`, `rexml` and `rss`. That is the
+whole of it. No HTML parser, no database, no service client — a gem needed by
+one plugin is installed by the operator who uses that plugin, so installing
+Automatic Ruby does not install what your Recipes do not use.
+
+Add one when you use the plugin that needs it:
+
+```sh
+gem install nokogiri              # the plugins that read HTML
+gem install activerecord sqlite3  # the store plugins
+```
+
+The table under "Optional plugin dependencies" below says which plugin needs
+which, and is the list to check before adding anything.
 
 ### From a checkout
 
-For working on the framework, or for running a version that is not released:
+For working on the framework, or for running a version that is not released.
+There are three ways to set one up, and the first is the one to start with.
+
+**Minimal — the framework and its test suite.** What you want for running the
+checkout, and for developing the framework itself:
 
 ```sh
 git clone https://github.com/id774/automaticruby.git
@@ -65,14 +83,44 @@ bundle exec bin/automatic --version
 bundle exec rake
 ```
 
-`bundle install` resolves the runtime and development dependencies in `Gemfile`
-and `automatic.gemspec`. It installs what is needed to run the checkout and its
-test suite. If the `bundle` command is unavailable, install Bundler first with
-`gem install bundler`.
+`bundle install` resolves the runtime dependencies of `automatic.gemspec` and
+the development ones — `rake`, `rspec` and `simplecov`. It installs **no**
+optional plugin gem: the `Gemfile`'s groups for those are optional, and Bundler
+does not install an optional group unless it is asked to. If the `bundle`
+command is unavailable, install Bundler first with `gem install bundler`.
 
-The default bundle does not install the optional `plugins` group. See
-"Optional plugin dependencies" below and [`PLUGINS.md`](PLUGINS.md) before
-installing anything for a particular plugin.
+**All supported optional plugin dependencies.** For plugin development, or for
+running the specs of the plugins that need a gem:
+
+```sh
+bundle config set --local with plugins
+bundle install
+bundle exec rake
+```
+
+That adds `activerecord`, `sqlite3`, `nokogiri`, `sanitize`, `nkf` and
+`feedbag`, and their specs then run as part of the ordinary suite. The setting
+is written to the checkout's own `.bundle/config`, which is not committed;
+`bundle config unset --local with` returns the checkout to the minimum, and
+`bundle install` afterwards.
+
+**One dependency at a time.** Start minimal and add only what a plugin you
+actually use needs. Each optional gem is in a second, smaller group named after
+what it is for, so the group name selects it on its own:
+
+```sh
+bundle config set --local with store     # activerecord and sqlite3
+bundle install
+```
+
+Several at once are space-separated: `bundle config set --local with "store
+html"`. The group names are in the table below.
+
+In a checkout, `gem install <gem>` on its own is **not** enough: `bundle exec`
+puts only the bundle on the load path, so a gem the `Gemfile` does not mention
+is not visible to it. Use the group, which is why the groups exist. Outside a
+checkout — the installed gem, run as `automatic` — there is no bundle and `gem
+install <gem>` is exactly right.
 
 Everything below that says `automatic` becomes `bundle exec bin/automatic` in a
 checkout.
@@ -116,7 +164,10 @@ worth telling apart:
 
 - A message about the feed being unreachable means the network or that
   particular feed, not the installation.
-- A Ruby `LoadError` naming a gem means the installation.
+- A `LoadError` naming a gem means a plugin's optional dependency is not
+  installed. `feed2console.yml` uses none, so at this point it means the
+  installation itself; a message naming a gem and a plugin means the plugin,
+  and "Optional plugin dependencies" below says what to install.
 
 To check the framework without any network at all, write a Recipe that uses
 `SubscriptionText`:
@@ -175,6 +226,11 @@ plugins:
       retry: 2
       interval: 3
 ```
+
+That Recipe needs three optional gems, because of the plugins it names rather
+than because of the framework: `nokogiri` for `FilterImageSource`, and
+`activerecord` and `sqlite3` for `StorePermalink`. See "Optional plugin
+dependencies" below.
 
 Three things in that Recipe are the operational advice of this document:
 
@@ -387,34 +443,43 @@ Recipe is stated there in terms you can act on.
 
 ## Optional plugin dependencies
 
-These gems are not installed with the framework. Install one only if you use the
-plugin, and check its status in [`PLUGINS.md`](PLUGINS.md) section 6 first —
-several of these plugins talk to services that no longer exist.
+This table is the list. Which plugin needs which gem, how to install it, and
+whether the plugin still works are all here, and nothing else repeats it.
 
-| Plugin | Needs | Status |
-| --- | --- | --- |
-| `FilterSanitize` | `sanitize` | Supported |
-| `FilterDescriptionLink` | `nkf` | Supported |
-| `CustomFeedSVNLog` | `xml-simple`, and the `svn` command | Supported (external) |
-| `ProvideFluentd`, `PublishFluentd` | `fluent-logger`, and a Fluentd instance | Supported (external) |
-| `PublishMemcached` | `dalli`, and a memcached server | Supported (external) |
-| `PublishEject` | the `eject` or `drutil` command | Supported (external) |
-| `NotifyIkachan` | an `ikachan` gateway you run | Supported (external) |
-| `StoreFile`, S3 path only | the `aws-sdk` v1 interface | Needs rework |
-| `PublishAmazonS3` | the `aws-sdk` v1 interface | Needs rework |
-| `PublishTwitter`, `SubscriptionTwitterSearch` | — | Unsupported |
-| `PublishPocket`, `SubscriptionPocket` | — | Unsupported |
-| `PublishHipchat` | — | Unsupported |
-| `PublishGoogleCalendar` | — | Unsupported |
-| `SubscriptionWeather` | — | Unsupported |
+None of these gems is installed by `gem install automatic` or by a default
+`bundle install`. Install one only if you use the plugin, and check the status
+column first — several of these plugins talk to services that no longer exist.
 
-```sh
-gem install sanitize             # for FilterSanitize
-gem install nkf                  # for FilterDescriptionLink
-gem install fluent-logger        # for the Fluentd plugins
-gem install dalli                # for PublishMemcached
-gem install xml-simple           # for CustomFeedSVNLog
-```
+**Installed gem**: `gem install <gem>`. **Checkout**: `bundle config set
+--local with <group>` and `bundle install`, because `bundle exec` sees only the
+bundle. `plugins` is every group in the first block at once.
+
+| Plugin | Needs | Installed gem | Checkout group | Status |
+| --- | --- | --- | --- | --- |
+| `StorePermalink`, `StoreFullText` | `activerecord`, `sqlite3` | `gem install activerecord sqlite3` | `store` | Supported |
+| `FilterImageSource`, `FilterDescriptionLink`, `SubscriptionLink`, `SubscriptionTumblr` | `nokogiri` | `gem install nokogiri` | `html` | Supported (`SubscriptionTumblr` external) |
+| `PublishMarkdown` | `nokogiri`, for HTML bodies only | `gem install nokogiri` | `html` | Supported; runs without it |
+| `FilterSanitize` | `sanitize` | `gem install sanitize` | `sanitize` | Supported |
+| `FilterDescriptionLink` | `nkf`, as well as `nokogiri` | `gem install nkf` | `nkf` | Supported |
+| `autodiscovery` and `inspect` subcommands | `feedbag` | `gem install feedbag` | `autodiscovery` | Supported |
+| `FilterFullFeed` | `nokogiri`, and a siteinfo file | `gem install nokogiri` | `html` | Supported (external) |
+| `CustomFeedSVNLog` | `xml-simple`, and the `svn` command | `gem install xml-simple` | `svn_log` | Supported (external) |
+| `ProvideFluentd`, `PublishFluentd` | `fluent-logger`, and a Fluentd instance | `gem install fluent-logger` | `fluentd` | Supported (external) |
+| `PublishMemcached` | `dalli`, and a memcached server | `gem install dalli` | `memcached` | Supported (external) |
+| `PublishEject` | the `eject` or `drutil` command | — | — | Supported (external) |
+| `NotifyIkachan` | an `ikachan` gateway you run | — | — | Supported (external) |
+| `StoreFile`, S3 path only | the `aws-sdk` v1 interface | — | — | Needs rework |
+| `PublishAmazonS3` | the `aws-sdk` v1 interface | — | — | Needs rework |
+| `PublishTwitter`, `SubscriptionTwitterSearch` | — | — | — | Unsupported |
+| `PublishPocket`, `SubscriptionPocket` | — | — | — | Unsupported |
+| `PublishHipchat` | — | — | — | Unsupported |
+| `PublishGoogleCalendar` | — | — | — | Unsupported |
+| `SubscriptionWeather` | — | — | — | Unsupported |
+
+The `plugins` group is the first six rows: the optional gems of the plugins
+whose specs need nothing but the gem. The three rows below it are in their own
+groups only, because each also needs a service or a command, and installing a
+gem alone would not make the plugin — or its spec — work.
 
 The two AWS rows are listed for completeness rather than as instructions.
 They call `AWS::S3`, which AWS SDK for Ruby version 1 provided and the current
@@ -422,16 +487,19 @@ They call `AWS::S3`, which AWS SDK for Ruby version 1 provided and the current
 need rework. `StoreFile` makes that requirement lazily, so its ordinary HTTP
 download path works with no AWS gem installed at all.
 
-In a checkout, install the `Gemfile`'s optional `plugins` group instead —
-uncommenting the entry first, where the gem is one of the commented ones:
+No optional group is installed by default and none is installed in required CI,
+so these plugins are outside what a green build guarantees. Installing a group
+brings the specs of its plugins into the ordinary `bundle exec rake` run, which
+is how they are verified.
 
-```sh
-BUNDLE_WITH=plugins bundle install
+Using a plugin without its gem is not a mystery: the plugin says what is
+missing, what needs it and how to get it, and the command exits `1`.
+
+```text
+automatic: The `activerecord` gem is not installed. It is needed by the store
+plugins StorePermalink and StoreFullText. Install it with `gem install
+activerecord`, ...
 ```
-
-That group is not installed by default and is not installed in CI, so these
-plugins are outside what the default test suite verifies. Installing it also
-brings their specs into the ordinary `bundle exec rake` run.
 
 ## Your own plugins
 
@@ -453,9 +521,11 @@ not touch this directory.
 **`command not found: automatic`** — the gem's binary directory is not on
 `PATH`. `gem environment` prints it as EXECUTABLE DIRECTORY.
 
-**`LoadError: cannot load such file -- <gem>`** — a plugin's optional dependency
-is missing. The message names it; install it, or check the table above in case
-the plugin is one that no longer works.
+**`The <gem> gem is not installed. It is needed by ...`** — a plugin's optional
+dependency is missing. The message names the gem, the plugin and the command to
+install it; the table above says the same thing, and says whether the plugin is
+one that no longer works. A bare `LoadError: cannot load such file -- <gem>` is
+the same situation from a plugin that is no longer supported.
 
 **`unknown plugin named X`** — the Recipe names a module the loader cannot
 resolve. Check the spelling against [`PLUGINS.md`](PLUGINS.md) section 6, and

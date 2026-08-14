@@ -10,6 +10,13 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
+# The store plugins keep their records in SQLite through ActiveRecord. Both
+# gems are the store plugins' own, declared in the Gemfile's optional :plugins
+# and :store groups, so this spec runs only where the operator has installed
+# them. See doc/POLICY.md section 5.
+return unless AutomaticSpec.optional_dependency?('activerecord') &&
+              AutomaticSpec.optional_dependency?('sqlite3')
+
 require 'store/full_text'
 require 'pathname'
 

@@ -210,7 +210,9 @@ Confirm that:
 - the required Ruby version is `>= 3.3.0`;
 - licenses contain both `GPL-3.0-only` and `LGPL-3.0-only`;
 - the authors are correct;
-- runtime and development dependencies match `automatic.gemspec`;
+- runtime and development dependencies match `automatic.gemspec`, and the
+  runtime ones are the framework's own — no gem that belongs to a plugin has
+  found its way in ([`POLICY.md`](POLICY.md) section 9.1);
 - `rubygems_mfa_required` is `true`.
 
 ## 8. Test an isolated local installation

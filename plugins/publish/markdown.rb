@@ -12,7 +12,6 @@
 module Automatic::Plugin
   class PublishMarkdown
     require 'fileutils'
-    require 'nokogiri'
 
     # Written under an item's heading, in this order. A field the item does not
     # carry produces no bullet at all, so an item is not padded out with empty
@@ -39,6 +38,28 @@ module Automatic::Plugin
     # that carries neither is written as it stands, so that a "<" in a
     # plain-text description is not parsed away.
     MARKUP = %r{<[a-zA-Z/!]|&[a-zA-Z#][0-9a-zA-Z]*;}
+
+    # What the substitute reducer below matches, in the order it applies them.
+    COMMENT_ELEMENT = /<!--.*?-->/m
+    DISCARDED_ELEMENT = %r{<(script|style)\b[^>]*>.*?</\1\s*>}mi
+    BREAK_ELEMENT = /<br\b[^>]*>/i
+    BLOCK_ELEMENT = %r{</?(?:#{BLOCK_ELEMENTS.join('|')})\b[^>]*>}i
+    TAG = /<[^>]*>/m
+    ENTITY = /&(\#\d+|\#[xX][0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);/
+
+    # The character references a feed body actually tends to carry: the five of
+    # XML, and the punctuation and symbols that follow prose out of a web page.
+    # A reference in neither this table nor the numeric form is left as it is
+    # written, which a reader can still make sense of; the full HTML set is two
+    # thousand entries and a parser's business.
+    ENTITIES = {
+      'amp' => '&', 'lt' => '<', 'gt' => '>', 'quot' => '"', 'apos' => "'",
+      'nbsp' => "\u00A0", 'copy' => '©', 'reg' => '®', 'trade' => '™',
+      'hellip' => '…', 'mdash' => '—', 'ndash' => '–', 'middot' => '·',
+      'bull' => '•', 'deg' => '°', 'laquo' => '«', 'raquo' => '»',
+      'lsquo' => '‘', 'rsquo' => '’', 'ldquo' => '“', 'rdquo' => '”',
+      'yen' => '¥', 'pound' => '£', 'euro' => '€'
+    }.freeze
 
     # The item's own date, in the zone the item carries. Nothing is converted
     # to local time: the same pipeline then produces the same document
@@ -146,9 +167,66 @@ module Automatic::Plugin
     end
 
     # Reduce markup to text: script and style go with their contents, a break
-    # ends a line, a block element ends a paragraph, entities are decoded by
-    # the parser, and the tags themselves are dropped.
+    # ends a line, a block element ends a paragraph, entities are decoded, and
+    # the tags themselves are dropped.
+    #
+    # A parser does it where one is installed, and the substitution below does
+    # it where none is. That is what keeps this plugin -- the one the Quick
+    # Start publishes with -- runnable on a plain `gem install automatic`:
+    # nokogiri is an optional dependency, and reducing a feed body to text is
+    # not a good enough reason to make everyone install a native extension.
+    # The two agree on what a body is reduced to; a parser is simply better at
+    # markup that is malformed. See doc/PLUGINS.md section 6.7.
     def html_to_text(html)
+      html_parser? ? parsed_text(html) : substituted_text(html)
+    end
+
+    # Memoized, and false rather than an exception when the gem is absent: this
+    # question is asked once per body.
+    def html_parser?
+      return @html_parser unless @html_parser.nil?
+
+      @html_parser =
+        begin
+          require 'nokogiri'
+          true
+        rescue LoadError
+          false
+        end
+    end
+
+    def substituted_text(html)
+      text = html.gsub(COMMENT_ELEMENT, '')
+      text = text.gsub(DISCARDED_ELEMENT, '')
+      text = text.gsub(BREAK_ELEMENT, "\n")
+      text = text.gsub(BLOCK_ELEMENT, "\n\n")
+      unescape(text.gsub(TAG, ''))
+    end
+
+    # One pass, so that "&amp;lt;" decodes to "&lt;" and not to "<", which is
+    # what a parser does with it too.
+    def unescape(text)
+      text.gsub(ENTITY) {|reference|
+        name = Regexp.last_match(1)
+        name.start_with?('#') ? character(name) || reference
+                              : ENTITIES.fetch(name, reference)
+      }
+    end
+
+    # A numeric character reference, or nil where it names no character: a
+    # surrogate, a value past the last code point, or zero.
+    def character(name)
+      code = name.start_with?('#x', '#X') ? name[2..].to_i(16) : name[1..].to_i
+      return nil unless code.positive?
+
+      begin
+        code.chr(Encoding::UTF_8)
+      rescue RangeError
+        nil
+      end
+    end
+
+    def parsed_text(html)
       fragment = Nokogiri::HTML.fragment(html)
       fragment.css('script, style').each {|node| node.remove }
       fragment.css('br').each {|node| node.replace(text_node(node, "\n")) }

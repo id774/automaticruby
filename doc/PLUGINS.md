@@ -378,18 +378,30 @@ secret file. A plugin therefore:
 
 ### 3.8 Dependencies
 
-A plugin requires its own libraries at the top of its own file:
+A plugin requires its own libraries at the top of its own file. A library that
+ships with Ruby is required plainly; a gem the operator has to install is
+required through `Automatic.require_optional`, which names the gem, the plugin
+and the way to install it if it is absent:
 
 ```ruby
 module Automatic::Plugin
   class PublishMemcached
-    require 'dalli'
+    Automatic.require_optional('dalli', needed_by: 'PublishMemcached')
 ```
+
+```text
+The `dalli` gem is not installed. It is needed by PublishMemcached. Install it
+with `gem install dalli`, or in a source checkout add its group to the bundle;
+see the optional plugin dependencies in doc/DEPLOYMENT.md.
+```
+
+Pass `gem_name:` where the gem's name differs from the path required, as
+`xml-simple` does from `xmlsimple`.
 
 That is what keeps a gem needed by one plugin out of everyone else's
 installation. A gem used by a single plugin is not added to the framework's
-runtime dependencies; it goes in the `Gemfile`'s optional `:plugins` group and
-the operator who uses the plugin installs it. See [`POLICY.md`](POLICY.md)
+runtime dependencies; it goes in an optional group of the `Gemfile` and the
+operator who uses the plugin installs it. See [`POLICY.md`](POLICY.md)
 section 9.
 
 Where a plugin has an optional capability that needs a heavier library — S3
@@ -522,13 +534,15 @@ Two rules govern this table, and they are the reason it exists at all:
   framework was used for, and several remain useful as templates for a
   replacement. Removal is a separate, deliberate decision.
 
-**Supported is not the same as covered by CI.** A Supported plugin whose gem is
-an optional plugin dependency — `FilterSanitize` and `FilterDescriptionLink` —
-works, and is simply not part of what a green build guarantees, because the
-default bundle does not install that gem. Its entry says so, and installing the
-gem runs its spec as part of the ordinary suite. Nothing here is classified by
-what CI happens to run; a plugin is not demoted for needing a gem, and is not
-promoted by a test that CI never executes.
+**Supported is not the same as covered by the required workflow.** A Supported
+plugin whose gem is an optional plugin dependency — the store plugins, the ones
+that read HTML, `FilterSanitize`, `FilterDescriptionLink` — works, and is
+simply not part of what a green required build guarantees, because the default
+bundle does not install that gem. Its entry says so, and installing the gem runs
+its spec as part of the ordinary suite, which is also what the separate
+`plugins` workflow does. Nothing here is classified by what CI happens to run; a
+plugin is not demoted for needing a gem, and is not promoted by a test that CI
+never executes.
 
 **This classification is a snapshot taken in August 2026,** based on the
 published status of each service and on what each plugin's code actually calls.
@@ -586,6 +600,9 @@ incoming pipeline.
 
 Set `interval` when fetching several pages from one host.
 
+Reads HTML through `FeedParser.parse_html`, so it needs `nokogiri`:
+`gem install nokogiri`, or the `html` group in a checkout.
+
 #### SubscriptionXml — **Supported**
 
 `subscription/xml.rb`. `GET`s an XML endpoint, converts the document to a hash,
@@ -625,9 +642,10 @@ drops any that leave the blog's own host. `pages` walks `/page/2` and onward.
 | `retry` | integer | Attempts after the first. Default `0`. |
 | `interval` | integer | Seconds between requests. Default `0`. |
 
-It reads HTML written for a browser, so it depends on the theme a given blog
-uses and on Tumblr's page structure. Verify against the blog you mean to follow
-before putting it in `cron`, and set `interval`.
+It reads HTML written for a browser, so it needs `nokogiri` — `gem install
+nokogiri`, or the `html` group in a checkout — and it depends on the theme a
+given blog uses and on Tumblr's page structure. Verify against the blog you mean
+to follow before putting it in `cron`, and set `interval`.
 
 #### SubscriptionTwitter — **Unsupported**
 
@@ -753,6 +771,8 @@ settings.
 `<img src>` values in the description, or, if there are none, the images on the
 page the link points at. Fetching pages means network access. No settings.
 
+Needs `nokogiri`: `gem install nokogiri`, or the `html` group in a checkout.
+
 #### FilterAbsoluteURI — **Supported**
 
 `filter/absolute_uri.rb`. Rewrites relative links to absolute ones.
@@ -794,11 +814,12 @@ the body.
 `get_title` makes one request per item; use `FilterOne` or a store plugin before
 it on a large feed.
 
-Needs the `nkf` gem, which the plugin uses to normalize a fetched page's
-encoding. `nkf` left the standard library after Ruby 3.3 and is an optional
-plugin dependency rather than a framework one, so it is not installed with the
-framework, and this plugin's spec is outside the default suite and outside CI.
-See [`DEPLOYMENT.md`](DEPLOYMENT.md).
+Needs `nkf`, which the plugin uses to normalize a fetched page's encoding, and
+`nokogiri`, which it reads the fetched page with. `nkf` left the standard
+library after Ruby 3.3; both are optional plugin dependencies rather than
+framework ones, so neither is installed with the framework, and this plugin's
+spec is outside the default suite and outside the required workflow. See
+[`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 #### FilterFullFeed — **Supported (external)**
 
@@ -809,6 +830,8 @@ page.
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `siteinfo` | string | File name under the assets directory. Required. |
+
+Needs `nokogiri`: `gem install nokogiri`, or the `html` group in a checkout.
 
 The shipped `assets/siteinfo/items_all.json` is a snapshot of the LDRFullFeed
 database taken from `wedata.net`, which no longer operates, so the file cannot
@@ -834,6 +857,12 @@ plugin runs without error and simply matches nothing.
 
 Persist, and drop what has already been seen. A store plugin is what makes a
 Recipe safe to run repeatedly.
+
+`StorePermalink` and `StoreFullText` keep their records in SQLite through
+ActiveRecord. Both gems are these plugins' own optional dependencies rather than
+the framework's: `gem install activerecord sqlite3`, or the `store` group in a
+checkout. A Recipe that stores nothing needs neither.
+See [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 #### StorePermalink — **Supported**
 
@@ -1017,15 +1046,18 @@ This is deliberately **not** an HTML-to-Markdown translation. Rendering
 arbitrary markup back into equivalent Markdown — tables, nested lists, inline
 links, images — is a large job with a large library behind it, and a library
 that size does not become a dependency for one plugin
-([`POLICY.md`](POLICY.md) section 9.1). Reducing markup to text needs nothing
-beyond `nokogiri`, which `gem install automatic` installs: it is a runtime
-dependency of this gem precisely so that the Supported plugins an installed gem
-must be able to run — this one, and `FeedParser.parse_html` for
-`SubscriptionLink` and `SubscriptionTumblr` — work with nothing else added.
-Requiring `automatic` itself loads no HTML parser. The result is defined by its
-two ends — the text survives, the markup does not — which is what both a reader
-and a program reading the file want from it. A link inside a body becomes its
-own text; the item's own link is in the metadata list, where nothing loses it.
+([`POLICY.md`](POLICY.md) section 9.1). The result is defined by its two ends —
+the text survives, the markup does not — which is what both a reader and a
+program reading the file want from it. A link inside a body becomes its own
+text; the item's own link is in the metadata list, where nothing loses it.
+
+**This plugin needs no gem of its own.** It uses `nokogiri` to reduce a body
+where `nokogiri` is installed, and reduces it with its own substitution where it
+is not, so that the Quick Start runs on a plain `gem install automatic` and no
+Recipe pays for an HTML parser it did not ask for. The two produce the same
+document for the bodies a feed carries; a parser is simply better at markup that
+is badly malformed, which is the reason to install `nokogiri` if you publish
+from feeds that produce it. The specs hold both to the same output.
 
 Where a different treatment is wanted, the pipeline already has the means:
 `FilterSanitize` before this plugin decides what markup survives into the

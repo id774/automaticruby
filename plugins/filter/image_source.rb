@@ -11,7 +11,7 @@
 module Automatic::Plugin
   class FilterImageSource
     require 'net/http'
-    require 'nokogiri'
+    Automatic.require_optional('nokogiri', needed_by: 'FilterImageSource')
     require 'open-uri'
     require 'uri'
 

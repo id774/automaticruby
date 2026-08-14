@@ -1,14 +1,28 @@
-# Collect, de-duplicate, and leave the result as a Markdown document.
+# Collect public information and leave the result as a Markdown document.
 #
 #   automatic -c ~/.automatic/config/example/feed2markdown.yml
 #
 # The document is readable as it stands, searchable with grep, worth keeping in
 # version control, and ready to hand to a program that takes text as input.
-# Nothing here needs an account, a credential or a service.
+# Nothing here needs an account, a credential, a service or a gem beyond the
+# ones `gem install automatic` brings: the Recipe is the framework's core and
+# two plugins that need nothing of their own.
 #
-# Safe to run from cron: StorePermalink records what has already been written,
-# so a later run appends only what is new and a run that finds nothing new
-# leaves the file untouched. See doc/DEPLOYMENT.md.
+# Running it twice appends the same items twice. To collect only what is new,
+# put a store plugin in front of the publisher -- it records what has already
+# been written, which is also what makes a Recipe safe to run from cron:
+#
+#   - module: StorePermalink
+#     config:
+#       db: feed2markdown.db
+#
+# The store plugins keep their records in SQLite through ActiveRecord, which is
+# an optional dependency rather than a framework one:
+#
+#   gem install activerecord sqlite3
+#
+# See doc/DEPLOYMENT.md for the optional plugin dependencies, and
+# doc/QUICKSTART.md for this Recipe step by step.
 #
 # To send the document to standard output instead, drop the PublishMarkdown
 # config and set the log level to none, so that only the document is written:
@@ -20,10 +34,6 @@ plugins:
     config:
       feeds:
         - https://www.ruby-lang.org/en/feeds/news.rss
-
-  - module: StorePermalink
-    config:
-      db: feed2markdown.db
 
   - module: PublishMarkdown
     config:

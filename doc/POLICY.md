@@ -371,6 +371,10 @@ repository level only; see section 10.
   plugin loads without it. The S3 branch of `StoreFile` is the example.
 - The CLI requires a subcommand's libraries inside that subcommand, so a
   command that does not use `feedbag` or the OPML parser does not load them.
+- **An optional gem is required through `Automatic.require_optional`**, which
+  names the gem, what needed it and how to install it when it is absent. A bare
+  `require` of an optional gem answers a solvable problem with
+  `cannot load such file`, which is not the framework's best answer.
 - **`Bundler.require` is not how the framework loads its dependencies.** An
   installed library must not impose a bundle on the program requiring it. The
   Bundler setup in `environment.rb` is a convenience for a source checkout and
@@ -442,15 +446,19 @@ Plugins outlive the services they talk to. The policy for what happens then:
   them a gate. A new example that reaches a host is tagged; one that does not is
   never given the tag to make a failure go away.
 - **The default suite does not depend on an optional plugin gem.** A gem the
-  `Gemfile` declares in its optional `:plugins` group is not installed by
-  `bundle install`, so the plugins that need it are not verified by the default
-  suite or by CI. That is a decision, taken here, and not something a failure
+  `Gemfile` declares in an optional group is not installed by `bundle install`,
+  so the plugins that need it are not verified by the default suite or by the
+  required workflow. That is a decision, taken here, and not something a failure
   discovers: the gems it applies to are the declared list
   `AutomaticSpec::OPTIONAL_PLUGIN_GEMS`, a spec whose plugin needs one guards
   its file with `AutomaticSpec.optional_dependency?`, and naming a gem that is
-  not on the list raises rather than skipping. Installing the group with
-  `BUNDLE_WITH=plugins bundle install` runs those specs as part of the ordinary
-  suite.
+  not on the list raises rather than skipping. Selecting the group with
+  `bundle config set --local with plugins` and installing runs those specs as
+  part of the ordinary suite.
+- **A guard is a skip with a reason, not a `pending`.** A spec outside the
+  default suite prints why it is outside it and does not run; the default
+  suite's output is a list of what was verified rather than a list of what was
+  not.
 - A spec whose plugin's gem is not installed is skipped by
   `AutomaticSpec.plugin_available?`, which names the missing gem. That is the
   intended behaviour and is not worked around by faking the gem.
@@ -558,28 +566,46 @@ behaviour breaks nothing.
 
 ### 9.1 The split
 
-Dependencies fall into three groups, and which group a gem is in is a decision,
-not an accident:
+Install the core by default; install a plugin's dependencies only when they are
+needed. Dependencies fall into three groups, and which group a gem is in is a
+decision, not an accident:
 
 **Runtime dependencies** — declared in `automatic.gemspec`, installed by `gem
-install automatic`. A gem is here only if the framework itself uses it, or if a
-plugin that the majority of Recipes use — or that the documented primary
-workflow runs — needs it. A gem that reached this list because of a plugin that
-no longer uses it, or because a Ruby release moved a library out of the standard
-library, is moved back out.
+install automatic`. A gem is here only if a file in `lib/` requires it: what
+`require 'automatic'`, loading a Recipe, loading a plugin, running a pipeline
+and the command line itself need, and nothing more. A gem that reached this list
+because of a plugin, because a plugin no longer uses it, or because a Ruby
+release moved a library out of the standard library, is moved back out.
 
 **Optional dependencies** — used by one plugin or a few, required inside the
-plugin's own file, declared in the `Gemfile`'s optional `:plugins` group, and
-**not declared as runtime dependencies**. An operator who uses that plugin
-installs the gem. This is Invariant 4, and it is why installing this gem does
-not install an AWS SDK.
+plugin's own file, declared in an optional group of the `Gemfile`, and **not
+declared as runtime dependencies**. An operator who uses that plugin installs
+the gem. This is Invariant 4, and it is why installing this gem does not install
+an AWS SDK.
 
+The permanent rules of the split:
+
+- **A core dependency is one the framework itself has.** A plugin's dependency
+  is never a framework runtime dependency, however useful, popular or
+  Supported that plugin is. How many Recipes happen to use it is not the test;
+  what `lib/` requires is.
+- **The operator who uses the plugin installs its gem.** Not having it must
+  never stop the framework from starting, and a Recipe that does not name the
+  plugin must run without it.
+- **A new plugin does not increase the core dependencies.** Adding one to the
+  runtime list needs an architectural justification — the framework itself
+  came to need the gem — recorded with the change; wanting the plugin to work
+  out of the box is not one.
+- **The default tests and required CI do not depend on an optional
+  integration.** Being in this group has that intended consequence: those
+  plugins are not part of what a green build guarantees. See section 5.
 - **An unsupported or optional integration does not decide a framework-wide
-  dependency.** Where one plugin needs a gem, that gem is the plugin's, however
-  useful the plugin is.
-- Being in this group has a consequence that is intended: the default suite and
-  CI do not install it, so those plugins are not part of what a green build
-  guarantees. See section 5.
+  dependency.** Where one plugin needs a gem, that gem is the plugin's.
+
+A missing optional gem is reported, not merely raised: the plugin requires it
+through `Automatic.require_optional`, which names the gem, what needed it and
+how to install it. That helper is the whole of the mechanism, and no dependency
+manager, plugin manifest or resolver is introduced beyond it.
 
 **Development dependencies** — the test and build tooling.
 
@@ -753,7 +779,10 @@ the version history records what it amounts to.
 
 ## 11. Continuous integration
 
-- CI runs on GitHub Actions, from `.github/workflows/ci.yml`.
+- CI runs on GitHub Actions. `.github/workflows/ci.yml` is the required check;
+  `.github/workflows/plugins.yml` is a separate, non-required workflow that
+  installs the optional `plugins` group and runs the same suite, so that the
+  documented all-plugins setup is checked as well as described.
 - **CI validates representative supported Ruby versions rather than every
   intermediate release.** The matrix runs the ends of the supported range and
   the release in the middle. The matrix and `required_ruby_version` are
@@ -767,9 +796,14 @@ the version history records what it amounts to.
   integration is not added to it.
 - **CI holds no secret and reaches no external service.** No credential is
   configured, and no integration test against a third-party API is run there.
-- **CI installs no optional plugin gem**, so no plugin's own dependency is a
-  condition of a green build. Where an optional integration is worth testing at
-  all, it is tested separately from the required workflow; section 5 says how.
+- **The required workflow installs no optional plugin gem**, so no plugin's own
+  dependency is a condition of the check that gates a change. The minimal
+  configuration is what it runs, which is what keeps the split of section 9.1
+  honest over time. Where an optional integration is worth testing at all, it is
+  tested separately from the required workflow; section 5 says how.
+- **A non-required workflow is held to the same standard as the required one.**
+  It is separate so that an optional dependency cannot gate a change, not so
+  that it may fail quietly.
 - **A failure is fixed, not silenced.** `|| true`, `continue-on-error` and a
   step that hides its exit status are not how a build is made green. Narrowing
   what is guaranteed is a legitimate answer; pretending to guarantee it is not.

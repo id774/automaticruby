@@ -5,12 +5,12 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jun 21, 2013
-# Updated::     Feb 25, 2014
+# Updated::     Aug 14, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class PublishFluentd
-    require 'fluent-logger'
+    Automatic.require_optional('fluent-logger', needed_by: 'PublishFluentd')
 
     def initialize(config, pipeline=[])
       @config = config

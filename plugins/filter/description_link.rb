@@ -11,8 +11,8 @@
 module Automatic::Plugin
   class FilterDescriptionLink
     require 'erb'
-    require 'nkf'
-    require 'nokogiri'
+    Automatic.require_optional('nkf', needed_by: 'FilterDescriptionLink')
+    Automatic.require_optional('nokogiri', needed_by: 'FilterDescriptionLink')
     require 'open-uri'
     require 'uri'
 

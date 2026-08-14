@@ -91,7 +91,12 @@ module AutomaticSpec
   # This is a declared list rather than something inferred from a load failure:
   # what the default suite does not cover is decided here, in one place, and a
   # spec that names a gem absent from this list is a mistake and says so.
-  OPTIONAL_PLUGIN_GEMS = %w[nkf sanitize].freeze
+  #
+  # The gems of the Supported (external) plugins are not here. Those plugins
+  # need a service or a command as well as a gem, they are outside the
+  # :plugins group for that reason, and their specs ask #plugin_available?
+  # instead.
+  OPTIONAL_PLUGIN_GEMS = %w[activerecord feedbag nkf nokogiri sanitize sqlite3].freeze
 
   class << self
     # Load a plugin, or report that its dependency is absent.
@@ -120,7 +125,8 @@ module AutomaticSpec
     #
     # Installing the group is what runs these:
     #
-    #   BUNDLE_WITH=plugins bundle install
+    #   bundle config set --local with plugins
+    #   bundle install
     def optional_dependency?(gem_name)
       unless OPTIONAL_PLUGIN_GEMS.include?(gem_name)
         raise ArgumentError,
@@ -131,7 +137,8 @@ module AutomaticSpec
 
       skipped_optional << gem_name
       warn "[automatic] not verified by this run: the optional plugin gem " \
-           "#{gem_name} is not installed (BUNDLE_WITH=plugins bundle install)"
+           "#{gem_name} is not installed " \
+           '(bundle config set --local with plugins && bundle install)'
       false
     end
 

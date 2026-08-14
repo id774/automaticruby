@@ -10,7 +10,16 @@ RSpec.describe 'the Quick Start Recipe' do
 
   it 'uses the short supported pipeline documented by the Quick Start' do
     modules = recipe.fetch('plugins').map { |plugin| plugin.fetch('module') }
-    expect(modules).to eq %w[SubscriptionFeed StorePermalink PublishMarkdown]
+    expect(modules).to eq %w[SubscriptionFeed PublishMarkdown]
+  end
+
+  # The Quick Start is what a plain `gem install automatic` can run, so the
+  # Recipe it ships names no plugin that needs an optional gem. The store
+  # plugins, which do, are the documented next step rather than the first one.
+  # See doc/POLICY.md section 9.1.
+  it 'names no plugin that needs an optional dependency' do
+    modules = recipe.fetch('plugins').map { |plugin| plugin.fetch('module') }
+    expect(modules).not_to include('StorePermalink', 'StoreFullText')
   end
 
   it 'uses a public HTTPS source and needs no credential' do
