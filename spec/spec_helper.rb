@@ -31,6 +31,8 @@ require 'active_support/core_ext/object/blank'
 require 'rspec/collection_matchers'
 require 'rspec/its'
 require 'rss'
+require 'fileutils'
+require 'tmpdir'
 
 require 'automatic'
 
@@ -70,6 +72,17 @@ end
 #   end
 #
 module AutomaticSpec
+  REAL_HOME = ENV['HOME']
+  TEST_HOME = Dir.mktmpdir('automatic-ruby-spec-home')
+  TEST_DB_DIR = File.join(TEST_HOME, '.automatic', 'db')
+  FileUtils.mkdir_p(TEST_DB_DIR)
+  ENV['HOME'] = TEST_HOME
+
+  at_exit do
+    ENV['HOME'] = REAL_HOME
+    FileUtils.remove_entry(TEST_HOME) if File.directory?(TEST_HOME)
+  end
+
   class << self
     # Load a plugin, or report that its dependency is absent.
     #
@@ -101,8 +114,7 @@ module AutomaticSpec
     end
 
     def db_dir
-      dir = File.expand_path('~/.automatic/db')
-      File.directory?(dir) ? dir : File.join(root_dir, 'db')
+      TEST_DB_DIR
     end
   end
 
