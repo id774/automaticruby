@@ -72,6 +72,12 @@ general policy would otherwise ask for.
 
 ### 1.3 Design philosophy
 
+- Simple comes before clever. Common work should fit in a short Recipe, and a
+  new abstraction needs a concrete problem the existing plugin contract cannot
+  solve.
+- Documentation examples must run. Supported paths receive maintenance priority
+  over historical integrations that need rework or are unsupported.
+
 - Prefer the smallest change that solves the problem. A pipeline that has run in
   someone's `cron` for a decade has earned the benefit of the doubt.
 - Understand why something exists before replacing it. A constant that looks

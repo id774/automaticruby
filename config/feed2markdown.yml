@@ -1,4 +1,4 @@
-# Collect, filter, de-duplicate, and leave the result as a Markdown document.
+# Collect, de-duplicate, and leave the result as a Markdown document.
 #
 #   automatic -c ~/.automatic/config/example/feed2markdown.yml
 #
@@ -15,26 +15,11 @@
 #
 #   automatic -c feed2markdown.yml > today.md
 
-global:
-  log:
-    level: info
-
 plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://blog.id774.net/post/feed/
-      retry: 3
-      interval: 5
-
-  - module: FilterIgnore
-    config:
-      title:
-        - Sponsored
-
-  - module: FilterSort
-    config:
-      sort: asc
+        - https://www.ruby-lang.org/en/feeds/news.rss
 
   - module: StorePermalink
     config:

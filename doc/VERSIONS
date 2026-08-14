@@ -11,6 +11,7 @@ v26.08 (Release Date: TBD)
 - Add the official LGPLv3 license text and include both license texts and the license explanation in the gem.
 - Align source headers and RubyGems metadata with the dual-license policy.
 - Raise the minimum Ruby to 3.2 and test on 3.2 through 3.4, replacing the "after Ruby 1.9" claim.
+- Refresh the supported matrix to maintained Ruby 3.3 through 3.5.
 - Replace Kernel#open with URI.open throughout, so fetching a URL works on Ruby 3, and read local files with File.open.
 - Replace File.exists? with File.exist? in the plugin loader and the Bundler setup.
 - Load Recipes with YAML.safe_load, so a Recipe cannot name a Ruby class to instantiate; aliases stay permitted.
@@ -63,6 +64,8 @@ v26.08 (Release Date: TBD)
 - Place PublishMarkdown in doc/BASIC_DESIGN.md as a serializer at the Publish boundary, keeping Markdown out of the framework, out of the pipeline value and out of any implicit step, and record how the log and a document share standard output.
 - Specify PublishMarkdown in doc/PLUGINS.md: a level-2 heading per item, a metadata list of the fields it carries, content_encoded before description, HTML reduced to text with nokogiri rather than translated, deterministic output, and the file and mode settings.
 - Add config/feed2markdown.yml, collecting a feed, filtering it, de-duplicating with StorePermalink and appending what is new to a Markdown file.
+- Simplify the Quick Start to collect the public Ruby news feed, de-duplicate it and publish Markdown.
+- Add concise Quick Start and plugin development guides whose examples are covered without network access.
 - Document Markdown output for unattended use in doc/DEPLOYMENT.md: the output path, append and overwrite semantics, file permissions, and keeping the log out of the document with global.log.level.
 - State in doc/POLICY.md that converting the pipeline into another representation is a Publish plugin's work and that the result stays inside the plugin.
 - Rewrite the README's opening example and quick start around Markdown output, so that collect, filter, de-duplicate and write a document reads as an ordinary use of the framework.

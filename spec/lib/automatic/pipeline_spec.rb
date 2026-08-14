@@ -64,6 +64,19 @@ describe Automatic::Pipeline do
         klass.class.should == Class
         klass.new(nil, ["mock"]).run.should == "mock"
       end
+
+      it "loads and runs the documented user filter" do
+        pipeline = AutomaticSpec.generate_pipeline do
+          feed { item "https://example.com/a", "Title" }
+        end
+        Automatic::Pipeline.load_plugin "FilterTitlePrefix"
+        plugin = Automatic::Plugin::FilterTitlePrefix.new(
+          { "prefix" => "[News] " }, pipeline
+        )
+
+        expect(plugin.run).to equal(pipeline)
+        expect(pipeline.first.items.first.title).to eq "[News] Title"
+      end
     end
   end
 end

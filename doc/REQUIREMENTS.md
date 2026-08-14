@@ -25,9 +25,9 @@ assembled in a configuration file.
 
 ## 3. Purpose
 
-A person has a recurring job that consists of fetching something, deciding which
-parts of it are new or interesting, keeping a record so the same item is not
-handled twice, and sending the result somewhere. Tomorrow they have another job
+A person has a recurring job that consists of acquiring information, processing
+what is useful, optionally persisting a record so it is not handled twice, and
+publishing a portable result. Tomorrow they have another job
 of the same shape with different endpoints. Writing each as a script means
 writing the fetching, the filtering, the de-duplication and the retrying again
 every time.
@@ -439,12 +439,11 @@ plugin knows to upload a local file rather than a remote one.
 
 ## 20. Supported Ruby
 
-- The floor is **Ruby 3.2**: the oldest release the dependency set is resolved
-  and tested against, and the Ruby shipped by long-term-support distributions
-  still in service. Nothing older is tested, and nothing older is supported.
+- The floor is **Ruby 3.3**: the oldest maintained release the dependency set is
+  resolved and tested against. Nothing older is tested or supported.
 - The versions upstream currently maintains are the recommended ones. The
   supported set is what the CI matrix runs, which at the time of writing is
-  3.2, 3.3 and 3.4.
+  3.3, 3.4 and 3.5.
 - The gemspec's `required_ruby_version` is a lower bound and not an upper one, so
   a newer Ruby is permitted before it has been added to the matrix. Adding one
   to the matrix is the act of supporting it.

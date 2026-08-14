@@ -28,8 +28,8 @@ nothing to stop.
 
 - A Unix-like system. GNU/Linux and macOS are what this is used on; Windows is
   not supported.
-- **Ruby 3.2 or later.** Check with `ruby -v`. The supported versions are 3.2,
-  3.3 and 3.4.
+- **Ruby 3.3 or later.** Check with `ruby -v`. The supported versions are 3.3,
+  3.4 and 3.5.
 - A build environment for native extensions, because `nokogiri` and `sqlite3`
   may build from source:
 
