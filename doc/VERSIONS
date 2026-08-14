@@ -62,6 +62,7 @@ v26.08 (Release Date: TBD)
 - Document Markdown output for unattended use in doc/DEPLOYMENT.md: the output path, append and overwrite semantics, file permissions, and keeping the log out of the document with global.log.level.
 - State in doc/POLICY.md that converting the pipeline into another representation is a Publish plugin's work and that the result stays inside the plugin.
 - Rewrite the README's opening example and quick start around Markdown output, so that collect, filter, de-duplicate and write a document reads as an ordinary use of the framework.
+- Exclude generated gem archives from the package file list, so CLI and test commands remain usable after a local gem build.
 
 v14.12.2 (2015-01-04)
 ---------------------
