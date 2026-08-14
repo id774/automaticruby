@@ -565,10 +565,6 @@ this repository. No document here defers to another repository.
 | [`doc/COPYING.LESSER`](doc/COPYING.LESSER) | The LGPLv3 text |
 | [`doc/AUTHORS`](doc/AUTHORS) | Contributors |
 
-`doc/README.ja` and `doc/PLUGINS.ja` are the historical Japanese documentation,
-kept as a record. They describe the software as it was around 2014 and are not
-maintained against the current code.
-
 ## 16. Versioning
 
 Releases are numbered `<year>.<month>`, two digits each, taken from the release
