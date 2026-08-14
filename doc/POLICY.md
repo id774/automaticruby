@@ -299,8 +299,12 @@ Every Ruby file carries a header comment. The common fields use this form:
 ```
 
 - `Name` is the fully qualified name of what the file defines.
-- The common `Author`, `Source Code`, `License` and `Contact` fields have the
-  same format in every file.
+- `Author` records the author or authors established by the file and its Git
+  history. The former name `774` is normalized to `id774`; third-party authors
+  are never removed or replaced, and multiple authors retain their recorded
+  order. Names and URLs are not inferred when the history does not provide them.
+- The common `Source Code`, `License` and `Contact` fields have the same format
+  in every file.
 - `Created` is never changed.
 - `Updated` is set to the date of a change that affects behaviour. A
   documentation-only or formatting-only change does not touch it.
