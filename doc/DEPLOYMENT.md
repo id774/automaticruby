@@ -216,6 +216,88 @@ automatic inspect https://example.com/           # both, in one step
 automatic opmlparser subscriptions.opml          # the feed URLs in an OPML export
 ```
 
+## Publishing to a Markdown document
+
+A Recipe that ends in `PublishMarkdown` leaves what it collected as a Markdown
+file, with no service and no credential involved. The plugin's specification —
+what it writes for each field, and what it does with HTML in a body — is
+[`PLUGINS.md`](PLUGINS.md) section 6.7. What matters when running it
+unattended is below.
+
+```yaml
+  - module: StorePermalink
+    config:
+      db: feeds.db
+
+  - module: PublishMarkdown
+    config:
+      file: ~/notes/feeds.md
+      mode: append
+```
+
+**The output path.** `file` is expanded, so `~` works, and a relative path is
+resolved against the process's working directory — which under `cron` is your
+home directory and is not worth relying on. Use an absolute path or a `~` path.
+A missing parent directory is created; nothing else on the path is touched, and
+the plugin writes to no other file.
+
+**Append or overwrite.** `mode: append`, the default, adds the run's items to
+the end of the file, which is what a Recipe in `cron` wants: with a store plugin
+in front of it, each run contributes only what is new and the file becomes a
+journal. `mode: overwrite` replaces the file, for a Recipe whose output is meant
+to be the current state rather than a history — a digest regenerated every
+morning, say. In either mode a run that produces no items writes nothing at all:
+the file is not created, not appended to and not truncated, so a quiet run
+leaves yesterday's document intact.
+
+**Permissions.** The file is created with your umask, like any other file the
+process writes. The plugin does not adjust it. Where the collected material is
+private, put the document in a directory you have restricted rather than relying
+on the file's own mode:
+
+```sh
+mkdir -p ~/notes && chmod 700 ~/notes
+```
+
+**Keeping the document clean.** With no `file`, the document goes to standard
+output — and so does the log ([`REQUIREMENTS.md`](REQUIREMENTS.md) section 14),
+so a redirect that collects one collects the other. Two ways out, and the Recipe
+chooses:
+
+```yaml
+global:
+  log:
+    level: none         # standard output then carries the document alone
+```
+
+```sh
+automatic -c feeds.yml > today.md
+```
+
+or give the plugin a `file`, which leaves standard output to the log and is what
+a `cron` entry wants, since the log is what you have afterwards when something
+went wrong:
+
+```crontab
+  0 7 * * *  /usr/local/bin/automatic -c $HOME/.automatic/config/feeds.yml >> $HOME/.automatic/log/feeds.log 2>&1
+```
+
+Redirecting the document itself from `cron` works as well, and then the log
+needs somewhere else to go:
+
+```crontab
+  0 7 * * *  /usr/local/bin/automatic -c $HOME/.automatic/config/feeds.yml >> $HOME/notes/feeds.md 2>>$HOME/.automatic/log/feeds.log
+```
+
+That entry is only clean if the Recipe sets `log.level: none`; otherwise the log
+lines land in the document. Setting the level in the Recipe is the supported
+way to do this, and the framework has no separate switch for it.
+
+**Afterwards.** The file is ordinary text: read it, `grep` it, feed it to
+another program, or keep it in a Git repository and commit after each run. The
+plugin writes nothing that changes between runs of the same pipeline, so a
+commit shows what arrived and nothing else.
+
 ## Credentials
 
 Plugins that reach an authenticated service take their credentials as ordinary

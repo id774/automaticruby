@@ -257,6 +257,43 @@ The categories are a convention with one mechanical consequence — the director
 name is part of the lookup key (section 4.6) — and no other. Nothing enforces
 that a `Filter` does not reach the network.
 
+**`Publish` is the boundary at which the pipeline meets a representation that is
+not the pipeline's.** A publishing plugin reads the value described in section
+4.8, writes it out in whatever form its destination wants — a line on a
+terminal, a request body, a record for a log collector, a document on disk — and
+returns the value it was given, unchanged. The conversion is the plugin's whole
+job and it happens in one direction, at one point:
+
+```text
+RSS-shaped pipeline
+      |
+      v
+Publish<Something>          the plugin: serialize, then emit
+      |
+      v
+the destination's own form  a terminal line, a JSON record, a Markdown document
+```
+
+`PublishMarkdown` is one of these and is architecturally unremarkable: it
+renders each item as a Markdown section and writes the result to standard output
+or to a file. What matters to this document is where it is *not*:
+
+- **Not in the framework.** `Automatic::Pipeline` gains no knowledge of
+  Markdown, `Automatic::FeedMaker` gains no Markdown constructor, and no
+  framework file mentions the format. A reference to it in `lib/` would be the
+  same design error as a reference to any other plugin (section 3).
+- **Not a second pipeline value.** Markdown is produced *from* the pipeline at
+  the moment the pipeline ends; it is never passed along one. The plugin returns
+  its input, so a plugin placed after it receives exactly what it would have
+  received without it, and Invariant 2 of [`POLICY.md`](POLICY.md) is untouched.
+- **Not implicit.** Nothing appends it to a Recipe. `Pipeline.run` runs the
+  entries the Recipe lists, in order, and that is still the whole of its
+  behaviour.
+
+Its specification — what it writes for each field, how HTML in a body is
+reduced, where the output goes — is in [`PLUGINS.md`](PLUGINS.md) section 6.7,
+because it is a plugin's specification and not a property of the design.
+
 Two shared pieces sit inside `plugins/` rather than in `lib/`, because they are
 plugin implementation and the framework does not use them:
 
@@ -331,6 +368,35 @@ Three properties of that flow are the design:
 - Nothing between the steps inspects the value. The framework never looks inside
   a feed.
 
+The last entry decides what the run leaves behind, and changing it changes
+nothing else. The same four steps ending in `PublishMarkdown` produce a document
+instead of terminal output:
+
+```text
+acquire            SubscriptionFeed, SubscriptionLink, CustomFeed*, ...
+   |                 many sources, one shape
+   v
+filter             FilterIgnore, FilterSanitize, FilterSort, ...
+   |
+   v
+store              StorePermalink: what has not been seen before
+   |
+   v
+publish            PublishMarkdown: serialize at the boundary
+   |
+   v
+Markdown           a file, or standard output
+   |
+   +--> read by a person
+   +--> searched with grep, processed with the usual tools
+   +--> committed, diffed, kept
+   +--> handed to a program, a language model or an agent
+```
+
+Everything above the last box is unchanged from the previous diagram, which is
+the point: the acquisition, the filtering and the de-duplication are the same
+plugins over the same value, and the exit is the part the Recipe chooses.
+
 ## 6. Settings
 
 Two kinds, and they do not mix.
@@ -386,9 +452,26 @@ a defect and its backtrace is wanted.
   for requested output — help, version, and the results of the diagnostic
   subcommands.
 - Publishing plugins whose entire purpose is to print (`PublishConsole`,
-  `PublishConsoleLink`) write to an output object held in an instance variable,
-  defaulting to `$stdout`. That is what lets their specs assert on what was
-  printed by substituting a double.
+  `PublishConsoleLink`, `PublishMarkdown` with no `file` setting) write to an
+  output object held in an instance variable, defaulting to `$stdout`. That is
+  what lets their specs assert on what was printed by substituting a double.
+
+The log and a publishing plugin's output therefore share standard output, which
+has never mattered — a `pretty_inspect` dump and a log line interleave without
+either becoming unreadable — and matters for a plugin whose output is a document
+meant to be redirected into a file. The design does not resolve this by giving
+the log a second destination: `Automatic::Log` writing to standard output is
+long-standing behaviour that Recipes and `cron` entries are written around
+(`REQUIREMENTS.md` section 14), and changing it for one plugin's benefit would
+be the framework acquiring a plugin's problem. It is resolved where the choice
+already exists — in the Recipe:
+
+- `global.log.level: none` silences the log for that run, leaving standard
+  output carrying the document alone;
+- or the plugin writes to a file it is given, and the log keeps standard output.
+
+Both are stated in [`PLUGINS.md`](PLUGINS.md) section 6.7 and in
+[`DEPLOYMENT.md`](DEPLOYMENT.md), which is where an operator looks.
 
 ## 9. Testability
 

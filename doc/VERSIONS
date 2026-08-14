@@ -51,6 +51,14 @@ v26.08 (Release Date: TBD)
 - Rewrite README.md around the current repository, and move the release history from doc/ChangeLog into this file without changing an entry or a date.
 - Remove doc/README and doc/PLUGINS, whose content is now in README.md, doc/BASIC_DESIGN.md and doc/PLUGINS.md.
 - Keep doc/README.ja and doc/PLUGINS.ja as historical Japanese documentation, marked as describing the software as it was.
+- Add PublishMarkdown, which renders the pipeline as a Markdown document to a file or to standard output, needing no service and no credential; forty-five plugins now ship, twenty-three of them Supported.
+- Require in doc/REQUIREMENTS.md that a run can publish a portable document, name Markdown as the standard publication format for that, and state that an output format is never a second pipeline representation and that RSS and Atom stay input formats.
+- Place PublishMarkdown in doc/BASIC_DESIGN.md as a serializer at the Publish boundary, keeping Markdown out of the framework, out of the pipeline value and out of any implicit step, and record how the log and a document share standard output.
+- Specify PublishMarkdown in doc/PLUGINS.md: a level-2 heading per item, a metadata list of the fields it carries, content_encoded before description, HTML reduced to text with nokogiri rather than translated, deterministic output, and the file and mode settings.
+- Add config/feed2markdown.yml, collecting a feed, filtering it, de-duplicating with StorePermalink and appending what is new to a Markdown file.
+- Document Markdown output for unattended use in doc/DEPLOYMENT.md: the output path, append and overwrite semantics, file permissions, and keeping the log out of the document with global.log.level.
+- State in doc/POLICY.md that converting the pipeline into another representation is a Publish plugin's work and that the result stays inside the plugin.
+- Rewrite the README's opening example and quick start around Markdown output, so that collect, filter, de-duplicate and write a document reads as an ordinary use of the framework.
 
 v14.12.2 (2015-01-04)
 ---------------------

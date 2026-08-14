@@ -23,7 +23,9 @@ plugins:
     config:
       db: seen.db
 
-  - module: PublishConsole
+  - module: PublishMarkdown
+    config:
+      file: ~/notes/feeds.md
 ```
 
 ```sh
@@ -31,9 +33,11 @@ automatic -c my_recipe.yml
 ```
 
 Fetch some feeds, drop what you do not want, remember what you have already
-seen, and do something with the rest. Change the last plugin and the same
-pipeline downloads the images instead, or forwards them to Fluentd, or writes
-them to a database. Write your own plugin and it composes with all the others.
+seen, and write the rest into a Markdown file: readable by people, reusable by
+tools, ready to hand to an AI. Change the last plugin and the same pipeline
+prints to the terminal instead, or downloads the images, or forwards them to
+Fluentd, or writes them to a database. Write your own plugin and it composes
+with all the others.
 
 ---
 
@@ -67,6 +71,13 @@ twice, and send the result somewhere. Writing each such job as a script means
 writing the fetching, the filtering, the de-duplication and the retrying again
 every time.
 
+"Somewhere" is often a file. A Recipe that ends in `PublishMarkdown` leaves what
+it collected as a Markdown document: a person reads it as it is, `grep` searches
+it, Git keeps its history, and a program — a language model or an agent among
+them — takes it as input without a parser or an API. That is the general case,
+and it needs no account anywhere; the plugins that publish to a service are for
+when a particular service is the point.
+
 Automatic Ruby exists so that those jobs are assembled instead. It contributes
 exactly three things:
 
@@ -91,8 +102,11 @@ plainly which of its plugins still work. See [`doc/VERSIONS`](doc/VERSIONS).
 
 - **Recipes in YAML.** A job is a file, not a program. No Ruby is written to
   wire a pipeline together.
-- **Forty-four plugins** across seven categories: subscribe, custom feed,
+- **Forty-five plugins** across seven categories: subscribe, custom feed,
   filter, store, provide, notify, publish.
+- **Markdown out of the box.** `PublishMarkdown` writes the result as a plain
+  Markdown document, to a file or to standard output, with no service and no
+  credential behind it. It is the natural end of a new Recipe.
 - **Plugins are found, not registered.** Adding one is dropping a file in a
   directory. No framework file is edited.
 - **Your plugins override the shipped ones.** `~/.automatic/plugins` is searched
@@ -186,15 +200,20 @@ use the plugin; the table is in [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md).
 
 ```sh
 automatic scaffold
-automatic -c ~/.automatic/config/example/feed2console.yml
+automatic -c ~/.automatic/config/example/feed2markdown.yml
 ```
 
 `scaffold` creates `~/.automatic` with `config/`, `plugins/`, `db/` and
 `assets/`, and copies the example Recipes into `~/.automatic/config/example`.
 It never overwrites anything already there.
 
-The example Recipe fetches one blog's feed and prints it. To check the framework
-without any network, write this instead:
+That Recipe fetches one blog's feed, skips what it has published before, and
+appends the rest to `~/.automatic/markdown/feeds.md`. Run it twice: the second
+run leaves the file alone, because the store plugin has seen it all. Read the
+file, `grep` it, put it in a repository, or hand it to whatever reads text next.
+`feed2console.yml` beside it is the same pipeline printing to the terminal.
+
+To check the framework without any network, write this instead:
 
 ```yaml
 # ~/.automatic/config/selftest.yml
@@ -204,7 +223,7 @@ plugins:
       feeds:
         - title: hello
           url: https://example.com/
-  - module: PublishConsoleLink
+  - module: PublishMarkdown
 ```
 
 ```sh
@@ -294,21 +313,21 @@ the same fact written twice, and the loader converts between them.
 | `Store` | `store/` | Persist, and drop what was seen before |
 | `Provide` | `provide/` | Emit the payload elsewhere |
 | `Notify` | `notify/` | Send a notification |
-| `Publish` | `publish/` | Send the result out, or print it |
+| `Publish` | `publish/` | Send the result out, print it, or write it as a document |
 
 `~/.automatic/plugins` is searched **before** the installation, so a file named
 like a shipped plugin replaces it.
 
 ### Which plugins still work
 
-Forty-four plugins ship with the gem, written between 2012 and 2015. Several
-talk to services that have since shut down. Every one is classified in
-[`doc/PLUGINS.md`](doc/PLUGINS.md) section 6, with its settings and the reason
-for its status:
+Forty-five plugins ship with the gem, most of them written between 2012 and
+2015. Several talk to services that have since shut down. Every one is
+classified in [`doc/PLUGINS.md`](doc/PLUGINS.md) section 6, with its settings
+and the reason for its status:
 
 | Status | Count | Meaning |
 | --- | --- | --- |
-| **Supported** | 22 | Works on the supported Rubies with current dependencies |
+| **Supported** | 23 | Works on the supported Rubies with current dependencies |
 | **Supported (external)** | 9 | Works, but needs something you provide: a service, a command, a data file |
 | **Needs rework** | 3 | The service exists; this plugin speaks a replaced interface |
 | **Unsupported** | 10 | The service has shut down |
@@ -533,7 +552,7 @@ this repository. No document here defers to another repository.
 | --- | --- |
 | [`doc/REQUIREMENTS.md`](doc/REQUIREMENTS.md) | What the system is for, what it guarantees, where its responsibility ends |
 | [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md) | How it is composed: the parts, their responsibilities, the flow of a run |
-| [`doc/PLUGINS.md`](doc/PLUGINS.md) | The Recipe format, the plugin contract, and the catalogue of all 44 plugins |
+| [`doc/PLUGINS.md`](doc/PLUGINS.md) | The Recipe format, the plugin contract, and the catalogue of all 45 plugins |
 | [`doc/POLICY.md`](doc/POLICY.md) | How a change is made and judged: style, dependencies, tests, versioning |
 | [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md) | Installing, scheduling, operating, and what to do when it fails |
 | [`doc/VERSIONS`](doc/VERSIONS) | The release history, from 2012 |

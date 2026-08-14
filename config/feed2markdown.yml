@@ -1,0 +1,46 @@
+# Collect, filter, de-duplicate, and leave the result as a Markdown document.
+#
+#   automatic -c ~/.automatic/config/example/feed2markdown.yml
+#
+# The document is readable as it stands, searchable with grep, worth keeping in
+# version control, and ready to hand to a program that takes text as input.
+# Nothing here needs an account, a credential or a service.
+#
+# Safe to run from cron: StorePermalink records what has already been written,
+# so a later run appends only what is new and a run that finds nothing new
+# leaves the file untouched. See doc/DEPLOYMENT.md.
+#
+# To send the document to standard output instead, drop the PublishMarkdown
+# config and set the log level to none, so that only the document is written:
+#
+#   automatic -c feed2markdown.yml > today.md
+
+global:
+  log:
+    level: info
+
+plugins:
+  - module: SubscriptionFeed
+    config:
+      feeds:
+        - http://blog.id774.net/post/feed/
+      retry: 3
+      interval: 5
+
+  - module: FilterIgnore
+    config:
+      title:
+        - Sponsored
+
+  - module: FilterSort
+    config:
+      sort: asc
+
+  - module: StorePermalink
+    config:
+      db: feed2markdown.db
+
+  - module: PublishMarkdown
+    config:
+      file: ~/.automatic/markdown/feeds.md
+      mode: append
