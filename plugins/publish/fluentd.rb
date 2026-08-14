@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Publish::Fluentd
-# Author::    774 <http://id774.net>
+# Author: id774 (More info: http://id774.net)
+# Source Code: https://github.com/id774/automaticruby
+# License: The GPL version 3, or LGPL version 3 (Dual License).
+# Contact: idnanashi@gmail.com
 # Created::   Jun 21, 2013
 # Updated::   Feb 25, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
-# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
   class PublishFluentd

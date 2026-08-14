@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Subscription::Twitter
-# Author::    774 <http://id774.net>
+# Author: id774 (More info: http://id774.net)
+# Source Code: https://github.com/id774/automaticruby
+# License: The GPL version 3, or LGPL version 3 (Dual License).
+# Contact: idnanashi@gmail.com
 # Created::   Sep 10, 2012
 # Updated::   Aug 14, 2026
 # Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
-# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 

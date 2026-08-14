@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Store::Database
-# Author::    kzgs
-#             774 <http://id774.net>
-#             soramugi <http://soramugi.net>
+# Author: id774 (More info: http://id774.net)
+# Source Code: https://github.com/id774/automaticruby
+# License: The GPL version 3, or LGPL version 3 (Dual License).
+# Contact: idnanashi@gmail.com
 # Created::   Feb 27, 2012
 # Updated::   Oct 09, 2014
 # Copyright:: Copyright (c) 2012-2014 Automatic Ruby Developers.
-# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 require 'active_record'
 

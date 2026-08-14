@@ -11,7 +11,10 @@
 #    script/build          Run the test suite and the CLI checks.
 #    script/build all      Also run the integration recipes by hand.
 #
-#  Maintainer: id774 <idnanashi@gmail.com>
+#  Author: id774 (More info: http://id774.net)
+#  Source Code: https://github.com/id774/automaticruby
+#  License: The GPL version 3, or LGPL version 3 (Dual License).
+#  Contact: idnanashi@gmail.com
 #
 #  v2.0 8/14,2026
 #       Replace the Jenkins-era workflow: drop bundle update and the

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Filter::Clear
-# Author::    774 <http://id774.net>
+# Author: id774 (More info: http://id774.net)
+# Source Code: https://github.com/id774/automaticruby
+# License: The GPL version 3, or LGPL version 3 (Dual License).
+# Contact: idnanashi@gmail.com
 # Created::   Oct 20, 2014
 # Updated::   Oct 20, 2014
 # Copyright:: Copyright (c) 2014 Automatic Ruby Developers.
-# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 
 module Automatic::Plugin
   class FilterClear

@@ -66,8 +66,9 @@ general policy would otherwise ask for.
    and none is written to the log.
 9. **Historical release history is not rewritten.** Past versions and their
    dates in [`VERSIONS`](VERSIONS) are a record, not a thing to tidy.
-10. **The licence is GPL version 3, and not the LGPL.** Changing it is out of
-    scope for any change that is not solely about the licence.
+10. **The licence is GPL version 3 or LGPL version 3.** Automatic Ruby is
+    dual-licensed, and a user may choose either license at their discretion. New
+    files use the same dual license.
 
 ### 1.3 Design philosophy
 
@@ -283,28 +284,29 @@ makes a diff harder to read than the style saves.
 
 ### 2.3 File headers
 
-Every Ruby file carries a header comment. The existing form is kept:
+Every Ruby file carries a header comment. The common fields use this form:
 
 ```ruby
 # -*- coding: utf-8 -*-
 # Name::      Automatic::Plugin::Filter::Example
-# Author::    774 <http://id774.net>
+# Author: id774 (More info: http://id774.net)
+# Source Code: https://github.com/id774/automaticruby
+# License: The GPL version 3, or LGPL version 3 (Dual License).
+# Contact: idnanashi@gmail.com
 # Created::   Feb 22, 2012
 # Updated::   Aug 14, 2026
 # Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
-# License::   Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 ```
 
 - `Name` is the fully qualified name of what the file defines.
-- `Author` lists the people who wrote it, oldest first. **An existing name is
-  never removed**, including from a file that has been substantially rewritten.
-  These are the contributors in [`AUTHORS`](AUTHORS).
+- The common `Author`, `Source Code`, `License` and `Contact` fields have the
+  same format in every file.
 - `Created` is never changed.
 - `Updated` is set to the date of a change that affects behaviour. A
   documentation-only or formatting-only change does not touch it.
-- The `Copyright` range's end year moves with `Updated`.
-- The `License` line is the same in every file and matches
-  [`LICENSE.md`](LICENSE.md).
+- The `Copyright` range's end year moves with `Updated`. Existing copyright
+  information is preserved and is not inferred from the `Author` field.
+- The `License` line matches [`LICENSE.md`](LICENSE.md).
 - A `Description::` line may be added below `Name` when the file's purpose is
   not obvious from its name. New plugins should have one.
 - The magic encoding comment is redundant on the supported Rubies. It is left in
@@ -481,7 +483,7 @@ behaviour breaks nothing.
   | `doc/POLICY.md` | This document: how a change is made and judged |
   | `doc/DEPLOYMENT.md` | Installing, running and operating it |
   | `doc/VERSIONS` | Release history |
-  | `doc/LICENSE.md`, `doc/COPYING` | The licence |
+  | `doc/LICENSE.md`, `doc/COPYING`, `doc/COPYING.LESSER` | The licence |
   | `doc/AUTHORS` | Contributors |
 
 - **No cross-repository reference.** These documents never say "see the policy
@@ -496,7 +498,7 @@ behaviour breaks nothing.
     the software as it was, they are not maintained against the current code,
     and they say so at their head. They are not the source of truth for
     anything, and they are not deleted.
-- Markdown documents may assume a renderer. `VERSIONS`, `COPYING` and `AUTHORS`
+- Markdown documents may assume a renderer. `VERSIONS`, `COPYING`, `COPYING.LESSER` and `AUTHORS`
   are plain text and keep their extensionless names, which are the names they
   are published and linked under.
 - Prose wraps near the width the document already uses. `VERSIONS` follows
