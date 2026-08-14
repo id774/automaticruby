@@ -580,6 +580,7 @@ this repository. No document here defers to another repository.
 | [`doc/PLUGINS.md`](doc/PLUGINS.md) | The Recipe format, the plugin contract, and the catalogue of all 45 plugins |
 | [`doc/POLICY.md`](doc/POLICY.md) | How a change is made and judged: style, dependencies, tests, versioning |
 | [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md) | Installing, scheduling, operating, and what to do when it fails |
+| [`doc/RELEASING.md`](doc/RELEASING.md) | For maintainers: building, verifying and publishing the gem |
 | [`doc/VERSIONS`](doc/VERSIONS) | The release history, from 2012 |
 | [`doc/LICENSE.md`](doc/LICENSE.md) | The licence |
 | [`doc/COPYING`](doc/COPYING) | The GPLv3 text |

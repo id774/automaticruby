@@ -625,6 +625,12 @@ not install an AWS SDK.
   resolution on every consumer.
 - `Rakefile` carries the test tasks and nothing else. It is not a build system,
   and no build system is introduced.
+- A release requires green required CI. Its built gem is inspected and installed
+  locally before publication, and its source version and metadata must agree.
+- A published version is immutable. Credentials are never committed, and
+  release commits and tags are not rewritten to conceal a publication error.
+- The manual publication procedure is [`RELEASING.md`](RELEASING.md). Publishing
+  is an explicit maintainer action, not a side effect of a build or test task.
 
 ---
 
