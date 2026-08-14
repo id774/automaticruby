@@ -94,9 +94,11 @@ Gem::Specification.new do |spec|
   # that plugin's own file and installed by the operator who uses the plugin.
   # See doc/POLICY.md section 9.1 and doc/DEPLOYMENT.md.
   #
-  # rexml, rss and nkf left the standard library and became gems over the 3.x
-  # series. Each one listed here is listed because something committed here
-  # requires it, not because a Ruby release moved it.
+  # rexml and rss left the standard library and became gems over the 3.x
+  # series, and nkf followed after 3.3. Each gem listed here is listed because
+  # something committed here requires it, and a library's move out of the
+  # standard library is not by itself a reason to declare it: nkf is a plugin's
+  # dependency and is in the Gemfile's optional group instead.
   spec.add_dependency 'activerecord',  '>= 7.1', '< 9.0'   # store plugins
   spec.add_dependency 'activesupport', '>= 7.1', '< 9.0'   # plugin loader, XML subscription
   spec.add_dependency 'feedbag',       '>= 1.0', '< 2.0'   # autodiscovery subcommand
