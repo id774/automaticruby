@@ -432,7 +432,7 @@ message construction — and the rest is left to the integration Recipes under
 | `Store` | Persist, and drop what has been seen before | Send anything outward |
 | `Provide` | Emit `content_encoded` elsewhere | Alter the pipeline |
 | `Notify` | Send a notification, return the pipeline unchanged | Alter the pipeline |
-| `Publish` | Send the result out, or print it; return the pipeline | Alter the pipeline |
+| `Publish` | Send the result out, print it, or write it as a document; return the pipeline | Alter the pipeline |
 
 Nothing enforces this. It is what makes a Recipe readable, and it is what a
 reviewer will ask about.
@@ -896,7 +896,155 @@ Honours a `PROXY` environment variable, on port 8080.
 
 ### 6.7 Publish
 
-Send the result outward, or print it. Normally last in a Recipe.
+Send the result outward, or print it. Normally last in a Recipe. This is where
+the pipeline is written out in a form that is not the pipeline's own, so each of
+these plugins is a serializer as much as a destination.
+
+#### PublishMarkdown — **Supported**
+
+`publish/markdown.rb`. Renders the pipeline as a Markdown document and writes it
+to standard output or to a file. It needs no service, no account and no
+credential, which is what makes it the plugin a Recipe can end with on any
+machine, and the one to reach for when the result is meant to be read later —
+by a person, by `grep`, by whatever is given the file next.
+
+```yaml
+  - module: PublishMarkdown
+    config:
+      file: ~/notes/feeds.md
+      mode: append
+```
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `file` | string | Path of the file to write. `~` is expanded and a missing parent directory is created. Absent: standard output. |
+| `mode` | string | `append`, the default, or `overwrite`. Read only when `file` is set. |
+
+Both are optional: `PublishMarkdown` with no `config` writes the document to
+standard output.
+
+##### What it writes
+
+One section per item, in pipeline order — the feeds in the order they arrive,
+the items in the order their feed carries them. Nothing sorts, groups or
+de-duplicates here; `FilterSort` and the store plugins are where that belongs.
+
+```markdown
+## An item's title
+
+- Link: <https://example.com/a>
+- Date: 2026-08-14 10:00:00 +0900
+- Author: someone@example.com
+
+The body of the item, as text.
+```
+
+- **The title is a level-2 ATX heading**, and that heading is the item boundary:
+  a section starts at `## ` and runs to the next one. An item with no title uses
+  its link as the heading, and an item with neither is headed `(untitled)`.
+  Level 2 rather than level 1, so that a document these sections are collected
+  into can carry a title of its own.
+- **The metadata list** follows the heading: one `- Field: value` bullet per
+  field the item carries, in the fixed order `Link`, `Date`, `Author`,
+  `Comments`, `Source`, `Enclosure`. A field that is `nil` or empty produces no
+  bullet, and an item carrying none produces no list. URLs are written as
+  autolinks — `<https://example.com/a>` — so that a renderer makes them links
+  and `grep` still sees the URL.
+- **The body** is `content_encoded` when the item has one, and `description`
+  otherwise, on the ground that a feed carrying both puts the summary in the
+  second and the article in the first. An item with neither has no body, and its
+  section is the heading and the metadata list.
+- **The date** is formatted `%Y-%m-%d %H:%M:%S %z` from the item's own date, in
+  the zone that date carries. Nothing is converted to local time, because the
+  same input then produces the same output on any machine.
+- **`source` and `enclosure` are elements rather than strings** in a parsed
+  feed. The source's text is used, and the enclosure's URL; where either is
+  already a plain string it is used as it stands.
+- **A section is followed by a blank line.** Appending a document to a document
+  therefore stays valid Markdown, and a file always ends with a newline.
+- **Nothing else is emitted.** No YAML front matter, no run header, no
+  timestamp of the run, no horizontal rules — nothing that is not in the
+  pipeline. The output for a given pipeline is byte-for-byte the same on every
+  run, which is what makes it worth committing and diffing. A format is easy to
+  add later and impossible to take away, so this one starts as ordinary
+  Markdown and no more.
+- **An empty pipeline writes nothing at all**: no file is created, and an
+  existing file is neither appended to nor truncated. A run in which the store
+  plugin found nothing new leaves the document exactly as it was.
+
+##### HTML in a body
+
+`description` and `content_encoded` carry HTML in most real feeds, and a
+document that dumped it unchanged would be HTML in a file named `.md` rather
+than Markdown. What the plugin does instead:
+
+- A body with no markup in it is passed through as it stands.
+- A body containing markup is **reduced to text**: `script` and `style` are
+  dropped with their contents, `<br>` becomes a line break, block elements
+  become paragraph breaks, character entities are decoded, and the tags
+  themselves are discarded.
+- In both cases the whitespace is normalized: line endings become `\n`,
+  trailing whitespace goes, and a run of blank lines collapses to one. Text
+  that came from markup also loses the source document's own indentation, which
+  is layout rather than content and which Markdown would otherwise read as a
+  code block.
+
+This is deliberately **not** an HTML-to-Markdown translation. Rendering
+arbitrary markup back into equivalent Markdown — tables, nested lists, inline
+links, images — is a large job with a large library behind it, and a library
+that size does not become a dependency for one plugin
+([`POLICY.md`](POLICY.md) section 9.1). Reducing markup to text needs nothing
+that is not already installed: `nokogiri` is a runtime dependency, used by the
+framework's own feed adapters. The result is defined by its two ends — the
+text survives, the markup does not — which is what both a reader and a program
+reading the file want from it. A link inside a body becomes its own text; the
+item's own link is in the metadata list, where nothing loses it.
+
+Where a different treatment is wanted, the pipeline already has the means:
+`FilterSanitize` before this plugin decides what markup survives into the
+description, and this plugin then reduces what is left.
+
+The body is otherwise written as it is: Markdown is **not** escaped, so a body
+line beginning with `#` or `-` renders as a heading or a list item. Escaping it
+would make the text worse to read in exchange for a rendering nothing depends
+on.
+
+##### Where the output goes
+
+With `file`, the document is written there, appended by default so that a
+Recipe in `cron` builds up one growing document, and `mode: overwrite` replaces
+the file when what is wanted is the current state rather than a history. The
+plugin writes only that file, and only what its `config` names.
+
+With no `file`, the document goes to standard output, which is what a pipe or a
+shell redirect wants:
+
+```sh
+automatic -c feeds.yml > today.md
+```
+
+Standard output is also where `Automatic::Log` writes
+([`REQUIREMENTS.md`](REQUIREMENTS.md) section 14), so a redirect collects the
+log lines into the document as well. Set the log level for that Recipe, which
+is the setting that already exists for it:
+
+```yaml
+global:
+  log:
+    level: none
+
+plugins:
+  # ...
+  - module: PublishMarkdown
+```
+
+`file` avoids the question entirely: the document goes to the file and the log
+keeps standard output. Which to use is an operational choice and
+[`DEPLOYMENT.md`](DEPLOYMENT.md) says more about it.
+
+The plugin logs one line per run at `info`, naming the destination and the
+number of items written; it does not log a line per item, because that log is
+what would be interleaved with the document.
 
 #### PublishConsole — **Supported**
 
@@ -1032,12 +1180,12 @@ passed through even when the API existed.
 
 | Status | Count | Plugins |
 | --- | --- | --- |
-| Supported | 22 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreFile`, `PublishConsole`, `PublishConsoleLink` |
+| Supported | 23 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
 | Supported (external) | 9 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper` |
 | Needs rework | 3 | `FilterGoogleNews`, `PublishAmazonS3`, `PublishHatenaBookmark` |
 | Unsupported | 10 | `SubscriptionTwitter`, `SubscriptionTwitterSearch`, `SubscriptionPocket`, `SubscriptionWeather`, `SubscriptionGGuide`, `SubscriptionChanToru`, `PublishTwitter`, `PublishPocket`, `PublishHipchat`, `PublishGoogleCalendar` |
 
-Forty-four plugins, of which the S3 path of `StoreFile` is counted with the
+Forty-five plugins, of which the S3 path of `StoreFile` is counted with the
 Supported row and noted separately in section 6.4.
 
 A Recipe using only the first two rows is a Recipe that can be expected to run.

@@ -348,6 +348,13 @@ repository level only; see section 10.
 
 - A new plugin follows [`PLUGINS.md`](PLUGINS.md) section 3, which is the
   contract, and section 3.10, which says which category it belongs in.
+- **Converting the pipeline into some other representation is a `Publish`
+  plugin's work, and the result stays inside the plugin.** It is serialized at
+  the boundary, written to the destination, and never passed along the pipeline
+  or made known to the framework, which keeps Invariant 2 and section 1.5
+  intact. Producing a portable document — one a person can read, ordinary tools
+  can process and another program can be given, with no service behind it — is
+  a destination like any other and belongs in that category.
 - A new plugin is added to the catalogue in `PLUGINS.md` section 6 in the same
   change, with its settings table and its status.
 - A new plugin comes with a spec that reaches no network.

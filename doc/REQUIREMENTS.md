@@ -146,6 +146,13 @@ makes them compose. Three consequences are requirements:
 The value has no schema beyond that, no validation and no version. A plugin that
 needs a field the previous plugin never set gets `nil`.
 
+This is an **internal** representation, and it is not a statement about what a
+run produces. A plugin that writes the pipeline out in some other form — a
+Markdown document, a row in a database, a request body — serializes it at the
+moment it leaves the pipeline, and the value the next plugin receives is
+unchanged. An output format is therefore never a second pipeline
+representation, and shall not become one; see section 10.2.
+
 ## 9. Input
 
 The framework itself reads:
@@ -163,6 +170,8 @@ The framework passes no ambient input to plugins. A plugin's entire input is the
 
 ## 10. Output
 
+### 10.1 What the framework writes
+
 The framework itself writes:
 
 - **a log**, to standard output (section 14),
@@ -174,6 +183,58 @@ does not know what any of it is and does not verify it.
 
 The final pipeline value is discarded. A Recipe whose last plugin only
 transforms the pipeline has done nothing observable, and that is not an error.
+
+### 10.2 What a run publishes
+
+Where the collected information ends up is decided by the Recipe, and the
+plugins that decide it are the `Publish` category. Two kinds of destination have
+always existed side by side: a remote service, reached with a credential over
+the network, and something local — the terminal, a file, a database. Neither is
+the system's purpose. Automatic Ruby is not a means of feeding one particular
+reader, one particular service or one particular protocol, and a requirement
+written as though it were would be wrong about what the system is for.
+
+Leaving the collected information behind as a **document that outlives the run**
+is as much a use of the system as sending it somewhere. That document is read by
+a person, kept in version control, searched with ordinary Unix tools, and given
+to a program — including a large language model or an agent — as input to
+summarize, classify or reorganize. These are the same document and the same
+requirement, not two.
+
+**Markdown is the standard publication format** for that purpose, in the sense
+that it is what a Recipe publishes when it has no reason to publish to a
+particular service. Its properties are the reason, and they are technical ones:
+
+- a person reads it as it is, with no tool and no rendering step;
+- it diffs and merges, so a growing document belongs in Git;
+- `grep`, `sed` and the rest operate on it without a parser;
+- a program consumes it as text, which is the form a language model or an agent
+  takes its input in;
+- it needs no service, no account, no credential and no network;
+- it is plain text, so it stays readable for as long as the filesystem does.
+
+The requirements that follow:
+
+- **A publication format shall be available that needs nothing outside the
+  machine.** A Recipe that collects, filters and de-duplicates shall be able to
+  finish by writing what it has, without an account anywhere.
+- **Markdown output is an ordinary Publish plugin**, subject to the plugin
+  contract of section 7.2 and to nothing else. It is not a framework feature,
+  the framework gains no knowledge of Markdown, and section 23 applies to it as
+  to anything else.
+- **Nothing is published implicitly.** A Recipe publishes what it names and
+  nothing more. The framework shall not append a publishing step to a Recipe
+  that does not ask for one, and a Recipe written before Markdown output existed
+  shall behave exactly as it did.
+- **The output format is not the pipeline value.** Serializing to Markdown
+  happens at the boundary, in the publishing plugin, and leaves section 8's
+  value untouched. No second representation is introduced, and the plugins
+  before and after are unaffected.
+- **RSS and Atom remain input formats.** `SubscriptionFeed` and the rest are
+  unaffected by any of this: a feed is still one of the ordinary ways to acquire
+  something, and none of it is deprecated. That the pipeline value has the shape
+  of a feed is an internal matter (section 8); it neither obliges a run to
+  publish a feed nor makes feeds less useful to read.
 
 ## 11. The command line
 
