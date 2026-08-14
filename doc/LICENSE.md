@@ -10,5 +10,5 @@ For the full legal text, please refer to the included files:
 
 ---
 
-© [id774](http://id774.net)
+Copyright (c) 2012-2026 Automatic Ruby Developers.
 Contact: [idnanashi@gmail.com](mailto:idnanashi@gmail.com)

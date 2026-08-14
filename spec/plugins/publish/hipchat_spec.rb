@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Publish::Hipchat
-# Author: Kohei Hasegawa (More info: http://github.com/banyan)
-# Source Code: https://github.com/id774/automaticruby
-# License: The GPL version 3, or LGPL version 3 (Dual License).
-# Contact: idnanashi@gmail.com
-# Created::   Jun 5,  2013
-# Updated::   Aug 14, 2026
-# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
+# Name::        Automatic::Plugin::Publish::Hipchat
+# Author:       Kohei Hasegawa (More info: http://github.com/banyan)
+# Source Code:: https://github.com/id774/automaticruby
+# License::     The GPL version 3, or LGPL version 3 (Dual License).
+# Contact::     idnanashi@gmail.com
+# Created::     Jun 5,  2013
+# Updated::     Aug 14, 2026
+# Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 # HipChat was shut down by Atlassian;

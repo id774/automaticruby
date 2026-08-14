@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::FullFeed
-# Author: progd (More info: http://d.hatena.ne.jp/progd/20120429/automatic_ruby_filter_full_feed)
-# Source Code: https://github.com/id774/automaticruby
-# License: The GPL version 3, or LGPL version 3 (Dual License).
-# Contact: idnanashi@gmail.com
-# Created::   Apr 29, 2012
-# Updated::   Aug 14, 2026
-# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
+# Name::        Automatic::Plugin::Filter::FullFeed
+# Author:       progd (More info: http://d.hatena.ne.jp/progd/20120429/automatic_ruby_filter_full_feed)
+# Source Code:: https://github.com/id774/automaticruby
+# License::     The GPL version 3, or LGPL version 3 (Dual License).
+# Contact::     idnanashi@gmail.com
+# Created::     Apr 29, 2012
+# Updated::     Aug 14, 2026
+# Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
 

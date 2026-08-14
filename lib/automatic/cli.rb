@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-# Name::      Automatic::CLI
-# Author: id774 (More info: http://id774.net)
-# Source Code: https://github.com/id774/automaticruby
-# License: The GPL version 3, or LGPL version 3 (Dual License).
-# Contact: idnanashi@gmail.com
-# Created::   Aug 14, 2026
-# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
+# Name::        Automatic::CLI
+# Author:       id774 (More info: http://id774.net)
+# Source Code:: https://github.com/id774/automaticruby
+# License::     The GPL version 3, or LGPL version 3 (Dual License).
+# Contact::     idnanashi@gmail.com
+# Created::     Aug 14, 2026
+# Updated::     Aug 14, 2026
+# Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # Everything that belongs to being a command: option parsing, the subcommands,
 # and turning a failure into a message and an exit status.

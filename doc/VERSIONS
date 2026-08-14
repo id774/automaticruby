@@ -3,6 +3,9 @@ automaticruby Repository Version History
 
 v26.08 (Release Date: TBD)
 --------------------------
+- Standardize source file header alignment and metadata labels.
+- Standardize Source Code metadata on the `Source Code::` form.
+- Standardize project copyright notices on Automatic Ruby Developers.
 - Restore original third-party author attribution in source headers after the header standardization.
 - Change the license from GPLv3-only to a GPLv3 or LGPLv3 dual license, selectable by the user.
 - Add the official LGPLv3 license text and include both license texts and the license explanation in the gem.

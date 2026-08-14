@@ -284,33 +284,40 @@ makes a diff harder to read than the style saves.
 
 ### 2.3 File headers
 
-Every Ruby file carries a header comment. The common fields use this form:
+Every Ruby file carries a header comment. Values start in the same column,
+using `Source Code::`, the longest label, as the alignment baseline. Fields
+appear in the order shown below. An executable uses this canonical form:
 
 ```ruby
+#!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-# Name::      Automatic::Plugin::Filter::Example
-# Author: id774 (More info: http://id774.net)
-# Source Code: https://github.com/id774/automaticruby
-# License: The GPL version 3, or LGPL version 3 (Dual License).
-# Contact: idnanashi@gmail.com
-# Created::   Feb 22, 2012
-# Updated::   Aug 14, 2026
-# Copyright:: Copyright (c) 2012-2026 Automatic Ruby Developers.
+# Name::        automatic
+# Author:       id774 (More info: http://id774.net)
+# Source Code:: https://github.com/id774/automaticruby
+# License::     The GPL version 3, or LGPL version 3 (Dual License).
+# Contact::     idnanashi@gmail.com
+# Created::     Feb 18, 2012
+# Updated::     Aug 14, 2026
+# Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 ```
 
+- Only files directly invoked as executables carry the shebang. Libraries,
+  plugins and specs omit the shebang and otherwise use the same form.
 - `Name` is the fully qualified name of what the file defines.
 - `Author` records the author or authors established by the file and its Git
   history. The former name `774` is normalized to `id774`; third-party authors
   are never removed or replaced, and multiple authors retain their recorded
   order. Names and URLs are not inferred when the history does not provide them.
-- The common `Source Code`, `License` and `Contact` fields have the same format
-  in every file.
+- The labels are exactly `Name::`, `Author:`, `Source Code::`, `License::`,
+  `Contact::`, `Created::`, `Updated::` and `Copyright::`.
 - `Created` is never changed.
 - `Updated` is set to the date of a change that affects behaviour. A
   documentation-only or formatting-only change does not touch it.
-- The `Copyright` range's end year moves with `Updated`. Existing copyright
-  information is preserved and is not inferred from the `Author` field.
-- The `License` line matches [`LICENSE.md`](LICENSE.md).
+- The project-level copyright notice is `Copyright (c) 2012-2026 Automatic
+  Ruby Developers.` Explicit third-party copyright notices are preserved and
+  are not inferred from the `Author` field.
+- The `License` line records the GPLv3 or LGPLv3 dual license and matches
+  [`LICENSE.md`](LICENSE.md).
 - A `Description::` line may be added below `Name` when the file's purpose is
   not obvious from its name. New plugins should have one.
 - The magic encoding comment is redundant on the supported Rubies. It is left in
