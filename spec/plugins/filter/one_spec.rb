@@ -32,10 +32,10 @@ describe Automatic::Plugin::FilterOne do
       its(:run) { should have(1).feeds }
 
       specify {
-        subject.run
-        subject.instance_variable_get(:@return_feeds)[0].items.
+        returned = subject.run
+        returned[0].items.
           count.should == 1
-        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
+        returned[0].items[0].link.
           should == 'http://aaa.png'
       }
     end
@@ -62,10 +62,10 @@ describe Automatic::Plugin::FilterOne do
       its(:run) { should have(1).feeds }
 
       specify {
-        subject.run
-        subject.instance_variable_get(:@return_feeds)[0].items.
+        returned = subject.run
+        returned[0].items.
           count.should == 1
-        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
+        returned[0].items[0].link.
           should == 'http://ddd.png'
       }
     end

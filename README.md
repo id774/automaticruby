@@ -93,15 +93,16 @@ second user.
 
 The project began in February 2012 and this is the first release since 2015. The
 core, the Recipe format and the plugin contract are unchanged; what has changed
-is that it runs on a current Ruby, installs from a current RubyGems, and says
-plainly which of its plugins still work. See [`doc/VERSIONS`](doc/VERSIONS).
+is that it runs on a current Ruby, installs from a current RubyGems, and ships
+a plugin set every part of which still has somewhere to talk to. See
+[`doc/VERSIONS`](doc/VERSIONS).
 
 ## 2. Features
 
 - **Recipes in YAML.** A job is a file, not a program. No Ruby is written to
   wire a pipeline together.
-- **Forty-five plugins** across seven categories: subscribe, custom feed,
-  filter, store, provide, notify, publish.
+- **34 plugins** across seven categories: subscribe, custom feed, filter,
+  store, provide, notify, publish — and every one of them has a current use.
 - **Markdown out of the box.** `PublishMarkdown` writes the result as a plain
   Markdown document, to a file or to standard output, with no service and no
   credential behind it. It is the natural end of a new Recipe.
@@ -118,9 +119,10 @@ plainly which of its plugins still work. See [`doc/VERSIONS`](doc/VERSIONS).
   the framework: `gem install automatic` brings four pure-Ruby gems and the
   command, and installs neither an HTML parser nor a database — let alone an
   AWS SDK.
-- **Honest about what is broken.** Every plugin is classified, with its reason,
-  in [`doc/PLUGINS.md`](doc/PLUGINS.md). Nothing dead is stubbed into looking
-  alive.
+- **No museum.** Every plugin is classified, with its reason, in
+  [`doc/PLUGINS.md`](doc/PLUGINS.md). Nothing dead is stubbed into looking
+  alive, and an integration whose service has gone is removed rather than
+  kept as a fossil.
 
 ## 3. Architecture
 
@@ -367,26 +369,29 @@ like a shipped plugin replaces it.
 
 ### Which plugins still work
 
-Forty-five plugins ship with the gem, most of them written between 2012 and
-2015. Several talk to services that have since shut down. Every one is
-classified in [`doc/PLUGINS.md`](doc/PLUGINS.md) section 6, with its settings
-and the reason for its status:
+34 plugins ship with the gem. Every one is classified in
+[`doc/PLUGINS.md`](doc/PLUGINS.md) section 6, with its settings and the reason
+for its status:
 
 | Status | Count | Meaning |
 | --- | --- | --- |
 | **Supported** | 23 | Works on the supported Rubies with current dependencies |
-| **Supported (external)** | 9 | Works, but needs something you provide: a service, a command, a data file |
-| **Needs rework** | 3 | The service exists; this plugin speaks a replaced interface |
-| **Unsupported** | 10 | The service has shut down |
+| **Supported (external)** | 10 | Works, but needs something you provide: a service, a command, a credential, a data file |
+| **Needs rework** | 1 | The service exists; this plugin speaks a replaced interface |
 
-Restoring one of the three in **Needs rework** — `FilterGoogleNews`,
-`PublishAmazonS3`, `PublishHatenaBookmark` — is self-contained work and a good
-first contribution.
+Eleven plugins were removed in this release rather than kept as history: each
+talked to a service that has shut down, or through an API that has been
+withdrawn with no replacement. They are listed with their reasons in
+[`doc/PLUGINS.md`](doc/PLUGINS.md) section 8, and Git history holds the code.
+A Recipe naming one of them now fails at load, before anything runs.
+
+Restoring the one in **Needs rework** — `PublishHatenaBookmark` — is
+self-contained work and a good first contribution.
 
 No plugin here is stubbed, mocked or simulated to make a test pass. Where a
 plugin's gem is not installed its spec is skipped and says which gem is
 missing; where the plugin still loads, its spec covers what does not need the
-service. A dead integration is never made to look alive.
+service. A dead integration is never made to look alive — it is removed.
 
 The contract, a worked example, and how to test a plugin are in
 [`doc/PLUGINS.md`](doc/PLUGINS.md) sections 3 and 4.
@@ -523,7 +528,7 @@ COVERAGE=on bundle exec rake spec
   longer exists is never stubbed into passing.
 - `test/integration/` holds Recipes for exercising plugins against real
   services. They are run by hand, are not part of the suite, and are never run
-  in CI. Most need a credential, a dead service, or both — read one before
+  in CI. Most need a credential or a service you run — read one before
   running it.
 
 The required check installs the bundle, builds the gem, loads the library, runs
@@ -547,7 +552,7 @@ bundle exec rake
 bundle exec bin/automatic -c config/feed2console.yml
 ```
 
-Contributions are welcome — a new plugin, or reviving one of the three that need
+Contributions are welcome — a new plugin, or reviving the one that needs
 rework, most of all.
 
 1. Fork the repository.
@@ -565,8 +570,8 @@ Two rules worth knowing before you start:
 
 - **A gem needed by one plugin is not a dependency of the framework.** Require
   it at the top of the plugin's own file.
-- **Nothing dead is faked.** A plugin whose service has shut down is classified
-  as unsupported, not stubbed into passing a test.
+- **Nothing dead is faked.** A plugin whose service has shut down is removed,
+  not stubbed into passing a test.
 
 - Repository: <https://github.com/id774/automaticruby>
 - Issues: <https://github.com/id774/automaticruby/issues>
@@ -586,6 +591,7 @@ Two rules worth knowing before you start:
 │       ├── log.rb           Levelled logging to standard output
 │       ├── feed_maker.rb    Builds pipeline values from plain data
 │       ├── feed_parser.rb   Fetches and parses feeds
+│       ├── http.rb          The one way in for what plugins fetch
 │       ├── opml.rb          OPML parser, for the opmlparser subcommand
 │       ├── environment.rb   Bundler setup for a source checkout
 │       └── version.rb
@@ -619,7 +625,7 @@ this repository. No document here defers to another repository.
 | [`doc/PLUGIN_DEVELOPMENT.md`](doc/PLUGIN_DEVELOPMENT.md) | A complete user plugin and practical testing guidance |
 | [`doc/REQUIREMENTS.md`](doc/REQUIREMENTS.md) | What the system is for, what it guarantees, where its responsibility ends |
 | [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md) | How it is composed: the parts, their responsibilities, the flow of a run |
-| [`doc/PLUGINS.md`](doc/PLUGINS.md) | The Recipe format, the plugin contract, and the catalogue of all 45 plugins |
+| [`doc/PLUGINS.md`](doc/PLUGINS.md) | The Recipe format, the plugin contract, and the catalogue of every shipped plugin |
 | [`doc/POLICY.md`](doc/POLICY.md) | How a change is made and judged: style, dependencies, tests, versioning |
 | [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md) | Installing, scheduling, operating, and what to do when it fails |
 | [`doc/RELEASING.md`](doc/RELEASING.md) | For maintainers: building, verifying and publishing the gem |

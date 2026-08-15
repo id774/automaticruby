@@ -5,43 +5,56 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jun 20, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class FilterAbsoluteURI
     require 'uri'
 
-    def initialize(config, pipeline=[])
-      @config = config
+    # Anything already carrying a scheme is left alone. The earlier spelling
+    # of this test matched `http://` only, so an https link was treated as
+    # relative and had the base prepended to it.
+    ABSOLUTE = %r{\A[a-zA-Z][a-zA-Z0-9+.\-]*://}
+
+    # URI::Parser became the RFC 3986 parser in Ruby 3.4, which reports #escape
+    # as obsolete. The RFC 2396 parser is what this was always reaching and is
+    # spelled the same way on every supported Ruby.
+    ESCAPER = URI::RFC2396_Parser.new
+
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
+      @base     = base_url
     end
 
     def run
-      @return_feeds = []
-      @pipeline.each {|feeds|
-        unless feeds.nil?
-          feeds.items.each {|feed|
-            feed.link = rewrite(feed.link) unless feed.link.nil?
-          }
-          @return_feeds << feeds
+      @pipeline.each_with_object([]) do |feeds, returned|
+        next if feeds.nil?
+
+        feeds.items.each do |item|
+          item.link = rewrite(item.link) unless item.link.nil?
         end
-      }
-      @return_feeds
+        returned << feeds
+      end
     end
 
     private
-    def rewrite(string)
-      if /^http:\/\/.*$/ =~ string
-        return string
-      end
 
-      if /[^\/]$/ =~ @config['url']
-        @config['url'] = @config['url'] + '/'
-      end
-      string = @config['url'] + string.sub(/^\./,'').sub(/^\//,'')
-      string = URI::RFC2396_Parser.new.escape(string)
-      return string
+    # Read once, in the constructor: the earlier version appended the trailing
+    # slash to the Recipe's own config mapping, which is the plugin's input
+    # rather than its state.
+    def base_url
+      url = @config['url'].to_s
+      return url if url.empty? || url.end_with?('/')
+
+      "#{url}/"
+    end
+
+    def rewrite(link)
+      return link if ABSOLUTE.match?(link)
+
+      ESCAPER.escape(@base + link.sub(/\A\./, '').sub(%r{\A/}, ''))
     end
   end
 end

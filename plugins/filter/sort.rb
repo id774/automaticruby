@@ -5,35 +5,26 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Mar 23, 2012
-# Updated::     Jan 23, 2013
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class FilterSort
-
-    def initialize(config, pipeline=[])
-      @config = config
-      @pipeline = pipeline
+    def initialize(config, pipeline = [])
+      @config    = config || {}
+      @pipeline  = pipeline
+      @ascending = @config['sort'].to_s == 'asc'
     end
 
+    # Sorts each feed's items by date. Items must carry one; a feed built from
+    # a source without dates fails here.
     def run
-      @return_feeds = []
-      @pipeline.each { |feeds|
-        return_feed_items = []
-        unless feeds.nil?
-          if @config['sort'] == "asc"
-            feeds.items.sort!{|a,b|
-              a.date <=> b.date
-            }
-          else
-            feeds.items.sort!{|a,b|
-              - (a.date <=> b.date)
-            }
-          end
-          @return_feeds << feeds
-        end
-      }
-      @return_feeds
+      @pipeline.each_with_object([]) do |feeds, returned|
+        next if feeds.nil?
+
+        feeds.items.sort! { |a, b| @ascending ? a.date <=> b.date : b.date <=> a.date }
+        returned << feeds
+      end
     end
   end
 end

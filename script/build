@@ -4,8 +4,9 @@
 # Local build script
 #
 #  Runs what CI runs, and optionally the integration recipes, which CI
-#  does not run and never will: they reach real services, several of
-#  which no longer exist. See doc/PLUGINS.md section 6.
+#  does not run and never will: they reach real services, and most need
+#  a credential or something the operator runs. See doc/PLUGINS.md
+#  section 6.
 #
 #  Usage:
 #    script/build          Run the test suite and the CLI checks.
@@ -16,6 +17,8 @@
 #  License: The GPL version 3, or LGPL version 3 (Dual License).
 #  Contact: idnanashi@gmail.com
 #
+#  v2.1 8/15,2026
+#       Drop the recipes of the plugins removed in v26.08.
 #  v2.0 8/14,2026
 #       Replace the Jenkins-era workflow: drop bundle update and the
 #       simplecov rake task, use the -v option the CLI now has, and
@@ -53,8 +56,8 @@ unit_tests() {
 }
 
 # The integration recipes reach real services and are run deliberately.
-# Most need a credential, a service that has shut down, or both; read the
-# recipe before running it.
+# Most need a credential or a service the operator runs; read the recipe
+# before running it.
 integration_tests() {
     for recipe in "$ROOT_DIR"/test/integration/test_*.yml
     do

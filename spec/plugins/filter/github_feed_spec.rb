@@ -35,20 +35,20 @@ describe Automatic::Plugin::FilterGithubFeed do
       its(:run) { should have(1).feeds }
 
       specify {
-        subject.run
+        returned = subject.run
 
-        subject.instance_variable_get(:@return_feeds)[0].items[0].link
+        returned[0].items[0].link
           .should == '1'
-        subject.instance_variable_get(:@return_feeds)[0].items[0].title
+        returned[0].items[0].title
           .should == 'title1'
-        subject.instance_variable_get(:@return_feeds)[0].items[0].description
+        returned[0].items[0].description
           .should == 'description1'
 
-        subject.instance_variable_get(:@return_feeds)[0].items[1].link
+        returned[0].items[1].link
           .should == '0'
-        subject.instance_variable_get(:@return_feeds)[0].items[1].title
+        returned[0].items[1].title
           .should == 'title0'
-        subject.instance_variable_get(:@return_feeds)[0].items[1].description
+        returned[0].items[1].description
           .should == 'description0'
       }
     end

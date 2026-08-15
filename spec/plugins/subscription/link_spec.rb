@@ -63,7 +63,7 @@ describe Automatic::Plugin::SubscriptionLink do
     subject {
       Automatic::Plugin::SubscriptionLink.new(
         { 'urls' => ["invalid_url"],
-          'interval' => 1,
+          'interval' => 0,
           'retry' => 1
         }
       )

@@ -5,132 +5,99 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 22, 2012
-# Updated::     Feb 25, 2014
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'publish/hatena_bookmark'
 
+# PublishHatenaBookmark is classified Needs rework in doc/PLUGINS.md section
+# 6.7: the service and its bookmarking API are current, the WSSE AtomPub
+# interface this speaks is not. Nothing here asserts that a bookmark is made.
+# What it holds is the part that a rework will have to keep working anyway --
+# how a link is made absolute, what the entry document contains -- and that
+# the request goes over TLS, which is the defect that was worth correcting
+# before the rest.
 describe Automatic::Plugin::PublishHatenaBookmark do
-  subject {
+  def plugin_for(link)
     Automatic::Plugin::PublishHatenaBookmark.new(
-      {"username" => "user", "password" => "pswd"},
-      AutomaticSpec.generate_pipeline{
-        feed { item "http://github.com" }
-      }
+      { 'username' => 'user', 'password' => 'pswd', 'interval' => 0 },
+      AutomaticSpec.generate_pipeline { feed { item link } }
     )
-  }
-
-  it "should post the link with prefix 'http' in the feed" do
-    hb = double("hb")
-    hb.should_receive(:post).with("http://github.com", nil)
-    subject.instance_variable_set(:@hb, hb)
-    subject.run.should have(1).feed
   end
-end
 
-describe Automatic::Plugin::PublishHatenaBookmark do
-  subject {
-    Automatic::Plugin::PublishHatenaBookmark.new(
-      {"username" => "user", "password" => "pswd"},
-      AutomaticSpec.generate_pipeline{
-        feed { item "//github.com" }
-      }
-    )
-  }
-
-  it "should post the link with prefix '//...' in the feed" do
-    hb = double("hb")
-    hb.should_receive(:post).with("http://github.com", nil)
-    subject.instance_variable_set(:@hb, hb)
-    subject.run.should have(1).feed
-  end
-end
-
-describe Automatic::Plugin::PublishHatenaBookmark do
-  subject {
-    Automatic::Plugin::PublishHatenaBookmark.new(
-      {"username" => "user", "password" => "pswd"},
-      AutomaticSpec.generate_pipeline{
-        feed { item "https://github.com" }
-      }
-    )
-  }
-
-  it "should post the link with prefix 'https' in the feed" do
-    hb = double("hb")
-    hb.should_receive(:post).with("https://github.com", nil)
-    subject.instance_variable_set(:@hb, hb)
-    subject.run.should have(1).feed
-  end
-end
-
-describe Automatic::Plugin::PublishHatenaBookmark do
-  subject {
-    Automatic::Plugin::PublishHatenaBookmark.new(
-      {"username" => "user", "password" => "pswd"},
-      AutomaticSpec.generate_pipeline{
-        feed { item "github.com" }
-      }
-    )
-  }
-
-  it "should post the link with others in the feed" do
-    hb = double("hb")
-    hb.should_receive(:post).with("http://github.com", nil)
-    subject.instance_variable_set(:@hb, hb)
-    subject.run.should have(1).feed
+  {
+    'http://github.com'  => 'http://github.com',
+    'https://github.com' => 'https://github.com',
+    '//github.com'       => 'https://github.com',
+    'github.com'         => 'https://github.com'
+  }.each_pair do |given, expected|
+    it "posts #{given.inspect} as #{expected.inspect}" do
+      plugin = plugin_for(given)
+      hb = double('hb')
+      hb.should_receive(:post).with(expected, nil)
+      plugin.instance_variable_set(:@hb, hb)
+      plugin.run.should have(1).feed
+    end
   end
 end
 
 describe Automatic::Plugin::HatenaBookmark do
-  describe "#wsse" do
-    subject {
-      Automatic::Plugin::HatenaBookmark.new.wsse("anonymous", "pswd")
-    }
+  subject { Automatic::Plugin::HatenaBookmark.new }
 
-    it { should be_has_key('X-WSSE') }
+  describe '#wsse' do
+    it 'builds the header' do
+      header = subject.wsse('anonymous', 'pswd')
+      header.should be_has_key('X-WSSE')
+      header['X-WSSE'].should match(
+        /\AUsernameToken Username="anonymous", PasswordDigest=".+", Nonce=".+", Created="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"\z/
+      )
+    end
 
-    specify {
-      subject['X-WSSE'].should match(
-        /^UsernameToken\sUsername="anonymous",\sPasswordDigest=".+", Nonce=".+", Created="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"/)
-    }
+    it 'uses a different nonce every time' do
+      nonce = ->(header) { header['X-WSSE'][/Nonce="([^"]+)"/, 1] }
+      nonce.call(subject.wsse('anonymous', 'pswd')).
+        should_not == nonce.call(subject.wsse('anonymous', 'pswd'))
+    end
   end
 
-  describe "#post" do
-    subject {
-      Automatic::Plugin::HatenaBookmark.new
-    }
+  describe '#post' do
+    let(:requests) { [] }
 
-    specify {
-      url = "http://www.google.com"
-      comment = "Can we trust them ?"
+    def connection(code)
+      response = double('response')
+      response.stub(:code).and_return(code)
+      double('http').tap { |http|
+        http.stub(:request) { |request| requests << request; response }
+      }
+    end
 
-      require 'net/http'
-      res = double("res")
-      res.should_receive(:code).and_return("201")
-      http = double("http")
-      http.should_receive(:post).with("/atom/post", subject.toXml(url, comment),
-        subject.wsse("", "")).and_return(res)
-      http.should_receive(:start).and_yield(http)
-      proxy = Net::HTTP.stub(:new) { http }
-      subject.post(url, comment)
-    }
+    it 'posts the entry to the endpoint over TLS' do
+      Net::HTTP.should_receive(:Proxy).with(nil, 8080).and_return(
+        double('proxy').tap { |proxy|
+          proxy.should_receive(:start).
+            with('b.hatena.ne.jp', 443, hash_including(use_ssl: true)).
+            and_yield(connection('201'))
+        }
+      )
 
-    specify {
-      url = "http://www.google.com"
-      comment = "Can we trust them ?"
+      subject.post('http://www.google.com', 'Can we trust them ?')
 
-      require 'net/http'
-      res = double("res")
-      res.should_receive(:code).twice.and_return("400")
-      http = double("http")
-      http.should_receive(:post).with("/atom/post", subject.toXml(url, comment),
-        subject.wsse("", "")).and_return(res)
-      http.should_receive(:start).and_yield(http)
-      proxy = Net::HTTP.stub(:new) { http }
-      subject.post(url, comment)
-    }
+      requests[0].path.should == '/atom/post'
+      requests[0]['x-wsse'].should_not be_nil
+      requests[0].body.should include('href="http://www.google.com"')
+      requests[0].body.should include('Can we trust them ?')
+    end
+
+    it 'logs any other response code as an error' do
+      Net::HTTP.stub(:Proxy).and_return(
+        double('proxy').tap { |proxy| proxy.stub(:start).and_yield(connection('400')) }
+      )
+      Automatic::Log.stub(:puts)
+      Automatic::Log.should_receive(:puts).with(:error, /400 Error/)
+
+      subject.post('http://www.google.com', nil)
+    end
   end
 end

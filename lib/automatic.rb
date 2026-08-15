@@ -17,6 +17,7 @@ module Automatic
   require 'automatic/log'
   require 'automatic/recipe'
   require 'automatic/pipeline'
+  require 'automatic/http'
   require 'automatic/feed_parser'
   require 'automatic/feed_maker'
   require 'automatic/version'
@@ -44,13 +45,13 @@ module Automatic
     # its absence into a message naming the gem, what wanted it and how to get
     # it. Nothing here resolves, installs or tracks a dependency: the `require`
     # is the plugin's own, made where the plugin makes it, and this only
-    # replaces `cannot load such file -- nkf` with a sentence an operator can
+    # replaces `cannot load such file -- dalli` with a sentence an operator can
     # act on. See doc/POLICY.md section 9.1 and doc/PLUGINS.md section 3.8.
     #
     #   Automatic.require_optional('sanitize', needed_by: 'FilterSanitize')
     #
     # `gem_name` is given where it differs from the path required, as
-    # `xmlsimple` does from the `xml-simple` gem.
+    # `active_record` does from the `activerecord` gem.
     def require_optional(feature, needed_by:, gem_name: feature)
       require feature
     rescue LoadError => e

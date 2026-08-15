@@ -10,11 +10,11 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-# FilterDescriptionLink needs the nkf and nokogiri gems, which the Gemfile
+# FilterDescriptionLink reads a fetched page with nokogiri, which the Gemfile
 # declares in its optional :plugins group. The default suite and CI do not
-# install them, so this spec runs only where the operator has. See
+# install it, so this spec runs only where the operator has. See
 # doc/POLICY.md section 5.
-if AutomaticSpec.optional_dependency?('nkf') && AutomaticSpec.optional_dependency?('nokogiri')
+if AutomaticSpec.optional_dependency?('nokogiri')
   require 'filter/description_link'
 
   describe Automatic::Plugin::FilterDescriptionLink do
@@ -140,6 +140,32 @@ if AutomaticSpec.optional_dependency?('nkf') && AutomaticSpec.optional_dependenc
           should == "aaa bbb ccc http://blog.id774.net/post/2014/10/01/532/ ddd eee"
         }
       end
+    end
+
+    # The framework hands a plugin a Hashie::Mash, not a Hash. This tested the
+    # mapping's class and so read neither setting in any real run; the spec
+    # below is the one that would have caught it.
+    context "with the mapping a Recipe actually produces" do
+
+      subject {
+        Automatic::Plugin::FilterDescriptionLink.new(
+          Hashie::Mash.new('clear_description' => 1),
+          AutomaticSpec.generate_pipeline {
+            feed {
+              item "http://test1.id774.net",
+              "dummy title",
+              "aaa bbb ccc http://test2.id774.net ddd eee",
+              "Mon, 07 Mar 2011 15:54:11 +0900"
+            }
+          }
+        )
+      }
+
+      specify {
+        returned = subject.run
+        returned[0].items[0].link.should == "http://test2.id774.net"
+        returned[0].items[0].description.should == ""
+      }
     end
 
   end

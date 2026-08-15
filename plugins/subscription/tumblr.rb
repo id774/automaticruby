@@ -5,57 +5,66 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Oct 16, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class SubscriptionTumblr
-    require 'open-uri'
-
-    def initialize(config, pipeline=[])
-      @config = config
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
     end
 
+    # Reads HTML written for a browser, so what it finds depends on the theme
+    # a given blog uses. Verify against the blog you mean to follow before
+    # putting it in cron, and set `interval`.
     def run
-      @return_feeds = []
-      @config['urls'].each {|url|
-        retries = 0
-        retry_max = @config['retry'].to_i || 0
-        begin
-          create_rss(url)
-          unless @config['pages'].nil?
-            @config['pages'].times {|i|
-              if i > 0
-                old_url = url + "/page/" + (i+1).to_s
-                create_rss(old_url)
-              end
-            }
-          end
-        rescue
-          retries += 1
-          Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
-          sleep ||= @config['interval'].to_i
-          retry if retries <= retry_max
+      Array(@config['urls']).each_with_object([]) do |url, feeds|
+        pages(url).each do |page|
+          rss = fetch(page, url)
+          feeds << rss unless rss.nil?
         end
-      }
-      @return_feeds
+      end
     end
 
     private
-    def create_rss(url)
-      Automatic::Log.puts("info", "Parsing Tumblr: #{url}")
-      html = URI.open(url).read
-      unless html.nil?
-        uri = URI.parse(url)
-        rss = Automatic::FeedParser.parse_html(html)
-        rss.items.each {|item|
-           unless item.link =~ Regexp.new(uri.host)
-             item.link = nil
-           end
-        }
-        sleep ||= @config['interval'].to_i
-        @return_feeds << rss
+
+    # The blog's own page, then /page/2 and onward.
+    def pages(url)
+      count = @config['pages'].to_i
+      return [url] if count < 2
+
+      [url] + (2..count).map { |number| "#{url}/page/#{number}" }
+    end
+
+    def fetch(url, blog_url)
+      retries   = 0
+      retry_max = @config['retry'].to_i
+      begin
+        Automatic::Log.puts('info', "Parsing Tumblr: #{url}")
+        rss = Automatic::FeedParser.parse_html(Automatic::Http.read(url))
+        drop_offsite_links(rss, blog_url)
+        sleep(@config['interval'].to_i)
+        rss
+      rescue StandardError => e
+        retries += 1
+        Automatic::Log.puts('error',
+                            "ErrorCount: #{retries}, Fault in parsing: #{url}, #{e.message}")
+        return nil if retries > retry_max
+
+        sleep(@config['interval'].to_i)
+        retry
+      end
+    end
+
+    # A theme's page carries the blog's own posts and a great deal else. A
+    # link that leaves the blog's host is blanked rather than removed, which
+    # is the pipeline's way of saying "not applicable"; the plugins after this
+    # one skip an item whose link is nil.
+    def drop_offsite_links(rss, blog_url)
+      host = Automatic::Http.uri(blog_url).host.to_s
+      rss.items.each do |item|
+        item.link = nil unless item.link.to_s.include?(host)
       end
     end
   end

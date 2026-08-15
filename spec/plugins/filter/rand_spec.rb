@@ -38,8 +38,8 @@ describe Automatic::Plugin::FilterRand do
       # outcome and fell through to a pending block on the one permutation in
       # twenty-four where nothing moved, so it failed at random.
       specify "returns exactly the input items" do
-        subject.run
-        links = subject.instance_variable_get(:@return_feeds)[0].items.map(&:link)
+        returned = subject.run
+        links = returned[0].items.map(&:link)
         links.sort.should == LINKS.sort
       end
 

@@ -98,8 +98,8 @@ bundle install
 bundle exec rake
 ```
 
-That adds `activerecord`, `sqlite3`, `nokogiri`, `sanitize`, `nkf` and
-`feedbag`, and their specs then run as part of the ordinary suite. The setting
+That adds `activerecord`, `sqlite3`, `nokogiri`, `sanitize` and `feedbag`,
+and their specs then run as part of the ordinary suite. The setting
 is written to the checkout's own `.bundle/config`, which is not committed;
 `bundle config unset --local with` returns the checkout to the minimum, and
 `bundle install` afterwards.
@@ -447,8 +447,7 @@ This table is the list. Which plugin needs which gem, how to install it, and
 whether the plugin still works are all here, and nothing else repeats it.
 
 None of these gems is installed by `gem install automatic` or by a default
-`bundle install`. Install one only if you use the plugin, and check the status
-column first — several of these plugins talk to services that no longer exist.
+`bundle install`. Install one only if you use the plugin.
 
 **Installed gem**: `gem install <gem>`. **Checkout**: `bundle config set
 --local with <group>` and `bundle install`, because `bundle exec` sees only the
@@ -460,32 +459,35 @@ bundle. `plugins` is every group in the first block at once.
 | `FilterImageSource`, `FilterDescriptionLink`, `SubscriptionLink`, `SubscriptionTumblr` | `nokogiri` | `gem install nokogiri` | `html` | Supported (`SubscriptionTumblr` external) |
 | `PublishMarkdown` | `nokogiri`, for HTML bodies only | `gem install nokogiri` | `html` | Supported; runs without it |
 | `FilterSanitize` | `sanitize` | `gem install sanitize` | `sanitize` | Supported |
-| `FilterDescriptionLink` | `nkf`, as well as `nokogiri` | `gem install nkf` | `nkf` | Supported |
 | `autodiscovery` and `inspect` subcommands | `feedbag` | `gem install feedbag` | `autodiscovery` | Supported |
 | `FilterFullFeed` | `nokogiri`, and a siteinfo file | `gem install nokogiri` | `html` | Supported (external) |
-| `CustomFeedSVNLog` | `xml-simple`, and the `svn` command | `gem install xml-simple` | `svn_log` | Supported (external) |
+| `CustomFeedSVNLog` | the `svn` command; no gem | — | — | Supported (external) |
 | `ProvideFluentd`, `PublishFluentd` | `fluent-logger`, and a Fluentd instance | `gem install fluent-logger` | `fluentd` | Supported (external) |
 | `PublishMemcached` | `dalli`, and a memcached server | `gem install dalli` | `memcached` | Supported (external) |
+| `PublishAmazonS3`, `StoreFile` S3 path | `aws-sdk-s3`, and a bucket | `gem install aws-sdk-s3` | `s3` | Supported (external) |
+| `PublishInstapaper` | an Instapaper account; no gem | — | — | Supported (external) |
 | `PublishEject` | the `eject` or `drutil` command | — | — | Supported (external) |
 | `NotifyIkachan` | an `ikachan` gateway you run | — | — | Supported (external) |
-| `StoreFile`, S3 path only | the `aws-sdk` v1 interface | — | — | Needs rework |
-| `PublishAmazonS3` | the `aws-sdk` v1 interface | — | — | Needs rework |
-| `PublishTwitter`, `SubscriptionTwitterSearch` | — | — | — | Unsupported |
-| `PublishPocket`, `SubscriptionPocket` | — | — | — | Unsupported |
-| `PublishHipchat` | — | — | — | Unsupported |
-| `PublishGoogleCalendar` | — | — | — | Unsupported |
-| `SubscriptionWeather` | — | — | — | Unsupported |
+| `PublishHatenaBookmark` | the current Hatena API, which it does not speak | — | — | Needs rework |
 
-The `plugins` group is the first six rows: the optional gems of the plugins
-whose specs need nothing but the gem. The three rows below it are in their own
-groups only, because each also needs a service or a command, and installing a
-gem alone would not make the plugin — or its spec — work.
+The `plugins` group is the first five rows: the optional gems of the plugins
+whose specs need nothing but the gem. The gems below it are in their own groups
+only, because each of those plugins also needs a service, a bucket or a
+command, and installing a gem alone would not make the plugin — or its spec —
+work.
 
-The two AWS rows are listed for completeness rather than as instructions.
-They call `AWS::S3`, which AWS SDK for Ruby version 1 provided and the current
-`aws-sdk-s3` does not; installing a gem will not make them work, and the plugins
-need rework. `StoreFile` makes that requirement lazily, so its ordinary HTTP
-download path works with no AWS gem installed at all.
+Both S3 rows make their requirement lazily, so `StoreFile`'s ordinary HTTP
+download path and `PublishAmazonS3` in `mode: test` work with no AWS gem
+installed at all. Leaving `access_key` and `secret_key` out of the Recipe is the
+better way to use them: the SDK then takes credentials from the environment, a
+shared profile or an instance role, and no long-lived secret sits in a file.
+
+Two gems left this table in v26.08 and are not needed by anything now:
+`xml-simple`, which `CustomFeedSVNLog` used to parse `svn log --xml` and which
+REXML — already a dependency of the framework — parses instead, and `nkf`,
+which `FilterDescriptionLink` used to normalize a page's encoding and which the
+HTML parser does for itself. If you installed either for this project, nothing
+here wants it any more.
 
 No optional group is installed by default and none is installed in required CI,
 so these plugins are outside what a green build guarantees. Installing a group
@@ -523,9 +525,14 @@ not touch this directory.
 
 **`The <gem> gem is not installed. It is needed by ...`** — a plugin's optional
 dependency is missing. The message names the gem, the plugin and the command to
-install it; the table above says the same thing, and says whether the plugin is
-one that no longer works. A bare `LoadError: cannot load such file -- <gem>` is
-the same situation from a plugin that is no longer supported.
+install it, and the table above says the same thing.
+
+**`Automatic::NoPluginError: unknown plugin named ...`** — a Recipe names a
+plugin that does not ship. Check the spelling against
+[`PLUGINS.md`](PLUGINS.md) section 6; if the name is in section 8, the plugin
+was removed because the service behind it no longer exists, and the Recipe
+needs a different last step rather than a reinstall. Nothing has run when this
+is raised.
 
 **`unknown plugin named X`** — the Recipe names a module the loader cannot
 resolve. Check the spelling against [`PLUGINS.md`](PLUGINS.md) section 6, and
@@ -562,7 +569,7 @@ are not run in CI:
 bundle exec bin/automatic -c test/integration/test_sort.yml
 ```
 
-Most of them need a credential, a service that no longer exists, or both. Read
+Most of them need a credential or a service you run. Read
 the Recipe before running it, and check the plugin's status in
 [`PLUGINS.md`](PLUGINS.md) section 6.
 

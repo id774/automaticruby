@@ -64,10 +64,32 @@ describe Automatic::Plugin::SubscriptionFeed do
       Automatic::Plugin::SubscriptionFeed.new(
         { 'feeds' => ["invalid_url"],
           'retry' => 1,
-          'interval' => 1
+          'interval' => 0
         }
       )
     }
+
+    its(:run) { should be_empty }
+  end
+
+  # `interval` is seconds between attempts, and it was not being waited: the
+  # line meant to do it assigned to a local variable named sleep and returned
+  # at once, so a Recipe asking to be gentle with a host was not.
+  context "with an interval between attempts" do
+    subject {
+      Automatic::Plugin::SubscriptionFeed.new(
+        { 'feeds' => ["invalid_url"], 'retry' => 2, 'interval' => 7 }
+      )
+    }
+
+    it "waits between them" do
+      subject.should_receive(:sleep).with(7).twice
+      subject.run.should be_empty
+    end
+  end
+
+  context "with no feeds at all" do
+    subject { Automatic::Plugin::SubscriptionFeed.new(nil) }
 
     its(:run) { should be_empty }
   end

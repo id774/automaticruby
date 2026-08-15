@@ -1,7 +1,13 @@
+# Print a public feed to the terminal.
+#
+#   automatic -c ~/.automatic/config/example/feed2console.yml
+#
+# The same pipeline as feed2markdown.yml with a different last plugin, which
+# is the plugin to end a Recipe with while you are still writing it. Nothing
+# here needs an account, a credential or a gem beyond the ones
+# `gem install automatic` brings.
+
 global:
-  timezone: Asia/Tokyo
-  cache:
-    base: /tmp
   log:
     level: info
 
@@ -9,6 +15,6 @@ plugins:
   - module: SubscriptionFeed
     config:
       feeds:
-        - http://blog.id774.net/post/feed/
+        - https://www.ruby-lang.org/en/feeds/news.rss
 
   - module: PublishConsole

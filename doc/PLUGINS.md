@@ -257,7 +257,7 @@ Examples, including the ones that are easy to get wrong:
 | `FilterAbsoluteURI` | `filter/absolute_uri.rb` |
 | `CustomFeedSVNLog` | `custom_feed/svn_log.rb` |
 | `PublishHatenaBookmark` | `publish/hatena_bookmark.rb` |
-| `SubscriptionTwitterSearch` | `subscription/twitter_search.rb` |
+| `FilterDescriptionLink` | `filter/description_link.rb` |
 
 The category directory is not decoration: it is half of the lookup key. A file
 in a directory whose name is not a prefix of the underscored class name is never
@@ -396,7 +396,7 @@ see the optional plugin dependencies in doc/DEPLOYMENT.md.
 ```
 
 Pass `gem_name:` where the gem's name differs from the path required, as
-`xml-simple` does from `xmlsimple`.
+`activerecord` does from `active_record`.
 
 That is what keeps a gem needed by one plugin out of everyone else's
 installation. A gem used by a single plugin is not added to the framework's
@@ -408,6 +408,26 @@ Where a plugin has an optional capability that needs a heavier library — S3
 support in `StoreFile`, for instance — the `require` goes inside the branch that
 uses it, so the plugin loads and its ordinary path works without that gem
 installed.
+
+### 3.8.1 Fetching
+
+A plugin that fetches over HTTP calls `Automatic::Http`:
+
+```ruby
+body = Automatic::Http.read(url)          # the body, or an exception
+Automatic::Http.uri(url)                  # a validated URI, or an exception
+Automatic::Http.fetchable?(url)           # for skipping an item rather than failing
+```
+
+It is a helper and not a client: it opens the URL through `open-uri` with the
+scheme restricted to HTTP and HTTPS, a connect and a read timeout, a bounded
+redirect chain and this project named as the agent. A URL string carrying
+characters a URI may not — a space, a Japanese query term — is escaped and
+parsed again rather than raising.
+
+The scheme restriction is the part that matters most: **a link in a pipeline
+item comes from a feed, which is to say from outside.** `URI.open` on such a
+string will read `file:///etc/passwd` as readily as an article.
 
 ### 3.9 Testing a plugin
 
@@ -520,19 +540,24 @@ Section 6 lists every plugin shipped in the gem. Each carries a status:
 | Status | Meaning |
 | --- | --- |
 | **Supported** | Works on the supported Ruby versions with the current dependencies. Covered by the default test suite where it can be. |
-| **Supported (external)** | The plugin is current, but it needs something the operator provides — a running service, an installed command, a data file. |
-| **Needs rework** | The service or API still exists, but this plugin speaks an interface that has been replaced. It will not work as written. |
-| **Unsupported** | The service has shut down, or its API is no longer reachable in the way this plugin uses it. Kept as history, not expected to work. |
+| **Supported (external)** | The plugin is current, but it needs something the operator provides — a running service, an installed command, a credential, a data file. |
+| **Needs rework** | The service and the capability still exist, but this plugin speaks an interface that has been replaced. It will not work as written, and restoring it is a self-contained piece of work. |
+
+There is no fourth row. There used to be one, holding plugins whose service had
+shut down, and the plugins that were in it have been removed rather than kept:
+see section 8.
 
 Two rules govern this table, and they are the reason it exists at all:
 
-- **Nothing is faked.** A plugin in the last two rows is not stubbed, mocked or
-  simulated to make a test pass or a catalogue entry look better. Its specs are
-  excluded from the default suite because its gem is absent or its service is
-  gone, and that absence is the honest signal.
-- **Nothing is deleted for being old.** These plugins are the record of what the
-  framework was used for, and several remain useful as templates for a
-  replacement. Removal is a separate, deliberate decision.
+- **Nothing is faked.** A plugin is not stubbed, mocked or simulated to make a
+  test pass or a catalogue entry look better. Where a plugin's gem is absent
+  its specs are excluded from the default suite, and that absence is the honest
+  signal. A service that no longer answers is not given a fake endpoint to
+  answer with; the plugin goes.
+- **Nothing is kept for being old.** A plugin ships because it has a current
+  practical use, not because it once did. Git history is where the previous
+  implementations are, and it keeps them without their being installed on
+  anyone's machine.
 
 **Supported is not the same as covered by the required workflow.** A Supported
 plugin whose gem is an optional plugin dependency — the store plugins, the ones
@@ -546,14 +571,13 @@ never executes.
 
 **This classification is a snapshot taken in August 2026,** based on the
 published status of each service and on what each plugin's code actually calls.
-The statuses in the "external service" rows depend on the outside world and can
-change without any commit here. Where a status was reached from published
-information rather than from a live check, the entry says so. To verify one
-yourself, run its Recipe from `test/integration` by hand; those are not part of
-CI and never will be.
+The statuses that depend on an outside service can change without any commit
+here. Where a status was reached from published information rather than from a
+live check, the entry says so. To verify one yourself, run its Recipe from
+`test/integration` by hand; those are not part of CI and never will be.
 
-Restoring a **Needs rework** plugin is a self-contained piece of work and a good
-first contribution. It is not part of this stage of the modernization.
+Restoring the one **Needs rework** plugin is a self-contained piece of work and
+a good first contribution.
 
 ---
 
@@ -585,6 +609,12 @@ with.
 | `interval` | integer | Seconds between attempts. Default `0`. |
 
 A feed that fails after its retries is logged and skipped; the others still run.
+
+`interval` is now waited. The line that was meant to wait it assigned to a
+local variable named `sleep` and returned at once, in this plugin and in every
+other that had a retry loop, so a Recipe asking to be gentle with a host was
+not being gentle. A Recipe that set `interval` will take longer than it used
+to and will behave as it always said it did.
 
 #### SubscriptionLink — **Supported**
 
@@ -647,53 +677,15 @@ nokogiri`, or the `html` group in a checkout — and it depends on the theme a
 given blog uses and on Tumblr's page structure. Verify against the blog you mean
 to follow before putting it in `cron`, and set `interval`.
 
-#### SubscriptionTwitter — **Unsupported**
-
-`subscription/twitter.rb`. Scraped `twitter.com` by matching CSS class names as
-they were in 2014 (`js-tweet-text`, `tweet-timestamp js-permalink js-nav`). The
-site is now X, the markup is gone, and a timeline is not served to an
-unauthenticated client at all. Nothing in this plugin can match.
-
-#### SubscriptionTwitterSearch — **Unsupported**
-
-`subscription/twitter_search.rb`. Calls `Twitter::Client.new(...).search(...)`,
-the interface of the `twitter` gem version 4. The gem's current major version
-does not have that class, and search on the current API is not available on the
-free tier. Restoring it means a new plugin against the current API and a paid
-plan, not a dependency bump.
-
-#### SubscriptionPocket — **Unsupported**
-
-`subscription/pocket.rb`. Reads the Pocket v3 `retrieve` endpoint through the
-`pocket-ruby` gem. Pocket was shut down by Mozilla in July 2025 and the API is
-gone. The gem remains on RubyGems; the service does not.
-
-#### SubscriptionWeather — **Unsupported**
-
-`subscription/weather.rb`. Uses the `weather_hacker` gem against livedoor
-Weather Hacks, which was terminated in 2020. The gem was last published in 2013.
-
-#### SubscriptionGGuide — **Unsupported**
-
-`subscription/g_guide.rb`. Searches a Japanese television schedule RSS at
-`tv.so-net.ne.jp`, over plain HTTP. The service is no longer operating at that
-address. Reported status, not a live check.
-
-#### SubscriptionChanToru — **Unsupported**
-
-`subscription/chan_toru.rb`. Runs `SubscriptionGGuide` and rewrites each link to
-a So-net "CHAN-TORU" recording URL. It cannot work while `SubscriptionGGuide`
-does not, and the target service is likewise gone. This is also the one plugin
-that depends on another plugin, which is noted in
-[`BASIC_DESIGN.md`](BASIC_DESIGN.md) section 4.9 and is not a pattern to copy.
-
 ### 6.2 CustomFeed
 
 #### CustomFeedSVNLog — **Supported (external)**
 
 `custom_feed/svn_log.rb`. Runs `svn log --xml` against a repository and makes a
-feed of the revisions. Needs the `svn` command and the `xml-simple` gem, neither
-of which is installed by this gem.
+feed of the revisions. Needs the `svn` command, which is the operator's to
+install, and **no gem of its own**: it reads the document with REXML, which is
+a runtime dependency of the framework already. It used to need `xml-simple`,
+whose last release was in 2021.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
@@ -701,8 +693,14 @@ of which is installed by this gem.
 | `fetch_items` | integer | Revisions to fetch. Default `30`. |
 | `title` | string | Channel title. Default empty. |
 
-`target` is interpolated into a shell command. Point it at a repository URL you
-control and nothing else.
+The command is run as an argument vector rather than through a shell, so a
+repository URL cannot become part of a command line. Point `target` at a
+repository you control regardless: `svn` itself will do what the URL tells it
+to.
+
+A repository with no revisions in the window asked for returns the pipeline
+unchanged, with a warning. RSS 1.0 has no representation for a channel with no
+items, and this used to end the run with a parser error.
 
 ### 6.3 Filter
 
@@ -725,7 +723,9 @@ kept, with a warning.
 #### FilterAccept — **Supported**
 
 `filter/accept.rb`. The complement of `FilterIgnore`: keeps only items that
-match. Same three keys, same substring rule.
+match. Same three keys, same substring rule. An item whose field is missing is
+not matched, and says so; it used to end the run with a `NoMethodError`, which
+is not what its complement does with the same item.
 
 #### FilterSort — **Supported**
 
@@ -760,18 +760,30 @@ plugin has done the work, so that later plugins publish nothing. No settings.
 
 #### FilterImage — **Supported**
 
-`filter/image.rb`. Sets `link` to `nil` unless it ends in `.jpg`, `.jpeg`,
-`.gif`, `.png` or `.tiff`. Note that it does not remove the items — it blanks
-their links, and the plugins after it skip items whose link is `nil`. No
-settings.
+`filter/image.rb`. Sets `link` to `nil` unless it names an image. Note that it
+does not remove the items — it blanks their links, and the plugins after it
+skip items whose link is `nil`. No settings.
+
+The extensions are `.jpg`, `.jpeg`, `.gif`, `.png`, `.tif`, `.tiff`, `.webp`
+and `.avif`, and the test is on the URL's **path**. Both of those changed:
+`.webp` and `.avif` are what an image link on the current web frequently is,
+and testing the whole URL meant that `photo.jpg?w=1280` — which is how most of
+what serves images now serves them — was not recognised as one. A Recipe using
+this filter will therefore keep links it used to blank.
 
 #### FilterImageSource — **Supported**
 
 `filter/image_source.rb`. Replaces each item with one item per image found: the
-`<img src>` values in the description, or, if there are none, the images on the
-page the link points at. Fetching pages means network access. No settings.
+images in the description, or, if there are none, the images on the page the
+link points at. Fetching pages means network access. No settings.
 
 Needs `nokogiri`: `gem install nokogiri`, or the `html` group in a checkout.
+
+The description is read with that parser rather than scanned for the literal
+text `<img src="`, so a document quoting its attributes with apostrophes or
+writing `src` after another attribute is no longer invisible to it, and a
+relative `src` is resolved against the item's own link. A page that cannot be
+read is a warning and no images, rather than the end of the run.
 
 #### FilterAbsoluteURI — **Supported**
 
@@ -780,6 +792,11 @@ Needs `nokogiri`: `gem install nokogiri`, or the `html` group in a checkout.
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `url` | string | The base. A trailing slash is added if absent. Required. |
+
+A link that already carries a scheme is left alone. That test matched `http://`
+only, so an `https://` link was treated as relative and had the base prepended
+to it; a Recipe that combined this filter with an HTTPS source was producing
+links that went nowhere.
 
 #### FilterSanitize — **Supported**
 
@@ -796,9 +813,17 @@ See [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 #### FilterTumblrResize — **Supported**
 
-`filter/tumblr_resize.rb`. Rewrites a Tumblr image link to the 1280-pixel
-variant, by substituting the size suffix. Assumes `FilterImage` or
-`FilterImageSource` has already put an image URL in the link. No settings.
+`filter/tumblr_resize.rb`. Rewrites a Tumblr image link to the largest variant.
+Assumes `FilterImage` or `FilterImageSource` has already put an image URL in
+the link. No settings.
+
+Tumblr has served images under two URL schemes, and both are rewritten. The
+older one carries the size as a suffix on the file name — `tumblr_xxx_500.jpg`
+becomes `tumblr_xxx_1280.jpg` — and is what images uploaded before 2019 still
+use. The newer one carries it as a path segment — `/s540x810/` becomes
+`/s1280x1920/` — and is what everything since uses. Only the first was handled,
+which is why this filter appeared to do nothing on a blog whose posts are
+recent.
 
 #### FilterDescriptionLink — **Supported**
 
@@ -814,12 +839,17 @@ the body.
 `get_title` makes one request per item; use `FilterOne` or a store plugin before
 it on a large feed.
 
-Needs `nkf`, which the plugin uses to normalize a fetched page's encoding, and
-`nokogiri`, which it reads the fetched page with. `nkf` left the standard
-library after Ruby 3.3; both are optional plugin dependencies rather than
-framework ones, so neither is installed with the framework, and this plugin's
-spec is outside the default suite and outside the required workflow. See
-[`DEPLOYMENT.md`](DEPLOYMENT.md).
+**Both settings were being ignored in every real run.** The test that guarded
+them asked whether the settings mapping was a `Hash`, and the framework hands a
+plugin a `Hashie::Mash`, which is a subclass and so is not that class. A Recipe
+setting `clear_description` or `get_title` will now do what it asked for.
+
+Needs `nokogiri`, which it reads the fetched page with — `gem install
+nokogiri`, or the `html` group in a checkout. It no longer needs `nkf`: the
+parser detects a page's encoding itself, which is one optional dependency
+fewer, and `nkf` had left the standard library after Ruby 3.3. This plugin's
+spec is outside the default suite and outside the required workflow because
+`nokogiri` is an optional dependency. See [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 #### FilterFullFeed — **Supported (external)**
 
@@ -846,12 +876,8 @@ snapshot and still laid out the same way. Supplying your own file in
 `content` are elements with a `.content` — into the flat items the rest of the
 pipeline expects. Needed because GitHub publishes Atom, not RSS. No settings.
 
-#### FilterGoogleNews — **Needs rework**
-
-`filter/google_news.rb`. Rewrites a Google News link to its destination by
-taking whatever follows `&url=`. It matches `http://news.google.com` over plain
-HTTP, and the redirect format it parses is no longer what Google News emits. The
-plugin runs without error and simply matches nothing.
+A field that is already a string is taken as it stands, so a pipeline that has
+been through another filter first is no longer a `NoMethodError`.
 
 ### 6.4 Store
 
@@ -888,7 +914,7 @@ republished article with a new URL is not stored twice. Pair with
 | --- | --- | --- |
 | `db` | string | Database file name, under `~/.automatic/db`. Required. |
 
-#### StoreFile — **Supported**, with an S3 path that **needs rework**
+#### StoreFile — **Supported**
 
 `store/file.rb`. Downloads what each link points at and rewrites the link to a
 `file://` URI, which is how `PublishAmazonS3` later knows it has a local file.
@@ -898,15 +924,23 @@ republished article with a new URL is not stored twice. Pair with
 | `path` | string | Directory to save into; created if absent. Required. |
 | `retry` | integer | Attempts after the first. Default `0`. |
 | `interval` | integer | Seconds between downloads. Default `0`. |
-| `access_key` | string | S3 only |
-| `secret_key` | string | S3 only |
-| `bucket_name` | string | S3 only |
+| `access_key` | string | S3 only. Omit to use the SDK's own credential chain. |
+| `secret_key` | string | S3 only. |
+| `bucket_name` | string | S3 only. The link's own host is used where this is absent. |
+| `region` | string | S3 only. Omit to use the SDK's own resolution. |
 
-HTTP and HTTPS downloads work. A link with the `s3n://` scheme is fetched from
-S3 through an interface of AWS SDK for Ruby version 1, which the current SDK
-does not provide; that path needs rework. The `aws-sdk` requirement is made
-lazily, inside the S3 branch, so the ordinary download path works without the
-gem installed.
+Only HTTP and HTTPS links are downloaded: a link comes from a feed, and a store
+plugin that would read `file://` on being asked to is a store plugin that can
+be asked to read anything.
+
+A link whose scheme is `s3://` or `s3n://` is fetched from a bucket instead,
+through **AWS SDK for Ruby version 3** — `aws-sdk-s3`, the SDK AWS publishes
+today. This was written against version 1's `AWS::S3`, which no published gem
+provides any more. `s3n://` is what Recipes written for this plugin use and is
+still accepted; `s3://` is the spelling everything else uses and is accepted as
+well. The gem is required inside that branch, so the ordinary download path
+works without it installed: `gem install aws-sdk-s3`, or the `s3` group in a
+checkout.
 
 Set `interval` when downloading a series from one host.
 
@@ -945,7 +979,11 @@ operator runs; there is no service to be shut down.
 | `command` | string | `notice` or `privmsg`. Default `notice`. |
 | `interval` | integer | Seconds between posts. Default `0`. |
 
-Honours a `PROXY` environment variable, on port 8080.
+Honours a `PROXY` environment variable, on port 8080. A gateway reached over
+`https` is spoken to over `https`; the connection used to be plain whatever the
+URL said. The channel and the message are form-encoded rather than interpolated
+into the request body, so an item whose title carries an `&` or a space reaches
+the channel whole instead of splitting the request.
 
 ### 6.7 Publish
 
@@ -1133,8 +1171,12 @@ and stores it under a single key. Needs the `dalli` gem and a memcached server.
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `host` | string | memcached host. Required. |
-| `port` | string | memcached port. Required. |
+| `port` | string or integer | memcached port. Required. |
 | `key` | string | The key to store under. Required. |
+
+`port: 11211` written as a number now works. The server address was built by
+concatenating strings, so a Recipe that did not quote the port ended the run
+with a `TypeError`.
 
 It writes one key per run, replacing the previous value. `key` collides with a
 `Hashie::Mash` built-in and logs a warning per run; the setting works, see
@@ -1153,10 +1195,10 @@ a Fluentd instance.
 | `tag` | string | Tag, for example `automatic.feed` |
 | `mode` | string | `test` builds no connection and sends nothing |
 
-#### PublishInstapaper — **Supported (external)**, verify before relying on it
+#### PublishInstapaper — **Supported (external)**
 
 `publish/instapaper.rb`. Adds each item to Instapaper through its Simple API,
-with HTTP basic authentication.
+with HTTP basic authentication over TLS.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
@@ -1165,73 +1207,66 @@ with HTTP basic authentication.
 | `retry` | integer | Attempts after the first. Default `0`. |
 | `interval` | integer | Seconds between posts. Default `0`. |
 
-The service and this API are believed to be operating, but this was not verified
-against the live service for this release; treat the status as provisional and
-check before putting it in `cron`. This plugin previously disabled TLS
-certificate verification, which has been corrected.
+The Simple API is still published at `www.instapaper.com/api/simple` and takes
+the same three parameters this sends. The status rests on that published
+documentation rather than on a live call with an account, so run
+`test/integration/test_instapaper.yml` once before putting it in `cron`.
 
-#### PublishAmazonS3 — **Needs rework**
+Constructing the plugin authenticates, so a wrong credential fails the run
+before any item is posted rather than once per item. Nothing logs the account
+or the password. This plugin used to disable TLS certificate verification,
+which was corrected in the previous release; the connection now also has a
+timeout, so an unanswered request ends rather than hanging a `cron` job.
+
+#### PublishAmazonS3 — **Supported (external)**
 
 `publish/amazon_s3.rb`. Uploads files whose link is a `file://` URI to S3,
-normally after `StoreFile`. Written against `AWS::S3` from AWS SDK for Ruby
-version 1; the current SDK exposes `Aws::S3` with a different interface, so the
-plugin does not run as written. S3 itself is unaffected — this is a client
-library migration, and a self-contained one.
+normally after `StoreFile`.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
-| `access_key` | string | Access key ID |
-| `secret_key` | string | Secret access key |
-| `bucket_name` | string | Bucket |
-| `target_path` | string | Prefix within the bucket |
-| `mode` | string | `test` logs the upload without performing it |
+| `access_key` | string | Access key ID. Omit to use the SDK's own credential chain. |
+| `secret_key` | string | Secret access key. |
+| `bucket_name` | string | Bucket. |
+| `target_path` | string | Prefix within the bucket. |
+| `region` | string | Omit to use the SDK's own resolution. |
+| `mode` | string | `test` logs the upload without performing it. |
+
+Migrated from `AWS::S3`, which only AWS SDK for Ruby version 1 provided, to
+`Aws::S3::Client` from **version 3** — the `aws-sdk-s3` gem, which is the SDK
+AWS publishes and maintains. The Recipe keys are unchanged; `region` is new and
+optional. The gem is an optional plugin dependency and is required only when an
+upload is actually made, so `mode: test` needs neither the gem nor an account:
+`gem install aws-sdk-s3`, or the `s3` group in a checkout.
+
+Leaving `access_key` and `secret_key` out is now the better way to run this. The
+SDK then resolves credentials from the environment, a shared profile or an
+instance role, which keeps a long-lived secret out of the Recipe file.
 
 #### PublishHatenaBookmark — **Needs rework**
 
 `publish/hatena_bookmark.rb`. Bookmarks each link to Hatena Bookmark by posting
-an Atom entry with WSSE authentication to `http://b.hatena.ne.jp/atom/post`.
+an Atom entry with WSSE authentication to `b.hatena.ne.jp/atom/post`.
 
-Two problems, independent of each other: the request is made over plain HTTP,
-which sends a password digest unencrypted, and the WSSE AtomPub interface has
-been superseded by OAuth. Reported status; not verified live for this release.
-Restoring it means the current API and the current authentication.
+Hatena Bookmark is operating and has a current bookmarking API; the WSSE
+AtomPub interface this speaks has been superseded by an OAuth one, and Hatena's
+own documentation no longer describes WSSE for this API. Restoring the plugin
+means the current endpoint and the current authentication, which is a
+credential format this Recipe cannot express: consumer key and secret plus an
+access token and secret, obtained through an authorization flow, in place of an
+ID and a password. That is a self-contained piece of work and it is why this is
+not classified any higher.
+
+The transport was corrected in the meantime: the request goes over HTTPS, so an
+operator who runs it does not put a password digest on the wire in the clear,
+and the nonce is drawn from a random source rather than from the clock. Neither
+is a claim that the plugin works.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `username` | string | Hatena ID |
 | `password` | string | Password |
 | `interval` | integer | Seconds between posts. Default `0`. |
-
-#### PublishTwitter — **Unsupported**
-
-`publish/twitter.rb`. Posts each item using `Twitter.configure` and
-`Twitter.update`, the module-level interface of the `twitter` gem version 4,
-which no longer exists. Posting on the current API also requires a paid tier.
-
-`tweet_tmp` is a template in which `{title}` and `{link}` are replaced by
-calling the named method on the item; the default is `{title} {link}`. The
-template is worth keeping in mind if you write a replacement.
-
-#### PublishPocket — **Unsupported**
-
-`publish/pocket.rb`. Adds each link to Pocket, which was shut down in July 2025.
-
-#### PublishHipchat — **Unsupported**
-
-`publish/hipchat.rb`. Posts each item's description to a HipChat room. Atlassian
-discontinued HipChat and shut the service down; there is no endpoint to talk to.
-
-#### PublishGoogleCalendar — **Unsupported**
-
-`publish/google_calendar.rb`. Creates an all-day event per item through the
-`gcalapi` gem, which speaks the Google Calendar GData API version 2 and
-authenticates with ClientLogin. Both were withdrawn by Google around 2014 and
-2015; the gem was last published in 2009.
-
-The plugin has an additional defect from before that, recorded because it shows
-how long it has been unused: it stores the account under the key `hatena_id`,
-while the code that authenticates reads `username`, so the account was never
-passed through even when the API existed.
 
 ---
 
@@ -1240,11 +1275,39 @@ passed through even when the API existed.
 | Status | Count | Plugins |
 | --- | --- | --- |
 | Supported | 23 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
-| Supported (external) | 9 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper` |
-| Needs rework | 3 | `FilterGoogleNews`, `PublishAmazonS3`, `PublishHatenaBookmark` |
-| Unsupported | 10 | `SubscriptionTwitter`, `SubscriptionTwitterSearch`, `SubscriptionPocket`, `SubscriptionWeather`, `SubscriptionGGuide`, `SubscriptionChanToru`, `PublishTwitter`, `PublishPocket`, `PublishHipchat`, `PublishGoogleCalendar` |
+| Supported (external) | 10 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper`, `PublishAmazonS3` |
+| Needs rework | 1 | `PublishHatenaBookmark` |
 
-Forty-five plugins, of which the S3 path of `StoreFile` is counted with the
-Supported row and noted separately in section 6.4.
+Thirty-four plugins. Every one of them either runs, or names the one thing it
+needs from the operator; the single exception says what is wrong with it and
+what fixing it would take.
 
-A Recipe using only the first two rows is a Recipe that can be expected to run.
+`spec/doc/plugins_catalogue_spec.rb` holds this table to the files in
+`plugins/`: an entry with no file, a file with no entry, and a count that has
+been left behind by an edit are all failures of the ordinary test suite.
+
+## 8. Plugins that were removed
+
+Eleven plugins were removed in v26.08 rather than kept as history. Each one
+talked to a service that has shut down, or through an API that has been
+withdrawn with no replacement that a plugin this size can reach:
+
+| Removed | Why |
+| --- | --- |
+| `SubscriptionTwitter`, `SubscriptionTwitterSearch`, `PublishTwitter` | Written against the `twitter` gem's version 4 interface and against `twitter.com` markup from 2014. The site is X, the gem's classes are gone, and the current API has no free tier — posting and searching are billed per call. |
+| `SubscriptionPocket`, `PublishPocket` | Pocket was shut down by Mozilla on 8 July 2025 and its API with it. |
+| `PublishHipchat` | Atlassian discontinued HipChat and shut the service down in February 2019; there is no endpoint. |
+| `PublishGoogleCalendar` | Speaks the Calendar GData API version 2 with ClientLogin, shut down in November 2014 and April 2015, through a gem last published in 2009. |
+| `SubscriptionWeather` | livedoor Weather Hacks ended on 31 July 2020, through a gem last published in 2013. |
+| `SubscriptionGGuide`, `SubscriptionChanToru` | So-net's "Gガイド.テレビ王国 Chan-Toru" ended on 31 July 2020 and the business was transferred; the RSS endpoint is gone. |
+| `FilterGoogleNews` | Unwrapped a Google News link by reading whatever followed `&url=`. Google News now emits opaque `/rss/articles/…` links whose destination is only obtainable from an undocumented internal endpoint. |
+
+The reason for removing rather than marking them is in section 5: a plugin ships
+because it has a current use. Git history holds the implementations, and a
+Recipe naming one of these now fails at load with `Automatic::NoPluginError`
+before anything runs — which is a clearer answer than a plugin that runs and
+does nothing.
+
+Their integration Recipes, specs and optional dependencies went with them. The
+`xml-simple` and `nkf` dependencies also went, from plugins that were kept: see
+sections 6.2 and 6.3.
