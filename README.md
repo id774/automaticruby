@@ -596,8 +596,13 @@ Two rules worth knowing before you start:
 │       ├── environment.rb   Bundler setup for a source checkout
 │       └── version.rb
 ├── plugins/                 The shipped plugins, one directory per category
-│   ├── subscription/  custom_feed/  filter/
-│   └── store/  provide/  notify/  publish/
+│   ├── subscription/        Acquire from outside
+│   ├── custom_feed/         Build a feed from a source that is not one
+│   ├── filter/              Select, reorder, rewrite
+│   ├── store/               Persist, and drop what was seen before
+│   ├── provide/             Emit the payload elsewhere
+│   ├── notify/              Send a notification
+│   └── publish/             Send the result out, print it, or write it as a document
 ├── config/                  Example Recipes; scaffold copies these out
 ├── assets/siteinfo/         Data files plugins read
 ├── db/                      Fallback for SQLite files when ~/.automatic/db is absent
