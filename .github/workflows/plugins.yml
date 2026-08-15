@@ -20,7 +20,13 @@ name: Optional plugin dependencies
 on:
   push:
     branches: ['**']
+    paths-ignore:
+      - '**/*.md'
+      - 'doc/**'
   pull_request:
+    paths-ignore:
+      - '**/*.md'
+      - 'doc/**'
   workflow_dispatch:
 
 permissions:
