@@ -415,9 +415,18 @@ A plugin that fetches over HTTP calls `Automatic::Http`:
 
 ```ruby
 body = Automatic::Http.read(url)          # the body, or an exception
+Automatic::Http.open(url) { |io| ... }    # the stream, for a caller that wants it
 Automatic::Http.uri(url)                  # a validated URI, or an exception
 Automatic::Http.fetchable?(url)           # for skipping an item rather than failing
 ```
+
+`read` returns a string that `open-uri` has already applied an encoding to,
+whether or not the response declared one: a page served as `text/html` with no
+charset comes back tagged UTF-8 because that is the fallback, not because the
+page said so. A plugin that hands the body to an HTML parser wants `open`
+instead, because a parser given the stream reads the `meta` charset for itself
+and a parser given the string believes the tag. `FilterFullFeed` is the worked
+example; the difference there was a whole article in mojibake.
 
 It is a helper and not a client: it opens the URL through `open-uri` with the
 scheme restricted to HTTP and HTTPS, a connect and a read timeout, a bounded
@@ -869,6 +878,33 @@ be refreshed from its origin and its newest entries are from 2013. The plugin
 works; how well it works depends on whether the sites you read are in that
 snapshot and still laid out the same way. Supplying your own file in
 `~/.automatic/assets/siteinfo/` is the way to keep it useful.
+
+Three things follow from the database being that old, and the plugin now
+accounts for each:
+
+- **A link matches under either scheme.** 3,448 of the 3,504 usable records
+  anchor on a scheme and all but twenty of those say `^http://`. The sites they
+  name have since moved to HTTPS, which is what a feed hands over, so matching
+  the link as it stands matched almost nothing and the filter quietly did
+  nothing at all. A record describes a site's layout, not how it is
+  transported, so the link is tried under both. Only the match is rewritten;
+  the page is fetched from the link the feed gave.
+- **A record that selects nothing leaves the summary alone.** A site redesigned
+  since its XPath was written selects no nodes, and putting that empty result
+  into the item replaced a perfectly good summary with an empty description.
+  The item keeps what it arrived with, and the miss is logged at `warn` with
+  the XPath that missed.
+- **The page's own encoding is believed before the record's.** The page is
+  parsed from the stream, so a charset in a `meta` tag is read even when the
+  response declared none. A record's `enc` is the fallback for a page that
+  declares nothing anywhere — 1,186 records carry one, mostly EUC-JP and
+  Shift_JIS — and an `enc` naming an encoding Ruby does not have is ignored
+  rather than raised. What comes out is UTF-8 either way.
+
+A record with no URL pattern, no XPath, or a pattern that is not a regular
+expression is dropped when the file is loaded rather than being allowed to fail
+a match later; an empty pattern would otherwise match every link in the feed.
+The remaining patterns are compiled once, not once per item.
 
 #### FilterGithubFeed — **Supported**
 

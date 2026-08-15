@@ -244,8 +244,11 @@ what is fetched.
 The first two use Ruby's bundled `rss` library. That is the reason the pipeline
 value has the shape it has.
 
-- `Http.read(url)` fetches a URL and returns the body; `Http.uri(url)` returns
-  a validated URI and `Http.fetchable?(url)` answers whether there is one.
+- `Http.read(url)` fetches a URL and returns the body and `Http.open(url)`
+  yields the stream, for a caller — an HTML parser, which detects a page's
+  encoding for itself — that would rather not be handed a decoded string;
+  `Http.uri(url)` returns a validated URI and `Http.fetchable?(url)` answers
+  whether there is one.
 
 `Automatic::Http` exists because the decisions a fetch implies — which schemes
 are allowed, how long to wait, how many redirects to follow, what to send as a
