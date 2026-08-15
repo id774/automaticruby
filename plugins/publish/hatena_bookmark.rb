@@ -5,108 +5,123 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 22, 2012
-# Updated::     Jan 15, 2014
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
+#
+# STATUS: Needs rework. This speaks the WSSE AtomPub interface, which Hatena
+# has superseded with an OAuth one. The service and the bookmarking API are
+# both current; this client is not, and restoring it means the current
+# endpoint and the current authentication rather than a change of a few lines.
+# See doc/PLUGINS.md section 6.7.
+#
+# The transport was corrected in the meantime: the request is made over HTTPS,
+# so that an operator who runs this does not put a password digest on the wire
+# in the clear. That is a defect worth not shipping whatever the plugin's
+# status is; it is not a claim that the plugin works.
+
+require 'digest/sha1'
+require 'net/http'
+require 'securerandom'
+require 'time'
+require 'uri'
 
 module Automatic::Plugin
   class HatenaBookmark
-    require 'rubygems'
-    require 'time'
-    require 'digest/sha1'
-    require 'net/http'
-    require 'uri'
-    #require 'nkf'
+    ENDPOINT = 'https://b.hatena.ne.jp/atom/post'
+    OPEN_TIMEOUT = 10
+    READ_TIMEOUT = 30
 
     attr_accessor :user
 
     def initialize
-      @user = {
-        "hatena_id" => "",
-        "password"  => ""
-      }
+      @user = { 'hatena_id' => '', 'password' => '' }
     end
 
     def wsse(hatena_id, password)
-      # Unique value
-      nonce = [Time.now.to_i.to_s].pack('m').gsub(/\n/, '')
-      now = Time.now.utc.iso8601
+      nonce  = SecureRandom.random_bytes(16)
+      now    = Time.now.utc.iso8601
+      digest = [Digest::SHA1.digest(nonce + now + password.to_s)].pack('m0')
 
-      # Base64 encoding for SHA1 Digested strings
-      digest = [Digest::SHA1.digest(nonce + now + password)].pack("m").gsub(/\n/, '')
-
-      {'X-WSSE' => sprintf(
-                           %Q<UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s">,
-                           hatena_id, digest, nonce, now)
-      }
+      { 'X-WSSE' => format('UsernameToken Username="%s", PasswordDigest="%s", ' \
+                           'Nonce="%s", Created="%s"',
+                           hatena_id, digest, [nonce].pack('m0'), now) }
     end
 
-    def toXml(link, summary)
-      %Q(
-      <entry xmlns="http://purl.org/atom/ns#">
-      <title>dummy</title>
-      <link rel="related" type="text/html" href="#{link}" />
-      <summary type="text/plain">#{summary}</summary>
-      </entry>
-    )
+    def to_xml(link, summary)
+      <<~XML
+        <entry xmlns="http://purl.org/atom/ns#">
+        <title>dummy</title>
+        <link rel="related" type="text/html" href="#{link}" />
+        <summary type="text/plain">#{summary}</summary>
+        </entry>
+      XML
     end
 
-    def post(b_url, b_comment)
-      Automatic::Log.puts("info", "Bookmarking: #{b_url}")
-      url = "http://b.hatena.ne.jp/atom/post"
-      header = wsse(@user["hatena_id"], @user["password"])
-      uri = URI.parse(url)
-      proxy_class = Net::HTTP::Proxy(ENV["PROXY"], 8080)
-      http = proxy_class.new(uri.host)
-      http.start { |http|
-        # b_url = NKF.nkf('-w', b_url)
-        # b_comment = NKF.nkf('-w', b_comment)
-        res = http.post(uri.path, toXml(b_url, b_comment), header)
-        if res.code == "201" then
-          message = "Success: #{b_url}"
-          message += " Comment: #{b_comment}" unless b_comment.nil?
-          Automatic::Log.puts(:info, message)
-        else
-          Automatic::Log.puts(:error, "#{res.code} Error: #{b_url}")
-        end
-      }
+    def post(url, comment)
+      Automatic::Log.puts('info', "Bookmarking: #{url}")
+      uri     = URI.parse(ENDPOINT)
+      request = Net::HTTP::Post.new(uri.path, wsse(@user['hatena_id'], @user['password']))
+      request.body = to_xml(url, comment)
+
+      response = start(uri) { |http| http.request(request) }
+      log(response, url, comment)
+    end
+
+    private
+
+    def start(uri, &block)
+      proxy = Net::HTTP.Proxy(ENV.fetch('PROXY', nil), 8080)
+      proxy.start(uri.host, uri.port,
+                  use_ssl: true,
+                  open_timeout: OPEN_TIMEOUT,
+                  read_timeout: READ_TIMEOUT, &block)
+    end
+
+    def log(response, url, comment)
+      if response.code == '201'
+        message = "Success: #{url}"
+        message += " Comment: #{comment}" unless comment.nil?
+        Automatic::Log.puts(:info, message)
+      else
+        Automatic::Log.puts(:error, "#{response.code} Error: #{url}")
+      end
     end
   end
 
   class PublishHatenaBookmark
     attr_accessor :hb
 
-    def initialize(config, pipeline=[])
-      @config = config
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
 
       @hb = HatenaBookmark.new
       @hb.user = {
-        "hatena_id" => @config['username'],
-        "password"  => @config['password']
+        'hatena_id' => @config['username'],
+        'password'  => @config['password']
       }
     end
 
     def run
-      @pipeline.each {|feeds|
-        unless feeds.nil?
-          feeds.items.each {|feed|
-            hb.post(rewrite(feed.link), nil)
-            sleep ||= @config['interval'].to_i
-          }
+      @pipeline.each do |feeds|
+        next if feeds.nil?
+
+        feeds.items.each do |feed|
+          hb.post(absolute(feed.link), nil)
+          sleep(@config['interval'].to_i)
         end
-      }
+      end
       @pipeline
     end
 
     private
-    def rewrite(string)
-      if /^https?:\/\/.*$/ =~ string
-        return string
-      elsif /^\/\/.*$/ =~ string
-        return "http:" + string
-      else
-        return "http://" + string
-      end
+
+    def absolute(link)
+      string = link.to_s
+      return string if string.match?(%r{\Ahttps?://})
+      return "https:#{string}" if string.start_with?('//')
+
+      "https://#{string}"
     end
   end
 end

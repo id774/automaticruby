@@ -65,7 +65,7 @@ describe Automatic::Plugin::SubscriptionTumblr do
       Automatic::Plugin::SubscriptionTumblr.new(
         { 'urls' => ["invalid_url"],
           'pages' => 3,
-          'interval' => 1,
+          'interval' => 0,
           'retry' => 2
         }
       )
@@ -73,4 +73,51 @@ describe Automatic::Plugin::SubscriptionTumblr do
 
     its(:run) { should be_empty }
   end
+end
+
+# The examples below read a page rather than reach one, so they run without a
+# network -- but the reading is FeedParser.parse_html, which needs nokogiri.
+# That gem is in the Gemfile's optional :plugins group, which the default
+# suite does not install. See doc/POLICY.md section 5.
+if AutomaticSpec.optional_dependency?('nokogiri')
+describe Automatic::Plugin::SubscriptionTumblr do
+  let(:page) {
+    '<a href="http://example.tumblr.com/post/1">one</a>' \
+    '<a href="https://elsewhere.example/x">two</a>'
+  }
+
+  before { Automatic::Http.stub(:read).and_return(page) }
+
+  # A theme's page carries the blog's own posts and a great deal else. A link
+  # that leaves the blog's host is blanked rather than removed, which is the
+  # pipeline's way of saying "not applicable".
+  it "blanks the links that leave the blog's host" do
+    plugin = Automatic::Plugin::SubscriptionTumblr.new(
+      'urls' => ['http://example.tumblr.com'], 'interval' => 0
+    )
+    links = plugin.run[0].items.map(&:link)
+    links.compact.should == ['http://example.tumblr.com/post/1']
+    links.should have(2).links
+  end
+
+  it "walks back through the pages the settings ask for" do
+    Automatic::Http.should_receive(:read).
+      with('http://example.tumblr.com').ordered.and_return(page)
+    Automatic::Http.should_receive(:read).
+      with('http://example.tumblr.com/page/2').ordered.and_return(page)
+    Automatic::Http.should_receive(:read).
+      with('http://example.tumblr.com/page/3').ordered.and_return(page)
+
+    Automatic::Plugin::SubscriptionTumblr.new(
+      'urls' => ['http://example.tumblr.com'], 'pages' => 3, 'interval' => 0
+    ).run.should have(3).feeds
+  end
+
+  it "fetches the blog's own page only where no page count is given" do
+    Automatic::Http.should_receive(:read).once.and_return(page)
+    Automatic::Plugin::SubscriptionTumblr.new(
+      'urls' => ['http://example.tumblr.com'], 'interval' => 0
+    ).run.should have(1).feed
+  end
+end
 end

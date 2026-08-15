@@ -5,45 +5,42 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Sep 18, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class SubscriptionLink
-    require 'open-uri'
-    require 'rss'
-
-    def initialize(config, pipeline=[])
-      @config = config
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
     end
 
+    # Returns only what it fetched, discarding any incoming pipeline.
     def run
-      @return_feeds = []
-      @config['urls'].each {|url|
-        retries = 0
-        retry_max = @config['retry'].to_i || 0
-        begin
-          create_rss(URI::RFC2396_Parser.new.escape(url))
-        rescue
-          retries += 1
-          Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault in parsing: #{url}")
-          sleep ||= @config['interval'].to_i
-          retry if retries <= retry_max
-        end
-      }
-      @return_feeds
+      Array(@config['urls']).each_with_object([]) do |url, feeds|
+        rss = fetch(url)
+        feeds << rss unless rss.nil?
+      end
     end
 
     private
 
-    def create_rss(url)
-      Automatic::Log.puts("info", "Parsing Link: #{url}")
-      html = URI.open(url).read
-      unless html.nil?
-        rss = Automatic::FeedParser.parse_html(html)
-        sleep ||= @config['interval'].to_i
-        @return_feeds << rss
+    def fetch(url)
+      retries   = 0
+      retry_max = @config['retry'].to_i
+      begin
+        Automatic::Log.puts('info', "Parsing Link: #{url}")
+        rss = Automatic::FeedParser.parse_html(Automatic::Http.read(url))
+        sleep(@config['interval'].to_i)
+        rss
+      rescue StandardError => e
+        retries += 1
+        Automatic::Log.puts('error',
+                            "ErrorCount: #{retries}, Fault in parsing: #{url}, #{e.message}")
+        return nil if retries > retry_max
+
+        sleep(@config['interval'].to_i)
+        retry
       end
     end
   end

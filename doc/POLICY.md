@@ -61,7 +61,8 @@ general policy would otherwise ask for.
    is configured in CI.
 7. **A plugin that cannot work is never simulated into working.** Stubbing a
    dead service to make a test pass, or to make the catalogue look better, is
-   forbidden outright. Marking it unsupported is the correct outcome.
+   forbidden outright. Removing the plugin is the correct outcome. See
+   section 4.
 8. **No credential is committed**, in a Recipe, an example, a fixture or a test,
    and none is written to the log.
 9. **Historical release history is not rewritten.** Past versions and their
@@ -75,8 +76,9 @@ general policy would otherwise ask for.
 - Simple comes before clever. Common work should fit in a short Recipe, and a
   new abstraction needs a concrete problem the existing plugin contract cannot
   solve.
-- Documentation examples must run. Supported paths receive maintenance priority
-  over historical integrations that need rework or are unsupported.
+- Documentation examples must run, and the Quick Start uses Supported plugins
+  only. Supported paths receive maintenance priority over integrations that
+  need rework.
 
 - Prefer the smallest change that solves the problem. A pipeline that has run in
   someone's `cron` for a decade has earned the benefit of the doubt.
@@ -102,7 +104,7 @@ lib/automatic.rb  ->  recipe.rb  ->  pipeline.rb
       |                                  v
       |                        Automatic::Plugin::*
       v                                  |
-log.rb   feed_maker.rb   feed_parser.rb  |
+log.rb  feed_maker.rb  feed_parser.rb  http.rb
       ^----------------------------------+
 ```
 
@@ -115,11 +117,12 @@ Dependency points one way and there is no edge back up:
   under `lib/automatic/` other than `cli.rb` may reference it.
 - **`Pipeline` knows how to find and call a plugin; it knows no plugin.** A
   reference to a plugin class name in the framework is a design error.
-- **A plugin knows `Log`, `FeedMaker`, `FeedParser` and its own libraries.** It
-  does not know another plugin, does not know the CLI, and does not reach into
-  `Automatic` for directories other than through the helpers provided.
-- **`Log`, `FeedMaker` and `FeedParser` are leaves.** They depend on nothing
-  else in this repository.
+- **A plugin knows `Log`, `FeedMaker`, `FeedParser`, `Http` and its own
+  libraries.** It does not know another plugin, does not know the CLI, and does
+  not reach into `Automatic` for directories other than through the helpers
+  provided.
+- **`Log`, `FeedMaker`, `FeedParser` and `Http` are leaves.** They depend on
+  nothing else in this repository.
 - A new responsibility goes to the part that owns it. Where it appears to belong
   to two, the boundary is wrong and is corrected, rather than the code being
   written across it.
@@ -134,9 +137,8 @@ Dependency points one way and there is no edge back up:
 - The framework does not inspect the pipeline between plugins.
 - A plugin does not modify framework state. It does not set `Automatic.root_dir`
   or `Automatic.user_dir`, and it does not change the log level.
-- Plugin-to-plugin dependency is avoided. The one existing case,
-  `SubscriptionChanToru` on `SubscriptionGGuide`, is explicit and is not a
-  pattern to extend.
+- Plugin-to-plugin dependency is avoided. A plugin that wants another plugin's
+  result is a Recipe with two entries in it.
 - Shared plugin code that the framework does not use stays under `plugins/`, not
   in `lib/`. `plugins/store/database.rb` is where it is for that reason.
 
@@ -222,8 +224,14 @@ Dependency points one way and there is no edge back up:
   documentation says to set it. Scraping politely is a requirement, not a
   courtesy.
 - A URL that comes from a setting or from feed content is escaped before use,
-  and is never interpolated into a shell command without the operator having
-  named it deliberately.
+  and is never interpolated into a shell command. An external command is run as
+  an argument vector.
+- **A URL that comes from feed content is external input.** It is fetched
+  through `Automatic::Http`, which restricts the scheme to HTTP and HTTPS,
+  because `URI.open` on such a string will read a local file as readily as an
+  article.
+- Every request has a connect and a read timeout. An unattended run that hangs
+  is a failure mode with no upper bound on its cost.
 
 ### 1.11 Security and credentials
 
@@ -403,27 +411,59 @@ repository level only; see section 10.
 
 ---
 
-## 4. Deprecated and broken plugins
+## 4. The life of a plugin
 
 Plugins outlive the services they talk to. The policy for what happens then:
 
-- **A plugin is not deleted for being old.** These are the record of what the
-  framework was used for, and several are usable as templates for a replacement.
+- **A shipped plugin has a current practical use.** That is the condition for
+  being in the gem, and it is a condition that has to keep being met, not one
+  met once. Having been useful is not the test.
 - **A plugin is classified, in `PLUGINS.md` section 6**, as Supported, Supported
-  (external), Needs rework or Unsupported, with the reason. The classification
-  is the deliverable; the code is left alone.
-- **A dead plugin is never faked into life.** No stub of a shut-down service, no
-  mock that makes an integration look alive, no test that asserts against a
-  simulation. This is Invariant 7 and it has no exceptions.
-- A plugin whose gem cannot be installed on a supported Ruby has its gem removed
-  from the development dependencies, and its spec then does not load. That
-  absence is the honest signal and is not worked around.
-- Restoring a plugin to a service's current API is a separate change, one plugin
-  at a time, with the catalogue entry updated in the same commit.
-- **Deleting a plugin** requires that its service is gone, that no replacement
-  is intended, and that the removal is recorded in `VERSIONS` naming the plugin
-  so that an operator whose Recipe breaks can find out why. It is not done as
-  part of a general clean-up.
+  (external) or Needs rework, with the reason. There is no status meaning
+  "does not work and never will"; a plugin in that position is removed.
+- **A dead integration is never faked into life.** No stub of a shut-down
+  service, no mock that makes an integration look alive, no test that asserts
+  against a simulation. This is Invariant 7 and it has no exceptions. If a
+  plugin can only be made to look supported by simulating what it talks to,
+  what it needs is deletion, not a double.
+- **Unsupported code is not kept for preservation.** Git history holds every
+  implementation this project ever shipped, and holds it without installing it
+  on anyone's machine or listing it in a catalogue an operator reads for
+  guidance. A plugin retained only so that its code exists somewhere is
+  retained for a reason the version control system already covers.
+- **The judgement is evidenced.** "Nobody uses that any more" is not a reason.
+  The service's own site, its API documentation or its published shutdown
+  notice is, and the reason goes in the catalogue entry or in the removal
+  record. Where the evidence cannot be obtained, the plugin is classified
+  **Needs rework** and kept: the failure mode of guessing is deleting something
+  that works.
+- **Needs rework means restoration is realistic.** A capability the service
+  still offers, reachable by a current API, with the work amounting to a
+  migration rather than a new project. A plugin whose service is gone is not
+  Needs rework; it is removed.
+- **Restoring a plugin to a service's current API** is a separate change, one
+  plugin at a time, with the catalogue entry updated in the same commit. Where
+  the current API forces a credential format the old Recipe cannot express,
+  that is a breaking change and is documented as one rather than hidden behind
+  a translation.
+- **Removing a plugin removes all of it**: implementation, specs, example and
+  integration Recipes, catalogue entry, and any optional dependency nothing
+  else needs. A class left behind to raise "this no longer works" is not a
+  courtesy; the loader's `NoPluginError` says the same thing earlier and
+  without shipping code.
+- **A removal is recorded in `VERSIONS`** in enough detail that an operator
+  whose Recipe breaks can find out why, and the reasons are kept in
+  `PLUGINS.md`. Removals are batched into a release rather than trickled, so
+  that an upgrade has one list to read.
+- **A modernized plugin keeps its Recipe's meaning.** Class names, setting
+  names and defaults are not changed for tidiness; where a fix makes a plugin
+  behave as its documentation always said it did, that is still a behaviour
+  change and the catalogue entry says so.
+- **A Supported plugin has deterministic local tests.** They cover this side of
+  the boundary — settings, request construction, serialization, response
+  handling, error behaviour — and reach no network, need no credential and
+  require no running service. The availability of somebody else's API is not
+  something a unit test can assert and is not something required CI waits on.
 
 ---
 
@@ -621,9 +661,9 @@ manager, plugin manifest or resolver is introduced beyond it.
   operator's bundle, and tight enough to exclude a major version this code has
   not been checked against.
 - A gem no longer used by anything committed here is removed.
-- A gem whose service no longer exists is removed from the development
-  dependencies, and the plugin using it is reclassified in `PLUGINS.md` rather
-  than deleted.
+- A gem whose service no longer exists is removed, along with the plugin that
+  needed it; see section 4. An optional group left with nothing to install is
+  deleted from the `Gemfile` in the same change.
 - **Nothing is vendored.** Dependencies come from RubyGems, which keeps their
   licences theirs.
 

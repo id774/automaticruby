@@ -98,10 +98,10 @@ Gem::Specification.new do |spec|
   # groups, doc/DEPLOYMENT.md and doc/POLICY.md section 9.1.
   #
   # rexml and rss left the standard library and became gems over the 3.x
-  # series, and nkf followed after 3.3. Each gem listed here is listed because
-  # a file in lib/ requires it, and a library's move out of the standard
-  # library is not by itself a reason to declare it: nkf is a plugin's
-  # dependency and is in the Gemfile's optional groups instead.
+  # series. Each gem listed here is listed because a file in lib/ requires it,
+  # and a library's move out of the standard library is not by itself a reason
+  # to declare it: a library only a plugin needs goes in the Gemfile's optional
+  # groups instead.
   spec.add_dependency 'activesupport', '>= 7.1', '< 9.0'   # plugin loader, XML subscription
   spec.add_dependency 'hashie',        '>= 4.0', '< 6.0'   # Recipe
   spec.add_dependency 'rexml',         '>= 3.2', '< 4.0'   # OPML parser

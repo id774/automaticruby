@@ -54,11 +54,6 @@ group :plugins, :sanitize, optional: true do
   gem 'sanitize'
 end
 
-# FilterDescriptionLink, which normalizes a fetched page's encoding with it.
-group :plugins, :nkf, optional: true do
-  gem 'nkf'
-end
-
 # The autodiscovery and inspect subcommands. No plugin and no Recipe uses it.
 group :plugins, :autodiscovery, optional: true do
   gem 'feedbag', '>= 1.0', '< 2.0'
@@ -77,10 +72,9 @@ group :fluentd, optional: true do
   gem 'fluent-logger'     # PublishFluentd and ProvideFluentd, with a Fluentd instance
 end
 
-group :svn_log, optional: true do
-  gem 'xml-simple'        # CustomFeedSVNLog, with the svn command
+group :s3, optional: true do
+  gem 'aws-sdk-s3'        # PublishAmazonS3 and the s3 path of StoreFile, with a bucket
 end
 
-# PublishAmazonS3 and the s3n:// path of StoreFile call AWS::S3, which only
-# AWS SDK for Ruby v1 provided. No currently published gem satisfies them, so
-# there is no group to select; they need rework. See doc/PLUGINS.md.
+# CustomFeedSVNLog needs the svn command and no gem: it reads `svn log --xml`
+# with REXML, which is a runtime dependency of the framework already.

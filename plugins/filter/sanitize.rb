@@ -5,47 +5,40 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jun 20, 2013
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class FilterSanitize
     Automatic.require_optional('sanitize', needed_by: 'FilterSanitize')
 
-    def initialize(config, pipeline=[])
-      @config = config
+    MODES = {
+      'basic'   => Sanitize::Config::BASIC,
+      'relaxed' => Sanitize::Config::RELAXED
+    }.freeze
+
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
-      case @config['mode']
-        when "basic"
-          @mode = Sanitize::Config::BASIC
-        when "relaxed"
-          @mode = Sanitize::Config::RELAXED
-        else
-          @mode = Sanitize::Config::RESTRICTED
-      end
+      @mode     = MODES.fetch(@config['mode'].to_s, Sanitize::Config::RESTRICTED)
     end
 
+    # Strips HTML from descriptions.
     def run
-      @return_feeds = []
-      @pipeline.each {|feeds|
-        unless feeds.nil?
-          feeds.items.each {|feed|
-            feed = sanitize(feed)
-          }
-          @return_feeds << feeds
-        end
-      }
-      @return_feeds
+      @pipeline.each_with_object([]) do |feeds, returned|
+        next if feeds.nil?
+
+        feeds.items.each { |item| sanitize(item) }
+        returned << feeds
+      end
     end
 
     private
-    def sanitize(feed)
-      begin
-        feed.description = Sanitize.fragment(feed.description, @mode) unless feed.description.nil?
-      rescue
-        Automatic::Log.puts("warn", "Undefined field detected in feed.")
-      end
-      feed
+
+    def sanitize(item)
+      item.description = Sanitize.fragment(item.description, @mode) unless item.description.nil?
+    rescue StandardError => e
+      Automatic::Log.puts('warn', "Undefined field detected in feed: #{e.message}")
     end
   end
 end

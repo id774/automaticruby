@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 # Name::        Automatic::Plugin::Store::File
 # Author:       id774 (More info: http://id774.net)
@@ -6,97 +5,122 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 28, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require 'fileutils'
-require 'open-uri'
 require 'uri'
 
 module Automatic::Plugin
   class StoreFile
+    # A link with either scheme is fetched from S3 rather than over HTTP.
+    # `s3n` is what Recipes written for this plugin use; `s3` is the spelling
+    # everything else uses and is accepted as well.
+    S3_SCHEMES = %w[s3 s3n].freeze
 
-    def initialize(config, pipeline=[])
-      @config = config
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
-      # The AWS SDK is required here rather than at the top of the file, so
-      # that downloading over HTTP needs neither the gem nor a bucket. This
-      # branch is written against AWS SDK for Ruby v1 and needs rework for the
-      # current SDK; see doc/PLUGINS.md section 6.4.
-      unless @config['bucket_name'].nil?
-        require 'aws-sdk'
-        s3 = AWS::S3.new(
-          :access_key_id => @config['access_key'],
-          :secret_access_key => @config['secret_key']
-        )
-        @bucket = s3.buckets[@config['bucket_name']]
-      end
-      @return_feeds = []
     end
 
+    # Downloads what each link points at and rewrites the link to a file URI,
+    # which is how PublishAmazonS3 later knows it has a local file.
     def run
-      @pipeline.each {|feeds|
-        unless feeds.nil?
-          feeds.items.each {|feed|
-            unless feed.link.nil?
-              Automatic::Log.puts("info", "Downloading File: #{feed.link}")
-              FileUtils.mkdir_p(@config['path']) unless FileTest.exist?(@config['path'])
-              retries = 0
-              retry_max = @config['retry'].to_i || 0
-              begin
-                retries += 1
-                feed.link = get_file(feed.link)
-                sleep ||= @config['interval'].to_i
-                @return_feeds << feed
-              rescue
-                Automatic::Log.puts("error", "ErrorCount: #{retries}, Fault during file download.")
-                sleep ||= @config['interval'].to_i
-                retry if retries <= retry_max
-              end
-            end
-          }
+      stored = []
+      @pipeline.each do |feeds|
+        next if feeds.nil?
+
+        feeds.items.each do |feed|
+          next if feed.link.nil?
+
+          stored << feed if store(feed)
         end
-      }
+      end
+
       @pipeline = []
-      @pipeline << Automatic::FeedMaker.create_pipeline(@return_feeds) if @return_feeds.length > 0
+      @pipeline << Automatic::FeedMaker.create_pipeline(stored) unless stored.empty?
       @pipeline
     end
 
     private
 
+    def store(feed)
+      Automatic::Log.puts('info', "Downloading File: #{feed.link}")
+      FileUtils.mkdir_p(@config['path'].to_s)
+
+      retries   = 0
+      retry_max = @config['retry'].to_i
+      begin
+        feed.link = get_file(feed.link)
+        sleep(@config['interval'].to_i)
+        true
+      rescue StandardError => e
+        retries += 1
+        Automatic::Log.puts('error',
+                            "ErrorCount: #{retries}, Fault during file download: #{e.message}")
+        return false if retries > retry_max
+
+        sleep(@config['interval'].to_i)
+        retry
+      end
+    end
+
     def get_file(url)
       uri = URI.parse(url)
-      case uri.scheme
-      when "s3n"
-        return_path = get_aws(uri)
-      else
-        return_path = wget(uri, url)
-      end
-      Automatic::Log.puts("info", "Saved File: #{return_path}")
-      "file://" + return_path
+      path = S3_SCHEMES.include?(uri.scheme) ? from_s3(uri) : download(url)
+      Automatic::Log.puts('info', "Saved File: #{path}")
+      "file://#{path}"
     end
 
-    def wget(uri, url)
-      filename = File.basename(uri.path)
-      filepath = File.join(@config['path'], filename)
-      URI.open(url) {|source|
-        File.open(filepath, "w+b") { |o|
-          o.print(source.read)
-        }
-      }
-      filepath
+    # Only HTTP and HTTPS are fetched: a link arrives from a feed, which is to
+    # say from outside, and `file://` is not something a store plugin should
+    # be talked into reading.
+    def download(url)
+      path = local_path(Automatic::Http.uri(url).path)
+      File.binwrite(path, Automatic::Http.read(url))
+      path
     end
 
-    def get_aws(uri)
-      filename = File.basename(uri.path)
-      filepath = File.join(@config['path'], filename)
-      object = @bucket.objects[uri.path]
-      File.open(filepath, 'wb') do |file|
-        object.read do |chunk|
-           file.write(chunk)
-        end
+    # AWS SDK for Ruby v3, one gem for one service. The bucket is the Recipe's
+    # `bucket_name` where it has one, so that an existing Recipe keeps its
+    # meaning, and the link's own host otherwise. Credentials are the Recipe's
+    # where it carries them and the SDK's default chain -- environment,
+    # profile, instance role -- where it does not, which is the way to run
+    # this without a secret in a file.
+    def from_s3(uri)
+      path = local_path(uri.path)
+      s3.get_object(bucket: bucket(uri), key: uri.path.sub(%r{\A/}, ''),
+                    response_target: path)
+      path
+    end
+
+    def s3
+      @s3 ||= begin
+        Automatic.require_optional('aws-sdk-s3', needed_by: 'the S3 path of StoreFile')
+        Aws::S3::Client.new(**client_options)
       end
-      filepath
+    end
+
+    def client_options
+      options = {}
+      options[:region] = @config['region'].to_s unless @config['region'].nil?
+      unless @config['access_key'].nil?
+        options[:access_key_id]     = @config['access_key'].to_s
+        options[:secret_access_key] = @config['secret_key'].to_s
+      end
+      options
+    end
+
+    def bucket(uri)
+      name = @config['bucket_name'].to_s
+      name.empty? ? uri.host.to_s : name
+    end
+
+    def local_path(remote_path)
+      name = File.basename(remote_path.to_s)
+      raise ArgumentError, "no file name in #{remote_path}" if name.empty? || name == '/'
+
+      File.join(@config['path'].to_s, name)
     end
   end
 end

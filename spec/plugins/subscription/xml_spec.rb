@@ -75,7 +75,7 @@ describe Automatic::Plugin::SubscriptionXml do
     subject {
       Automatic::Plugin::SubscriptionXml.new(
         { 'urls' => ["invalid_url"],
-          'interval' => 1,
+          'interval' => 0,
           'retry' => 1
         }
       )

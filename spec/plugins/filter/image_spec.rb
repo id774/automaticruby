@@ -36,32 +36,62 @@ describe Automatic::Plugin::FilterImage do
       its(:run) { should have(1).feeds }
 
       specify {
-        subject.run
-        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
+        returned = subject.run
+        returned[0].items[0].link.
         should == "http://id774.net/images/link_1.jpg"
-        subject.instance_variable_get(:@return_feeds)[0].items[1].link.
+        returned[0].items[1].link.
         should == "http://id774.net/images/link_2.jpg"
-        subject.instance_variable_get(:@return_feeds)[0].items[2].link.
+        returned[0].items[2].link.
         should == "http://id774.net/images/link_3.JPG"
-        subject.instance_variable_get(:@return_feeds)[0].items[3].link.
+        returned[0].items[3].link.
         should == "http://id774.net/images/link_4.png"
-        subject.instance_variable_get(:@return_feeds)[0].items[4].link.
+        returned[0].items[4].link.
         should == "http://id774.net/images/link_5.jpeg"
-        subject.instance_variable_get(:@return_feeds)[0].items[5].link.
+        returned[0].items[5].link.
         should == "http://id774.net/images/link_6.PNG"
-        subject.instance_variable_get(:@return_feeds)[0].items[6].link.
+        returned[0].items[6].link.
         should be_nil
-        subject.instance_variable_get(:@return_feeds)[0].items[7].link.
+        returned[0].items[7].link.
         should == "http://id774.net/images/link_8.gif"
-        subject.instance_variable_get(:@return_feeds)[0].items[8].link.
+        returned[0].items[8].link.
         should == "http://id774.net/images/link_9.GIF"
-        subject.instance_variable_get(:@return_feeds)[0].items[9].link.
+        returned[0].items[9].link.
         should == "http://id774.net/images/link_10.tiff"
-        subject.instance_variable_get(:@return_feeds)[0].items[10].link.
+        returned[0].items[10].link.
         should be_nil
-        subject.instance_variable_get(:@return_feeds)[0].items[11].link.
+        returned[0].items[11].link.
         should == "http://id774.net/images/link_11.TIFF"
       }
     end
+  end
+end
+
+describe Automatic::Plugin::FilterImage do
+  # The test is on the path rather than on the whole link, so that an image
+  # served with a query string -- which is how most of what serves images now
+  # serves them -- is recognised. webp and avif are images too.
+  context "with links of the shapes the current web serves" do
+    subject {
+      Automatic::Plugin::FilterImage.new({},
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "https://example.com/a.jpg?w=1280&v=2"
+            item "https://example.com/b.webp"
+            item "https://example.com/c.avif"
+            item "https://example.com/d.tif"
+            item "https://example.com/e.html?image=f.jpg"
+            item "https://example.com/"
+          }})}
+
+    specify {
+      subject.run[0].items.map(&:link).should == [
+        "https://example.com/a.jpg?w=1280&v=2",
+        "https://example.com/b.webp",
+        "https://example.com/c.avif",
+        "https://example.com/d.tif",
+        nil,
+        nil
+      ]
+    }
   end
 end

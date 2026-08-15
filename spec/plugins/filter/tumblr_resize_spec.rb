@@ -110,3 +110,32 @@ describe Automatic::Plugin::FilterTumblrResize do
     end
   end
 end
+
+# Tumblr has served images under two URL schemes. The size suffix above is the
+# older one, which images uploaded before 2019 still carry; everything since
+# carries the size as a path segment, and the plugin rewrites that as well.
+describe Automatic::Plugin::FilterTumblrResize do
+  context "with the current media.tumblr.com URL scheme" do
+    subject {
+      Automatic::Plugin::FilterTumblrResize.new({},
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "https://64.media.tumblr.com/aaa/bbb-1f/s540x810/ccc.jpg"
+            item "https://66.media.tumblr.com/aaa/bbb-1f/s75x75_c1/ccc.jpg"
+            item "https://64.media.tumblr.com/aaa/bbb-1f/s1280x1920/ccc.jpg"
+            item "https://example.com/not/a/tumblr/image.jpg"
+          }})}
+
+    specify {
+      returned = subject.run
+      returned[0].items[0].link.
+        should == "https://64.media.tumblr.com/aaa/bbb-1f/s1280x1920/ccc.jpg"
+      returned[0].items[1].link.
+        should == "https://66.media.tumblr.com/aaa/bbb-1f/s75x75_c1/ccc.jpg"
+      returned[0].items[2].link.
+        should == "https://64.media.tumblr.com/aaa/bbb-1f/s1280x1920/ccc.jpg"
+      returned[0].items[3].link.
+        should == "https://example.com/not/a/tumblr/image.jpg"
+    }
+  end
+end

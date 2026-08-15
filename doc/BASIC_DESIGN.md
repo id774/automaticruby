@@ -63,7 +63,7 @@ lib/automatic/recipe.rb  lib/automatic/pipeline.rb
         |                   |                  ~/.automatic/plugins/<category>/<name>.rb
         v                   v
 lib/automatic/log.rb   lib/automatic/feed_maker.rb
-        |
+        |              lib/automatic/http.rb
         v
    standard output
 ```
@@ -74,8 +74,8 @@ Dependency points downward, and there is no edge back up:
 - `Automatic::CLI` knows the framework. Nothing in the framework knows the CLI.
 - `Automatic::Pipeline` knows how to find and call a plugin. It knows no plugin.
 - A plugin knows `Automatic::Log`, `Automatic::FeedMaker`,
-  `Automatic::FeedParser` and its own libraries. It knows no other plugin, with
-  one deliberate exception noted in section 4.9.
+  `Automatic::FeedParser`, `Automatic::Http` and its own libraries. It knows no
+  other plugin.
 - `Automatic::Log` and `Automatic::FeedMaker` are leaves. They depend on nothing
   in this repository.
 
@@ -226,9 +226,10 @@ It is a module with state rather than an injected object. That is a consequence
 of plugins calling `Automatic::Log` directly, which keeps a plugin's signature
 to `(config, pipeline)`.
 
-### 4.8 `lib/automatic/feed_maker.rb` and `feed_parser.rb`
+### 4.8 `lib/automatic/feed_maker.rb`, `feed_parser.rb` and `http.rb`
 
-The adapters between "some data" and the pipeline shape.
+The adapters between "some data" and the pipeline shape, and the one way in for
+what is fetched.
 
 - `FeedParser.get_url(url)` fetches a URL and parses it as a feed.
 - `FeedParser.parse_html(html)` builds a feed whose items are the page's links,
@@ -240,8 +241,20 @@ The adapters between "some data" and the pipeline shape.
   arbitrary payload in `content_encoded`, which is the route by which the XML
   subscription plugin feeds the Fluentd provide plugin.
 
-Both use Ruby's bundled `rss` library. That is the reason the pipeline value has
-the shape it has.
+The first two use Ruby's bundled `rss` library. That is the reason the pipeline
+value has the shape it has.
+
+- `Http.read(url)` fetches a URL and returns the body; `Http.uri(url)` returns
+  a validated URI and `Http.fetchable?(url)` answers whether there is one.
+
+`Automatic::Http` exists because the decisions a fetch implies — which schemes
+are allowed, how long to wait, how many redirects to follow, what to send as a
+User-Agent — were being made separately by every plugin that fetched, mostly by
+omission. It is a helper of about twenty lines and not a client: a plugin that
+wants something else calls Ruby directly. The scheme allowlist is the part that
+earns it a file of its own, because a link in a pipeline item comes from a feed
+and `URI.open` on such a string will read a local file as readily as an
+article.
 
 ### 4.9 `plugins/` — `Automatic::Plugin::*`
 
@@ -301,8 +314,8 @@ Its specification — what it writes for each field, how HTML in a body is
 reduced, where the output goes — is in [`PLUGINS.md`](PLUGINS.md) section 6.7,
 because it is a plugin's specification and not a property of the design.
 
-Two shared pieces sit inside `plugins/` rather than in `lib/`, because they are
-plugin implementation and the framework does not use them:
+One shared piece sits inside `plugins/` rather than in `lib/`, because it is
+plugin implementation and the framework does not use it:
 
 - `plugins/store/database.rb` — the `Automatic::Plugin::Database` mixin: opens
   the SQLite database named in the Recipe, creates the table from the including
@@ -310,10 +323,6 @@ plugin implementation and the framework does not use them:
   `for_each_new_feed`, which yields only items whose key is not already stored.
   `StorePermalink` and `StoreFullText` are this mixin plus a model and a column
   list.
-- `plugins/subscription/chan_toru.rb` requires `g_guide.rb` and delegates to it.
-  This is the one plugin-to-plugin dependency, it is explicit, and it is not a
-  pattern to copy.
-
 ### 4.10 `db/`, `config/`, `assets/`
 
 Fallbacks inside the installation, used when the corresponding part of the user

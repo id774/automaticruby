@@ -5,64 +5,49 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     May  6, 2013
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class SubscriptionText
-    def initialize(config, pipeline=[])
-      @config   = config
+    # Columns of a TSV row, in order. A row with fewer columns leaves the rest
+    # unset, which is what makes a one-column file of titles a valid input.
+    COLUMNS = %w[title url description author comments].freeze
+
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
-      @return_feeds = []
     end
 
+    # Reaches no network, which is what makes this the plugin to test a
+    # Recipe's later half with. Any combination of the four keys may be given.
     def run
-      create_feed
-      @pipeline << Automatic::FeedMaker.create_pipeline(@return_feeds) if @return_feeds.length > 0
+      items = titles + urls + feeds + files
+      @pipeline << Automatic::FeedMaker.create_pipeline(items) unless items.empty?
       @pipeline
     end
 
     private
 
-    def create_feed
-      unless @config.nil?
-        @dummyfeeds = []
-        unless @config['titles'].nil?
-          @config['titles'].each {|title|
-            feed = {}
-            feed['title'] = title
-            @return_feeds << Automatic::FeedMaker.generate_feed(feed)
-          }
-        end
+    def titles
+      Array(@config['titles']).map { |title| Automatic::FeedMaker.generate_feed('title' => title) }
+    end
 
-        unless @config['urls'].nil?
-          @config['urls'].each {|url|
-            feed = {}
-            feed['url'] = url
-            @return_feeds << Automatic::FeedMaker.generate_feed(feed)
-          }
-        end
+    def urls
+      Array(@config['urls']).map { |url| Automatic::FeedMaker.generate_feed('url' => url) }
+    end
 
-        unless @config['feeds'].nil?
-          @config['feeds'].each {|feed|
-            @return_feeds << Automatic::FeedMaker.generate_feed(feed)
-          }
-        end
+    def feeds
+      Array(@config['feeds']).map { |feed| Automatic::FeedMaker.generate_feed(feed) }
+    end
 
-        unless @config['files'].nil?
-          @config['files'].each {|f|
-            File.open(File.expand_path(f)) do |file|
-              file.each_line do |line|
-                feed = {}
-                feed['title'], feed['url'], feed['description'], feed['author'],
-                feed['comments'] = line.force_encoding("utf-8").strip.split("\t")
-                @return_feeds << Automatic::FeedMaker.generate_feed(feed)
-              end
-            end
-          }
+    # Tab separated, read as UTF-8, and `~` expanded.
+    def files
+      Array(@config['files']).flat_map do |path|
+        File.foreach(File.expand_path(path), encoding: 'UTF-8').map do |line|
+          Automatic::FeedMaker.generate_feed(COLUMNS.zip(line.strip.split("\t")).to_h)
         end
       end
     end
-
   end
 end

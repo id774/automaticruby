@@ -30,8 +30,8 @@ describe Automatic::Plugin::FilterImageSource do
     describe "#run" do
       its(:run) { should have(1).feeds }
       specify {
-        subject.run
-        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
+        returned = subject.run
+        returned[0].items[0].link.
         should == "http://27.media.tumblr.com/tumblr_lzrubkfPlt1qb8vzto1_500.png"
       }
     end
@@ -51,8 +51,8 @@ describe Automatic::Plugin::FilterImageSource do
     describe "#run" do
       its(:run) { should have(1).feeds }
       specify {
-        subject.run
-        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
+        returned = subject.run
+        returned[0].items[0].link.
         should == "http://24.media.tumblr.com/tumblr_m07wttnIdy1qzoj1jo1_400.jpg"
       }
     end
@@ -69,27 +69,68 @@ describe Automatic::Plugin::FilterImageSource do
             ""
           }})}
 
+    # The page behind the link is read through Automatic::Http, which is this
+    # framework's own boundary rather than a service being simulated: the spec
+    # says what the page contains and asserts on what the plugin makes of it.
     describe "#run" do
       before do
-        subject.stub(:rewrite_link).and_return(['http://huge.png'])
+        Automatic::Http.stub(:read).
+          and_return('<img src="http://huge.png">')
       end
 
       its(:run) { should have(1).feeds }
       specify {
-        subject.run
-        subject.instance_variable_get(:@return_feeds)[0].items[0].link.
+        returned = subject.run
+        returned[0].items[0].link.
         should == 'http://huge.png'
       }
     end
 
-    describe "#imgs" do
+    describe "with several images on the page" do
       before do
-        response = Hashie::Mash.new
-        response.read = '<img src="http://a.png"><br /><img src="http://b.png">'
-        URI.stub(:open).and_return(response)
+        Automatic::Http.stub(:read).
+          and_return('<img src="http://a.png"><br /><img src="http://b.png">')
       end
 
       its(:run) { subject.run[0].items.length.should == 2 }
     end
+
+    describe "with a page whose images are relative" do
+      before do
+        Automatic::Http.stub(:read).
+          and_return("<img src='/a.png'><img src='b.png'>")
+      end
+
+      specify {
+        subject.run[0].items.map(&:link).sort.
+          should == ['http://tumblr.com/a.png', 'http://tumblr.com/b.png']
+      }
+    end
+
+    describe "when the page cannot be read" do
+      before do
+        Automatic::Http.stub(:read).and_raise(StandardError, 'no such host')
+      end
+
+      its(:run) { should have(1).feeds }
+      specify { subject.run[0].items.should be_empty }
+    end
+  end
+end
+
+describe Automatic::Plugin::FilterImageSource do
+  context "with a description quoting src with apostrophes" do
+    subject {
+      Automatic::Plugin::FilterImageSource.new({},
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://example.com/post", "",
+            "<p><img alt='x' src='http://example.com/a.png'></p>"
+          }})}
+
+    specify {
+      subject.run[0].items.map(&:link).
+        should == ['http://example.com/a.png']
+    }
   end
 end

@@ -96,7 +96,7 @@ module AutomaticSpec
   # need a service or a command as well as a gem, they are outside the
   # :plugins group for that reason, and their specs ask #plugin_available?
   # instead.
-  OPTIONAL_PLUGIN_GEMS = %w[activerecord feedbag nkf nokogiri sanitize sqlite3].freeze
+  OPTIONAL_PLUGIN_GEMS = %w[activerecord feedbag nokogiri sanitize sqlite3].freeze
 
   class << self
     # Load a plugin, or report that its dependency is absent.

@@ -13,20 +13,19 @@
 
 module Automatic
   module FeedParser
-    require 'open-uri'
     require 'rss'
-    require 'uri'
+    require 'automatic/http'
 
     # Fetch a URL and parse it as a feed. Validation is off, because feeds in
     # the wild frequently are not valid and are still readable.
+    #
+    # Fetching goes through Automatic::Http, which is where the scheme
+    # allowlist, the timeouts and the redirect limit live.
     def self.get_url(url)
       return if url.nil?
 
       Automatic::Log.puts('info', "Parsing Feed: #{url}")
-      feed = URI.parse(url).normalize
-      feed.open do |http|
-        RSS::Parser.parse(http.read, false)
-      end
+      RSS::Parser.parse(Automatic::Http.read(url), false)
     end
 
     # Build a feed whose items are the links of an HTML document. This is how

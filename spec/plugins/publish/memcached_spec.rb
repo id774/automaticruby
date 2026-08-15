@@ -5,66 +5,63 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jun 25, 2013
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-# PublishMemcached needs the optional dalli gem;
-# doc/PLUGINS.md section 6.7 classifies it as Supported (external).
-#
-# The gem is not a dependency of this project, so this spec is skipped rather
-# than stubbed; see doc/POLICY.md section 4.
+# PublishMemcached needs the dalli gem and a memcached server; doc/PLUGINS.md
+# section 6.7 classifies it as Supported (external). The gem is an optional
+# dependency in its own Gemfile group, so this spec is skipped rather than
+# stubbed where it is absent (doc/POLICY.md section 4). Where it is present,
+# what is verified is the value the plugin builds and the key it stores it
+# under -- no server is contacted.
 return unless AutomaticSpec.plugin_available?('publish/memcached')
 
 describe Automatic::Plugin::PublishMemcached do
-  context 'when feed' do
-    describe 'should put the feeds to memcached' do
-      subject {
-        Automatic::Plugin::PublishMemcached.new(
-          {
-            'host' => "localhost",
-            'port' => "11211",
-            'key'  => "rspec"
-          },
-          AutomaticSpec.generate_pipeline{
-            feed {
-              item "http://blog.id774.net/post/2012/01/30/18/", "ブログをはじめた",
-              "なぜいまブログなのか
-              
-              いままでインターネット全体に公開するブログとして、はてなダイアリーを利用してきた。それ以外のある程度まとまった文章は Facebook に書いてきた。それはそれで良かったのだけど、いろいろと思うところもあり、このたび新しくブログをはじめることにした。
-              
-              はてなダイアリーはシンタックスハイライト (プログラミング言語の色付けのこと) が充実していたので利用していた。しかし最近登場した CoffeeScript や Haml のような新しい言語には対応していない。新しくはてなブログというのも始まったが、ダイアリー以上にシンタックスハイライトが使えないようだ。
-              
-              そこで、今後インターネット上で文章を書いていくにあたりどうするか考えた。"
-              item "http://blog.id774.net/post/2012/01/30/38/", "Twitter Viewer つくった",
-              "Twitter を閲覧するための Web アプリをつくった。
-              
-              Twitter Viewer
-              
-              やっていることは至ってシンプルで RDB にためた発言をブラウザに表示させているだけである。内容は Rails の Scaffold ほとんどそのまま。 CSS はサイトローカルな Bootstrap を読み込んでいる。簡単なアプリだが、ブラウザにいちど表示させてしまえば電波が入らない地下鉄などでもゆっくり読めるので、モバイル環境で大量の発言をざっとチェックしたいときなどに使えて意外と実用的である。発言のクロールは別途おこなう必要がある。この例では Termtter の ActiveRecord プラグインを利用している。"
-              item "http://blog.id774.net/post/2012/01/30/48/", "PC-98 とエミュレータ",
-              "Facebook には少し書いたのだが、今年に入ってから 90 年代に使っていた PC-98 と呼ばれる PC を発掘したので起動した。もう 15 年前後も経っているというのに正常に利用することができて感動してしまった。あの ThinkPad ですら数年ほど電源を入れないで放置しておくと起動しないことが多いのに、さすが発売当初 40 〜 50 万円程もした高級マシンである。そんなわけで今回は PC-98 の話。
-              
-              PC-98 のソフトを使う
-              当時のソフトウェアを利用するためには以下のものが必要だ。
-              1. PC-98 エミュレータ
-              2. MS-DOS (オペレーティングシステム)
-              3. 動作させる対象のソフトウェア"
-            }
-            feed {
-              item "http://d.hatena.ne.jp/Naruhodius/20120130/1327862031", "ブログを移転しました",
-              "いままでこの「はてなダイアリー」にブログを書いてきましたが、以下のアドレスにブログを移転することにしました。このブログはもう更新されません。以下の新しいブログを購読してください。"
-            }
-          }
-        )
-      }
+  let(:cache) { double('cache') }
 
-      its (:run) {
-        fluentd = double("memcached")
-        subject.run.should have(2).feed
+  let(:pipeline) {
+    AutomaticSpec.generate_pipeline {
+      feed {
+        item 'http://blog.id774.net/post/2012/01/30/18/', 'ブログをはじめた', 'なぜいまブログなのか'
+        item 'http://blog.id774.net/post/2012/01/30/38/', 'Twitter Viewer つくった', '本文'
       }
-    end
+      feed {
+        item 'http://d.hatena.ne.jp/Naruhodius/20120130/1327862031', 'ブログを移転しました', '本文'
+      }
+    }
+  }
 
+  subject {
+    Automatic::Plugin::PublishMemcached.new(
+      { 'host' => 'localhost', 'port' => 11_211, 'key' => 'rspec' }, pipeline
+    )
+  }
+
+  before { Dalli::Client.stub(:new).and_return(cache) }
+
+  it 'stores the whole pipeline under one key, keyed by link' do
+    stored = nil
+    cache.should_receive(:set) { |key, value| key.should == 'rspec'; stored = value }
+    subject.run.should have(2).feeds
+
+    stored.keys.should have(3).links
+    stored['http://blog.id774.net/post/2012/01/30/18/'][:title].should == 'ブログをはじめた'
+  end
+
+  # `port: 11211` in a Recipe is an Integer, and building the server address by
+  # concatenation used to end the run on it.
+  it 'accepts a port written as a number or as a string' do
+    Dalli::Client.should_receive(:new).with('localhost:11211').and_return(cache)
+    cache.stub(:set)
+    subject.run
+  end
+
+  it 'logs a failure to store and returns the pipeline' do
+    cache.stub(:set).and_raise(RuntimeError, 'connection refused')
+    Automatic::Log.stub(:puts)
+    Automatic::Log.should_receive(:puts).with('warn', /connection refused/)
+    subject.run.should have(2).feeds
   end
 end

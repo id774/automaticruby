@@ -5,71 +5,73 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 28, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class FilterImageSource
-    require 'net/http'
     Automatic.require_optional('nokogiri', needed_by: 'FilterImageSource')
-    require 'open-uri'
     require 'uri'
 
-    def initialize(config, pipeline=[])
-      @config = config
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
     end
 
+    # Replaces each item with one item per image found: the images in the
+    # description, or, where it has none, the images on the page the link
+    # points at. The second case reaches the network.
     def run
-      @return_feeds = []
-      @pipeline.each {|feeds|
-        new_feeds = Array.new
-        unless feeds.nil?
-          feeds.items.each {|feed|
-            arr = rewrite_link(feed)
-            if arr.length > 0
-              arr.each {|link|
-                Automatic::Log.puts("info", "Extract Image: #{link}")
-                hashie = Hashie::Mash.new
-                hashie.title = 'FilterImageSource'
-                hashie.link = link
-                new_feeds << hashie
-              }
-            end
-          }
-        end
-        @return_feeds << Automatic::FeedMaker.create_pipeline(new_feeds)
-      }
-      @return_feeds
+      @pipeline.each_with_object([]) do |feeds, returned|
+        items = feeds.nil? ? [] : feeds.items.flat_map { |item| extract(item) }
+        returned << Automatic::FeedMaker.create_pipeline(items)
+      end
     end
 
     private
 
-    def rewrite_link(feed)
-      array = Array.new
-      feed.description.scan(/<img src="(.*?)"/) {|matched|
-        array = array | matched
-      }
-      if array.length === 0 && feed.link != nil
-        array = imgs(feed.link)
+    def extract(item)
+      images(item).map do |link|
+        Automatic::Log.puts('info', "Extract Image: #{link}")
+        image = Hashie::Mash.new
+        image.title = 'FilterImageSource'
+        image.link  = link
+        image
       end
-      array
     end
 
-    def imgs(link)
-      images = Array.new
-      html = URI.open(link).read
-      unless html.nil?
-        doc = Nokogiri::HTML(html)
-        (doc/:img).each {|img|
-          image = img[:src]
-          unless /^http/ =~ image
-            image = link.sub(/\/([^\/]+)$/, image.sub(/^\./,''))
-          end
-          images << image
-        }
-      end
-      images
+    def images(item)
+      found = sources(item.description.to_s, item.link)
+      return found unless found.empty?
+      return [] if item.link.nil?
+
+      page_images(item.link)
+    end
+
+    def page_images(link)
+      sources(Automatic::Http.read(link), link)
+    rescue StandardError => e
+      Automatic::Log.puts('warn', "Failed to read images from #{link}: #{e.message}")
+      []
+    end
+
+    # The images of an HTML fragment, as absolute URLs. This was a scan for
+    # `<img src="` before, which found nothing in a document quoting its
+    # attributes with apostrophes or writing src after another attribute; the
+    # parser this plugin already needs answers the question properly.
+    def sources(html, base)
+      Nokogiri::HTML.fragment(html).css('img').filter_map do |image|
+        source = image['src'].to_s.strip
+        absolute(source, base) unless source.empty?
+      end.uniq
+    end
+
+    def absolute(source, base)
+      return source if base.nil?
+
+      URI.join(base, source).to_s
+    rescue StandardError
+      source
     end
   end
 end

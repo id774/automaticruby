@@ -5,27 +5,28 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 23, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class PublishConsole
     require 'pp'
 
-    def initialize(config, pipeline=[])
-      @config = config
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
-      @output = $stdout
+      # Held in an instance variable rather than written to $stdout directly,
+      # so that a spec can substitute it. See doc/PLUGINS.md section 3.6.
+      @output   = $stdout
     end
 
+    # Prints each item, the plugin to end a Recipe with while writing it.
     def run
-      @pipeline.each {|feeds|
-        unless feeds.nil?
-          feeds.items.each {|feed|
-            @output.puts(feed.pretty_inspect)
-          }
-        end
-      }
+      @pipeline.each do |feeds|
+        next if feeds.nil?
+
+        feeds.items.each { |feed| @output.puts(feed.pretty_inspect) }
+      end
       @pipeline
     end
   end

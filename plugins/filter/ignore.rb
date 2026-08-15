@@ -5,61 +5,48 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 22, 2012
-# Updated::     Feb 21, 2014
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class FilterIgnore
-    def initialize(config, pipeline=[])
-      @config = config
+    FIELDS = %i[title link description].freeze
+
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
     end
 
+    # Drops items containing any listed keyword. Matching is a substring test,
+    # so an empty keyword drops everything.
     def run
-      @return_feeds = []
-      @pipeline.each {|feeds|
-        new_feeds = []
-        unless feeds.nil?
-          feeds.items.each {|items|
-            new_feeds << items if exclude(items) == false
-          }
-        end
-        @return_feeds << Automatic::FeedMaker.create_pipeline(new_feeds) if new_feeds.length > 0
-      }
-      @return_feeds
+      @pipeline.each_with_object([]) do |feeds, returned|
+        kept = feeds.nil? ? [] : feeds.items.reject { |item| exclude?(item) }
+        returned << Automatic::FeedMaker.create_pipeline(kept) unless kept.empty?
+      end
     end
 
     private
-    def detect_exclude(item, evaluation, reason)
-      begin
-        if item.include?(evaluation)
-          Automatic::Log.puts("info", "Excluded by #{reason}: #{item}")
-          return true
+
+    def exclude?(item)
+      FIELDS.any? do |field|
+        Array(@config[field.to_s]).any? do |keyword|
+          excluded?(item.send(field), keyword.to_s.chomp, field)
         end
-      rescue NoMethodError
-        Automatic::Log.puts("warn", "Invalid feed detected in ignore process with #{item}")
-        return false
       end
     end
 
-    def exclude(items)
-      detection = false
-      unless @config['title'].nil?
-        @config['title'].each {|e|
-          detection = true if detect_exclude(items.title, e.chomp, 'title')
-        }
+    # An item whose field is missing is kept, with a warning.
+    def excluded?(value, keyword, field)
+      unless value.respond_to?(:include?)
+        Automatic::Log.puts('warn', "Invalid feed detected in ignore process with #{value}")
+        return false
       end
-      unless @config['link'].nil?
-        @config['link'].each {|e|
-          detection = true if detect_exclude(items.link, e.chomp, 'link')
-        }
-      end
-      unless @config['description'].nil?
-        @config['description'].each {|e|
-          detection = true if detect_exclude(items.description, e.chomp, 'description')
-        }
-      end
-      detection
+
+      return false unless value.include?(keyword)
+
+      Automatic::Log.puts('info', "Excluded by #{field}: #{value}")
+      true
     end
   end
 end

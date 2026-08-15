@@ -9,6 +9,8 @@ v26.08 (Release Date: TBD)
 - Verify TLS certificates when publishing to Instapaper instead of accepting an unverified connection.
 - Modernize gem packaging and dependency policy, separating core requirements from optional plugin dependencies so that an installation can be minimal, complete or extended one plugin at a time, and excluding development and generated files.
 - Classify every shipped plugin by its current support status rather than simulating obsolete services in tests.
+- Modernize the bundled plugins for current Ruby, libraries and services, and remove the integrations that are no longer viable.
+- Remove the plugins for Twitter, Pocket, HipChat, Google Calendar, livedoor Weather, So-net G-Guide and Chan-Toru, and Google News link rewriting; their services or APIs no longer exist, and a Recipe naming one now fails at load.
 - Rebuild the test and CI strategy for current RSpec and Ruby, with deterministic isolation from user data and external services.
 - Add Markdown as the primary service-independent publication format, with a documented and tested first-run workflow.
 - Rebuild the maintained documentation around current usage, architecture, policy, plugins and deployment, and remove superseded historical documents.

@@ -35,10 +35,10 @@ if AutomaticSpec.optional_dependency?('sanitize')
         its(:run) { should have(1).feeds }
 
         specify {
-          subject.run
-          subject.instance_variable_get(:@return_feeds)[0].items.
+          returned = subject.run
+          returned[0].items.
             count.should == 1
-          subject.instance_variable_get(:@return_feeds)[0].items[0].description.
+          returned[0].items[0].description.
             should == 'fuga'
         }
       end
@@ -64,10 +64,10 @@ if AutomaticSpec.optional_dependency?('sanitize')
         its(:run) { should have(1).feeds }
 
         specify {
-          subject.run
-          subject.instance_variable_get(:@return_feeds)[0].items.
+          returned = subject.run
+          returned[0].items.
             count.should == 1
-          subject.instance_variable_get(:@return_feeds)[0].items[0].description.
+          returned[0].items[0].description.
             should == '<a rel="nofollow">fuga</a>'
         }
       end
@@ -93,10 +93,10 @@ if AutomaticSpec.optional_dependency?('sanitize')
         its(:run) { should have(1).feeds }
 
         specify {
-          subject.run
-          subject.instance_variable_get(:@return_feeds)[0].items.
+          returned = subject.run
+          returned[0].items.
             count.should == 1
-          subject.instance_variable_get(:@return_feeds)[0].items[0].description.
+          returned[0].items[0].description.
             should == 'fuga'
         }
       end
@@ -122,10 +122,10 @@ if AutomaticSpec.optional_dependency?('sanitize')
         its(:run) { should have(1).feeds }
 
         specify {
-          subject.run
-          subject.instance_variable_get(:@return_feeds)[0].items.
+          returned = subject.run
+          returned[0].items.
             count.should == 1
-          subject.instance_variable_get(:@return_feeds)[0].items[0].description.
+          returned[0].items[0].description.
             should == '<a>fuga</a>'
         }
       end
@@ -147,10 +147,10 @@ if AutomaticSpec.optional_dependency?('sanitize')
         its(:run) { should have(1).feeds }
 
         specify {
-          subject.run
-          subject.instance_variable_get(:@return_feeds)[0].items.
+          returned = subject.run
+          returned[0].items.
             count.should == 1
-          subject.instance_variable_get(:@return_feeds)[0].items[0].description.
+          returned[0].items[0].description.
             should == ''
         }
       end

@@ -5,27 +5,28 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jun 02, 2013
-# Updated::     Aug 14, 2026
+# Updated::     Aug 15, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class PublishConsoleLink
-    require 'pp'
-
-    def initialize(config, pipeline=[])
-      @config = config
+    def initialize(config, pipeline = [])
+      @config   = config || {}
       @pipeline = pipeline
-      @output = $stdout
+      @output   = $stdout
     end
 
+    # Prints each item's link, one per line, and nothing else. Useful in a
+    # pipe, which is why an item whose link a filter has blanked prints
+    # nothing rather than an empty line.
     def run
-      @pipeline.each {|feeds|
-        unless feeds.nil?
-          feeds.items.each {|feed|
-            @output.puts(feed.link)
-          }
+      @pipeline.each do |feeds|
+        next if feeds.nil?
+
+        feeds.items.each do |feed|
+          @output.puts(feed.link) unless feed.link.nil?
         end
-      }
+      end
       @pipeline
     end
   end

@@ -357,12 +357,17 @@ The framework reaches nothing. Plugins reach the network, and where they do:
 - Nothing is fetched on the framework's own initiative: no update check, no
   telemetry, no phone-home.
 
-Many of the services these plugins were written against have since shut down or
-replaced their APIs. Which plugins still work is a fact about the outside world
-rather than about this repository, so it is recorded per plugin in
-[`PLUGINS.md`](PLUGINS.md) section 6 and kept current there. Two requirements
-follow:
+Services shut down and APIs are replaced, and whether a given plugin still works
+is a fact about the outside world rather than about this repository. It is
+recorded per plugin in [`PLUGINS.md`](PLUGINS.md) section 6 and kept current
+there. Three requirements follow:
 
+- **A shipped plugin shall be practically usable on the supported Ruby
+  versions.** Shipping it is a statement that it does what its entry says,
+  given what that entry says the operator must provide. A plugin for which that
+  statement can no longer be made shall be corrected or removed; it shall not
+  be carried indefinitely as a record of what once existed, which is what the
+  version control history is for.
 - **A plugin that cannot work shall say so** — in the catalogue and, where it
   runs at all, in its log output. It shall not be quietly left to fail at
   runtime.
