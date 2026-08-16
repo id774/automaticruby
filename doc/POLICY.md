@@ -746,6 +746,11 @@ agree rather than asserting a literal.
   the entry already standing at the top of `doc/VERSIONS`.
 - An unreleased entry carries `(Release Date: TBD)`. Replacing that with the
   date is the release itself, and is not a change to record inside the entry.
+- **A repository that has not yet made its first release is in its initial
+  construction stage**, and that stage takes no entry here. The work of building
+  up to the first release is not accumulated in `doc/VERSIONS` one by one: the
+  file is the record of released versions, not of the construction that precedes
+  the first of them, and its first entry is written when that release is made.
 - **A series of changes made on one day is one version**, not several. Do not
   split a day's work across version numbers.
 - **A version that actually existed is never merged into another**, even when it
