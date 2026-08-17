@@ -325,7 +325,9 @@ plugin implementation and the framework does not use it:
   class's `column_definition` when it is absent, and provides
   `for_each_new_feed`, which yields only items whose key is not already stored.
   `StorePermalink` and `StoreFullText` are this mixin plus a model and a column
-  list.
+  list. `StoreDigest` takes the database part of it and decides for itself what
+  has been seen, because it is identified by a digest of an item's content
+  rather than by the link `for_each_new_feed` reads.
 ### 4.10 `db/`, `config/`, `assets/`
 
 Fallbacks inside the installation, used when the corresponding part of the user

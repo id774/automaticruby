@@ -1044,11 +1044,16 @@ been through another filter first is no longer a `NoMethodError`.
 Persist, and drop what has already been seen. A store plugin is what makes a
 Recipe safe to run repeatedly.
 
-`StorePermalink` and `StoreFullText` keep their records in SQLite through
-ActiveRecord. Both gems are these plugins' own optional dependencies rather than
-the framework's: `gem install activerecord sqlite3`, or the `store` group in a
-checkout. A Recipe that stores nothing needs neither.
+`StorePermalink`, `StoreFullText` and `StoreDigest` keep their records in SQLite
+through ActiveRecord. Both gems are these plugins' own optional dependencies
+rather than the framework's: `gem install activerecord sqlite3`, or the `store`
+group in a checkout. A Recipe that stores nothing needs neither.
 See [`DEPLOYMENT.md`](DEPLOYMENT.md).
+
+They answer different questions, and a Recipe may ask more than one of them:
+`StorePermalink` whether this **link** has been seen, `StoreFullText` whether
+this link or title has been stored with its body, `StoreDigest` whether this
+**content** has been seen, whatever it was published under.
 
 #### StorePermalink — **Supported**
 
@@ -1073,6 +1078,124 @@ republished article with a new URL is not stored twice. Pair with
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `db` | string | Database file name, under `~/.automatic/db`. Required. |
+
+#### StoreDigest — **Supported**
+
+`store/digest.rb`. Takes the SHA-256 digest of the item fields the Recipe names,
+records it in SQLite, and passes on only the items whose digest was not recorded
+already. Content identity, where `StorePermalink` is URL identity: a page that
+reissues one article under a new URL is one item here, and one URL whose content
+changed is a new item — the opposite of what `StorePermalink` decides in both
+cases. Pair it with `CustomFeedWeb`, whose items are whatever an index page
+currently lists.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `db` | string | Database file name, under `~/.automatic/db`. Required. |
+| `fields` | list | The fields the digest is taken over, in the order written. Default: `title`, `description`. |
+
+```yaml
+plugins:
+  - module: CustomFeedWeb
+    config:
+      sites:
+        - url: https://example.com/news/
+
+  - module: StoreDigest
+    config:
+      db: web-digest.db
+
+  - module: PublishMarkdown
+    config:
+      file: ~/.automatic/markdown/web-watch.md
+      mode: append
+```
+
+The first run passes on everything the page listed and records a digest for
+each. The second passes on nothing, because the page still lists the same
+articles. A run in which one article has been added passes on that one.
+
+**`fields`** names any of `title`, `link`, `description`, `author`, `comments`,
+`source` and `content_encoded`. `date` is not among them — an item republished
+unchanged carries a new date often enough to defeat the purpose — and neither is
+`enclosure`, which is a structure rather than a value.
+
+- The order is part of the fingerprint. `[title, description]` and
+  `[description, title]` are two different specifications and produce different
+  digests; nothing is sorted behind the Recipe's back.
+- **The fields named are the fields used.** A Recipe that asks for
+  `content_encoded` gets `content_encoded`, and an item whose body is empty is
+  not quietly judged on its title instead. What the Recipe says two identical
+  items are is what this plugin obeys.
+- Anything but an absent `fields` is taken as written: an empty list, a name
+  that is not a field, a name given twice and a value that is not a list are
+  each refused with an `ArgumentError` before the database is opened, rather
+  than corrected into something the Recipe did not ask for.
+- `db` is required, and an empty name is refused the same way.
+
+**What "the same content" means here.** Each value is read as UTF-8, with
+invalid and undefined characters replaced, normalized to Unicode NFC, its runs
+of whitespace collapsed to one space and its ends trimmed. The values are joined
+with their field names into one canonical string — `title`, NUL, the title, NUL,
+`description`, NUL, the description — and that string is hashed with SHA-256.
+The algorithm is fixed; there is no setting for it and no column recording it.
+
+Two items are therefore the same item when their selected fields are **exactly**
+equal after that normalization, and not otherwise. A difference of case, of
+punctuation or of markup is a difference of content. This is not similarity
+matching: there is no fuzzy comparison, no edit distance, no embedding and no
+semantic judgement anywhere in it, and two articles that report one event in
+different words are two items.
+
+**An item with nothing to hash is passed on, not stored.** Where every field the
+Recipe named is empty after normalization — `fields: [description]` on an item
+that has no description — there is nothing to identify the item by. Hashing the
+empty string would make every such item the same item and silence all but the
+first of them for good, so instead the plugin logs a warning naming the item's
+link and passes it on unjudged. An item is never lost for having too little
+content. A field that is empty while another is not takes part in the digest as
+an empty value, so an item with a title and no description differs from the same
+item with both.
+
+**A database failure ends the run.** A failed read or a failed write is not
+rescued here, which is deliberate and is a difference from `StoreFullText`: an
+item passed on after its digest failed to store would be published again on the
+next run, and de-duplication that quietly stops de-duplicating is worse than a
+run that stops. The digest column carries a unique index, so two runs of one
+Recipe overlapping cannot both store one digest; the second write is rejected
+and its item is treated as seen.
+
+The digest is all that is stored — no title, no body, no URL. Recording what an
+item said is `StoreFullText`'s work, and pairing the two is how a Recipe gets
+both.
+
+`StorePermalink` and `StoreDigest` may stand in one Recipe, each with its own
+database, and the pair is worth having: the first drops what has been seen at
+that URL, the second drops what has been seen under any URL.
+
+```yaml
+plugins:
+  - module: CustomFeedWeb
+    config:
+      sites:
+        - url: https://example.com/news/
+
+  - module: FilterFullFeed
+
+  - module: StoreDigest
+    config:
+      db: fulltext-digest.db
+      fields:
+        - content_encoded
+
+  - module: PublishMarkdown
+    config:
+      file: ~/.automatic/markdown/web-watch.md
+      mode: append
+```
+
+With the body fetched first, the digest is taken over the article itself, so a
+headline edited between runs no longer republishes the article.
 
 #### StoreFile — **Supported**
 
@@ -1434,11 +1557,11 @@ is a claim that the plugin works.
 
 | Status | Count | Plugins |
 | --- | --- | --- |
-| Supported | 24 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `CustomFeedWeb`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
+| Supported | 25 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `CustomFeedWeb`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreDigest`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
 | Supported (external) | 10 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper`, `PublishAmazonS3` |
 | Needs rework | 1 | `PublishHatenaBookmark` |
 
-Thirty-five plugins. Every one of them either runs, or names the one thing it
+Thirty-six plugins. Every one of them either runs, or names the one thing it
 needs from the operator; the single exception says what is wrong with it and
 what fixing it would take.
 

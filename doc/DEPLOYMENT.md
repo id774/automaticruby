@@ -455,7 +455,7 @@ bundle. `plugins` is every group in the first block at once.
 
 | Plugin | Needs | Installed gem | Checkout group | Status |
 | --- | --- | --- | --- | --- |
-| `StorePermalink`, `StoreFullText` | `activerecord`, `sqlite3` | `gem install activerecord sqlite3` | `store` | Supported |
+| `StorePermalink`, `StoreFullText`, `StoreDigest` | `activerecord`, `sqlite3` | `gem install activerecord sqlite3` | `store` | Supported |
 | `FilterImageSource`, `FilterDescriptionLink`, `SubscriptionLink`, `SubscriptionTumblr`, `CustomFeedWeb` | `nokogiri` | `gem install nokogiri` | `html` | Supported (`SubscriptionTumblr` external) |
 | `PublishMarkdown` | `nokogiri`, for HTML bodies only | `gem install nokogiri` | `html` | Supported; runs without it |
 | `FilterSanitize` | `sanitize` | `gem install sanitize` | `sanitize` | Supported |
@@ -499,8 +499,7 @@ missing, what needs it and how to get it, and the command exits `1`.
 
 ```text
 automatic: The `activerecord` gem is not installed. It is needed by the store
-plugins StorePermalink and StoreFullText. Install it with `gem install
-activerecord`, ...
+plugins. Install it with `gem install activerecord`, ...
 ```
 
 ## Your own plugins
