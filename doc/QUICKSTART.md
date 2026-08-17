@@ -136,10 +136,21 @@ bundle exec bin/automatic scaffold
 bundle exec bin/automatic -c ~/.automatic/config/example/feed2markdown.yml
 ```
 
-A checkout resolves gems through Bundler rather than through RubyGems, so step 5
-is done differently there: `bundle config set --local with store` and
-`bundle install`, instead of `gem install activerecord sqlite3`. See
-[`DEPLOYMENT.md`](DEPLOYMENT.md).
+A checkout resolves gems through Bundler rather than through RubyGems, and two
+things follow from that:
+
+- **Step 5 is done with a group, not with `gem install`.** `bundle config set
+  --local with store` and `bundle install`, instead of `gem install activerecord
+  sqlite3`. A gem installed by `gem install` is not in the bundle, so the
+  checkout does not see it however plainly `gem list` shows it.
+- **A Recipe needs the groups of every plugin it names, added up.** The Recipe
+  above needs only `store`; one that also reads HTML pages needs `html` as well,
+  and selecting one of the two fails half way through the run rather than at the
+  start.
+
+[`DEPLOYMENT.md`](DEPLOYMENT.md) has the table of which plugin needs which
+group, and "Working out what a Recipe needs, in a checkout" takes a three-plugin
+Recipe from written to running that way, step by step.
 
 The Recipe is ordinary YAML. Change the feed URL, insert a supported Filter, or
 change the Markdown path without changing the framework. To write a small

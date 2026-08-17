@@ -233,10 +233,12 @@ for. If the `bundle` command is unavailable, install Bundler first with
 `gem install bundler`.
 
 In a checkout, every `automatic` below becomes `bundle exec bin/automatic`, and
-`bundle exec` sees only the bundle — so a plugin's gem is added with a group
-rather than with `gem install`. The group names, and which plugin needs which
-gem, are in [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md); what each plugin does is
-in [`doc/PLUGINS.md`](doc/PLUGINS.md).
+the checkout resolves its gems through the bundle — so a plugin's gem is added
+with a group rather than with `gem install`, and a Recipe using plugins from two
+groups selects both at once. The group names, which plugin needs which gem, and
+a Recipe taken step by step through choosing its groups are in
+[`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md); what each plugin does is in
+[`doc/PLUGINS.md`](doc/PLUGINS.md).
 
 ## 6. Quick start
 

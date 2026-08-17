@@ -404,6 +404,12 @@ runtime dependencies; it goes in an optional group of the `Gemfile` and the
 operator who uses the plugin installs it. See [`POLICY.md`](POLICY.md)
 section 9.
 
+A Recipe therefore needs the sum of what its plugins need, and each is loaded
+when the pipeline reaches it, so a gem missing for the third plugin is reported
+after the first two have run. [`DEPLOYMENT.md`](DEPLOYMENT.md) lists which
+plugin needs which gem, and "Working out what a Recipe needs, in a checkout"
+takes one Recipe through adding those up before running it.
+
 Where a plugin has an optional capability that needs a heavier library — S3
 support in `StoreFile`, for instance — the `require` goes inside the branch that
 uses it, so the plugin loads and its ordinary path works without that gem
