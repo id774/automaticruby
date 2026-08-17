@@ -35,7 +35,7 @@ gemspec
 # The table of which plugin needs which gem, and which of those plugins still
 # work, is in doc/DEPLOYMENT.md and doc/PLUGINS.md section 6.
 
-# StorePermalink and StoreFullText, through plugins/store/database.rb.
+# StorePermalink, StoreFullText and StoreDigest, through plugins/store/database.rb.
 group :plugins, :store, optional: true do
   gem 'activerecord', '>= 7.1', '< 9.0'
   gem 'sqlite3',      '>= 1.7', '< 3.0'
