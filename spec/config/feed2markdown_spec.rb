@@ -4,19 +4,20 @@ require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
 
 require 'yaml'
 
-RSpec.describe 'the Quick Start Recipe' do
+RSpec.describe 'the feed2markdown example Recipe' do
   let(:path) { File.join(APP_ROOT, 'config', 'feed2markdown.yml') }
   let(:recipe) { YAML.safe_load(File.read(path)) }
 
-  it 'uses the short supported pipeline documented by the Quick Start' do
+  it 'uses the short supported pipeline its header documents' do
     modules = recipe.fetch('plugins').map { |plugin| plugin.fetch('module') }
     expect(modules).to eq %w[SubscriptionFeed PublishMarkdown]
   end
 
-  # The Quick Start is what a plain `gem install automatic` can run, so the
-  # Recipe it ships names no plugin that needs an optional gem. The store
-  # plugins, which do, are the documented next step rather than the first one.
-  # See doc/POLICY.md section 9.1.
+  # This is the shipped Recipe a plain `gem install automatic` can run with
+  # nothing added, which is what makes it the one to reach for first, so it
+  # names no plugin that needs an optional gem. The store plugins, which do,
+  # are the documented next step rather than the first one. See
+  # doc/POLICY.md section 9.1.
   it 'names no plugin that needs an optional dependency' do
     modules = recipe.fetch('plugins').map { |plugin| plugin.fetch('module') }
     expect(modules).not_to include('StorePermalink', 'StoreFullText')
@@ -36,7 +37,7 @@ RSpec.describe 'the Quick Start Recipe' do
     end
   end
 
-  it 'writes the Markdown file described by the Quick Start' do
+  it 'writes the Markdown file its header describes' do
     publisher = recipe.fetch('plugins').last.fetch('config')
     expect(publisher).to include(
       'file' => '~/.automatic/markdown/feeds.md',

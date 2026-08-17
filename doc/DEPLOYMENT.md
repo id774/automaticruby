@@ -34,8 +34,9 @@ nothing to stop.
   [`REQUIREMENTS.md`](REQUIREMENTS.md) section 20.
 - Optional gems for particular plugins, listed in the table under
   "Optional plugin dependencies" below. None is needed to install Automatic
-  Ruby, to run the Quick Start, or to run a Recipe that does not use the
-  plugin.
+  Ruby, or to run a Recipe that does not use the plugin; a Recipe that does
+  name one installs it as a step of its own, which is what the Quick Start's
+  step 4 is.
 - A build environment may be needed for one of those optional gems — `nokogiri`
   and `sqlite3` build a native extension where no binary package matches your
   platform. The framework's own dependencies are pure Ruby, so the normal
@@ -114,13 +115,15 @@ bundle install
 ```
 
 Several at once are space-separated: `bundle config set --local with "store
-html"`. The group names are in the table below.
+html"`, and a Recipe using plugins from two groups needs exactly that. The group
+names are in the table below, and "Working out what a Recipe needs, in a
+checkout" takes one Recipe through choosing them.
 
-In a checkout, `gem install <gem>` on its own is **not** enough: `bundle exec`
-puts only the bundle on the load path, so a gem the `Gemfile` does not mention
-is not visible to it. Use the group, which is why the groups exist. Outside a
-checkout — the installed gem, run as `automatic` — there is no bundle and `gem
-install <gem>` is exactly right.
+In a checkout, `gem install <gem>` on its own is **not** enough: the checkout
+resolves its gems through the bundle, so a gem the `Gemfile` does not mention is
+not visible to it however plainly `gem list` shows it. Use the group, which is
+why the groups exist. Outside a checkout — the installed gem, run as `automatic`
+— there is no bundle and `gem install <gem>` is exactly right.
 
 Everything below that says `automatic` becomes `bundle exec bin/automatic` in a
 checkout.
@@ -502,6 +505,240 @@ automatic: The `activerecord` gem is not installed. It is needed by the store
 plugins. Install it with `gem install activerecord`, ...
 ```
 
+### Working out what a Recipe needs, in a checkout
+
+The table says what a plugin needs. A Recipe needs the **sum** of what its
+plugins need, worked out before the first run rather than discovered one failed
+run at a time, and in a checkout that sum is a list of groups. The Quick Start's
+Recipe — index pages watched for new articles, de-duplicated by content,
+published as one Markdown document — is the worked example, shortened here to
+one page:
+
+```yaml
+# ~/.automatic/config/web2markdown.yml
+plugins:
+  - module: CustomFeedWeb
+    config:
+      retry: 2
+      interval: 2
+      sites:
+        - name: The Go Blog
+          url: https://go.dev/blog/
+          link_selector: 'a[href]'
+          include:
+            - '^https://go\.dev/blog/[^/]+$'
+          same_host: true
+          fetch_items: 20
+
+  - module: StoreDigest
+    config:
+      db: web2markdown.db
+      fields:
+        - title
+        - link
+
+  - module: PublishMarkdown
+    config:
+      file: ~/.automatic/markdown/web.md
+      mode: append
+```
+
+[`QUICKSTART.md`](QUICKSTART.md) runs that Recipe end to end, with the sites it
+watches and what each plugin does. What follows is the part a checkout does
+differently: turning those three plugins into a bundle that can run them.
+
+**1. List the plugins the Recipe names.** They are the `module` lines, in order:
+`CustomFeedWeb`, `StoreDigest`, `PublishMarkdown`.
+
+**2. Look each one up in the table above.** What that lookup yields here, and
+the whole of what this Recipe's dependencies are:
+
+| Plugin | Needs | Checkout group |
+| --- | --- | --- |
+| `CustomFeedWeb` | `nokogiri`, to read the index pages | `html` |
+| `StoreDigest` | `activerecord`, `sqlite3` | `store` |
+| `PublishMarkdown` | nothing of its own | — |
+
+`PublishMarkdown` is the row worth reading twice. It needs no gem: it reduces an
+HTML body with `nokogiri` where one is installed and with its own substitution
+where none is, so it neither adds a group here nor fails without one. A plugin's
+row in the table is the answer, not a guess from what the plugin does.
+
+**3. Add the groups up.** This Recipe needs `html` **and** `store`. Getting this
+step half right fails half way through the run, because a plugin is loaded when
+the pipeline reaches it and not before: with `html` alone, `CustomFeedWeb`
+loads, fetches its pages and hands its feeds on, and the run then stops where
+the second plugin is loaded.
+
+```text
+automatic: The `activerecord` gem is not installed. It is needed by the store
+plugins. Install it with `gem install activerecord`, or in a source checkout add
+its group to the bundle; see the optional plugin dependencies in
+doc/DEPLOYMENT.md. (cannot load such file -- active_record)
+```
+
+The first plugin having worked is not the setup being finished. Read the whole
+Recipe, then install once.
+
+**4. Select the groups in the checkout.**
+
+```sh
+cd ~/automaticruby
+bundle config set --local with "html store"
+```
+
+**5. Install them.**
+
+```sh
+bundle install
+```
+
+**6. Check what was selected.** This prints the setting Bundler will use, and
+where it came from:
+
+```sh
+bundle config get with
+```
+
+```text
+Set for your local app (/home/you/automaticruby/.bundle/config): [:html, :store]
+```
+
+**7. Run the Recipe.**
+
+```sh
+bundle exec bin/automatic -c ~/.automatic/config/web2markdown.yml
+```
+
+Run it twice. The second run publishes nothing, because `StoreDigest` has the
+digest of everything the page listed, which is what makes the Recipe safe to put
+in `cron` and is worth checking before scheduling any Recipe with an effect.
+
+A store plugin's `db` is a **file name**, not a path: it is resolved under
+`~/.automatic/db`, or under the checkout's own `db/` where that directory does
+not exist yet, so a checkout run before `scaffold` keeps its database inside the
+checkout. The `Using Database:` line of an `info`-level log names the file that
+was opened, which is the way to check. `PublishMarkdown`'s `file` is the
+opposite — a path, with `~` expanded — and the Recipe above uses each as it is
+meant.
+
+Adding a plugin to a Recipe later starts this over at step 1: a `FilterSanitize`
+added to the Recipe above brings `sanitize` with it, and the `with` setting has
+to name `sanitize` as well as `html` and `store`.
+
+### Why `bundle exec`, and why `gem install` is not enough here
+
+A checkout resolves its gems through Bundler whether or not you ask it to.
+`lib/automatic/environment.rb` treats a `Gemfile` beside `lib/` as "this is a
+source checkout" and requires `bundler/setup` before anything else loads, so
+`bin/automatic` run from a checkout sees the bundle and nothing outside it. That
+is what makes `gem install` the wrong tool there: the gem installs, `gem list`
+prints it, plain `ruby -rnokogiri -e ''` loads it — and the checkout still
+reports it as missing, because it is not in the bundle.
+
+```sh
+gem install nokogiri
+gem list nokogiri                 # prints the gem that was just installed
+./bin/automatic -c ~/.automatic/config/web2markdown.yml
+# automatic: The `nokogiri` gem is not installed. It is needed by CustomFeedWeb...
+```
+
+Use the group, and then run through `bundle exec`, from the checkout directory:
+
+```sh
+cd ~/automaticruby
+bundle exec bin/automatic -c ~/.automatic/config/web2markdown.yml
+```
+
+`bundle exec` matters for what it does when the bundle is **not** in the state
+you think it is. The `require 'bundler/setup'` above is deliberately forgiving:
+where Bundler is absent, or where a group has been selected but not yet
+installed, it is rescued and the program falls back to whatever RubyGems can
+activate — quietly, and against gems the `Gemfile.lock` never resolved.
+Running the same command through `bundle exec` says so instead:
+
+```text
+bundler: failed to load command: bin/automatic (bin/automatic)
+Could not find activerecord-8.1.3.1, sqlite3-2.9.6-x86_64-linux-gnu ... in
+locally installed gems (Bundler::GemNotFound)
+```
+
+That is `bundle install` not having been run after step 4, stated as such.
+`bundle exec` is also what keeps one habit for the whole checkout: the same
+prefix runs the specs, the diagnostic subcommands and the Recipe, and typing
+`automatic` instead would run the installed gem rather than the checkout.
+
+**What "is not installed" means in that message.** It is the framework
+reporting that **this process could not `require` the library**, which is wider
+than "no copy of the gem exists on this machine". A gem installed by `gem
+install` but outside the checkout's bundle produces it; so does a group selected
+but not installed, and so does an installation under a different Ruby. The gem
+name and the plugin name in the message are what to act on; whether to act with
+a group or with `gem install` is decided by where you are running from, not by
+the message.
+
+To see what the bundle actually holds, ask the bundle rather than RubyGems:
+
+```sh
+bundle config get with           # which optional groups are selected
+bundle show nokogiri             # where the bundle's copy is, or an error
+bundle show activerecord
+bundle show sqlite3
+```
+
+```sh
+bundle exec ruby -rnokogiri      -e 'puts Nokogiri::VERSION'
+bundle exec ruby -ractive_record -e 'puts ActiveRecord::VERSION::STRING'
+bundle exec ruby -rsqlite3       -e 'puts SQLite3::VERSION'
+```
+
+Those three `require` the libraries the way the plugins do — note
+`active_record` for the `activerecord` gem — under the same bundle the Recipe
+will run under. `gem list` answers a different question and is the one to
+distrust here: it lists what RubyGems has, which in a checkout is neither what
+the plugins will load nor what a missing-gem message is about.
+
+### All of the optional gems, or only the ones a Recipe names
+
+Two ways to select groups, for two purposes:
+
+```sh
+bundle config set --local with plugins        # all of them, at once
+bundle config set --local with "html store"   # what this Recipe needs
+```
+
+`plugins` is every gem in the first block of the `Gemfile` — `activerecord`,
+`sqlite3`, `nokogiri`, `sanitize`, `feedbag` — and is meant for working **on**
+the plugins: it brings their specs into the ordinary `bundle exec rake` run,
+which is how those plugins are verified. It is the right setting for plugin
+development and for a checkout you are developing in.
+
+Naming the groups is the right setting for **running** Recipes, and is what the
+design of the split asks for: a gem is installed by the operator who uses the
+plugin that needs it, and a checkout that runs this Recipe has no reason to
+build `sanitize` or to hold `feedbag`. Start there; `plugins` is not a shortcut
+for having read the table, and a checkout that has installed everything hides
+the group a Recipe of yours will need on the next machine.
+
+Either way the setting is written to the checkout's own `.bundle/config`, which
+is not committed and belongs to that checkout alone. That is what makes it hold:
+`bundle install`, `bundle exec bin/automatic`, `bundle exec rake` and the
+checkout's `bin/automatic` all read it, so the groups are selected once rather
+than remembered at every command. Passing the environment variable instead —
+`BUNDLE_WITH="html store" bundle install` — configures that one command and
+leaves the next one without it, which produces exactly the confusing case above:
+an installed group that the running process does not select.
+
+To return the checkout to the minimum:
+
+```sh
+bundle config unset --local with
+bundle install
+```
+
+The gems stay on the machine; what changes is that the bundle no longer includes
+them, and the plugins that need them report them as missing again.
+
 ## Your own plugins
 
 `~/.automatic/plugins` is on the loader's search path, **ahead of the
@@ -523,8 +760,11 @@ not touch this directory.
 `PATH`. `gem environment` prints it as EXECUTABLE DIRECTORY.
 
 **`The <gem> gem is not installed. It is needed by ...`** — a plugin's optional
-dependency is missing. The message names the gem, the plugin and the command to
-install it, and the table above says the same thing.
+dependency could not be required. The message names the gem, the plugin and the
+command to install it, and the table above says the same thing. In a checkout it
+also means a gem installed outside the bundle, or a group selected but not
+installed; "Why `bundle exec`, and why `gem install` is not enough here" above
+tells the cases apart.
 
 **`Automatic::NoPluginError: unknown plugin named ...`** — a Recipe names a
 plugin that does not ship. Check the spelling against

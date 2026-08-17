@@ -22,7 +22,7 @@
 #   gem install activerecord sqlite3
 #
 # See doc/DEPLOYMENT.md for the optional plugin dependencies, and
-# doc/QUICKSTART.md for this Recipe step by step.
+# doc/QUICKSTART.md for a first run taken step by step.
 #
 # To send the document to standard output instead, drop the PublishMarkdown
 # config and set the log level to none, so that only the document is written:
