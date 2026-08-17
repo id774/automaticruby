@@ -171,10 +171,11 @@ module Automatic::Plugin
     # the tags themselves are dropped.
     #
     # A parser does it where one is installed, and the substitution below does
-    # it where none is. That is what keeps this plugin -- the one the Quick
-    # Start publishes with -- runnable on a plain `gem install automatic`:
-    # nokogiri is an optional dependency, and reducing a feed body to text is
-    # not a good enough reason to make everyone install a native extension.
+    # it where none is. That is what keeps this plugin -- the one a Recipe ends
+    # with when the result is meant to be read -- runnable on a plain `gem
+    # install automatic`: nokogiri is an optional dependency, and reducing a
+    # feed body to text is not a good enough reason to make everyone install a
+    # native extension.
     # The two agree on what a body is reduced to; a parser is simply better at
     # markup that is malformed. See doc/PLUGINS.md section 6.7.
     def html_to_text(html)

@@ -120,7 +120,7 @@ describe Automatic::Plugin::PublishMarkdown do
 
   # nokogiri is an optional dependency: the plugin uses it where it is
   # installed and reduces the body itself where it is not, so that a plain
-  # `gem install automatic` can run the Quick Start. See doc/PLUGINS.md
+  # `gem install automatic` can run a Recipe ending here. See doc/PLUGINS.md
   # section 6.7. The default suite runs the substitute, this run of it is
   # explicit, and where the optional gem is installed the last example holds
   # the two to the same answer.

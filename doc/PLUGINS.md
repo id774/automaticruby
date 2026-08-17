@@ -1380,8 +1380,8 @@ text; the item's own link is in the metadata list, where nothing loses it.
 
 **This plugin needs no gem of its own.** It uses `nokogiri` to reduce a body
 where `nokogiri` is installed, and reduces it with its own substitution where it
-is not, so that the Quick Start runs on a plain `gem install automatic` and no
-Recipe pays for an HTML parser it did not ask for. The two produce the same
+is not, so that a Recipe ending here runs on a plain `gem install automatic` and
+no Recipe pays for an HTML parser it did not ask for. The two produce the same
 document for the bodies a feed carries; a parser is simply better at markup that
 is badly malformed, which is the reason to install `nokogiri` if you publish
 from feeds that produce it. The specs hold both to the same output.

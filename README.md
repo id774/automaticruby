@@ -34,8 +34,9 @@ prints to the terminal instead, or downloads the images, or forwards them to
 Fluentd, or writes them to a database. Write your own plugin and it composes
 with all the others.
 
-**[Follow the Quick Start](doc/QUICKSTART.md)** to install the gem, scaffold the
-example, and produce Markdown from the public Ruby news feed.
+**[Follow the Quick Start](doc/QUICKSTART.md)** to install the gem, write a
+Recipe that watches four public index pages, install what that Recipe needs, and
+produce Markdown from the articles they list.
 
 ---
 
@@ -242,7 +243,9 @@ a Recipe taken step by step through choosing its groups are in
 
 ## 6. Quick start
 
-The complete first-run guide is [`doc/QUICKSTART.md`](doc/QUICKSTART.md).
+The complete first-run guide is [`doc/QUICKSTART.md`](doc/QUICKSTART.md): it
+writes one Recipe that reads four public index pages, installs what that Recipe
+needs, and leaves the new articles in a Markdown document.
 
 ```sh
 automatic scaffold
@@ -253,13 +256,13 @@ automatic -c ~/.automatic/config/example/feed2markdown.yml
 `assets/`, and copies the example Recipes into `~/.automatic/config/example`.
 It never overwrites anything already there.
 
-That Recipe fetches the public Ruby news feed and appends its items to
-`~/.automatic/markdown/feeds.md`, using nothing but the framework and what
-`gem install automatic` brought. Read the file, `grep` it, put it in a
-repository, or hand it to whatever reads text next. `feed2console.yml` beside
-it is the same pipeline printing to the terminal. Adding a store plugin, so
-that a second run appends only what is new, is step 5 of the Quick Start and
-the point at which the first optional gems are installed.
+`feed2markdown.yml` is the shortest shipped Recipe: it fetches the public Ruby
+news feed and appends its items to `~/.automatic/markdown/feeds.md`, using
+nothing but the framework and what `gem install automatic` brought.
+`feed2console.yml` beside it is the same pipeline printing to the terminal. Read
+the file, `grep` it, put it in a repository, or hand it to whatever reads text
+next. A Recipe that names a plugin with an optional gem installs that gem first,
+which is step 4 of the Quick Start and the habit worth learning early.
 
 To check the framework without any network, write this instead:
 

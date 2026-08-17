@@ -34,8 +34,9 @@ nothing to stop.
   [`REQUIREMENTS.md`](REQUIREMENTS.md) section 20.
 - Optional gems for particular plugins, listed in the table under
   "Optional plugin dependencies" below. None is needed to install Automatic
-  Ruby, to run the Quick Start, or to run a Recipe that does not use the
-  plugin.
+  Ruby, or to run a Recipe that does not use the plugin; a Recipe that does
+  name one installs it as a step of its own, which is what the Quick Start's
+  step 4 is.
 - A build environment may be needed for one of those optional gems — `nokogiri`
   and `sqlite3` build a native extension where no binary package matches your
   platform. The framework's own dependencies are pure Ruby, so the normal
@@ -508,9 +509,10 @@ plugins. Install it with `gem install activerecord`, ...
 
 The table says what a plugin needs. A Recipe needs the **sum** of what its
 plugins need, worked out before the first run rather than discovered one failed
-run at a time, and in a checkout that sum is a list of groups. This Recipe —
-index pages watched for new articles, de-duplicated by content, published as one
-Markdown document — is the worked example:
+run at a time, and in a checkout that sum is a list of groups. The Quick Start's
+Recipe — index pages watched for new articles, de-duplicated by content,
+published as one Markdown document — is the worked example, shortened here to
+one page:
 
 ```yaml
 # ~/.automatic/config/web2markdown.yml
@@ -520,18 +522,6 @@ plugins:
       retry: 2
       interval: 2
       sites:
-        # Python Insider. Its articles are
-        # https://blog.python.org/2026/08/python-3147-31315/ and the like.
-        - name: Python Insider
-          url: https://blog.python.org/
-          link_selector: 'a[href]'
-          include:
-            - '^https://blog\.python\.org/20[0-9]{2}/[0-9]{2}/[^/]+/?$'
-          same_host: true
-          fetch_items: 20
-
-        # The Go Blog. Its articles are https://go.dev/blog/pkgsite-api
-        # and the like. Further sites are further entries of the same shape.
         - name: The Go Blog
           url: https://go.dev/blog/
           link_selector: 'a[href]'
@@ -552,6 +542,10 @@ plugins:
       file: ~/.automatic/markdown/web.md
       mode: append
 ```
+
+[`QUICKSTART.md`](QUICKSTART.md) runs that Recipe end to end, with the sites it
+watches and what each plugin does. What follows is the part a checkout does
+differently: turning those three plugins into a bundle that can run them.
 
 **1. List the plugins the Recipe names.** They are the `module` lines, in order:
 `CustomFeedWeb`, `StoreDigest`, `PublishMarkdown`.
@@ -617,8 +611,8 @@ bundle exec bin/automatic -c ~/.automatic/config/web2markdown.yml
 ```
 
 Run it twice. The second run publishes nothing, because `StoreDigest` has the
-digest of everything the pages listed — the same check the Quick Start makes
-with `StorePermalink`, and what makes the Recipe safe to put in `cron`.
+digest of everything the page listed, which is what makes the Recipe safe to put
+in `cron` and is worth checking before scheduling any Recipe with an effect.
 
 A store plugin's `db` is a **file name**, not a path: it is resolved under
 `~/.automatic/db`, or under the checkout's own `db/` where that directory does

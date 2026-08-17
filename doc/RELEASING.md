@@ -231,8 +231,8 @@ env -u RUBYLIB GEM_HOME="$gem_home" GEM_PATH="$gem_home" \
   "$gem_home/bin/automatic" --help
 ```
 
-Confirm the installed version equals `VERSION`. Then run the offline Quick
-Start shape with a temporary home and a minimal Recipe:
+Confirm the installed version equals `VERSION`. Then run a Recipe that needs no
+network and no optional gem, with a temporary home:
 
 ```sh
 smoke_home=$(mktemp -d)
@@ -375,7 +375,7 @@ security behavior can change independently of this repository:
 - [ ] `bundle exec rake` passes and the gem builds.
 - [ ] Package contents and metadata have been inspected.
 - [ ] GPLv3/LGPLv3, Ruby version and dependencies are correct.
-- [ ] The isolated local install and Quick Start smoke test pass.
+- [ ] The isolated local install and offline smoke test pass.
 - [ ] The release commit and immutable `vX.Y.Z` tag identify the built source.
 - [ ] Publication has explicit approval and `gem push` succeeds.
 - [ ] RubyGems.org metadata and a clean remote install are verified.
