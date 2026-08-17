@@ -246,6 +246,10 @@ anything. The shipped `feed2markdown.yml` and `feed2console.yml` in
 `~/.automatic/config/example` are the same shape over an ordinary feed, for a
 site that publishes one.
 
+Taking this same pipeline further — the article bodies, one joined text, and an
+AI service asked one question about it — is
+[`AI_TUTORIAL.md`](AI_TUTORIAL.md).
+
 What each plugin does is [`PLUGINS.md`](PLUGINS.md) section 6; installing,
 scheduling and operating a Recipe is [`DEPLOYMENT.md`](DEPLOYMENT.md); writing a
 small plugin of your own is
