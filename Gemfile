@@ -42,9 +42,10 @@ group :plugins, :store, optional: true do
 end
 
 # An HTML parser, for the plugins that read HTML: FilterFullFeed,
-# FilterImageSource, FilterDescriptionLink, and FeedParser.parse_html for
-# SubscriptionLink and SubscriptionTumblr. PublishMarkdown uses it when it is
-# installed and reduces a body to text without it.
+# FilterImageSource, FilterDescriptionLink, CustomFeedWeb, and
+# FeedParser.parse_html for SubscriptionLink and SubscriptionTumblr.
+# PublishMarkdown uses it when it is installed and reduces a body to text
+# without it.
 group :plugins, :html, optional: true do
   gem 'nokogiri', '>= 1.15', '< 2.0'
 end

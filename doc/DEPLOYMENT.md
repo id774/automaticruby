@@ -456,7 +456,7 @@ bundle. `plugins` is every group in the first block at once.
 | Plugin | Needs | Installed gem | Checkout group | Status |
 | --- | --- | --- | --- | --- |
 | `StorePermalink`, `StoreFullText` | `activerecord`, `sqlite3` | `gem install activerecord sqlite3` | `store` | Supported |
-| `FilterImageSource`, `FilterDescriptionLink`, `SubscriptionLink`, `SubscriptionTumblr` | `nokogiri` | `gem install nokogiri` | `html` | Supported (`SubscriptionTumblr` external) |
+| `FilterImageSource`, `FilterDescriptionLink`, `SubscriptionLink`, `SubscriptionTumblr`, `CustomFeedWeb` | `nokogiri` | `gem install nokogiri` | `html` | Supported (`SubscriptionTumblr` external) |
 | `PublishMarkdown` | `nokogiri`, for HTML bodies only | `gem install nokogiri` | `html` | Supported; runs without it |
 | `FilterSanitize` | `sanitize` | `gem install sanitize` | `sanitize` | Supported |
 | `autodiscovery` and `inspect` subcommands | `feedbag` | `gem install feedbag` | `autodiscovery` | Supported |

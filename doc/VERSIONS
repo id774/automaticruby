@@ -11,6 +11,7 @@ v26.08 (Release Date: TBD)
 - Classify every shipped plugin by its current support status rather than simulating obsolete services in tests.
 - Modernize the bundled plugins for current Ruby, libraries and services, and remove the integrations that are no longer viable.
 - Remove the plugins for Twitter, Pocket, HipChat, Google Calendar, livedoor Weather, So-net G-Guide and Chan-Toru, and Google News link rewriting; their services or APIs no longer exist, and a Recipe naming one now fails at load.
+- Add the plugin CustomFeedWeb, which builds one feed per HTML index page from the article links it lists, selected with CSS selectors and filtered by host, pattern and count.
 - Rebuild the test and CI strategy for current RSpec and Ruby, with deterministic isolation from user data and external services.
 - Add Markdown as the primary service-independent publication format, with a documented and tested first-run workflow.
 - Rebuild the maintained documentation around current usage, architecture, policy, plugins and deployment, and remove superseded historical documents.

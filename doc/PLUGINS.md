@@ -688,6 +688,130 @@ to follow before putting it in `cron`, and set `interval`.
 
 ### 6.2 CustomFeed
 
+#### CustomFeedWeb — **Supported**
+
+`custom_feed/web.rb`. Fetches HTML index pages and builds one feed per page
+from the article links it lists. For a site that publishes no feed and whose
+list page has more structure than `SubscriptionLink` reads: CSS selectors say
+where an article is and what belongs to it, and the links are resolved,
+filtered and deduplicated on the way into the feed.
+
+```yaml
+  - module: CustomFeedWeb
+    config:
+      retry: 2
+      interval: 1
+      sites:
+        - url: https://example.com/news/
+          name: Example News
+          item_selector: article
+          link_selector: h2 a
+          title_selector: h2
+          description_selector: .summary
+          date_selector: time
+          same_host: true
+          include:
+            - ^https://example\.com/news/
+          exclude:
+            - /category/
+          fetch_items: 50
+```
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `sites` | sequence | Page mappings, fetched in order. Required. |
+| `retry` | integer | Attempts after the first, per page. Default `0`. |
+| `interval` | integer | Seconds between requests. Default `0`. |
+
+Each element of `sites` is a mapping. A bare `- https://example.com/news/` is
+not accepted: a page's settings are what this plugin is for, and one shorthand
+kept working forever is a second format to support.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `url` | string | The page to fetch. Required. |
+| `name` | string | Channel title. Default the page's `<title>`, then its host. |
+| `item_selector` | string | The node one article occupies. |
+| `link_selector` | string | The permalink, evaluated inside the article where there is one. Default `a[href]`. |
+| `title_selector` | string | The title, inside the article. Default the link's own text. |
+| `description_selector` | string | The summary the page prints, taken as text. |
+| `date_selector` | string | The publication date, inside the article. |
+| `same_host` | boolean | Drop a URL whose host is not the page's. Default `true`. |
+| `include` | sequence | Regular expressions; a URL matching none of them is dropped. |
+| `exclude` | sequence | Regular expressions; a URL matching one of them is dropped. |
+| `fetch_items` | integer | Items per page, from the top. Default `100`; `0`, a negative value and an absent one all mean the default. |
+
+There are three ways a page is read, and which one applies follows from the
+selectors given:
+
+- **Neither `item_selector` nor `link_selector`.** Every `a[href]` on the page
+  is a candidate and its text is the title. This is the mode to start with.
+- **`link_selector` only.** Each node it selects is a candidate, and its text
+  is the title. `main h2 a` is the usual shape of it.
+- **`item_selector`.** Each node it selects is one article, and
+  `link_selector`, `title_selector`, `description_selector` and
+  `date_selector` are evaluated inside that node. Without `link_selector` the
+  article's first `a[href]` is the permalink; without `title_selector` the
+  link's own text is the title.
+
+`title_selector`, `description_selector` and `date_selector` are read inside an
+article, so giving one without `item_selector` names no article to read it in
+and is refused as a settings error.
+
+A candidate URL is resolved against the page it was found on — `/articles/42`,
+`../42` and `//example.com/42` all become the URL a reader would follow — and
+then judged in this order: HTTP or HTTPS, not the page itself, `same_host`,
+`include`, `exclude`, already seen, and finally `fetch_items`. The fragment is
+removed, because two links differing only in their anchor are one article. The
+query string is kept, because `?id=42` is frequently the whole of what
+identifies one; no canonical form is guessed. `same_host` is an exact host
+match, so `blog.example.com` is not `www.example.com`.
+
+The page's own order is kept. A list page's order is the only ordering
+information it carries, and nothing here sorts by date; `FilterSort` is where
+a Recipe asks for that.
+
+`date_selector` prefers the `datetime` attribute of a `<time>` element and
+otherwise parses the node's text. A date that cannot be read is logged and the
+item keeps its place without one — the time the page was fetched is not the
+time the article was published, and is never substituted for it.
+
+The plugin keeps no state: it fetches the page, and what the page lists now is
+what it returns. Whether an item has been published before is the record
+`StorePermalink` keeps, which is what the usual Recipe puts after it:
+
+```yaml
+plugins:
+  - module: CustomFeedWeb
+    config:
+      sites:
+        - url: https://example.com/news/
+          link_selector: main h2 a
+
+  - module: StorePermalink
+    config:
+      db: web-watch.db
+
+  - module: PublishMarkdown
+    config:
+      file: ~/.automatic/markdown/web-watch.md
+      mode: append
+```
+
+A page that could not be fetched is retried, then logged and skipped, and the
+other pages still produce their feeds. Settings that cannot be carried out —
+a site that is not a mapping, a missing or unfetchable `url`, an `include` or
+`exclude` that is not a regular expression, a selector combination that names
+no article — are refused before anything is fetched, because a second attempt
+would fail identically.
+
+Nothing else is fetched: no article body, no next page, no sitemap, no feed
+autodiscovery, and no link found on the page is followed. One run makes one
+request per site. Set `interval` when several sites are on one host.
+
+Needs `nokogiri`, which it reads the page with: `gem install nokogiri`, or the
+`html` group in a checkout.
+
 #### CustomFeedSVNLog — **Supported (external)**
 
 `custom_feed/svn_log.rb`. Runs `svn log --xml` against a repository and makes a
@@ -1310,11 +1434,11 @@ is a claim that the plugin works.
 
 | Status | Count | Plugins |
 | --- | --- | --- |
-| Supported | 23 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
+| Supported | 24 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `CustomFeedWeb`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
 | Supported (external) | 10 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper`, `PublishAmazonS3` |
 | Needs rework | 1 | `PublishHatenaBookmark` |
 
-Thirty-four plugins. Every one of them either runs, or names the one thing it
+Thirty-five plugins. Every one of them either runs, or names the one thing it
 needs from the operator; the single exception says what is wrong with it and
 what fixing it would take.
 
