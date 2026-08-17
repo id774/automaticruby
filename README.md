@@ -632,6 +632,7 @@ this repository. No document here defers to another repository.
 | Document | What it holds |
 | --- | --- |
 | [`doc/QUICKSTART.md`](doc/QUICKSTART.md) | The shortest path from installation to a Markdown result |
+| [`doc/AI_TUTORIAL.md`](doc/AI_TUTORIAL.md) | Building a Recipe that collects web articles and asks an AI service one question about them |
 | [`doc/PLUGIN_DEVELOPMENT.md`](doc/PLUGIN_DEVELOPMENT.md) | A complete user plugin and practical testing guidance |
 | [`doc/REQUIREMENTS.md`](doc/REQUIREMENTS.md) | What the system is for, what it guarantees, where its responsibility ends |
 | [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md) | How it is composed: the parts, their responsibilities, the flow of a run |
