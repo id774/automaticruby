@@ -1045,6 +1045,279 @@ pipeline expects. Needed because GitHub publishes Atom, not RSS. No settings.
 A field that is already a string is taken as it stands, so a pipeline that has
 been through another filter first is no longer a `NoMethodError`.
 
+#### FilterJoin — **Supported**
+
+`filter/join.rb`. Joins every item in the pipeline into one item. Many items
+in, one item out, and that is the whole of it: it fetches nothing, summarizes
+nothing, and knows nothing about what reads the result.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `title` | string | The title of the joined item. Default `Joined items`. |
+
+**In**: the pipeline as it stands — any number of feeds, any number of items; a
+feed that is `nil` is passed over. **Out**: one feed holding one item. The whole
+pipeline becomes one item rather than one item per feed, because the point of
+joining is to have a single text; a Recipe that wants one item per feed still
+has its feeds separate before this plugin runs.
+
+The description is plain text, with a numbered heading per item so that
+whatever reads it can tell one article from the next:
+
+```text
+ARTICLE 1
+Title: Ruby 4.1 released
+URL: https://example.com/a
+
+The body of the first article.
+
+ARTICLE 2
+Title: PostgreSQL 19 released
+URL: https://example.com/b
+
+The body of the second article.
+```
+
+A title, link or description an item does not carry is written as empty, so
+every section has the same shape. **An input with no items produces an empty
+pipeline**, not an item that says nothing.
+
+**The joined item has no link.** It is several articles at once, so there is no
+page it points at, and putting the first article's URL there would name a
+source for text that is not only from it. That has one consequence for a
+Recipe: the store plugins are keyed on the link and drop an item without one,
+so `StorePermalink`, `StoreFullText` and `StoreDigest` belong **before** this
+plugin, where there is still one item per article to record. `PublishMarkdown`
+heads the joined item with its title and writes no `Link` bullet.
+
+Nothing here is about AI. Joining a day's log lines, notifications or release
+notes into one document is the same operation, and this plugin adds no prompt
+of its own — what the joined text is for is decided by whatever the Recipe puts
+next.
+
+```yaml
+  - module: FilterJoin
+    config:
+      title: Daily Digest
+```
+
+**The four AI filters.** The plugins that follow each send an item's
+description to one AI service and put the answer back in its place. They are
+four plugins rather than one with a `provider` setting, and that is the design
+rather than an accident: the services differ in endpoint, authentication,
+request body, answer shape, error format and available models; each of those
+moves without asking the others; and a Recipe naming `FilterClaude` says on its
+face where the text is being sent.
+Changing service is changing that one line.
+
+**None of them is a summarizer.** The Recipe's `prompt` is the instruction and
+the item's description is the text it applies to, so summarizing, translating,
+extracting, reformatting and classifying are the same plugin with a different
+prompt. There is no default prompt: a Recipe without one is refused with an
+`ArgumentError` rather than being given a purpose it did not ask for. The two
+are sent as separate fields — a system instruction and a user turn — so that
+what an article says is text to be worked on, never an instruction to obey.
+
+What the four have in common:
+
+| Point | What it is |
+| --- | --- |
+| Required settings | `token`, `model` and `prompt`. A Recipe missing one is an `ArgumentError` before the first request. |
+| `retry`, `interval` | Attempts after a failure, and seconds to wait between them. Both default to `0`. |
+| What is retried | The network, a `429`, a `5xx`. |
+| What is not | A refused request, an answer that is not JSON, an answer whose shape is not the one the service documents, and a setting that is missing or wrong. These raise and end the run, because the next attempt would fail the same way. |
+| Input and output | The pipeline's feeds and items, in the same number and the same order. Only `description` is replaced; `title`, `link`, `date` and the rest are untouched. |
+| An item with no description | Logged and passed over. Nothing is sent, and nothing is emptied. |
+| A failure | Never leaves an empty description behind. A run that could not transform an item ends rather than publishing the article as a blank. |
+| The credential | A Recipe setting, which makes the Recipe a secret file. It is never logged, never in an exception message, and never written into an item. TLS certificates are verified. |
+
+Each of them makes **one request per item**, which is what makes the order of a
+Recipe worth thinking about:
+
+- `FilterJoin` → an AI filter: the articles become one text and the service is
+  asked about it **once**. This is the digest arrangement — one answer over
+  everything, which is not the same as a list of separate summaries.
+- An AI filter → `FilterJoin`: each article is transformed **on its own**, and
+  the answers are joined afterwards. Use `FilterOne` or a store plugin ahead of
+  it on a large feed; each item is a billed request.
+
+#### FilterOpenAI — **Supported (external)**
+
+`filter/open_ai.rb`. Sends each item's description to the OpenAI API and
+replaces it with the answer. It speaks the Responses API,
+`https://api.openai.com/v1/responses`, which is the interface OpenAI recommends
+for new integrations, and authenticates with the token as a bearer token.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `token` | string | OpenAI API key. Required. |
+| `model` | string | Model name, as OpenAI names it. Required. |
+| `prompt` | string | The instruction, sent as the request's `instructions`. Required. |
+| `retry` | integer | Attempts after a failure. Default `0`. |
+| `interval` | integer | Seconds between attempts. Default `0`. |
+
+The endpoint is not a setting: there is one, an operator has no version of this
+plugin that talks to a different host, and a setting for it would be a way to
+send the token somewhere else. The answer is read out of the typed `output`
+array, from the `output_text` of the assistant's message.
+
+```yaml
+  - module: FilterOpenAI
+    config:
+      token: sk-...
+      model: gpt-5.6
+      prompt: |
+        Summarize the following articles as one digest, in Japanese.
+      retry: 2
+      interval: 2
+```
+
+#### FilterClaude — **Supported (external)**
+
+`filter/claude.rb`. Sends each item's description to the Anthropic Messages
+API, `https://api.anthropic.com/v1/messages`, and replaces it with the answer.
+Anthropic authenticates with an `x-api-key` header rather than a bearer token,
+requires an API version header, and requires a `max_tokens` — so this plugin
+sends all three, and has one setting the others do not.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `token` | string | Anthropic API key, sent as `x-api-key`. Required. |
+| `model` | string | Model name, as Anthropic names it. Required. |
+| `prompt` | string | The instruction, sent as the request's `system`. Required. |
+| `max_tokens` | integer | The longest answer to allow, which this API requires. Default `4096`. |
+| `retry` | integer | Attempts after a failure. Default `0`. |
+| `interval` | integer | Seconds between attempts. Default `0`. |
+
+The `anthropic-version` header is a constant, not a setting: it is the version
+of the HTTP interface rather than of a model, and changing it is a change to
+this plugin. The answer is the `text` of the content blocks the API returns;
+blocks of other kinds are passed over.
+
+```yaml
+  - module: FilterClaude
+    config:
+      token: sk-ant-...
+      model: claude-opus-5
+      prompt: |
+        Summarize the following articles as one digest, in Japanese.
+      max_tokens: 2048
+      retry: 2
+      interval: 2
+```
+
+#### FilterGemini — **Supported (external)**
+
+`filter/gemini.rb`. Sends each item's description to the Google Gemini API and
+replaces it with the answer. Gemini names the model in the URL rather than in
+the body, so the endpoint is
+`https://generativelanguage.googleapis.com/v1beta/models/<model>:generateContent`,
+built from the Recipe's `model`. The API key goes in an `x-goog-api-key`
+header, which is how Google documents it and what keeps a credential out of a
+URL and out of anything that logs one.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `token` | string | Gemini API key, sent as `x-goog-api-key`. Required. |
+| `model` | string | Model name, bare — `gemini-3.5-flash`, not `models/gemini-3.5-flash`. Required. |
+| `prompt` | string | The instruction, sent as `system_instruction`. Required. |
+| `retry` | integer | Attempts after a failure. Default `0`. |
+| `interval` | integer | Seconds between attempts. Default `0`. |
+
+The request is built of `contents` and `parts` as this API defines them, and is
+not bent into another service's shape. The answer is the text of the first
+candidate's parts; an answer carrying no candidate — which is what a request
+stopped by a safety filter looks like — is an error rather than an empty
+description.
+
+```yaml
+  - module: FilterGemini
+    config:
+      token: AIza...
+      model: gemini-3.5-flash
+      prompt: |
+        Summarize the following articles as one digest, in Japanese.
+      retry: 2
+      interval: 2
+```
+
+#### FilterSakuraAI — **Supported (external)**
+
+`filter/sakura_ai.rb`. Sends each item's description to the Sakura AI Engine,
+`https://api.ai.sakura.ad.jp/v1/chat/completions`, and replaces it with the
+answer. The token is a bearer token, and the request is the chat completions
+form: the prompt as a `system` message, the description as a `user` message.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `token` | string | Sakura AI Engine token. Required. |
+| `model` | string | Model name, as the service's control panel lists it. Required. |
+| `prompt` | string | The instruction, sent as the `system` message. Required. |
+| `retry` | integer | Attempts after a failure. Default `0`. |
+| `interval` | integer | Seconds between attempts. Default `0`. |
+
+**This interface is OpenAI-compatible, and this is still its own plugin.** It is
+a different service: a different endpoint, a different account, a different set
+of models, its own limits and its own errors, any of which may move without
+OpenAI moving. Folding it into `FilterOpenAI` behind a setting would trade a
+Recipe that says where the text goes for a Recipe that does not.
+
+```yaml
+  - module: FilterSakuraAI
+    config:
+      token: ...
+      model: gpt-oss-120b
+      prompt: |
+        以下の記事群について、個別記事の要約を羅列するのではなく、
+        全体を一つのダイジェストとして日本語で要約してください。
+      retry: 2
+      interval: 2
+```
+
+A digest, end to end: find the articles, drop the ones already seen, fetch
+their bodies, strip the markup, join them, ask once, write the answer out.
+
+```yaml
+plugins:
+  - module: CustomFeedWeb
+    config:
+      sites:
+        - url: https://example.com/news/
+
+  - module: StorePermalink
+    config:
+      db: digest.db
+
+  - module: FilterFullFeed
+    config:
+      siteinfo: items_all.json
+
+  - module: FilterSanitize
+
+  - module: FilterJoin
+    config:
+      title: Daily Digest
+
+  - module: FilterSakuraAI
+    config:
+      token: ...
+      model: gpt-oss-120b
+      prompt: |
+        以下の記事群について、個別記事の要約を羅列するのではなく、
+        全体を一つのダイジェストとして日本語で要約してください。
+      retry: 2
+      interval: 2
+
+  - module: PublishMarkdown
+    config:
+      file: ~/.automatic/markdown/digest.md
+      mode: append
+```
+
+Changing service is changing the one entry: `FilterSakuraAI` for
+`FilterOpenAI`, `FilterClaude` or `FilterGemini`, with that plugin's own
+settings. Nothing before or after it changes.
+
 ### 6.4 Store
 
 Persist, and drop what has already been seen. A store plugin is what makes a
@@ -1563,11 +1836,11 @@ is a claim that the plugin works.
 
 | Status | Count | Plugins |
 | --- | --- | --- |
-| Supported | 25 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `CustomFeedWeb`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `StorePermalink`, `StoreFullText`, `StoreDigest`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
-| Supported (external) | 10 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper`, `PublishAmazonS3` |
+| Supported | 26 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `CustomFeedWeb`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `FilterJoin`, `StorePermalink`, `StoreFullText`, `StoreDigest`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
+| Supported (external) | 14 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `FilterOpenAI`, `FilterClaude`, `FilterGemini`, `FilterSakuraAI`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper`, `PublishAmazonS3` |
 | Needs rework | 1 | `PublishHatenaBookmark` |
 
-Thirty-six plugins. Every one of them either runs, or names the one thing it
+Forty-one plugins. Every one of them either runs, or names the one thing it
 needs from the operator; the single exception says what is wrong with it and
 what fixing it would take.
 

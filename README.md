@@ -102,7 +102,7 @@ a plugin set every part of which still has somewhere to talk to. See
 
 - **Recipes in YAML.** A job is a file, not a program. No Ruby is written to
   wire a pipeline together.
-- **36 plugins** across seven categories: subscribe, custom feed, filter,
+- **41 plugins** across seven categories: subscribe, custom feed, filter,
   store, provide, notify, publish — and every one of them has a current use.
 - **Markdown out of the box.** `PublishMarkdown` writes the result as a plain
   Markdown document, to a file or to standard output, with no service and no
@@ -374,14 +374,14 @@ like a shipped plugin replaces it.
 
 ### Which plugins still work
 
-36 plugins ship with the gem. Every one is classified in
+41 plugins ship with the gem. Every one is classified in
 [`doc/PLUGINS.md`](doc/PLUGINS.md) section 6, with its settings and the reason
 for its status:
 
 | Status | Count | Meaning |
 | --- | --- | --- |
-| **Supported** | 25 | Works on the supported Rubies with current dependencies |
-| **Supported (external)** | 10 | Works, but needs something you provide: a service, a command, a credential, a data file |
+| **Supported** | 26 | Works on the supported Rubies with current dependencies |
+| **Supported (external)** | 14 | Works, but needs something you provide: a service, a command, a credential, a data file |
 | **Needs rework** | 1 | The service exists; this plugin speaks a replaced interface |
 
 Eleven plugins were removed in this release rather than kept as history: each

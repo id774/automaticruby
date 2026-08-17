@@ -13,6 +13,8 @@ v26.08 (Release Date: TBD)
 - Remove the plugins for Twitter, Pocket, HipChat, Google Calendar, livedoor Weather, So-net G-Guide and Chan-Toru, and Google News link rewriting; their services or APIs no longer exist, and a Recipe naming one now fails at load.
 - Add the plugin CustomFeedWeb, which builds one feed per HTML index page from the article links it lists, selected with CSS selectors and filtered by host, pattern and count.
 - Add the plugin StoreDigest, which drops items by content rather than by URL, on a SHA-256 digest of the item fields a Recipe names.
+- Add the plugin FilterJoin, which joins the whole pipeline into one item carrying each item's title, link and body, and invents no permalink for it.
+- Add the plugins FilterOpenAI, FilterClaude, FilterGemini and FilterSakuraAI, one per AI service rather than one selectable by setting, each replacing an item's description with what that service answers to the Recipe's prompt under a token the Recipe holds.
 - Rebuild the test and CI strategy for current RSpec and Ruby, with deterministic isolation from user data and external services.
 - Add Markdown as the primary service-independent publication format, with a documented and tested first-run workflow.
 - Rebuild the maintained documentation around current usage, architecture, policy, plugins and deployment, and remove superseded historical documents.
