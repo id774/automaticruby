@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Aug 14, 2026
+# Updated::     Aug 19, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../../spec_helper'))
@@ -77,6 +77,18 @@ describe Automatic::CLI do
       path = File.join(APP_ROOT, "test", "fixtures", "sampleOPML.xml")
       expect(run("opmlparser", path)).to eq Automatic::CLI::EXIT_SUCCESS
       expect(out.string).not_to be_empty
+    end
+  end
+
+  describe "the inspect subcommand" do
+    it "fails cleanly when no feed is discovered" do
+      stub_const("Feedbag", Class.new)
+      allow(Automatic).to receive(:require_optional)
+      allow(Feedbag).to receive(:find).and_return([])
+
+      expect(run("inspect", "https://example.com/")).to eq Automatic::CLI::EXIT_FAILURE
+      expect(err.string).to match(%r{no feed found at https://example\.com/})
+      expect(out.string).to be_empty
     end
   end
 
