@@ -6,6 +6,7 @@ v26.08 (Release Date: TBD)
 - Support Ruby 3.3 through 4.0 and modernize the codebase for current Ruby and maintained library APIs, validating representative versions in CI.
 - Harden Recipe loading with safe YAML parsing, structural validation and framework-specific errors.
 - Restructure the CLI with help and version options, predictable error reporting and documented exit statuses.
+- Report a clear CLI error when feed inspection discovers no feed instead of raising an internal exception.
 - Verify TLS certificates when publishing to Instapaper instead of accepting an unverified connection.
 - Modernize gem packaging and dependency policy, separating core requirements from optional plugin dependencies so that an installation can be minimal, complete or extended one plugin at a time, and excluding development and generated files.
 - Classify every shipped plugin by its current support status rather than simulating obsolete services in tests.

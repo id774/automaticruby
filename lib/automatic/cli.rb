@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Aug 14, 2026
+# Updated::     Aug 19, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # Everything that belongs to being a command: option parsing, the subcommands,
@@ -218,6 +218,8 @@ module Automatic
       require 'pp'
       url = argv.shift || missing_argument('inspect')
       feeds = Feedbag.find(url)
+      raise Automatic::Error, "no feed found at #{url}" if feeds.empty?
+
       @stdout.puts feeds.pretty_inspect
       @stdout.puts Automatic::FeedParser.get_url(feeds.pop).pretty_inspect
     end
