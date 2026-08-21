@@ -58,7 +58,8 @@ produce Markdown from the articles they list.
 14. [Repository structure](#14-repository-structure)
 15. [Documents](#15-documents)
 16. [Versioning](#16-versioning)
-17. [License](#17-license)
+17. [Name](#17-name)
+18. [License](#18-license)
 
 ---
 
@@ -665,7 +666,22 @@ What this repository promises not to break — the Recipe format, the plugin
 contract, the plugin naming rule, the user directory, the CLI, and existing
 store databases — is listed in [`doc/POLICY.md`](doc/POLICY.md) section 7.
 
-## 17. License
+## 17. Name
+
+The name **Automatic Ruby** was partly inspired by David Heinemeier Hansson's
+story of naming Ruby on Rails. He first chose *Rails* for the idea of putting
+development "on rails"; when the obvious Rails domain names were unavailable,
+`rubyonrails.com` was free. He later said he liked the result because it put
+Ruby itself more prominently in the name and helped introduce Ruby to a wider
+audience. See [his account of the naming](https://tim.blog/2018/06/05/the-tim-ferriss-show-transcripts-david-dhh-heinemeier-hansson/).
+
+I took a simple lesson from that story: a software name does not have to
+literally describe its architecture. This project was inspired in part by
+Plagger, and I wanted the name to put two things up front: **automatic**
+processing, and doing it in **Ruby** rather than Perl. *Automatic Ruby* said
+both, sounded natural enough, and was easy to remember. That was enough.
+
+## 18. License
 
 Automatic Ruby is dual-licensed under the
 [GNU General Public License, Version 3](https://www.gnu.org/licenses/gpl-3.0.html)
