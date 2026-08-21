@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 15, 2026
-# Updated::     Aug 15, 2026
+# Updated::     Aug 21, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -48,6 +48,13 @@ describe Automatic::Http do
     it 'refuses a string that is not a URL at all' do
       lambda { Automatic::Http.uri('invalid_url') }.should raise_error(ArgumentError)
     end
+
+    %w[http:example.com https:/feed].each do |url|
+      it "refuses #{url} without a host" do
+        lambda { Automatic::Http.uri(url) }.
+          should raise_error(ArgumentError, /has no host/)
+      end
+    end
   end
 
   describe '.fetchable?' do
@@ -57,6 +64,7 @@ describe Automatic::Http do
 
     it 'answers false rather than raising for one it will not' do
       Automatic::Http.fetchable?('file:///etc/passwd').should be false
+      Automatic::Http.fetchable?('https:/feed').should be false
       Automatic::Http.fetchable?(nil).should be false
     end
   end

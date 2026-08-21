@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 15, 2026
-# Updated::     Aug 15, 2026
+# Updated::     Aug 21, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # One way in for everything the plugins fetch over HTTP.
@@ -78,6 +78,9 @@ module Automatic
         parsed = parse(string)
         unless SCHEMES.include?(parsed.scheme)
           raise ArgumentError, "not an HTTP or HTTPS URL: #{string}"
+        end
+        unless parsed.host
+          raise ArgumentError, "HTTP or HTTPS URL has no host: #{string}"
         end
 
         parsed.normalize
