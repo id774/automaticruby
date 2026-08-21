@@ -1,8 +1,8 @@
 automaticruby Repository Version History
 ========================================
 
-v26.08 (Release Date: TBD)
---------------------------
+v26.08 (2026-08-22)
+-------------------
 - Support Ruby 3.3 through 4.0 and modernize the codebase for current Ruby and maintained library APIs, validating representative versions in CI.
 - Harden Recipe loading with safe YAML parsing, structural validation and framework-specific errors.
 - Restructure the CLI with help and version options, predictable error reporting and documented exit statuses.
