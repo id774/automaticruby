@@ -98,12 +98,12 @@ several plugins shell out to Unix commands.
 
 ## 7. The two public interfaces
 
-Two things in this repository are interfaces that people outside it depend on,
-and they receive the strongest compatibility protection in this project. That
-protection is deliberately narrower than treating every implementation detail
-or every shipped plugin as permanent. The Recipe format and the plugin contract
-are stable contracts; framework internals may improve within those contracts,
-and plugins remain replaceable components.
+Two public contracts define how external Recipes and plugins compose with the
+framework, and they receive the strongest compatibility protection in this
+project. That protection is deliberately narrower than treating every
+implementation detail or every shipped plugin as permanent. The Recipe format
+and the plugin contract are stable composition contracts; framework internals
+may improve within those contracts, and plugins remain replaceable components.
 
 ### 7.1 The Recipe
 
