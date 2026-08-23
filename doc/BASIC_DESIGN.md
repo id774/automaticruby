@@ -51,11 +51,11 @@ Maintenance strength follows the architectural layer:
   or interface no longer exists is not preserved by simulation merely to retain
   catalogue size.
 
-Composability is not ranked as a fourth concern after compatibility, safety
-and efficiency. It is the architectural property that defines the framework:
-a small core, independent plugins, one pipeline representation and Recipe-level
-composition. A change that replaces those properties changes the identity of
-the system and is judged as an architecture change.
+Composability is an architectural invariant, not an optimization preference.
+It is the architectural property that defines the framework: a small core,
+independent plugins, one pipeline representation and Recipe-level composition.
+A change that replaces those properties changes the identity of the system and
+is judged as an architecture change.
 
 ## 3. Composition
 

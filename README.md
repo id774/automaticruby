@@ -171,11 +171,10 @@ That is the whole of the framework's behaviour. The value passed along — the
 *pipeline* — is an array of feed objects, and because every plugin takes and
 returns that one shape, any plugin composes with any other.
 
-This composability is an architectural invariant, not a fourth item in a
-priority list beside compatibility, safety and efficiency. Keeping the core
-small, keeping plugin responsibilities independent and keeping one pipeline
-shape are what make Automatic Ruby this framework rather than a collection of
-hard-coded applications.
+This composability is an architectural invariant, not an optimization
+preference. Keeping the core small, keeping plugin responsibilities
+independent and keeping one pipeline shape are what make Automatic Ruby this
+framework rather than a collection of hard-coded applications.
 
 The pipeline normally **narrows**: subscription plugins produce, filters and
 stores reduce, publishers consume. Reading a Recipe top to bottom reads the
