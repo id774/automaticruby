@@ -17,6 +17,12 @@ repository.
 
 ## 2. Design policy
 
+Automatic Ruby is a general-purpose composition framework, not host
+infrastructure and not a purpose-built application. The design therefore
+protects the small set of contracts that make composition possible without
+treating every framework implementation detail or every shipped plugin as
+equally permanent.
+
 - **The framework is the small part.** It loads a Recipe, finds classes by name,
   and calls them in order. It has no domain knowledge, and gaining some would be
   a design error rather than a feature.
@@ -31,6 +37,25 @@ repository.
   is an error only for a Recipe that asked for that plugin.
 - **The library never exits and never prints.** Exit status is decided by the
   entry point; user-facing text is written by the entry point or logged.
+
+Maintenance strength follows the architectural layer:
+
+- **Core contracts are strongly protected.** The Recipe format, plugin
+  contract, single pipeline shape, lookup and override semantics, execution
+  order and established CLI behaviour are depended on outside this repository.
+- **Framework internals may improve inside those contracts.** The loader, CLI,
+  helpers and internal structure are not frozen merely because they are old,
+  provided the invariants and public contracts remain intact.
+- **Plugins are intentionally replaceable.** They may be added, repaired,
+  replaced or removed as their external systems change. A plugin whose service
+  or interface no longer exists is not preserved by simulation merely to retain
+  catalogue size.
+
+Composability is not ranked as a fourth concern after compatibility, safety
+and efficiency. It is the architectural property that defines the framework:
+a small core, independent plugins, one pipeline representation and Recipe-level
+composition. A change that replaces those properties changes the identity of
+the system and is judged as an architecture change.
 
 ## 3. Composition
 
@@ -279,6 +304,12 @@ categories divide responsibility:
 The categories are a convention with one mechanical consequence — the directory
 name is part of the lookup key (section 4.6) — and no other. Nothing enforces
 that a `Filter` does not reach the network.
+
+Replaceability is part of this boundary. A plugin is not given the same
+permanence as the Recipe format or the plugin contract itself. The framework
+preserves the rules that let plugins compose; it does not preserve a plugin
+whose external purpose has disappeared, and it does not move a plugin's domain
+behaviour into the core merely to make that behaviour permanent.
 
 **`Publish` is the boundary at which the pipeline meets a representation that is
 not the pipeline's.** A publishing plugin reads the value described in section

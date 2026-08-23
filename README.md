@@ -78,6 +78,18 @@ them — takes it as input without a parser or an API. That is the general case,
 and it needs no account anywhere; the plugins that publish to a service are for
 when a particular service is the point.
 
+Automatic Ruby is neither host infrastructure nor a purpose-built
+application. It is a general-purpose composition framework: a small mechanism
+for assembling independent steps into a straight-line job. Its generality
+comes from how many jobs fit that composition model, not from growing the
+framework until every kind of workflow fits inside it.
+
+When one concrete purpose needs branching, transactional orchestration,
+multi-user state, permissions, a strongly coupled domain model, or another
+responsibility that does not fit a short plugin pipeline naturally, a
+purpose-built application is usually the better design. Automatic Ruby is
+not made more general by absorbing that complexity into its core.
+
 Automatic Ruby exists so that those jobs are assembled instead. It contributes
 exactly three things:
 
@@ -158,6 +170,12 @@ end
 That is the whole of the framework's behaviour. The value passed along — the
 *pipeline* — is an array of feed objects, and because every plugin takes and
 returns that one shape, any plugin composes with any other.
+
+This composability is an architectural invariant, not a fourth item in a
+priority list beside compatibility, safety and efficiency. Keeping the core
+small, keeping plugin responsibilities independent and keeping one pipeline
+shape are what make Automatic Ruby this framework rather than a collection of
+hard-coded applications.
 
 The pipeline normally **narrows**: subscription plugins produce, filters and
 stores reduce, publishers consume. Reading a Recipe top to bottom reads the

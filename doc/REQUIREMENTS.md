@@ -50,6 +50,16 @@ to a plugin, and plugins are expected to come and go.
 
 - **Not an application.** It has no behaviour of its own. With no Recipe it does
   nothing, and every useful thing it does is a plugin's doing.
+- **Not host infrastructure.** It is not a common system baseline installed to
+  provide the same foundational behaviour to every host. It is operator tooling
+  for assembling jobs, and the jobs, dependencies and effects are chosen by each
+  Recipe.
+- **Not a substitute for a purpose-built application.** The fact that many jobs
+  can be expressed as plugin pipelines does not make every problem a framework
+  problem. A concrete purpose that needs branching, complex shared state,
+  transactions, interactive behaviour, multi-user permissions or tightly
+  coupled domain logic belongs in an application rather than in a larger
+  Automatic Ruby core.
 - **Not a daemon or a scheduler.** One invocation runs one Recipe once and
   exits. Repetition is `cron`'s job, and periodic running is deliberately left
   outside; see section 15.
@@ -89,7 +99,11 @@ several plugins shell out to Unix commands.
 ## 7. The two public interfaces
 
 Two things in this repository are interfaces that people outside it depend on,
-and they are treated accordingly.
+and they receive the strongest compatibility protection in this project. That
+protection is deliberately narrower than treating every implementation detail
+or every shipped plugin as permanent. The Recipe format and the plugin contract
+are stable contracts; framework internals may improve within those contracts,
+and plugins remain replaceable components.
 
 ### 7.1 The Recipe
 
@@ -131,6 +145,12 @@ In practice the elements are RSS objects produced by Ruby's `RSS::Maker` or by
 that acquires something which is not a feed — a row of a TSV file, an API
 response, a weather report — converts it into this shape and the rest of the
 pipeline is unaffected.
+
+The single pipeline shape is part of the framework's composition model. It is
+protected for the same reason as the plugin contract: changing it would not
+merely refactor an implementation, but would change what existing plugins can
+compose with. Composability here is an architectural invariant, not an
+optimization preference.
 
 This is the framework's one substantive constraint on plugins, and it is what
 makes them compose. Three consequences are requirements:
@@ -294,6 +314,13 @@ The requirements on failure:
   completed. Silently returning an empty pipeline is a defect.
 - **A Recipe naming a plugin that does not exist fails immediately**, before any
   plugin runs, with a message naming the plugin.
+
+These execution rules describe the straight-line composition model Automatic
+Ruby supports. They are not an incomplete version of a richer workflow engine.
+A use case that fundamentally requires branching, resume checkpoints,
+transactional coordination or cross-step state ownership should not cause the
+framework to grow those features by default; it should first be judged as a
+candidate for a purpose-built application.
 
 ## 13. The user directory
 
