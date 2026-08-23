@@ -22,10 +22,22 @@ The Invariants below decide over the rest of it.
 
 ### 1.1 Purpose and scope
 
+Automatic Ruby is neither system infrastructure nor a purpose-built
+application. It is a general-purpose composition framework. Its purpose is to
+keep a small composition mechanism stable enough that independent plugins can
+be combined freely, without turning the framework into a host baseline, a
+general workflow engine or a collection of hard-coded applications.
+
 - **Automatic Ruby is a framework, and the framework is the small part.** It
   loads a Recipe, finds classes by name and calls them in order. Nearly every
   change belongs in a plugin, and a change that adds domain knowledge to the
   framework needs a reason beyond convenience.
+- **Generality comes from composition, not from accumulating framework
+  features.** A concrete use case that needs branching, transactional
+  orchestration, multi-user state, permissions, a strongly coupled domain
+  model or another responsibility that does not fit a short linear pipeline is
+  not automatically a reason to enlarge the framework. A purpose-built
+  application is often the correct boundary for that complexity.
 - **It is one person's tooling, run unattended from `cron`.** It is not a
   service, not multi-tenant and not a product. That premise decides several
   rules below that would otherwise look lax — the Recipe being trusted, chiefly.
@@ -55,23 +67,41 @@ general policy would otherwise ask for.
 4. **A dependency needed by one plugin is not a dependency of the framework.**
    Installing the gem must not pull in an SDK for a service the operator does
    not use. See section 9.
-5. **A failure is never silent.** No `rescue` that returns an empty pipeline as
+5. **Composability is an architectural invariant, not an optimization goal.**
+   The small framework, independent plugins, one pipeline representation and
+   Recipe-level ordering are the identity of the system. They are not traded
+   away merely for convenience, central validation, richer orchestration or a
+   more application-like design.
+6. **A failure is never silent.** No `rescue` that returns an empty pipeline as
    if nothing happened, and no run that exits zero after something went wrong.
-6. **The default test suite reaches no network and needs no credential.** None
+7. **The default test suite reaches no network and needs no credential.** None
    is configured in CI.
-7. **A plugin that cannot work is never simulated into working.** Stubbing a
+8. **A plugin that cannot work is never simulated into working.** Stubbing a
    dead service to make a test pass, or to make the catalogue look better, is
    forbidden outright. Removing the plugin is the correct outcome. See
    section 4.
-8. **No credential is committed**, in a Recipe, an example, a fixture or a test,
+9. **No credential is committed**, in a Recipe, an example, a fixture or a test,
    and none is written to the log.
-9. **Historical release history is not rewritten.** Past versions and their
-   dates in [`VERSIONS`](VERSIONS) are a record, not a thing to tidy.
-10. **The licence is GPL version 3 or LGPL version 3.** Automatic Ruby is
+10. **Historical release history is not rewritten.** Past versions and their
+    dates in [`VERSIONS`](VERSIONS) are a record, not a thing to tidy.
+11. **The licence is GPL version 3 or LGPL version 3.** Automatic Ruby is
     dual-licensed, and a user may choose either license at their discretion. New
     files use the same dual license.
 
 ### 1.3 Design philosophy
+
+The repository is maintained in three layers, and they do not receive the same
+degree of conservatism.
+
+- **Core contracts receive the strongest compatibility protection:** the
+  Recipe format, plugin contract, pipeline shape, plugin lookup and override
+  semantics, execution order and established CLI contract.
+- **Framework implementation may improve within those contracts:** the CLI,
+  loader, pipeline implementation, logging and shared helpers are not frozen
+  merely because they are old.
+- **Plugins are replaceable components:** they may be added, repaired,
+  replaced or removed as their external systems and purposes change. A dead
+  integration is not retained by simulation.
 
 - Simple comes before clever. Common work should fit in a short Recipe, and a
   new abstraction needs a concrete problem the existing plugin contract cannot
@@ -90,7 +120,43 @@ general policy would otherwise ask for.
 - Old is not a defect. Neither is unfashionable. A defect is something that does
   not work, is not understood, or cannot be tested.
 
-### 1.4 The parts and the direction of dependency
+### 1.4 Change discipline and maintenance boundary
+
+Automatic Ruby does not inherit every maintenance rule that is appropriate
+for long-lived host infrastructure. Its core contracts deserve comparable
+caution because external Recipes and plugins depend on them, but the whole
+repository is not treated as immutable infrastructure.
+
+Finding a possible safety, portability, maintainability, cleanup,
+modernization or refactoring improvement does not by itself authorize an
+implementation change. A change is made when that change is part of the stated
+work, not merely because an opportunity was noticed while editing nearby code.
+
+Established behaviour is evaluated by layer. A Recipe or plugin contract that
+has been used for years has strong compatibility value. A framework internal
+implementation detail may be improved while preserving those contracts. A
+shipped plugin may be replaced or removed when its external service or
+interface is gone and the plugin can no longer perform real work.
+
+Safety mechanisms are means, not goals. A guard, validation layer, sandbox,
+permission model, retry layer or other defensive mechanism is justified by the
+risk it materially reduces and by whether that benefit outweighs added
+complexity, new failure modes and maintenance cost. This project is trusted
+single-user tooling; controls appropriate to an untrusted multi-user service
+are not added merely because they are generally considered safer.
+
+Long-running operational history is evidence, especially for Recipe semantics,
+plugin contracts and cron pipelines. It is not a reason to preserve a broken
+integration or to freeze internal implementation that can change without
+altering those contracts.
+
+A change that would introduce branching, loops, fan-out, transactional
+orchestration, multi-user state, a central plugin registry, domain knowledge in
+the framework or another responsibility that changes the composition model is
+an architecture change. It is not reached as a routine refactoring or as a
+convenient way to satisfy one plugin or one Recipe.
+
+### 1.5 The parts and the direction of dependency
 
 ```text
 bin/automatic
@@ -127,7 +193,7 @@ Dependency points one way and there is no edge back up:
   to two, the boundary is wrong and is corrected, rather than the code being
   written across it.
 
-### 1.5 The plugin boundary
+### 1.6 The plugin boundary
 
 - The framework's knowledge of a plugin is: its name, its file's location, its
   constructor's two arguments and its `run` method. It does not know a plugin's
@@ -142,7 +208,7 @@ Dependency points one way and there is no edge back up:
 - Shared plugin code that the framework does not use stays under `plugins/`, not
   in `lib/`. `plugins/store/database.rb` is where it is for that reason.
 
-### 1.6 Configuration
+### 1.7 Configuration
 
 - A Recipe is the whole of a job's configuration. There is no second file, no
   configuration directory, and no environment-variable settings.
@@ -161,7 +227,7 @@ Dependency points one way and there is no edge back up:
   change is a setting; a value that is part of what the plugin means stays in
   the code.
 
-### 1.7 Error handling
+### 1.8 Error handling
 
 - **The framework catches nothing from a plugin.** A plugin that raises ends the
   run, for the reason given in `REQUIREMENTS.md` section 12. Adding a blanket
@@ -182,7 +248,7 @@ Dependency points one way and there is no edge back up:
 - **The library never calls `exit` or `abort`.** Exit status is decided at the
   process entry point, from the value `Automatic::CLI.run` returns.
 
-### 1.8 Logging and output
+### 1.9 Logging and output
 
 - **A library file never calls `puts`, `print` or `warn`.** It logs, through
   `Automatic::Log`.
@@ -196,7 +262,7 @@ Dependency points one way and there is no edge back up:
 - No log line contains a credential. A plugin that logs its own settings
   wholesale is a defect.
 
-### 1.9 Filesystem access
+### 1.10 Filesystem access
 
 - The framework touches two roots: the installation directory and
   `~/.automatic`. Nothing else, and no absolute path elsewhere appears in the
@@ -211,7 +277,7 @@ Dependency points one way and there is no edge back up:
   extended, and nothing else acquires the ability to delete an operator's data.
 - A plugin writes only where its settings tell it to.
 
-### 1.10 Network access
+### 1.11 Network access
 
 - **The framework reaches nothing.** No update check, no telemetry, no
   phone-home. Every request is a plugin's, on a Recipe's instruction.
@@ -233,7 +299,7 @@ Dependency points one way and there is no edge back up:
 - Every request has a connect and a read timeout. An unattended run that hangs
   is a failure mode with no upper bound on its cost.
 
-### 1.11 Security and credentials
+### 1.12 Security and credentials
 
 - **A Recipe is trusted local configuration**, equivalent to a shell script the
   operator wrote. This is the trust boundary, it is stated in
@@ -251,7 +317,7 @@ Dependency points one way and there is no edge back up:
 - A change that touches authentication says in its `VERSIONS` entry what it
   changed.
 
-### 1.12 Judging a change
+### 1.13 Judging a change
 
 - Does it keep the Recipe format and the plugin contract, and if not, is that
   deliberate and recorded?
@@ -261,6 +327,15 @@ Dependency points one way and there is no edge back up:
 - Is it the smallest change that does the job?
 - Does a test say it works, and does the default suite still need no network?
 - Do the documents still match the code, in the same commit?
+- Which layer is changing: a core contract, framework implementation or a
+  replaceable plugin?
+- Is a framework change solving a framework problem, or absorbing
+  domain-specific behaviour that belongs in a plugin or an application?
+- Does a new dependency remain local to the plugin that needs it?
+- Does a proposed safety mechanism materially reduce a relevant risk without
+  imposing disproportionate complexity on trusted single-user tooling?
+- Does the change preserve the small linear composition model, and if not, has
+  an explicit architecture change actually been chosen?
 
 ---
 
@@ -397,7 +472,7 @@ repository level only; see section 10.
 - **Converting the pipeline into some other representation is a `Publish`
   plugin's work, and the result stays inside the plugin.** It is serialized at
   the boundary, written to the destination, and never passed along the pipeline
-  or made known to the framework, which keeps Invariant 2 and section 1.5
+  or made known to the framework, which keeps Invariant 2 and section 1.6
   intact. Producing a portable document — one a person can read, ordinary tools
   can process and another program can be given, with no service behind it — is
   a destination like any other and belongs in that category.
@@ -423,7 +498,7 @@ Plugins outlive the services they talk to. The policy for what happens then:
   "does not work and never will"; a plugin in that position is removed.
 - **A dead integration is never faked into life.** No stub of a shut-down
   service, no mock that makes an integration look alive, no test that asserts
-  against a simulation. This is Invariant 7 and it has no exceptions. If a
+  against a simulation. This is Invariant 8 and it has no exceptions. If a
   plugin can only be made to look supported by simulating what it talks to,
   what it needs is deletion, not a double.
 - **Unsupported code is not kept for preservation.** Git history holds every
@@ -472,7 +547,7 @@ Plugins outlive the services they talk to. The policy for what happens then:
 - **RSpec**, under `spec/`, mirroring the source tree: `spec/lib/` for the
   framework and `spec/plugins/<category>/` for plugins.
 - **The default suite reaches no network and needs no credential.** This is
-  Invariant 6. A spec that would is not written; the integration Recipes under
+  Invariant 7. A spec that would is not written; the integration Recipes under
   `test/integration/` are where that belongs, and they are run by hand.
 - A framework spec covers the loader, the Recipe, the pipeline, the log and the
   CLI's exit statuses.
@@ -622,6 +697,12 @@ plugin's own file, declared in an optional group of the `Gemfile`, and **not
 declared as runtime dependencies**. An operator who uses that plugin installs
 the gem. This is Invariant 4, and it is why installing this gem does not install
 an AWS SDK.
+
+Dependency minimization is not a repository-wide contest to use the fewest
+libraries. A plugin may be rich when its purpose requires it. The rule is that
+the cost stays with the plugin that needs it: a parser, database driver, SDK or
+other domain-specific dependency must not become a framework dependency merely
+because one plugin uses it.
 
 The permanent rules of the split:
 
