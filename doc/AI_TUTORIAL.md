@@ -166,11 +166,12 @@ A Recipe that relies on full article bodies should supply siteinfo for the
 sites it relies on under `~/.automatic/assets/siteinfo/`, rather than treating
 the bundled snapshot as a guarantee of coverage.
 
-Where no record matches, the plugin leaves the item exactly as it arrived, and
-the run continues. That is the behaviour to rely on and also the reason the
-document above holds a title, a link and a date per article and no body: an
-index page read without a `description_selector` carries no description for
-`FilterFullFeed` to have improved on.
+Where no record matches, the plugin leaves the item exactly as it arrived and
+the run continues. If the index page also provides no description, that item
+therefore has metadata but no article body. If a bundled or user-supplied
+siteinfo record does match, `FilterFullFeed` may replace the description with
+the selected article body. The tutorial relies on that conditional behavior,
+not on either outcome being guaranteed for a particular site.
 
 Text can enter these items from the index page or from the article page,
 and both are
@@ -418,9 +419,9 @@ in a Recipe they are interchangeable at the same position:
       interval: 2
 ```
 
-Nothing before or after the swapped entry changes. `token`, `model` and `prompt`
-are required by all four; `max_tokens` exists only for Claude, because that API
-requires it. Model names move with the services, so take them from the provider
+Nothing before or after the swapped entry changes. `token`, `model` and
+`prompt` are shared required settings of the AI filters; `max_tokens` exists
+only for Claude because that API requires it. Model names move with the services, so take them from the provider
 you are using rather than from this document, and see
 [`PLUGINS.md`](PLUGINS.md) section 6.3 for each plugin's endpoint,
 authentication and answer handling.

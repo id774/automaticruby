@@ -1249,9 +1249,9 @@ for new integrations, and authenticates with the token as a bearer token.
 | `retry` | integer | Attempts after a failure. Default `0`. |
 | `interval` | integer | Seconds between attempts. Default `0`. |
 
-The endpoint is fixed by this plugin rather than exposed as a setting, an operator has no version of this
-plugin that talks to a different host, and a setting for it would be a way to
-send the token somewhere else. The answer is read out of the typed `output`
+The endpoint is fixed by this plugin rather than exposed as a setting. An
+operator has no version of this plugin that talks to a different host, and a
+setting for the endpoint would provide a way to send the token somewhere else. The answer is read out of the typed `output`
 array, from the `output_text` of the assistant's message.
 
 ```yaml
@@ -1313,7 +1313,7 @@ URL and out of anything that logs one.
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `token` | string | Gemini API key, sent as `x-goog-api-key`. Required. |
-| `model` | string | Model name, bare — `gemini-3.5-flash`, not `models/gemini-3.5-flash`. Required. |
+| `model` | string | Bare model name without the `models/` prefix. Required. |
 | `prompt` | string | The instruction, sent as `system_instruction`. Required. |
 | `retry` | integer | Attempts after a failure. Default `0`. |
 | `interval` | integer | Seconds between attempts. Default `0`. |
