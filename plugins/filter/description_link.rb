@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Oct 03, 2014
-# Updated::     Aug 15, 2026
+# Updated::     Aug 24, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
@@ -63,10 +63,27 @@ module Automatic::Plugin
     def fetch_title(url)
       return nil unless Automatic::Http.fetchable?(url)
 
-      Nokogiri::HTML.parse(Automatic::Http.read(url)).xpath('//title').text
+      Nokogiri::HTML.parse(page(url)).xpath('//title').text
     rescue StandardError => e
       Automatic::Log.puts('warn', "Failed in get title for: #{url}, #{e.message}")
       nil
+    end
+
+    # The one place this plugin actually reaches the network. `wait` runs in
+    # the `ensure` so that a fetch attempt is waited out whether it succeeded
+    # or raised -- a URL that is not fetchable never gets here at all, and so
+    # never waits.
+    def page(url)
+      Automatic::Http.read(url)
+    ensure
+      wait
+    end
+
+    # `interval` seconds after a real fetch attempt, positive values only. See
+    # doc/PLUGINS.md section 6.3.
+    def wait
+      seconds = @config['interval'].to_i
+      sleep(seconds) if seconds.positive?
     end
   end
 end

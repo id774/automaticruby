@@ -115,8 +115,8 @@ a plugin set every part of which still has somewhere to talk to. See
 
 - **Recipes in YAML.** A job is a file, not a program. No Ruby is written to
   wire a pipeline together.
-- **41 plugins** across seven categories: subscribe, custom feed, filter,
-  store, provide, notify, publish — and every one of them has a current use.
+- **Plugins across seven categories.** Subscribe, custom feed, filter, store,
+  provide, notify and publish plugins compose through the same pipeline contract.
 - **Markdown out of the box.** `PublishMarkdown` writes the result as a plain
   Markdown document, to a file or to standard output, with no service and no
   credential behind it. It is the natural end of a new Recipe.
@@ -392,15 +392,15 @@ like a shipped plugin replaces it.
 
 ### Which plugins still work
 
-41 plugins ship with the gem. Every one is classified in
+Every shipped plugin is classified in
 [`doc/PLUGINS.md`](doc/PLUGINS.md) section 6, with its settings and the reason
 for its status:
 
-| Status | Count | Meaning |
-| --- | --- | --- |
-| **Supported** | 26 | Works on the supported Rubies with current dependencies |
-| **Supported (external)** | 14 | Works, but needs something you provide: a service, a command, a credential, a data file |
-| **Needs rework** | 1 | The service exists; this plugin speaks a replaced interface |
+| Status | Meaning |
+| --- | --- |
+| **Supported** | Works on the supported Rubies with current dependencies |
+| **Supported (external)** | Works, but needs something you provide: a service, a command, a credential, a data file |
+| **Needs rework** | The service exists; this plugin speaks a replaced interface |
 
 Eleven plugins were removed in this release rather than kept as history: each
 talked to a service that has shut down, or through an API that has been
@@ -408,8 +408,9 @@ withdrawn with no replacement. They are listed with their reasons in
 [`doc/PLUGINS.md`](doc/PLUGINS.md) section 8, and Git history holds the code.
 A Recipe naming one of them now fails at load, before anything runs.
 
-Restoring the one in **Needs rework** — `PublishHatenaBookmark` — is
-self-contained work and a good first contribution.
+`PublishHatenaBookmark` is currently classified as **Needs rework**; restoring
+it to the service's current interface is self-contained work and a good first
+contribution.
 
 No plugin here is stubbed, mocked or simulated to make a test pass. Where a
 plugin's gem is not installed its spec is skipped and says which gem is

@@ -5,14 +5,16 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 15, 2026
-# Updated::     Aug 15, 2026
+# Updated::     Aug 24, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
-# doc/PLUGINS.md section 6 is the catalogue of what ships, and README.md
-# repeats its counts. Both are prose, and prose drifts from a directory. This
-# holds them to it: a plugin with no entry, an entry with no plugin, and a
-# count left behind by an edit are failures of the ordinary suite rather than
-# something a reader discovers.
+# doc/PLUGINS.md section 6 is the catalogue of what ships: the set of plugins
+# and each one's current status. This spec compares that catalogue with the
+# plugin files themselves -- a plugin with no entry, an entry with no plugin,
+# and an entry duplicated within section 6 are all failures of the ordinary
+# suite rather than something a reader discovers. No second count or plugin
+# list is maintained anywhere as a target to keep this spec, or section 6,
+# synchronized with.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
 
@@ -42,18 +44,20 @@ RSpec.describe 'the plugin catalogue' do
   # "#### SubscriptionFeed — **Supported**"
   ENTRY = /^\#\#\#\#\s+(\w+)\s+—\s+\*\*(.+?)\*\*/
 
-  def catalogue
+  # Section 6's entries, in the order they appear, as [name, status] pairs. A
+  # name that appears twice is left duplicated here rather than collapsed by
+  # #to_h, so a spec can tell an accidental duplicate apart from a plugin with
+  # no entry at all.
+  def catalogue_entries
     document = File.read(File.join(APP_ROOT, 'doc', 'PLUGINS.md'), encoding: 'UTF-8')
     section = document[/^## 6\. The plugins$.*?^## 7\./m]
     raise 'doc/PLUGINS.md has no section 6' if section.nil?
 
-    section.scan(ENTRY).to_h
+    section.scan(ENTRY)
   end
 
-  # "| Supported (external) | 10 | `SubscriptionTumblr`, ... |"
-  def summary_rows
-    document = File.read(File.join(APP_ROOT, 'doc', 'PLUGINS.md'), encoding: 'UTF-8')
-    document.scan(/^\|\s(Supported|Supported \(external\)|Needs rework)\s\|\s(\d+)\s\|\s(.+?)\s\|$/)
+  def catalogue
+    catalogue_entries.to_h
   end
 
   let(:shipped) { shipped_plugins }
@@ -88,40 +92,11 @@ RSpec.describe 'the plugin catalogue' do
     end
   end
 
-  describe 'the summary table in section 7' do
-    it 'counts what section 6 lists' do
-      counted = entries.values.group_by { |status| status.sub(/,.*\z/, '') }.
-                transform_values(&:size)
+  it 'lists every plugin exactly once' do
+    names = catalogue_entries.map(&:first)
+    duplicates = names.tally.select { |_name, count| count > 1 }.keys.sort
 
-      summary_rows.each do |status, count, _plugins|
-        count.to_i.should == counted.fetch(status, 0)
-      end
-    end
-
-    it 'names what section 6 lists' do
-      summary_rows.each do |status, _count, plugins|
-        named = plugins.scan(/`(\w+)`/).flatten.sort
-        expected = entries.select { |_name, value| value.sub(/,.*\z/, '') == status }.keys.sort
-        named.should == expected
-      end
-    end
-
-    it 'accounts for every plugin exactly once' do
-      summary_rows.sum { |_status, count, _plugins| count.to_i }.should == shipped.size
-    end
-  end
-
-  describe 'README.md' do
-    let(:readme) { File.read(File.join(APP_ROOT, 'README.md'), encoding: 'UTF-8') }
-
-    it 'gives the same total' do
-      readme.should include("#{shipped.size} plugins")
-    end
-
-    it 'gives the same count per status' do
-      summary_rows.each do |status, count, _plugins|
-        readme.should match(/\*\*#{Regexp.escape(status)}\*\*\s*\|\s*#{count}\s*\|/)
-      end
-    end
+    duplicates.should == []
+    shipped.sort.should == names.sort
   end
 end

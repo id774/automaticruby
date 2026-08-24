@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Mar  1, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Aug 24, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -132,5 +132,61 @@ describe Automatic::Plugin::FilterImageSource do
       subject.run[0].items.map(&:link).
         should == ['http://example.com/a.png']
     }
+  end
+end
+
+describe Automatic::Plugin::FilterImageSource, "the interval setting" do
+  context "when interval is positive and every page fetch succeeds" do
+    subject {
+      Automatic::Plugin::FilterImageSource.new(
+        { 'interval' => 2 },
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://example.com/a", "", ""
+            item "http://example.com/b", "", ""
+          }})}
+
+    before do
+      Automatic::Http.stub(:read) { |url| "<img src=\"#{url}/image.png\">" }
+    end
+
+    it "waits after every page fetch" do
+      subject.should_receive(:sleep).with(2).twice
+      lambda { subject.run }.should_not raise_error
+    end
+  end
+
+  context "when the images come from the description" do
+    subject {
+      Automatic::Plugin::FilterImageSource.new(
+        { 'interval' => 2 },
+        AutomaticSpec.generate_pipeline {
+          feed {
+            item "http://example.com/a", "",
+            "<img src=\"http://example.com/a.png\">"
+          }})}
+
+    it "does not wait" do
+      Automatic::Http.should_not_receive(:read)
+      subject.should_not_receive(:sleep)
+      subject.run[0].items.map(&:link).should == ['http://example.com/a.png']
+    end
+  end
+
+  context "when the page fetch fails" do
+    subject {
+      Automatic::Plugin::FilterImageSource.new(
+        { 'interval' => 2 },
+        AutomaticSpec.generate_pipeline {
+          feed { item "http://example.com/a", "", "" }
+        })}
+
+    before { Automatic::Http.stub(:read).and_raise(StandardError, 'no such host') }
+
+    it "waits once and returns no images" do
+      subject.should_receive(:sleep).with(2).once
+      returned = subject.run
+      returned[0].items.should be_empty
+    end
   end
 end

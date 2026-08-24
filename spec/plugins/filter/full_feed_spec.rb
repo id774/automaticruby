@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Jan 24, 2013
-# Updated::     Aug 15, 2026
+# Updated::     Aug 24, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -261,6 +261,63 @@ describe Automatic::Plugin::FilterFullFeed, 'without a network' do
     it "is required" do
       lambda { Automatic::Plugin::FilterFullFeed.new({}, []) }.
         should raise_error(ArgumentError, /siteinfo/)
+    end
+  end
+
+  describe "the interval setting" do
+    context "when interval is positive and every fetch succeeds" do
+      subject {
+        Automatic::Plugin::FilterFullFeed.new(
+          { 'siteinfo' => 'test.json', 'interval' => 2 },
+          AutomaticSpec.generate_pipeline {
+            feed {
+              item 'http://example.com/article-1', 'a title', 'the summary the feed gave'
+              item 'http://example.com/article-2', 'another title', 'another summary'
+            }
+          })
+      }
+
+      it "waits after each page fetch" do
+        subject.should_receive(:sleep).with(2).twice
+        lambda { subject.run }.should_not raise_error
+      end
+    end
+
+    context "when the siteinfo does not match, so no page is fetched" do
+      let(:records) { [FullFeedSpec.record('^http://elsewhere\.example/', '//div')] }
+
+      subject {
+        Automatic::Plugin::FilterFullFeed.new(
+          { 'siteinfo' => 'test.json', 'interval' => 2 },
+          AutomaticSpec.generate_pipeline {
+            feed { item 'http://example.com/article', 'a title', 'the summary the feed gave' }
+          })
+      }
+
+      it "does not wait" do
+        Automatic::Http.should_not_receive(:open)
+        subject.should_not_receive(:sleep)
+        lambda { subject.run }.should_not raise_error
+      end
+    end
+
+    context "when the fetch fails" do
+      before { Automatic::Http.stub(:open).and_raise(Errno::ECONNREFUSED) }
+
+      subject {
+        Automatic::Plugin::FilterFullFeed.new(
+          { 'siteinfo' => 'test.json', 'interval' => 2 },
+          AutomaticSpec.generate_pipeline {
+            feed { item 'http://example.com/article', 'a title', 'the summary the feed gave' }
+          })
+      }
+
+      it "waits once and keeps the existing summary" do
+        subject.should_receive(:sleep).with(2).once
+        lambda { subject.run }.should_not raise_error
+        subject.instance_variable_get(:@pipeline)[0].items[0].description.
+          should == 'the summary the feed gave'
+      end
     end
   end
 end

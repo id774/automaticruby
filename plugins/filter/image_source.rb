@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 28, 2012
-# Updated::     Aug 15, 2026
+# Updated::     Aug 24, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
@@ -49,10 +49,27 @@ module Automatic::Plugin
     end
 
     def page_images(link)
-      sources(Automatic::Http.read(link), link)
+      sources(page(link), link)
     rescue StandardError => e
       Automatic::Log.puts('warn', "Failed to read images from #{link}: #{e.message}")
       []
+    end
+
+    # The one place this plugin actually reaches the network. `wait` runs in
+    # the `ensure` so that a fetch attempt is waited out whether it succeeded
+    # or raised -- an item whose description already had images never gets
+    # here at all, and so never waits.
+    def page(link)
+      Automatic::Http.read(link)
+    ensure
+      wait
+    end
+
+    # `interval` seconds after a real fetch attempt, positive values only. See
+    # doc/PLUGINS.md section 6.3.
+    def wait
+      seconds = @config['interval'].to_i
+      sleep(seconds) if seconds.positive?
     end
 
     # The images of an HTML fragment, as absolute URLs. This was a scan for
