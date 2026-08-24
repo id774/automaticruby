@@ -41,7 +41,7 @@ FilterSakuraAI       ask one question about that text
 PublishMarkdown      write the answer to a document
 ```
 
-Seven plugins, each doing one thing, each handing its result to the next. The
+Each plugin does one thing and hands its result to the next. The
 Recipe that expresses it is in section 4, and nothing in it is a special case:
 every entry is a plugin the framework loads by name, and the order of the list
 is the order of the work.
@@ -133,7 +133,7 @@ gem install activerecord sqlite3
 gem install sanitize
 ```
 
-In a checkout the same three groups are selected together:
+In a checkout, select the groups required by those plugins together:
 
 ```sh
 bundle config set --local with "html store sanitize"
@@ -153,14 +153,18 @@ link, its date and whatever text the pipeline could get. No AI service has been
 contacted, no credential exists yet, and the Recipe is complete in itself: a
 person who only ever wanted this can stop here and put it in `cron`.
 
-**Expect `FilterFullFeed` to find nothing for these three sites, and read the
-log to see it.** The shipped `assets/siteinfo/items_all.json` is a snapshot of
-the LDRFullFeed database whose newest entries are from 2013, and none of its URL
-patterns matches these sites:
+**Read the `FilterFullFeed` log rather than assuming bundled siteinfo
+coverage.** The shipped siteinfo file is a snapshot. If a record matches an
+article URL, `FilterFullFeed` fetches the page and applies that record's
+XPath. If no record matches, the existing item is preserved and the log says:
 
 ```text
-Fulltext SITEINFO not found: https://go.dev/blog/pkgsite-api
+Fulltext SITEINFO not found: https://example.com/article
 ```
+
+A Recipe that relies on full article bodies should supply siteinfo for the
+sites it relies on under `~/.automatic/assets/siteinfo/`, rather than treating
+the bundled snapshot as a guarantee of coverage.
 
 Where no record matches, the plugin leaves the item exactly as it arrived, and
 the run continues. That is the behaviour to rely on and also the reason the
@@ -168,7 +172,8 @@ document above holds a title, a link and a date per article and no body: an
 index page read without a `description_selector` carries no description for
 `FilterFullFeed` to have improved on.
 
-Getting text into these items is a choice between two places, and both are
+Text can enter these items from the index page or from the article page,
+and both are
 configuration rather than code:
 
 - **From the index page.** Where the listing prints a summary, an
@@ -241,7 +246,7 @@ Now the AI filter goes between `FilterJoin` and `PublishMarkdown`:
   - module: FilterSakuraAI
     config:
       token: YOUR_SAKURA_AI_TOKEN
-      model: gpt-oss-120b
+      model: <Sakura AI Engine model>
       prompt: |
         以下の記事群について、個別記事の要約を羅列するのではなく、
         全体を一つのダイジェストとして日本語で要約してください。
@@ -291,7 +296,7 @@ plugins:
   - module: FilterSakuraAI
     config:
       token: YOUR_SAKURA_AI_TOKEN
-      model: gpt-oss-120b
+      model: <Sakura AI Engine model>
       prompt: |
         以下の記事群について、個別記事の要約を羅列するのではなく、
         全体を一つのダイジェストとして日本語で要約してください。
@@ -341,7 +346,7 @@ Move the AI filter to before `FilterJoin` and change nothing else:
   - module: FilterSakuraAI
     config:
       token: YOUR_SAKURA_AI_TOKEN
-      model: gpt-oss-120b
+      model: <Sakura AI Engine model>
       prompt: |
         以下の記事を日本語で三行に要約してください。
       retry: 2
@@ -374,16 +379,16 @@ and that no plugin had to be changed or configured to express it.
 
 ## 6. Change the service by changing one line
 
-The four AI filters — `FilterOpenAI`, `FilterClaude`, `FilterGemini` and
-`FilterSakuraAI` — are one per service rather than one plugin with a `provider`
-setting. Each replaces an item's description with what its service answers, so
+Automatic Ruby uses separate service-specific AI filters rather than one
+plugin with a `provider` setting. Their current catalogue and settings are
+maintained in [`PLUGINS.md`](PLUGINS.md) section 6.3. Each replaces an item's description with what its service answers, so
 in a Recipe they are interchangeable at the same position:
 
 ```yaml
   - module: FilterOpenAI
     config:
       token: YOUR_OPENAI_API_KEY
-      model: gpt-5.6
+      model: <OpenAI model>
       prompt: |
         以下の記事群を一つのダイジェストとして日本語で要約してください。
       retry: 2
@@ -394,7 +399,7 @@ in a Recipe they are interchangeable at the same position:
   - module: FilterClaude
     config:
       token: YOUR_ANTHROPIC_API_KEY
-      model: claude-opus-5
+      model: <Anthropic model>
       prompt: |
         以下の記事群を一つのダイジェストとして日本語で要約してください。
       max_tokens: 2048
@@ -406,7 +411,7 @@ in a Recipe they are interchangeable at the same position:
   - module: FilterGemini
     config:
       token: YOUR_GEMINI_API_KEY
-      model: gemini-3.5-flash
+      model: <Gemini model>
       prompt: |
         以下の記事群を一つのダイジェストとして日本語で要約してください。
       retry: 2
@@ -420,13 +425,14 @@ you are using rather than from this document, and see
 [`PLUGINS.md`](PLUGINS.md) section 6.3 for each plugin's endpoint,
 authentication and answer handling.
 
-That a Recipe names the service on its face is the reason for four plugins. A
+A Recipe naming the service on its face is the reason for keeping
+service-specific plugins. A
 line reading `FilterClaude` says where the text is going, which is a question
 worth being able to answer by reading the Recipe.
 
 ## 7. Change the prompt, and the Recipe does another job
 
-None of the four filters is a summarizer. The prompt is the instruction and the
+None of the AI filters is a summarizer. The prompt is the instruction and the
 item's description is the text it applies to, so summarizing, translating,
 extracting and classifying are the same plugin with different words in one
 setting. Keeping the Recipe of section 4 and replacing only the `prompt`:
@@ -457,15 +463,17 @@ still worth remembering what the input is: pages fetched from the open web. A
 prompt that states what to do when the text does not contain what was asked for
 is more robust than one that assumes it does.
 
-**Long input has a limit that belongs to the model, not to the framework.** A
-joined text of forty full articles can exceed what a model accepts, and the
-service answers with an error that ends the run. Fewer sites, a smaller
-`fetch_items`, a stricter `include`, or the per-article arrangement of section 5
-are the ways to stay under it with the plugins that ship today. Splitting one
-long text into pieces, transforming each and asking a final question about the
-results is the natural next arrangement conceptually, and it is **not**
-something this repository provides: there is no chunking plugin, and a Recipe
-cannot express it today.
+**Long input has a limit that belongs to the model, not to the framework.**
+A joined text can exceed what a model accepts, and the service then returns an
+error that ends the run. `FilterLimit` can cap how many source items proceed,
+and `FilterBatch` can group source items into fixed-size item batches before
+an AI filter so that one request need not contain the whole pipeline. Their
+exact behavior is specified in [`PLUGINS.md`](PLUGINS.md) section 6.3.
+
+`FilterBatch` does not split one already-joined text by character or token
+length, and Automatic Ruby does not perform recursive summarization or a
+final synthesis automatically. A Recipe that needs those operations still
+needs a different pipeline design or a purpose-built component.
 
 ## 8. Why it is built this way
 

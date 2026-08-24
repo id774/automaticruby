@@ -17,10 +17,8 @@ module Automatic::Plugin
     SITEINFO_TYPES = %w[SBM INDIVIDUAL IND SUBGENERAL SUB GENERAL GEN].freeze
 
     # One siteinfo record, reduced to the four things a match needs and with
-    # its URL pattern compiled once. The database ships with 3,504 usable
-    # records, so compiling them per item -- which is what matching against
-    # the raw JSON did -- was several thousand `Regexp.new` calls for every
-    # link in every feed.
+    # its URL pattern compiled once. Compiling patterns when the database is
+    # loaded avoids rebuilding regular expressions for every item.
     Entry = Struct.new(:url, :pattern, :xpath, :encoding)
 
     def initialize(config, pipeline = [])
@@ -107,13 +105,10 @@ module Automatic::Plugin
       @siteinfo.find { |record| links.any? { |candidate| record.pattern.match?(candidate) } }
     end
 
-    # The database was last updated in 2013 and 3,448 of its 3,504 records
-    # anchor on a scheme, nearly all of them `^http://`. The sites they name
-    # have since moved to HTTPS, so an https link out of a feed matches none of
-    # them and the filter silently does nothing. Matching the link under either
-    # scheme is what keeps those records reachable; a record is about a site's
-    # layout, not about how it is transported. Only the match is rewritten --
-    # the page is fetched from the link the feed gave.
+    # A stored siteinfo pattern may name HTTP while a current feed supplies HTTPS,
+    # or the reverse. A record describes a site's layout rather than its current
+    # transport scheme, so matching tries both schemes. Only the candidate used
+    # for matching changes; the page is fetched from the original item link.
     def schemes(link)
       case link
       when %r{\Ahttps://} then [link, link.sub(%r{\Ahttps://}, 'http://')]
@@ -150,9 +145,9 @@ module Automatic::Plugin
     # database is full of sites that declare their charset only in a meta tag,
     # and for those the difference is the whole article in mojibake.
     #
-    # A record's own `enc` is the last resort, for a page that declares nothing
-    # anywhere: it was recorded in 2013, and trusting it ahead of what the page
-    # says would break every site that has changed encoding since.
+    # A record's own `enc` is the last resort for a page that declares nothing.
+    # Page declarations take precedence because a site's encoding can change after
+    # a siteinfo record is written.
     def document(link, entry)
       page, declared = fetch_page(link)
       parsed = Nokogiri::HTML.parse(StringIO.new(page))

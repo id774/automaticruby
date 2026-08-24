@@ -158,8 +158,8 @@ The value is stored and is read correctly, because plugins read their settings
 by string key rather than as a property. This is noise, not breakage, and a
 Recipe using such a key needs no change.
 
-Two shipped plugins have such a name, from before this was understood, and they
-keep it: `FilterSort`'s `sort` and `PublishMemcached`'s `key`. Renaming them
+The existing collisions retained for compatibility are `FilterSort`'s `sort`
+and `PublishMemcached`'s `key`. Renaming them
 would break every Recipe using them, which is not a trade worth making for a
 warning. **A new plugin should not introduce one**: prefer `max_length` to
 `max`, `item_count` to `count`, `cache_key` to `key`.
@@ -265,7 +265,7 @@ found.
 
 ### 3.3 Discovery and precedence
 
-Two search roots, in this order:
+Search roots, in this order:
 
 1. `~/.automatic/plugins/<category>/<rest>.rb`
 2. `<installation>/plugins/<category>/<rest>.rb`
@@ -276,7 +276,7 @@ plugin's behaviour without editing the installation.
 
 Creating a new category is creating a directory. `~/.automatic/plugins/mine/`
 plus a class named `MineSomething` works with no change to the framework, though
-staying inside the seven categories is preferred, because their names tell a
+staying inside the established categories listed in section 3.2 is preferred, because their names tell a
 reader where in a pipeline the plugin belongs.
 
 Loading is lazy: the loader registers an `autoload`, so the file is read when
@@ -558,11 +558,11 @@ Section 6 lists every plugin shipped in the gem. Each carries a status:
 | **Supported (external)** | The plugin is current, but it needs something the operator provides — a running service, an installed command, a credential, a data file. |
 | **Needs rework** | The service and the capability still exist, but this plugin speaks an interface that has been replaced. It will not work as written, and restoring it is a self-contained piece of work. |
 
-There is no fourth row. There used to be one, holding plugins whose service had
-shut down, and the plugins that were in it have been removed rather than kept:
-see section 8.
+No status is used for an integration whose service or capability is
+permanently unavailable. Such plugins are removed rather than retained; see
+section 8.
 
-Two rules govern this table, and they are the reason it exists at all:
+The rules that govern this table are the reason it exists at all:
 
 - **Nothing is faked.** A plugin is not stubbed, mocked or simulated to make a
   test pass or a catalogue entry look better. Where a plugin's gem is absent
@@ -584,15 +584,13 @@ its spec as part of the ordinary suite, which is also what the separate
 plugin is not demoted for needing a gem, and is not promoted by a test that CI
 never executes.
 
-**This classification is a snapshot taken in August 2026,** based on the
-published status of each service and on what each plugin's code actually calls.
-The statuses that depend on an outside service can change without any commit
-here. Where a status was reached from published information rather than from a
+**Statuses involving an outside service are snapshots of external state.**
+They can change without any commit here. Where a status was reached from published information rather than from a
 live check, the entry says so. To verify one yourself, run its Recipe from
 `test/integration` by hand; those are not part of CI and never will be.
 
-Restoring the one **Needs rework** plugin is a self-contained piece of work and
-a good first contribution.
+Restoring a plugin classified as **Needs rework** is a self-contained piece
+of work and a good first contribution.
 
 ---
 
@@ -1075,34 +1073,27 @@ fetch attempt whether it succeeded or failed. A non-positive or non-numeric
 
 Needs `nokogiri`: `gem install nokogiri`, or the `html` group in a checkout.
 
-The shipped `assets/siteinfo/items_all.json` is a snapshot of the LDRFullFeed
-database taken from `wedata.net`, which no longer operates, so the file cannot
-be refreshed from its origin and its newest entries are from 2013. The plugin
-works; how well it works depends on whether the sites you read are in that
-snapshot and still laid out the same way. Supplying your own file in
-`~/.automatic/assets/siteinfo/` is the way to keep it useful.
+The shipped `assets/siteinfo/items_all.json` is a bundled LDRFullFeed-compatible
+siteinfo snapshot. Its coverage is a snapshot rather than a guarantee that a
+site is present or still uses the recorded layout. The bundled file may be
+replaced from a newer upstream snapshot, as recorded in
+[`VERSIONS`](VERSIONS); an operator can also supply a siteinfo file under
+`~/.automatic/assets/siteinfo/`.
 
-Three things follow from the database being that old, and the plugin now
-accounts for each:
+The plugin's behavior does not depend on the bundled snapshot having a
+particular record count, date, scheme distribution, or encoding distribution:
 
-- **A link matches under either scheme.** 3,448 of the 3,504 usable records
-  anchor on a scheme and all but twenty of those say `^http://`. The sites they
-  name have since moved to HTTPS, which is what a feed hands over, so matching
-  the link as it stands matched almost nothing and the filter quietly did
-  nothing at all. A record describes a site's layout, not how it is
-  transported, so the link is tried under both. Only the match is rewritten;
-  the page is fetched from the link the feed gave.
-- **A record that selects nothing leaves the summary alone.** A site redesigned
-  since its XPath was written selects no nodes, and putting that empty result
-  into the item replaced a perfectly good summary with an empty description.
-  The item keeps what it arrived with, and the miss is logged at `warn` with
-  the XPath that missed.
-- **The page's own encoding is believed before the record's.** The page is
-  parsed from the stream, so a charset in a `meta` tag is read even when the
-  response declared none. A record's `enc` is the fallback for a page that
-  declares nothing anywhere — 1,186 records carry one, mostly EUC-JP and
-  Shift_JIS — and an `enc` naming an encoding Ruby does not have is ignored
-  rather than raised. What comes out is UTF-8 either way.
+- **A link matches under either HTTP scheme.** A stored URL pattern can name
+  `http://` while a current feed supplies `https://`, or the reverse. Matching
+  therefore tries both schemes while fetching the page from the original item
+  link.
+- **A record that selects nothing leaves the summary alone.** If the recorded
+  XPath no longer selects content, the existing description is preserved and
+  the miss is logged at `warn`.
+- **The page's own encoding is believed before the record's.** Response or
+  document declarations take precedence; the record's `enc` is only a fallback,
+  and an encoding Ruby does not recognize is ignored rather than raised. The
+  selected body is normalized to UTF-8.
 
 A record with no URL pattern, no XPath, or a pattern that is not a regular
 expression is dropped when the file is loaded rather than being allowed to fail
@@ -1203,9 +1194,10 @@ next.
       title: Daily Digest
 ```
 
-**The four AI filters.** The plugins that follow each send an item's
+**The AI filters.** The plugins that follow each send an item's
 description to one AI service and put the answer back in its place. They are
-four plugins rather than one with a `provider` setting, and that is the design
+separate service-specific plugins rather than one plugin with a
+`provider` setting, and that is the design
 rather than an accident: the services differ in endpoint, authentication,
 request body, answer shape, error format and available models; each of those
 moves without asking the others; and a Recipe naming `FilterClaude` says on its
@@ -1216,11 +1208,10 @@ Changing service is changing that one line.
 the item's description is the text it applies to, so summarizing, translating,
 extracting, reformatting and classifying are the same plugin with a different
 prompt. There is no default prompt: a Recipe without one is refused with an
-`ArgumentError` rather than being given a purpose it did not ask for. The two
-are sent as separate fields — a system instruction and a user turn — so that
+`ArgumentError` rather than being given a purpose it did not ask for. The instruction and the item text are sent as separate fields — a system instruction and a user turn — so that
 what an article says is text to be worked on, never an instruction to obey.
 
-What the four have in common:
+What the AI filters have in common:
 
 | Point | What it is |
 | --- | --- |
@@ -1258,7 +1249,7 @@ for new integrations, and authenticates with the token as a bearer token.
 | `retry` | integer | Attempts after a failure. Default `0`. |
 | `interval` | integer | Seconds between attempts. Default `0`. |
 
-The endpoint is not a setting: there is one, an operator has no version of this
+The endpoint is fixed by this plugin rather than exposed as a setting, an operator has no version of this
 plugin that talks to a different host, and a setting for it would be a way to
 send the token somewhere else. The answer is read out of the typed `output`
 array, from the `output_text` of the assistant's message.
@@ -1267,7 +1258,7 @@ array, from the `output_text` of the assistant's message.
   - module: FilterOpenAI
     config:
       token: sk-...
-      model: gpt-5.6
+      model: <OpenAI model>
       prompt: |
         Summarize the following articles as one digest, in Japanese.
       retry: 2
@@ -1280,7 +1271,8 @@ array, from the `output_text` of the assistant's message.
 API, `https://api.anthropic.com/v1/messages`, and replaces it with the answer.
 Anthropic authenticates with an `x-api-key` header rather than a bearer token,
 requires an API version header, and requires a `max_tokens` — so this plugin
-sends all three, and has one setting the others do not.
+sends those required values and exposes the required `max_tokens` setting in
+addition to the shared settings.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
@@ -1300,7 +1292,7 @@ blocks of other kinds are passed over.
   - module: FilterClaude
     config:
       token: sk-ant-...
-      model: claude-opus-5
+      model: <Anthropic model>
       prompt: |
         Summarize the following articles as one digest, in Japanese.
       max_tokens: 2048
@@ -1336,7 +1328,7 @@ description.
   - module: FilterGemini
     config:
       token: AIza...
-      model: gemini-3.5-flash
+      model: <Gemini model>
       prompt: |
         Summarize the following articles as one digest, in Japanese.
       retry: 2
@@ -1368,7 +1360,7 @@ Recipe that says where the text goes for a Recipe that does not.
   - module: FilterSakuraAI
     config:
       token: ...
-      model: gpt-oss-120b
+      model: <Sakura AI Engine model>
       prompt: |
         以下の記事群について、個別記事の要約を羅列するのではなく、
         全体を一つのダイジェストとして日本語で要約してください。
@@ -1403,7 +1395,7 @@ plugins:
   - module: FilterSakuraAI
     config:
       token: ...
-      model: gpt-oss-120b
+      model: <Sakura AI Engine model>
       prompt: |
         以下の記事群について、個別記事の要約を羅列するのではなく、
         全体を一つのダイジェストとして日本語で要約してください。

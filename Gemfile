@@ -3,8 +3,8 @@
 # which this file evaluates. Only the optional, plugin-specific gems are listed
 # here. See doc/POLICY.md section 9.
 #
-# `bundle install` with no configuration installs the framework's four runtime
-# dependencies and the development ones, and nothing below: a checkout is set
+# `bundle install` with no configuration installs the framework's runtime
+# dependencies declared in automatic.gemspec and the development ones, and nothing below: a checkout is set
 # up to run and to test the framework, not to run every plugin.
 
 source 'https://rubygems.org'
@@ -16,9 +16,10 @@ gemspec
 # and a Recipe that does not use the plugin does not need them.
 #
 # Every group here is optional, so nothing below is installed by default and
-# neither the default test suite nor required CI depends on any of it. Each gem
-# is in two groups: `plugins`, which is all of them at once, and one named
-# after what it is for, which is one of them on its own. Both are Bundler
+# neither the default test suite nor required CI depends on any of it.
+# Gems in the aggregate optional-plugin set belong to `plugins` and to a
+# purpose-specific group. The group declarations below are the source of
+# truth for that membership. Both are Bundler
 # groups and both are selected the same way, in the checkout's own .bundle
 # directory, which is not committed:
 #

@@ -87,8 +87,9 @@ Gem::Specification.new do |spec|
   spec.extra_rdoc_files   = ['README.md', 'doc/LICENSE.md']
 
   # Runtime dependencies: what the framework in lib/ requires, and nothing
-  # else. Requiring `automatic`, loading a Recipe, loading a plugin, running a
-  # pipeline and the CLI's own work are what these four are for.
+  # else. Requiring `automatic`, loading a Recipe, loading a plugin,
+  # running a pipeline and the CLI's own work are what these dependencies are
+  # for.
   #
   # A gem needed by a plugin is NOT declared here, however useful that plugin
   # is. It is required inside the plugin's own file and installed by the

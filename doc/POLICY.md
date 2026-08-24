@@ -410,7 +410,7 @@ appear in the order shown below. An executable uses this canonical form:
 - A `Description::` line may be added below `Name` when the file's purpose is
   not obvious from its name. New plugins should have one.
 - The magic encoding comment is redundant on the supported Rubies. It is left in
-  place in existing files, because removing it from forty files is a diff with
+  place in existing files, because removing it across existing files is a diff with
   no benefit, and it is not required in a new file.
 
 Files do not carry a per-file version history. This repository versions at the
