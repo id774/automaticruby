@@ -1,6 +1,10 @@
 automaticruby Repository Version History
 ========================================
 
+v26.09 (Release Date: TBD)
+--------------------------
+- Refresh the bundled LDRFullFeed siteinfo database from the newer upstream snapshot.
+
 v26.08 (2026-08-22)
 -------------------
 - Support Ruby 3.3 through 4.0 and modernize the codebase for current Ruby and maintained library APIs, validating representative versions in CI.
