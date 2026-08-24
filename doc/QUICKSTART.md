@@ -1,12 +1,15 @@
 # Quick Start
 
-This guide takes four public pages through one short Automatic Ruby pipeline and
-leaves what they publish as one Markdown document. It needs no account, no
-credential, no paid service and no database server.
+This guide takes the public pages listed in its Recipe through one short
+Automatic Ruby pipeline and leaves what they publish as one Markdown document.
+It needs no account, no credential, no paid service and no database server.
 
-It does need two of the optional gems — because of the plugins the Recipe
-names, not because of the framework — and installing exactly those is a step of
-this guide rather than a footnote to it. Automatic Ruby installs what the
+It does need optional gems because of the plugins the Recipe names, not because
+of the framework. The exact requirements are derived in
+[Install what the Recipe needs](#4-install-what-the-recipe-needs) from the
+canonical optional-dependency table in
+[`DEPLOYMENT.md`](DEPLOYMENT.md#optional-plugin-dependencies), rather than
+being maintained as a separate count here. Automatic Ruby installs what the
 framework needs and leaves a plugin's gems to the operator who uses that
 plugin, so "which plugins does this Recipe name, and what do they need" is a
 question every Recipe asks. Skipping it is the usual way a first run stops half
@@ -38,7 +41,7 @@ overwritten.
 ## 3. Write the Recipe
 
 A Recipe is one job: the plugins it runs, in order, with their settings. This
-one reads four public index pages as HTML and makes a feed of the articles each
+one reads the public index pages listed under `sites` as HTML and makes a feed of the articles each
 lists — which is what to do for a page whose feed you do not have — keeps a
 record of what it has already seen, and appends the rest to a Markdown
 document.
@@ -101,7 +104,7 @@ plugins:
       mode: append
 ```
 
-Three plugins, and each hands its result to the next:
+Each plugin hands its result to the next:
 
 - **`CustomFeedWeb`** fetches each page and makes a feed of the article links it
   lists. `include` is what tells an article from a navigation link, `interval`
@@ -117,7 +120,8 @@ Three plugins, and each hands its result to the next:
 
 Read the Recipe you have just written, plugin by plugin, and look each one up in
 the table of optional plugin dependencies in [`DEPLOYMENT.md`](DEPLOYMENT.md).
-That table gives, for these three:
+For the plugins in this Recipe, that table resolves the requirements as
+follows:
 
 - **`CustomFeedWeb`** — `nokogiri`, which it reads the pages with. In a
   checkout, the group `html`.
@@ -221,10 +225,10 @@ bundle exec bin/automatic scaffold
 bundle exec bin/automatic -c ~/.automatic/config/web2markdown.yml
 ```
 
-Step 4 is the step that differs, because a checkout resolves its gems through
-Bundler rather than through RubyGems. Each optional gem is in a Bundler group,
-and the Recipe's groups — `html` and `store`, from step 4 — are selected
-together and installed once:
+The "Install what the Recipe needs" step is the step that differs, because a
+checkout resolves its gems through Bundler rather than through RubyGems. Each
+optional gem is in a Bundler group, and the Recipe's groups — `html` and
+`store`, from that step — are selected together and installed once:
 
 ```sh
 bundle config set --local with "html store"
@@ -233,7 +237,7 @@ bundle install
 
 `gem install nokogiri` does **not** work here: the gem installs, and the
 checkout still reports it as missing, because it is not in the bundle. That
-difference, the commands that show what the bundle holds, and the same three
+difference, the commands that show what the bundle holds, and the same Recipe
 plugins taken step by step through choosing their groups are in
 [`DEPLOYMENT.md`](DEPLOYMENT.md) under "Working out what a Recipe needs, in a
 checkout".

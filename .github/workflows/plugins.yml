@@ -1,8 +1,8 @@
 name: Optional plugin dependencies
 
 # Installs the Gemfile's optional `plugins` group and runs the same suite, so
-# that the second documented way of setting up a checkout is checked as well as
-# described: the group resolves, and the plugin specs it brings in pass.
+# that the documented all-optional-plugin checkout setup is checked as well
+# as described: the group resolves, and the plugin specs it brings in pass.
 #
 # This is not the required check. ci.yml is, and it installs none of this: what
 # has to hold on every commit is that the framework runs on its own runtime

@@ -35,7 +35,7 @@ Fluentd, or writes them to a database. Write your own plugin and it composes
 with all the others.
 
 **[Follow the Quick Start](doc/QUICKSTART.md)** to install the gem, write a
-Recipe that watches four public index pages, install what that Recipe needs, and
+Recipe that watches public index pages, install what that Recipe needs, and
 produce Markdown from the articles they list.
 
 ---
@@ -98,8 +98,10 @@ exactly three things:
   over,
 - **a loader** that finds a step by name, so that a Recipe can name it.
 
-Everything else is a plugin. The framework is under seven hundred lines of Ruby
-and is meant to stay that size.
+Everything else is a plugin. The framework is intentionally kept small; its
+responsibilities and architectural boundary are defined in
+[`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md) and
+[`doc/POLICY.md`](doc/POLICY.md).
 
 It is one person's tooling, run unattended from `cron`, against their own
 accounts and their own files. It is not a service, and there is no notion of a
@@ -115,8 +117,8 @@ a plugin set every part of which still has somewhere to talk to. See
 
 - **Recipes in YAML.** A job is a file, not a program. No Ruby is written to
   wire a pipeline together.
-- **Plugins across seven categories.** Subscribe, custom feed, filter, store,
-  provide, notify and publish plugins compose through the same pipeline contract.
+- **Plugins organized by role.** Subscribe, custom feed, filter, store, provide,
+  notify and publish plugins compose through the same pipeline contract.
 - **Markdown out of the box.** `PublishMarkdown` writes the result as a plain
   Markdown document, to a file or to standard output, with no service and no
   credential behind it. It is the natural end of a new Recipe.
@@ -130,9 +132,9 @@ a plugin set every part of which still has somewhere to talk to. See
 - **Retry and interval** on everything that reaches the network, configured per
   plugin in the Recipe.
 - **A small installation.** A gem needed by one plugin is not a dependency of
-  the framework: `gem install automatic` brings four pure-Ruby gems and the
-  command, and installs neither an HTML parser nor a database — let alone an
-  AWS SDK.
+  the framework: `gem install automatic` brings the framework's runtime
+  dependencies declared in `automatic.gemspec` and the command, and installs
+  neither an HTML parser nor a database — let alone an AWS SDK.
 - **No museum.** Every plugin is classified, with its reason, in
   [`doc/PLUGINS.md`](doc/PLUGINS.md). Nothing dead is stubbed into looking
   alive, and an integration whose service has gone is removed rather than
@@ -184,7 +186,8 @@ The full account is [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md).
 
 ## 4. Supported environment
 
-- **Ruby 3.3 through 4.0.** CI validates 3.3, 3.4 and 4.0.
+- **Ruby 3.3 through 4.0.** The continuously validated versions are the matrix
+  in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 - A Unix-like system. GNU/Linux and macOS are what it is used on. Windows is not
   supported.
 - A compiler only if you install an optional plugin gem that builds from source
@@ -199,10 +202,11 @@ Two statements, and they are not the same one:
 - **Supported range.** The code is written for Ruby 3.3 through 4.0, using APIs
   the whole range shares. `required_ruby_version` is `>= 3.3.0` and has no upper
   bound, so a Ruby newer than the matrix is permitted rather than refused.
-- **Continuously validated versions.** CI runs the ends of the range and the
-  release in the middle — 3.3, 3.4 and 4.0 — rather than every intermediate
-  release. A version's absence from the matrix means it is not verified on every
-  commit; it does not mean it is expected to fail.
+- **Continuously validated versions.** The authoritative set is the matrix in
+  [`.github/workflows/ci.yml`](.github/workflows/ci.yml), which represents the
+  supported range rather than enumerating every intermediate release. A
+  version's absence from the matrix means it is not verified on every commit;
+  it does not mean it is expected to fail.
 
 ## 5. Installation
 
@@ -213,7 +217,8 @@ gem install automatic
 automatic --version
 ```
 
-That installs the framework, the command and four pure-Ruby dependencies.
+That installs the framework, the command and the runtime dependencies
+declared in `automatic.gemspec`.
 A gem that only one plugin needs is not among them: install it when you use
 that plugin, with `gem install nokogiri` or `gem install activerecord sqlite3`.
 [`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md) lists which plugin needs which.
@@ -221,8 +226,7 @@ that plugin, with `gem install nokogiri` or `gem install activerecord sqlite3`.
 ### From a checkout
 
 Use a checkout to try the current development version, change the source,
-develop a plugin or verify changes before a release. There are three ways to
-set one up; start with the first.
+develop a plugin or verify changes before a release. The supported checkout setups are shown below; start with the minimal setup.
 
 ```sh
 git clone https://github.com/id774/automaticruby.git
@@ -262,8 +266,9 @@ a Recipe taken step by step through choosing its groups are in
 ## 6. Quick start
 
 The complete first-run guide is [`doc/QUICKSTART.md`](doc/QUICKSTART.md): it
-writes one Recipe that reads four public index pages, installs what that Recipe
-needs, and leaves the new articles in a Markdown document.
+writes one Recipe that reads the public index pages listed by that guide,
+installs what that Recipe needs, and leaves the new articles in a Markdown
+document.
 
 ```sh
 automatic scaffold
@@ -280,7 +285,9 @@ nothing but the framework and what `gem install automatic` brought.
 `feed2console.yml` beside it is the same pipeline printing to the terminal. Read
 the file, `grep` it, put it in a repository, or hand it to whatever reads text
 next. A Recipe that names a plugin with an optional gem installs that gem first,
-which is step 4 of the Quick Start and the habit worth learning early.
+which is covered by the "Install what the Recipe needs" section of
+[`doc/QUICKSTART.md`](doc/QUICKSTART.md) and is the habit worth learning
+early.
 
 To check the framework without any network, write this instead:
 
@@ -333,7 +340,7 @@ plugins:                      # required
 - `global.log.level` is the only framework setting. `global.timezone` and
   `global.cache` appear in old Recipes and are read by nothing.
 
-Two conventions worth knowing before writing one:
+Conventions worth knowing before writing one:
 
 - **Put a store plugin in front of anything with an effect.** `StorePermalink`
   records what has been seen and passes on only what has not. It is what makes a
@@ -392,25 +399,21 @@ like a shipped plugin replaces it.
 
 ### Which plugins still work
 
-Every shipped plugin is classified in
-[`doc/PLUGINS.md`](doc/PLUGINS.md) section 6, with its settings and the reason
-for its status:
+The complete shipped-plugin catalogue and the current status of each plugin
+are maintained in
+[`doc/PLUGINS.md`](doc/PLUGINS.md#6-the-plugins).
+The status vocabulary and its meaning are defined in
+[Reading the catalogue](doc/PLUGINS.md#5-reading-the-catalogue), and removed
+integrations and the reasons for their removal are recorded in
+[Plugins that were removed](doc/PLUGINS.md#8-plugins-that-were-removed).
 
-| Status | Meaning |
-| --- | --- |
-| **Supported** | Works on the supported Rubies with current dependencies |
-| **Supported (external)** | Works, but needs something you provide: a service, a command, a credential, a data file |
-| **Needs rework** | The service exists; this plugin speaks a replaced interface |
+This README intentionally does not repeat current plugin totals, per-status
+totals, or the current membership of a status. Adding, removing, or
+reclassifying a plugin changes the canonical catalogue rather than a
+synchronized summary here.
 
-Eleven plugins were removed in this release rather than kept as history: each
-talked to a service that has shut down, or through an API that has been
-withdrawn with no replacement. They are listed with their reasons in
-[`doc/PLUGINS.md`](doc/PLUGINS.md) section 8, and Git history holds the code.
-A Recipe naming one of them now fails at load, before anything runs.
-
-`PublishHatenaBookmark` is currently classified as **Needs rework**; restoring
-it to the service's current interface is self-contained work and a good first
-contribution.
+A plugin classified as **Needs rework** in the catalogue is a
+self-contained contribution candidate.
 
 No plugin here is stubbed, mocked or simulated to make a test pass. Where a
 plugin's gem is not installed its spec is skipped and says which gem is
@@ -449,8 +452,8 @@ automatic --version
 | `opmlparser <path>` | Print the feed URLs in an OPML file. |
 | `log <level> <message>` | Emit one line in the framework's log format. |
 
-The middle five answer "will this work as a Recipe input?" before you write the
-Recipe:
+The discovery and parsing subcommands help answer "will this work as a Recipe
+input?" before you write the Recipe:
 
 ```sh
 automatic autodiscovery https://example.com/
@@ -474,8 +477,9 @@ There is no configuration file besides the Recipe. Every setting a job needs is
 in the Recipe that defines the job, which is what makes a Recipe portable
 between machines.
 
-**Framework settings** — one, `global.log.level`, with the values `info`,
-`warn`, `error` and `none`.
+**Framework setting:** `global.log.level`, with the values `info`, `warn`,
+`error` and `none`. Its Recipe-level contract is specified in
+[`doc/PLUGINS.md`](doc/PLUGINS.md#24-global).
 
 **Plugin settings** — the `config` mapping of a plugin entry, passed to that
 plugin and read by nothing else. Established names: `retry` for an attempt
@@ -576,8 +580,8 @@ bundle exec rake
 bundle exec bin/automatic -c config/feed2console.yml
 ```
 
-Contributions are welcome — a new plugin, or reviving the one that needs
-rework, most of all.
+Contributions are welcome — a new plugin, or restoring a plugin currently
+classified as **Needs rework** in the canonical catalogue, most of all.
 
 1. Fork the repository.
 2. Write the change, with a spec that reaches no network.
@@ -590,7 +594,7 @@ judged by: the direction of dependency, where a new capability belongs, how
 dependencies are added, how the documents divide, and how a version history
 entry is written.
 
-Two rules worth knowing before you start:
+Rules worth knowing before you start:
 
 - **A gem needed by one plugin is not a dependency of the framework.** Require
   it at the top of the plugin's own file.

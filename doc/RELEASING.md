@@ -33,8 +33,9 @@ gem --version
 bundle --version
 ```
 
-The release Ruby need not reproduce the complete CI matrix locally. Required
-GitHub Actions checks must be green on Ruby 3.3, 3.4 and 4.0 before publication.
+The release Ruby need not reproduce the complete CI matrix locally. Required GitHub Actions checks must be green for every Ruby version in the
+current matrix of [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+before publication.
 
 ## 2. Authentication and credentials
 
@@ -85,8 +86,8 @@ X.YY        release in year X, month YY
 X.YY.PATCH  correction to an earlier release in the same month
 ```
 
-Section 10 of `POLICY.md` is authoritative. A release updates these three
-places together in one release-metadata commit:
+Section 10 of `POLICY.md` is authoritative. A release updates these release-metadata sources together in one
+release-metadata commit:
 
 - `VERSION` contains the package version;
 - `lib/automatic/version.rb` defines `Automatic::VERSION` for the CLI;
@@ -207,7 +208,7 @@ Confirm that:
 - the name is `automatic` and the version equals `VERSION`;
 - the summary and homepage describe this project;
 - `source_code_uri` is the Automatic Ruby repository;
-- the required Ruby version is `>= 3.3.0`;
+- the required Ruby version matches `automatic.gemspec`;
 - licenses contain both `GPL-3.0-only` and `LGPL-3.0-only`;
 - the authors are correct;
 - runtime and development dependencies match `automatic.gemspec`, and the

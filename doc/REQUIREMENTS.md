@@ -491,8 +491,9 @@ Two statements are made here, and they are deliberately different.
   dependency the project needs moves it, or when the version drops out of the
   distributions the project is used on.
 
-**The continuously validated versions** are **3.3, 3.4 and 4.0** — the ends of
-the range and the release in the middle.
+**The continuously validated versions** are the versions in the matrix of
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml). That workflow is
+authoritative for the set checked on every commit.
 
 - CI runs representative versions rather than every intermediate release. The
   cost of a matrix entry is paid on every commit, and a third entry between two
@@ -503,9 +504,10 @@ the range and the release in the middle.
 - Adding a released Ruby to the matrix is how support for it becomes continuous,
   and is a small change.
 
-One statement of the supported range lives in the gemspec, one statement of the
-validated set lives in the CI matrix, and the README and the documents agree
-with both.
+`automatic.gemspec` is authoritative for the supported Ruby requirement, and
+`.github/workflows/ci.yml` is authoritative for the continuously validated
+set. User-facing documents state the supported range where readers need it
+and refer to the matrix rather than duplicating its current membership.
 
 ## 21. Portability
 
@@ -534,9 +536,10 @@ with both.
 
 ## 23. Simplicity
 
-The framework is under seven hundred lines of Ruby and is meant to stay that
-size. It is the small fixed part that plugins are written against, and it earns
-its keep by not changing.
+The framework is meant to remain the small fixed part that plugins are written
+against. Its responsibility boundary, rather than a duplicated current line
+count, is the maintained constraint; see
+[`BASIC_DESIGN.md`](BASIC_DESIGN.md).
 
 - A capability that can live in a plugin lives in a plugin.
 - A framework feature that only one plugin would use does not belong to the
