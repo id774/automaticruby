@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Apr 29, 2012
-# Updated::     Aug 15, 2026
+# Updated::     Aug 24, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
@@ -154,11 +154,28 @@ module Automatic::Plugin
     # anywhere: it was recorded in 2013, and trusting it ahead of what the page
     # says would break every site that has changed encoding since.
     def document(link, entry)
-      page, declared = Automatic::Http.open(link) { |io| [io.read, declared_charset?(io)] }
+      page, declared = fetch_page(link)
       parsed = Nokogiri::HTML.parse(StringIO.new(page))
       return parsed if declared || parsed.meta_encoding || entry.encoding.nil?
 
       Nokogiri::HTML.parse(StringIO.new(page), nil, entry.encoding)
+    end
+
+    # The one place this plugin actually reaches the network. `wait` runs in
+    # the `ensure` so that a fetch attempt is waited out whether it succeeded
+    # or raised -- an item with no link and an item whose siteinfo did not
+    # match never get here at all, and so never wait.
+    def fetch_page(link)
+      Automatic::Http.open(link) { |io| [io.read, declared_charset?(io)] }
+    ensure
+      wait
+    end
+
+    # `interval` seconds after a real fetch attempt, positive values only. See
+    # doc/PLUGINS.md section 6.3.
+    def wait
+      seconds = @config['interval'].to_i
+      sleep(seconds) if seconds.positive?
     end
 
     # Whether the response itself named a charset, as opposed to open-uri

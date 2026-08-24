@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Oct 03, 2014
-# Updated::     Aug 14, 2026
+# Updated::     Aug 24, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -166,6 +166,82 @@ if AutomaticSpec.optional_dependency?('nokogiri')
         returned[0].items[0].link.should == "http://test2.id774.net"
         returned[0].items[0].description.should == ""
       }
+    end
+
+    describe "the interval setting" do
+      context "when interval is positive and every title page fetch succeeds" do
+        subject {
+          Automatic::Plugin::FilterDescriptionLink.new(
+            { 'get_title' => 1, 'interval' => 2 },
+            AutomaticSpec.generate_pipeline {
+              feed {
+                item "http://test1.id774.net", "dummy title 1",
+                "aaa bbb ccc http://test2.id774.net ddd eee"
+                item "http://test3.id774.net", "dummy title 2",
+                "aaa bbb ccc http://test4.id774.net ddd eee"
+              }
+            }
+          )
+        }
+
+        before do
+          Automatic::Http.stub(:read).
+            and_return('<html><head><title>Fetched title</title></head><body></body></html>')
+        end
+
+        it "waits after every title page fetch" do
+          subject.should_receive(:sleep).with(2).twice
+          subject.run
+          subject.instance_variable_get(:@pipeline)[0].items.each do |item|
+            item.title.should == "Fetched title"
+          end
+        end
+      end
+
+      context "when get_title is disabled" do
+        subject {
+          Automatic::Plugin::FilterDescriptionLink.new(
+            { 'interval' => 2 },
+            AutomaticSpec.generate_pipeline {
+              feed {
+                item "http://test1.id774.net", "dummy title",
+                "aaa bbb ccc http://test2.id774.net ddd eee"
+              }
+            }
+          )
+        }
+
+        it "does not wait" do
+          Automatic::Http.should_not_receive(:read)
+          subject.should_not_receive(:sleep)
+          subject.run
+          subject.instance_variable_get(:@pipeline)[0].items[0].link.
+            should == "http://test2.id774.net"
+        end
+      end
+
+      context "when the title page fetch fails" do
+        subject {
+          Automatic::Plugin::FilterDescriptionLink.new(
+            { 'get_title' => 1, 'interval' => 2 },
+            AutomaticSpec.generate_pipeline {
+              feed {
+                item "http://test1.id774.net", "dummy title",
+                "aaa bbb ccc http://test2.id774.net ddd eee"
+              }
+            }
+          )
+        }
+
+        before { Automatic::Http.stub(:read).and_raise(StandardError, 'no such host') }
+
+        it "waits once and keeps the existing title" do
+          subject.should_receive(:sleep).with(2).once
+          lambda { subject.run }.should_not raise_error
+          subject.instance_variable_get(:@pipeline)[0].items[0].title.
+            should == "dummy title"
+        end
+      end
     end
 
   end

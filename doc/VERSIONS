@@ -4,6 +4,9 @@ automaticruby Repository Version History
 v26.09 (Release Date: TBD)
 --------------------------
 - Refresh the bundled LDRFullFeed siteinfo database from the newer upstream snapshot.
+- Add FilterLimit, FilterBatch, and FilterPresent for pipeline-wide limiting, fixed-size batching, and required-field filtering.
+- Add per-fetch interval handling to FilterFullFeed, FilterImageSource, and FilterDescriptionLink.
+- Make the Section 6 plugin catalogue the single source of truth instead of duplicating current plugin counts and lists.
 
 v26.08 (2026-08-22)
 -------------------

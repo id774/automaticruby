@@ -866,6 +866,34 @@ match. Same three keys, same substring rule. An item whose field is missing is
 not matched, and says so; it used to end the run with a `NoMethodError`, which
 is not what its complement does with the same item.
 
+#### FilterPresent — **Supported**
+
+`filter/present.rb`. Keeps only items for which every configured field is
+present. It is an AND filter over field presence, not a keyword matcher.
+
+Recipe:
+
+```yaml
+  - module: FilterPresent
+    config:
+      fields:
+        - title
+        - description
+```
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `fields` | sequence | Fields that must all be present. Required and non-empty. |
+
+The fields that may be checked are `title`, `link`, `description`, `author`,
+`comments`, `source` and `content_encoded`. A field the item has no accessor
+for, a `nil` value, an empty string and a whitespace-only string are all
+absent; an RSS field that responds to `#content` — a parsed source, for
+instance — is judged on that content rather than on the element itself. An
+item is kept only when every configured field is present. An unknown field or
+a field named twice is a settings error, raised when the plugin is
+constructed. No network access, and no dependency on another plugin.
+
 #### FilterSort — **Supported**
 
 `filter/sort.rb`. Sorts each feed's items by date.
@@ -886,6 +914,31 @@ setting works; see section 2.6.1.
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `pick` | string | `last` takes the last item. Anything else, including absent, takes the first. |
+
+#### FilterLimit — **Supported**
+
+`filter/limit.rb`. Limits how many items the whole pipeline passes downstream.
+The limit is shared across feeds rather than applied once per feed.
+
+Recipe:
+
+```yaml
+  - module: FilterLimit
+    config:
+      max_items: 20
+```
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `max_items` | integer | Maximum items passed by the whole pipeline. Required; must be greater than zero. |
+
+Items are selected in feed order, then item order, up to `max_items`; the
+grouping of the input feeds is kept in the output, and a feed that contributed
+no item under the limit is left out of it. Once the limit is reached, later
+feeds are not walked at all. Anything other than a positive integer —
+including zero, a negative number, and a non-numeric or fractional string — is
+a settings error, raised when the plugin is constructed; a numeric string such
+as `"20"` is accepted. No network access, and no dependency on another plugin.
 
 #### FilterRand — **Supported**
 
@@ -914,7 +967,16 @@ this filter will therefore keep links it used to blank.
 
 `filter/image_source.rb`. Replaces each item with one item per image found: the
 images in the description, or, if there are none, the images on the page the
-link points at. Fetching pages means network access. No settings.
+link points at. Fetching pages means network access.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `interval` | integer | Seconds to wait after each page fetch attempt. Default `0`. |
+
+An item whose images come from the description is never fetched, and
+`interval` does not apply to it. Where a page is fetched, the wait follows the
+actual fetch attempt whether it succeeded or failed. A non-positive or
+non-numeric `interval` — including it being absent — means no wait at all.
 
 Needs `nokogiri`: `gem install nokogiri`, or the `html` group in a checkout.
 
@@ -974,9 +1036,14 @@ the body.
 | --- | --- | --- |
 | `clear_description` | `1` | Empty the description afterwards. Any other value leaves it. |
 | `get_title` | `1` | Fetch the new link and use its `<title>`. Any other value skips it. |
+| `interval` | integer | Seconds to wait after each title-page fetch attempt when `get_title` is `1`. Default `0`. |
 
 `get_title` makes one request per item; use `FilterOne` or a store plugin before
-it on a large feed.
+it on a large feed. When `get_title` is not `1`, no title page is fetched and
+`interval` does not apply. A URL that is not fetchable is not read either, and
+does not wait. Where a title page is read, the wait follows the actual fetch
+attempt whether it succeeded or failed. A non-positive or non-numeric
+`interval` — including it being absent — means no wait at all.
 
 **Both settings were being ignored in every real run.** The test that guarded
 them asked whether the settings mapping was a `Hash`, and the framework hands a
@@ -999,6 +1066,12 @@ page.
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `siteinfo` | string | File name under the assets directory. Required. |
+| `interval` | integer | Seconds to wait after each article-page fetch attempt. Default `0`. |
+
+An item whose link matches no siteinfo record is never fetched, and `interval`
+does not apply to it. Where a link does match, the wait follows the actual
+fetch attempt whether it succeeded or failed. A non-positive or non-numeric
+`interval` — including it being absent — means no wait at all.
 
 Needs `nokogiri`: `gem install nokogiri`, or the `html` group in a checkout.
 
@@ -1044,6 +1117,35 @@ pipeline expects. Needed because GitHub publishes Atom, not RSS. No settings.
 
 A field that is already a string is taken as it stands, so a pipeline that has
 been through another filter first is no longer a `NoMethodError`.
+
+#### FilterBatch — **Supported**
+
+`filter/batch.rb`. Groups all items in the pipeline into fixed-size batches.
+Feed boundaries are intentionally discarded; each batch becomes one item in one
+output feed.
+
+Recipe:
+
+```yaml
+  - module: FilterBatch
+    config:
+      batch_items: 5
+```
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `batch_items` | integer | Maximum source items in one batch. Required; must be greater than zero. |
+
+The whole pipeline is collected in feed order, then item order, and sliced
+into batches of `batch_items` source items. Each batch becomes one item titled
+`Batch N`; a batch item carries no link. Its description lists the source
+items as `ARTICLE N`, `Title:`, `URL:` and the body, with the `ARTICLE`
+numbering starting over at 1 in every batch. An empty pipeline produces an
+empty pipeline. Anything other than a positive integer — including zero, a
+negative number, and a non-numeric or fractional string — is a settings error,
+raised when the plugin is constructed; a numeric string such as `"5"` is
+accepted. It is independent of `FilterJoin` — it does not require it, call it,
+or depend on it in any way — and reaches no network and no external service.
 
 #### FilterJoin — **Supported**
 
@@ -1832,21 +1934,19 @@ is a claim that the plugin works.
 
 ---
 
-## 7. Summary
+## 7. Catalogue maintenance
 
-| Status | Count | Plugins |
-| --- | --- | --- |
-| Supported | 26 | `SubscriptionFeed`, `SubscriptionLink`, `SubscriptionXml`, `SubscriptionText`, `CustomFeedWeb`, `FilterIgnore`, `FilterAccept`, `FilterSort`, `FilterOne`, `FilterRand`, `FilterClear`, `FilterImage`, `FilterImageSource`, `FilterAbsoluteURI`, `FilterSanitize`, `FilterTumblrResize`, `FilterDescriptionLink`, `FilterGithubFeed`, `FilterJoin`, `StorePermalink`, `StoreFullText`, `StoreDigest`, `StoreFile`, `PublishMarkdown`, `PublishConsole`, `PublishConsoleLink` |
-| Supported (external) | 14 | `SubscriptionTumblr`, `CustomFeedSVNLog`, `FilterFullFeed`, `FilterOpenAI`, `FilterClaude`, `FilterGemini`, `FilterSakuraAI`, `ProvideFluentd`, `NotifyIkachan`, `PublishEject`, `PublishMemcached`, `PublishFluentd`, `PublishInstapaper`, `PublishAmazonS3` |
-| Needs rework | 1 | `PublishHatenaBookmark` |
+Section 6 is the single source of truth for the set of plugins that ship and
+for each plugin's current status. Current plugin totals, per-status totals and
+duplicate current plugin-name lists are not maintained here or in `README.md`;
+adding or removing a plugin changes its implementation, its specification and
+its Section 6 catalogue entry, not a second summary that has to be kept in
+sync.
 
-Forty-one plugins. Every one of them either runs, or names the one thing it
-needs from the operator; the single exception says what is wrong with it and
-what fixing it would take.
-
-`spec/doc/plugins_catalogue_spec.rb` holds this table to the files in
-`plugins/`: an entry with no file, a file with no entry, and a count that has
-been left behind by an edit are all failures of the ordinary test suite.
+`spec/doc/plugins_catalogue_spec.rb` verifies that every shipped plugin has
+exactly one Section 6 entry, every Section 6 entry has a shipped plugin at the
+loader-derived path, and every entry uses one of the statuses defined in
+section 5.
 
 ## 8. Plugins that were removed
 
