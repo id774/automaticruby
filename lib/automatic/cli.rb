@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Aug 19, 2026
+# Updated::     Sep  5, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # Everything that belongs to being a command: option parsing, the subcommands,
@@ -178,16 +178,12 @@ module Automatic
       create_dir(File.join(Automatic.user_dir, 'db'))
 
       assets = File.join(Automatic.user_dir, 'assets')
-      if create_dir(assets)
-        FileUtils.cp_r(File.join(@root_dir, 'assets', 'siteinfo'),
-                       File.join(assets, 'siteinfo'))
-      end
+      create_dir(assets)
+      copy_bundled(File.join(@root_dir, 'assets', 'siteinfo'), File.join(assets, 'siteinfo'))
 
       config = Automatic.user_config_dir
-      if create_dir(config)
-        FileUtils.cp_r(File.join(@root_dir, 'config'),
-                       File.join(config, 'example'))
-      end
+      create_dir(config)
+      copy_bundled(File.join(@root_dir, 'config'), File.join(config, 'example'))
     end
 
     def unscaffold(_argv)
@@ -221,7 +217,7 @@ module Automatic
       raise Automatic::Error, "no feed found at #{url}" if feeds.empty?
 
       @stdout.puts feeds.pretty_inspect
-      @stdout.puts Automatic::FeedParser.get_url(feeds.pop).pretty_inspect
+      @stdout.puts Automatic::FeedParser.get_url(feeds.first).pretty_inspect
     end
 
     def opmlparser(argv)
@@ -243,6 +239,19 @@ module Automatic
       FileUtils.mkdir_p(path)
       @stdout.puts "Creating #{path}"
       true
+    end
+
+    # Bundled initial data (siteinfo, example config) is copied whenever its
+    # own destination is missing, independent of whether the parent user
+    # directory already existed. That is what lets a re-run of scaffold heal a
+    # partially-scaffolded user directory instead of only ever populating a
+    # brand new one. See doc/DEPLOYMENT.md and doc/POLICY.md on scaffold only
+    # adding what is missing.
+    def copy_bundled(src, dest)
+      return if File.exist?(dest)
+
+      FileUtils.cp_r(src, dest)
+      @stdout.puts "Creating #{dest}"
     end
   end
 end

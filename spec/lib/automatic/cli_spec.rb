@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Aug 19, 2026
+# Updated::     Sep  5, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../../spec_helper'))
@@ -89,6 +89,86 @@ describe Automatic::CLI do
       expect(run("inspect", "https://example.com/")).to eq Automatic::CLI::EXIT_FAILURE
       expect(err.string).to match(%r{no feed found at https://example\.com/})
       expect(out.string).to be_empty
+    end
+
+    it "parses the first feed when several are discovered" do
+      stub_const("Feedbag", Class.new)
+      allow(Automatic).to receive(:require_optional)
+      allow(Feedbag).to receive(:find)
+        .and_return(["https://example.com/first", "https://example.com/second"])
+      allow(Automatic::FeedParser).to receive(:get_url).and_return("parsed")
+
+      expect(run("inspect", "https://example.com/")).to eq Automatic::CLI::EXIT_SUCCESS
+      expect(Automatic::FeedParser).to have_received(:get_url).with("https://example.com/first")
+    end
+  end
+
+  describe "the scaffold subcommand" do
+    around do |example|
+      Dir.mktmpdir("automatic-ruby-scaffold-spec") do |dir|
+        @scaffold_user_dir = dir
+        Automatic.user_dir = dir
+        example.run
+      end
+      Automatic.user_dir = nil
+    end
+
+    def run_scaffold
+      run("scaffold", root_dir: APP_ROOT)
+    end
+
+    it "creates the missing bundled siteinfo when the assets directory already exists" do
+      FileUtils.mkdir_p(File.join(@scaffold_user_dir, "assets"))
+
+      expect(run_scaffold).to eq Automatic::CLI::EXIT_SUCCESS
+
+      siteinfo = File.join(@scaffold_user_dir, "assets", "siteinfo")
+      expect(File.directory?(siteinfo)).to be true
+      expect(Dir.children(siteinfo)).not_to be_empty
+    end
+
+    it "creates the missing bundled example configuration when the config directory already exists" do
+      FileUtils.mkdir_p(Automatic.user_config_dir)
+
+      expect(run_scaffold).to eq Automatic::CLI::EXIT_SUCCESS
+
+      example_config = File.join(Automatic.user_config_dir, "example")
+      expect(File.directory?(example_config)).to be true
+      expect(Dir.children(example_config)).not_to be_empty
+    end
+
+    it "does not overwrite an existing siteinfo directory" do
+      siteinfo = File.join(@scaffold_user_dir, "assets", "siteinfo")
+      FileUtils.mkdir_p(siteinfo)
+      File.write(File.join(siteinfo, "marker.txt"), "existing user data")
+
+      expect(run_scaffold).to eq Automatic::CLI::EXIT_SUCCESS
+
+      expect(File.read(File.join(siteinfo, "marker.txt"))).to eq "existing user data"
+    end
+
+    it "does not overwrite an existing example configuration directory" do
+      example_config = File.join(Automatic.user_config_dir, "example")
+      FileUtils.mkdir_p(example_config)
+      File.write(File.join(example_config, "marker.txt"), "existing user data")
+
+      expect(run_scaffold).to eq Automatic::CLI::EXIT_SUCCESS
+
+      expect(File.read(File.join(example_config, "marker.txt"))).to eq "existing user data"
+    end
+
+    it "leaves existing user data untouched when run repeatedly" do
+      run_scaffold
+
+      siteinfo = File.join(@scaffold_user_dir, "assets", "siteinfo")
+      example_config = File.join(Automatic.user_config_dir, "example")
+      File.write(File.join(siteinfo, "marker.txt"), "kept across reruns")
+      File.write(File.join(example_config, "marker.txt"), "kept across reruns")
+
+      expect(run_scaffold).to eq Automatic::CLI::EXIT_SUCCESS
+
+      expect(File.read(File.join(siteinfo, "marker.txt"))).to eq "kept across reruns"
+      expect(File.read(File.join(example_config, "marker.txt"))).to eq "kept across reruns"
     end
   end
 
