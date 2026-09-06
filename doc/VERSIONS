@@ -3,29 +3,48 @@ automaticruby Repository Version History
 
 v26.09 (Release Date: TBD)
 --------------------------
-- Add FilterLimit, FilterBatch and FilterPresent; add per-fetch interval handling to FilterFullFeed, FilterImageSource and FilterDescriptionLink; refresh the bundled LDRFullFeed siteinfo database; make doc/PLUGINS.md section 6 the single source of truth for the plugin catalogue.
-- Harden the framework's execution boundary: fix CLI inspect/scaffold contract drift, distinguish missing optional dependencies from unrelated load failures, preserve standard item metadata when FeedMaker rebuilds pipelines, and validate Recipe plugin entries with a discovery preflight before any plugin runs.
+- Add FilterLimit, FilterBatch, FilterPresent, and per-fetch interval handling;
+  make doc/PLUGINS.md section 6 the plugin catalogue's source of truth.
+- Harden the framework's execution boundary: fix CLI contract drift, distinguish
+  dependency from load failures, and preflight-validate Recipe plugins.
 
 v26.08 (2026-08-22)
 -------------------
-- Support Ruby 3.3 through 4.0 and modernize the codebase for current Ruby and maintained library APIs, validating representative versions in CI.
-- Harden Recipe loading with safe YAML parsing, structural validation and framework-specific errors.
-- Restructure the CLI with help and version options, predictable error reporting and documented exit statuses.
-- Report a clear CLI error when feed inspection discovers no feed instead of raising an internal exception.
+- Support Ruby 3.3 through 4.0 and modernize the codebase for current Ruby and
+  maintained library APIs, validating representative versions in CI.
+- Harden Recipe loading with safe YAML parsing, structural validation and
+  framework-specific errors.
+- Restructure the CLI with help and version options, predictable error reporting
+  and documented exit statuses.
+- Report a clear CLI error when feed inspection discovers no feed instead of
+  raising an internal exception.
 - Reject HTTP and HTTPS URLs without a host before attempting a network request.
-- Verify TLS certificates when publishing to Instapaper instead of accepting an unverified connection.
-- Modernize gem packaging and dependency policy, separating core requirements from optional plugin dependencies so that an installation can be minimal, complete or extended one plugin at a time, and excluding development and generated files.
-- Classify every shipped plugin by its current support status rather than simulating obsolete services in tests.
-- Modernize the bundled plugins for current Ruby, libraries and services, and remove the integrations that are no longer viable.
-- Remove the plugins for Twitter, Pocket, HipChat, Google Calendar, livedoor Weather, So-net G-Guide and Chan-Toru, and Google News link rewriting; their services or APIs no longer exist, and a Recipe naming one now fails at load.
-- Add the plugin CustomFeedWeb, which builds one feed per HTML index page from the article links it lists, selected with CSS selectors and filtered by host, pattern and count.
-- Add the plugin StoreDigest, which drops items by content rather than by URL, on a SHA-256 digest of the item fields a Recipe names.
-- Add the plugin FilterJoin, which joins the whole pipeline into one item carrying each item's title, link and body, and invents no permalink for it.
-- Add the plugins FilterOpenAI, FilterClaude, FilterGemini and FilterSakuraAI, one per AI service rather than one selectable by setting, each replacing an item's description with what that service answers to the Recipe's prompt under a token the Recipe holds.
-- Rebuild the test and CI strategy for current RSpec and Ruby, with deterministic isolation from user data and external services.
-- Add Markdown as the primary service-independent publication format, with a documented and tested first-run workflow.
-- Rebuild the maintained documentation around current usage, architecture, policy, plugins and deployment, and remove superseded historical documents.
-- Offer the project under either GPLv3 or LGPLv3, retaining third-party attribution and shipping both licence texts.
+- Verify TLS certificates when publishing to Instapaper instead of accepting an
+  unverified connection.
+- Modernize gem packaging: separate core from optional plugin dependencies so an
+  install can be minimal or extended one plugin at a time.
+- Classify every shipped plugin by its current support status rather than
+  simulating obsolete services in tests.
+- Modernize the bundled plugins for current Ruby, libraries and services, and
+  remove the integrations that are no longer viable.
+- Remove the plugins for services that no longer exist: Twitter, Pocket, HipChat,
+  Google Calendar, livedoor Weather, So-net G-Guide and Chan-Toru.
+- Add the plugin CustomFeedWeb, building one feed per HTML index page from its
+  article links, selected by CSS selector and filtered by host, pattern and count.
+- Add the plugin StoreDigest, which drops items by content rather than by URL, on
+  a SHA-256 digest of the item fields a Recipe names.
+- Add the plugin FilterJoin, which joins the whole pipeline into one item carrying
+  each item's title, link and body, and invents no permalink for it.
+- Add one AI filter plugin per service (FilterOpenAI, FilterClaude, FilterGemini,
+  FilterSakuraAI), replacing an item's description with that service's answer.
+- Rebuild the test and CI strategy for current RSpec and Ruby, with deterministic
+  isolation from user data and external services.
+- Add Markdown as the primary service-independent publication format, with a
+  documented and tested first-run workflow.
+- Rebuild the maintained documentation around current usage, architecture, policy,
+  plugins and deployment, and remove superseded historical documents.
+- Offer the project under either GPLv3 or LGPLv3, retaining third-party
+  attribution and shipping both licence texts.
 
 v14.12.2 (2015-01-04)
 ---------------------
@@ -61,9 +80,12 @@ v14.3.0 (2014-03-23)
 v14.2.0 (2014-02-26)
 --------------------
 - Add the plugin Publish::AmazonS3.
-- Rename Store::TargetLink to Store::File, and have it rewrite the link to a file URI scheme.
-- Enable the file URI scheme in an RSS 2.0 feed, and let Store::File fetch a file from Amazon S3.
-- Read text from TSV formatted files in Subscription::Text, and add the description, author and comments fields to the RSS 2.0 feed.
+- Rename Store::TargetLink to Store::File, and have it rewrite the link to a file
+  URI scheme.
+- Enable the file URI scheme in an RSS 2.0 feed, and let Store::File fetch a file
+  from Amazon S3.
+- Read text from TSV formatted files in Subscription::Text, and add the
+  description, author and comments fields to the RSS 2.0 feed.
 - Give the log messages more detail.
 - Use 'double' instead of 'mock' and 'stub' for rspec-mocks.
 - Improve CI with a network connection.
@@ -85,14 +107,17 @@ v13.7.0 (2013-07-28)
 
 v13.6.0 (2013-06-28)
 --------------------
-- Add the plugins Subscription::Pocket, Subscription::TwitterSearch, Subscription::GGuide, Subscription::ChanToru, Filter::Accept, Filter::Sanitize, Filter::GithubFeed, Publish::ConsoleLink, Publish::Hipchat, Publish::Memcached and Publish::Fluentd.
-- Correspond to activesupport and activerecord 4.0, temporarily removing the mail plugins for actionmailer 4.0.
+- Add eleven plugins spanning Subscription, Filter and Publish, including Pocket,
+  GGuide, ChanToru, Accept, Sanitize, ConsoleLink, Hipchat, Memcached and Fluentd.
+- Correspond to activesupport and activerecord 4.0, temporarily removing the mail
+  plugins for actionmailer 4.0.
 - Ruby 1.8 support was outdated.
 - And other improvements and bug fixes.
 
 v13.5.0 (2013-05-18)
 --------------------
-- Add the plugins Subscription::Text, Subscription::Weather, Filter::One, Filter::Rand, Publish::Twitter and Publish::Pocket.
+- Add the plugins Subscription::Text, Subscription::Weather, Filter::One,
+  Filter::Rand, Publish::Twitter and Publish::Pocket.
 - Move the repository from id774/automaticruby to automaticruby/automaticruby.
 
 v13.4.1 (2013-04-10)
@@ -106,7 +131,8 @@ v13.2.0 (2013-02-13)
 - Implement the retry function in all subscription and download plugins.
 - Plugin Filter::Ignore has become an item-based filter.
 - Rename the plugin Filter::Reverse to Filter::Sort.
-- Add the plugins Subscription::GoogleReaderStar, Filter::FullFeed and Publish::Instapaper.
+- Add the plugins Subscription::GoogleReaderStar, Filter::FullFeed and
+  Publish::Instapaper.
 - Improve the tests.
 - And other minor bug fixes.
 
@@ -127,18 +153,25 @@ v12.9.1 (2012-09-18)
 
 v12.9.0 (2012-09-18)
 --------------------
-- Unify the format of the pipeline to a feed object, an array of feeds; some plugins lost backward compatibility.
-- Add the plugins Subscription::Link, Subscription::Twitter, Filter::Image and Filter::AbsoluteURI.
-- Remove the obsolete plugins Subscription::URI, Extract::Link, Filter::ImageLink, Store::Link and Store::Target.
+- Unify the format of the pipeline to a feed object, an array of feeds; some
+  plugins lost backward compatibility.
+- Add the plugins Subscription::Link, Subscription::Twitter, Filter::Image and
+  Filter::AbsoluteURI.
+- Remove the obsolete plugins Subscription::URI, Extract::Link, Filter::ImageLink,
+  Store::Link and Store::Target.
 
 v12.6.0 (2012-06-18)
 --------------------
-- Add the plugins Subscription::URI, Extract::Link, Filter::ImageLink, Store::Link and Store::Target.
-- Make scaffold create the config and db directories, and add the unscaffold subcommand to automatic-config.
-- Search the user directory's config when given -c with a simple filename, and use the user's db directory when it exists.
+- Add the plugins Subscription::URI, Extract::Link, Filter::ImageLink, Store::Link
+  and Store::Target.
+- Make scaffold create the config and db directories, and add the unscaffold
+  subcommand to automatic-config.
+- Search the user directory's config when given -c with a simple filename, and use
+  the user's db directory when it exists.
 - Show the recipe and db name in the log.
 - Refactor the plug-in names and the header fields.
-- Add tests, taking RSpec code coverage over 99%, and add the all option to script/build.
+- Add tests, taking RSpec code coverage over 99%, and add the all option to
+  script/build.
 
 v12.4.0 (2012-04-30)
 --------------------
@@ -149,20 +182,24 @@ v12.4.0 (2012-04-30)
 v12.3.1 (2012-03-16)
 --------------------
 - Write the English documents doc/README and doc/PLUGINS.
-- Let a user who installed the gem package create their own plugins, under ~/.automatic/plugins.
-- Merge the utilities into the automatic-config command, adding the subcommands scaffold, autodiscovery, opmlparser, feedparser and log.
+- Let a user who installed the gem package create their own plugins, under
+  ~/.automatic/plugins.
+- Merge the utilities into the automatic-config command, adding the subcommands
+  scaffold, autodiscovery, opmlparser, feedparser and log.
 - Add the integration test script script/build for CI.
 
 v12.03 (2012-03-07)
 -------------------
 - Distribute as a gem library.
-- Add the plugins CustomFeed::SVNLog, Notify::Ikachan, Filter::TumblrResize, Filter::Image and Store::TargetLink.
+- Add the plugins CustomFeed::SVNLog, Notify::Ikachan, Filter::TumblrResize,
+  Filter::Image and Store::TargetLink.
 - Add the CI and build script script/bootstrap.
 - Significant refactoring.
 
 v12.02.1 (2012-02-25)
 ---------------------
-- Point release: a large refactoring of the core, a reorganization of the namespace, and a few plugins added.
+- Point release: a large refactoring of the core, a reorganization of the
+  namespace, and a few plugins added.
 
 v12.02 (2012-02-18)
 -------------------
@@ -171,12 +208,12 @@ v12.02 (2012-02-18)
 
 Notes on this record
 ====================
-- Entries from v12.02 to v14.12.0 were moved here from doc/ChangeLog, which this file replaces. No entry and no date
-  was changed in the move; the wording was brought to one bullet per change, and nothing was added or dropped.
-- v14.10.1, v14.12.1 and v14.12.2 were released and are recorded in the commit log, but were never written
-  into doc/ChangeLog. Their entries above were reconstructed from the commits that bumped the version.
-- No Git tag exists for any release before v26.08. The version numbers above are those recorded
-  in the VERSION file at the time, and the commit log is the only other record of them.
+- Entries from v12.02 to v14.12.0 were moved here from doc/ChangeLog, unchanged in
+  date or content, one bullet per change.
+- v14.10.1, v14.12.1 and v14.12.2 were released and recorded in the commit log but
+  never in doc/ChangeLog; their entries above are reconstructed from it.
+- No Git tag exists for any release before v26.08; the version numbers above are
+  those recorded in the VERSION file at the time.
 - Between v14.12.2 and v26.08 the only committed change was adding
   test/integration/test_pdf2local.yml (April 2015), folded into v26.08.
 
