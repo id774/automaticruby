@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Sep  5, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # Everything that belongs to being a command: option parsing, the subcommands,
@@ -103,11 +103,13 @@ module Automatic
       EXIT_FAILURE
     end
 
-    # A LoadError is one of the failures reported as a message here: a Recipe
-    # naming a plugin whose optional gem is not installed is an operator's
-    # mistake with an answer, and the answer is in the message rather than in a
-    # backtrace. What the plugin itself raises is left alone; see
-    # doc/PLUGINS.md section 2.7.
+    # Automatic::OptionalDependencyError is one of the failures reported as a
+    # message here: a Recipe naming a plugin whose optional gem is not
+    # installed is an operator's mistake with an answer, and the answer is in
+    # the message rather than in a backtrace. A LoadError raised from inside a
+    # plugin's own load -- for a different, unrelated missing file -- is not
+    # this, and is left alone along with everything else the plugin itself
+    # raises; see doc/PLUGINS.md section 2.7.
     def run_recipe(path)
       unless File.exist?(resolve_recipe(path))
         @stderr.puts "automatic: no such recipe: #{path}"
@@ -116,7 +118,8 @@ module Automatic
 
       Automatic.run(recipe: Automatic::Recipe.new(path), root_dir: @root_dir)
       EXIT_SUCCESS
-    rescue Automatic::Error, Psych::Exception, SystemCallError, IOError, LoadError => e
+    rescue Automatic::Error, Psych::Exception, SystemCallError, IOError,
+           Automatic::OptionalDependencyError => e
       @stderr.puts "automatic: #{e.message}"
       EXIT_FAILURE
     end
@@ -139,7 +142,7 @@ module Automatic
 
       handler.call(argv)
       EXIT_SUCCESS
-    rescue Automatic::Error, SystemCallError, IOError, LoadError => e
+    rescue Automatic::Error, SystemCallError, IOError, Automatic::OptionalDependencyError => e
       @stderr.puts "automatic: #{e.message}"
       EXIT_FAILURE
     end

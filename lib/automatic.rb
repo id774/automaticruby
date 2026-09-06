@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 18, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # The framework module: the two directories everything else resolves paths
@@ -38,6 +38,14 @@ module Automatic
   # A Recipe parsed, but is not a document this framework can run.
   class InvalidRecipeError < Error; end
 
+  # Raised by require_optional when, and only when, the exact feature it was
+  # asked to require could not be found. A LoadError subtype rather than an
+  # Error subtype, so that a caller already rescuing LoadError still catches
+  # it; distinct from plain LoadError so that a caller can tell "the optional
+  # gem itself is missing" apart from a LoadError raised from inside that
+  # gem's own load. See doc/POLICY.md section 9.1.
+  class OptionalDependencyError < LoadError; end
+
   class << self
     attr_accessor :root_dir
 
@@ -55,7 +63,14 @@ module Automatic
     def require_optional(feature, needed_by:, gem_name: feature)
       require feature
     rescue LoadError => e
-      raise LoadError,
+      # e.path is the argument require failed to find. When it matches
+      # feature, this require itself is what failed, and the gem naming this
+      # feature is what is missing. When it does not, the failure happened
+      # somewhere inside feature's own load -- a different missing file -- and
+      # is not this gem's absence; it is re-raised unconverted.
+      raise e unless e.path == feature
+
+      raise OptionalDependencyError,
             "The `#{gem_name}` gem is not installed. It is needed by #{needed_by}. " \
             "Install it with `gem install #{gem_name}`, or in a source checkout add " \
             'its group to the bundle; see the optional plugin dependencies in ' \

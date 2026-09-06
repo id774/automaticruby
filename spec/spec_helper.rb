@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Mar  9, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # The suite reaches no network and needs no credential. That is a rule, not a
@@ -105,10 +105,15 @@ module AutomaticSpec
     # longer exists, and no currently published gem speaks to it -- is never
     # stubbed into passing (doc/POLICY.md Invariant 7). Its spec is skipped
     # instead, and the reason is printed, which is the honest signal.
+    #
+    # Only Automatic::OptionalDependencyError, raised by require_optional for
+    # the plugin's own missing gem, is skipped this way. A plain LoadError
+    # from elsewhere in the plugin's load is a broken plugin or a broken
+    # dependency, not an absent optional gem, and is left to fail the spec.
     def plugin_available?(path)
       require path
       true
-    rescue LoadError => e
+    rescue Automatic::OptionalDependencyError => e
       skipped_plugins << [path, e.message]
       warn "[automatic] skipping #{path} spec: #{e.message}"
       false

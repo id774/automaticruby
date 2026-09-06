@@ -8,6 +8,7 @@ v26.09 (Release Date: TBD)
 - Add per-fetch interval handling to FilterFullFeed, FilterImageSource, and FilterDescriptionLink.
 - Make doc/PLUGINS.md section 6 the single source of truth for the current plugin catalogue.
 - Fix CLI contract drift so inspect parses the first discovered feed and scaffold restores missing bundled siteinfo and example configuration without overwriting existing user data.
+- Distinguish missing optional dependencies from unrelated load failures so CLI diagnostics and plugin-spec skips do not hide broken loads.
 
 v26.08 (2026-08-22)
 -------------------

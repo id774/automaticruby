@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Mar  9, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
@@ -135,6 +135,62 @@ describe Automatic do
       expect {
         Automatic.require_optional("automatic_no_such_gem", needed_by: "FilterExample")
       }.to raise_error(LoadError, /needed by FilterExample/)
+    end
+
+    it "raises the dedicated OptionalDependencyError when the feature itself is missing" do
+      expect {
+        Automatic.require_optional("automatic_no_such_gem", needed_by: "FilterExample")
+      }.to raise_error(Automatic::OptionalDependencyError)
+    end
+
+    # A feature that itself exists but fails partway through its own require,
+    # because something *it* requires is missing, is a different failure than
+    # this gem being absent: doc/PLUGINS.md section 3.8 and doc/POLICY.md
+    # section 9.1 both describe require_optional as reporting on the feature
+    # named to it, not on whatever that feature goes on to load.
+    describe "when the feature loads but requires something missing itself" do
+      def with_outer_feature_on_load_path
+        Dir.mktmpdir("automatic-ruby-require-optional-spec") do |dir|
+          File.write(File.join(dir, "automatic_outer_feature.rb"),
+                     "require 'automatic_inner_missing_feature'\n")
+          $LOAD_PATH.unshift dir
+          begin
+            yield
+          ensure
+            $LOAD_PATH.delete(dir)
+            $LOADED_FEATURES.delete(File.join(dir, "automatic_outer_feature.rb"))
+          end
+        end
+      end
+
+      it "propagates the original LoadError unconverted" do
+        with_outer_feature_on_load_path do
+          expect {
+            Automatic.require_optional("automatic_outer_feature", needed_by: "a spec")
+          }.to raise_error(LoadError, /automatic_inner_missing_feature/)
+        end
+      end
+
+      it "does not raise the dedicated OptionalDependencyError" do
+        with_outer_feature_on_load_path do
+          begin
+            Automatic.require_optional("automatic_outer_feature", needed_by: "a spec")
+          rescue LoadError => e
+            expect(e).not_to be_a(Automatic::OptionalDependencyError)
+          end
+        end
+      end
+
+      it "does not mention the outer feature's gem installation guidance" do
+        with_outer_feature_on_load_path do
+          begin
+            Automatic.require_optional("automatic_outer_feature", needed_by: "a spec")
+          rescue LoadError => e
+            expect(e.message).not_to match(/gem is not installed/)
+            expect(e.message).not_to match(/gem install/)
+          end
+        end
+      end
     end
   end
 
