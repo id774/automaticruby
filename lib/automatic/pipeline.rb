@@ -5,12 +5,19 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 22, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # The core: resolve a plugin's class name to a file, then run the Recipe's
 # plugins in order, each receiving the previous one's output. See
 # doc/BASIC_DESIGN.md section 4.6 and doc/PLUGINS.md section 3.
+#
+# Every module the Recipe names is discovered before any plugin runs, so that
+# an unknown module later in the Recipe is refused before an earlier plugin's
+# side effect, not after it. Discovery only registers an autoload; it does not
+# read a plugin's own source, which stays lazy until that plugin's turn to
+# run. See doc/PLUGINS.md on unknown plugin being refused before any plugin
+# runs.
 
 require 'active_support/core_ext/string/inflections'
 
@@ -51,10 +58,13 @@ module Automatic
       def run(recipe)
         raise NoRecipeError, 'no recipe given' if recipe.nil?
 
+        entries = []
+        recipe.each_plugin { |plugin| entries << [plugin, plugin.module] }
+
+        entries.each { |_plugin, mod| load_plugin(mod) }
+
         pipeline = []
-        recipe.each_plugin do |plugin|
-          mod = plugin.module
-          load_plugin(mod)
+        entries.each do |plugin, mod|
           klass = Automatic::Plugin.const_get(mod)
           pipeline = klass.new(plugin.config, pipeline).run
         end

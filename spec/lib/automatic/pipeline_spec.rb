@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Mar 10, 2012
-# Updated::     Feb 25, 2014
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.join(File.dirname(__FILE__) ,'../../spec_helper'))
@@ -46,6 +46,49 @@ describe Automatic::Pipeline do
         recipe.should_receive(:each_plugin).and_yield(plugin)
         Automatic::Pipeline.run(recipe).should == []
       end
+
+      # Every module a Recipe names is discovered before any plugin runs, so
+      # that an unknown module later on is refused before an earlier plugin's
+      # side effect, not after it; doc/PLUGINS.md documents unknown plugin as
+      # refused before any plugin runs, wherever in the Recipe it is.
+      it "refuses an unknown module before running a plugin that precedes it" do
+        good = double("plugin", :module => "FilterIgnore")
+        bad  = double("plugin", :module => "NoSuchPluginAtAll")
+        recipe = double("recipe")
+        recipe.should_receive(:each_plugin).and_yield(good).and_yield(bad)
+
+        expect(good).not_to receive(:config)
+
+        lambda {
+          Automatic::Pipeline.run(recipe)
+        }.should raise_exception(Automatic::NoPluginError,
+          /unknown plugin named NoSuchPluginAtAll/)
+      end
+
+      it "refuses an unknown module at the front before a plugin behind it runs" do
+        bad  = double("plugin", :module => "NoSuchPluginAtAll")
+        good = double("plugin", :module => "FilterIgnore")
+        recipe = double("recipe")
+        recipe.should_receive(:each_plugin).and_yield(bad).and_yield(good)
+
+        expect(good).not_to receive(:config)
+
+        lambda {
+          Automatic::Pipeline.run(recipe)
+        }.should raise_exception(Automatic::NoPluginError,
+          /unknown plugin named NoSuchPluginAtAll/)
+      end
+
+      it "runs every plugin once all named modules are discoverable" do
+        first  = double("plugin", :module => "FilterIgnore")
+        second = double("plugin", :module => "FilterOne")
+        first.should_receive(:config)
+        second.should_receive(:config)
+        recipe = double("recipe")
+        recipe.should_receive(:each_plugin).and_yield(first).and_yield(second)
+
+        Automatic::Pipeline.run(recipe)
+      end
     end
   end
 
@@ -76,6 +119,45 @@ describe Automatic::Pipeline do
 
         expect(plugin.run).to equal(pipeline)
         expect(pipeline.first.items.first.title).to eq "[News] Title"
+      end
+    end
+
+    # FilterLoadMarker (spec/user_dir/plugins/filter/load_marker.rb) has no
+    # behaviour of its own; it exists only to be discoverable, so that its
+    # presence in $LOADED_FEATURES tells these two examples whether its file
+    # was actually read, as distinct from merely registered for autoload.
+    # Referencing Automatic::Plugin::FilterLoadMarker directly would load it
+    # and defeat that, so neither example does.
+    describe "#run and discovery preflight" do
+      let(:fixture_path) {
+        File.join(APP_ROOT, "spec", "user_dir", "plugins", "filter", "load_marker.rb")
+      }
+
+      it "does not load a discoverable plugin's source during preflight, even when an unknown module follows it" do
+        expect($LOADED_FEATURES).not_to include(fixture_path)
+
+        good = double("plugin", :module => "FilterLoadMarker")
+        bad  = double("plugin", :module => "NoSuchPluginAtAll")
+        recipe = double("recipe")
+        recipe.should_receive(:each_plugin).and_yield(good).and_yield(bad)
+
+        lambda {
+          Automatic::Pipeline.run(recipe)
+        }.should raise_exception(Automatic::NoPluginError,
+          /unknown plugin named NoSuchPluginAtAll/)
+
+        expect($LOADED_FEATURES).not_to include(fixture_path)
+      end
+
+      it "loads a discoverable plugin's source only once execution reaches it" do
+        plugin = double("plugin", :module => "FilterLoadMarker")
+        plugin.should_receive(:config)
+        recipe = double("recipe")
+        recipe.should_receive(:each_plugin).and_yield(plugin)
+
+        Automatic::Pipeline.run(recipe)
+
+        expect($LOADED_FEATURES).to include(fixture_path)
       end
     end
   end

@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Aug 14, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../../spec_helper'))
@@ -51,6 +51,62 @@ describe Automatic::Recipe do
       body = "plugins:\n  - module: PublishConsole\n    config: !ruby/object:Struct {}\n"
       expect { recipe(body) }.to raise_error Psych::DisallowedClass
     end
+
+    # doc/PLUGINS.md documents each plugins entry as a mapping naming a
+    # module, with an optional config mapping. A malformed entry is refused
+    # here, at load time, rather than left to surface as whatever internal
+    # exception it happens to raise once the pipeline reaches it.
+    it "refuses a plugin entry that is a scalar" do
+      expect { recipe("plugins:\n  - nope\n") }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[0\] is not a mapping/
+    end
+
+    it "refuses a plugin entry that is a sequence" do
+      expect { recipe("plugins:\n  - [FilterOne]\n") }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[0\] is not a mapping/
+    end
+
+    it "refuses a plugin entry with no module" do
+      body = "plugins:\n  - config:\n      foo: bar\n"
+      expect { recipe(body) }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[0\] has no module name/
+    end
+
+    it "refuses a plugin entry whose module is not a string" do
+      body = "plugins:\n  - module: 42\n"
+      expect { recipe(body) }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[0\] has no module name/
+    end
+
+    it "refuses a plugin entry whose module is an empty string" do
+      body = "plugins:\n  - module: ''\n"
+      expect { recipe(body) }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[0\] has no module name/
+    end
+
+    it "refuses a plugin entry whose module is whitespace only" do
+      body = "plugins:\n  - module: \"   \"\n"
+      expect { recipe(body) }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[0\] has no module name/
+    end
+
+    it "refuses a plugin entry whose config is a scalar" do
+      body = "plugins:\n  - module: FilterOne\n    config: nope\n"
+      expect { recipe(body) }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[0\] has a config that is not a mapping/
+    end
+
+    it "refuses a plugin entry whose config is a sequence" do
+      body = "plugins:\n  - module: FilterOne\n    config:\n      - invalid\n"
+      expect { recipe(body) }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[0\] has a config that is not a mapping/
+    end
+
+    it "identifies a malformed entry after valid ones by its own index" do
+      body = "plugins:\n  - module: FilterOne\n  - module: FilterClear\n  - nope\n"
+      expect { recipe(body) }.
+        to raise_error Automatic::InvalidRecipeError, /plugins\[2\] is not a mapping/
+    end
   end
 
   describe "what it accepts" do
@@ -71,6 +127,17 @@ describe Automatic::Recipe do
     it "leaves an entry without config as nil" do
       body = "plugins:\n  - module: FilterClear\n"
       expect(recipe(body).each_plugin.first.config).to be_nil
+    end
+
+    it "accepts an entry with config explicitly set to null" do
+      body = "plugins:\n  - module: FilterClear\n    config: null\n"
+      expect(recipe(body).each_plugin.first.config).to be_nil
+    end
+
+    it "accepts the same module named more than once" do
+      body = "plugins:\n  - module: FilterOne\n  - module: FilterOne\n"
+      expect(recipe(body).each_plugin.map { |plugin| plugin.module }).
+        to eq %w[FilterOne FilterOne]
     end
 
     # Aliases let a block of settings be shared between plugins, which is a
