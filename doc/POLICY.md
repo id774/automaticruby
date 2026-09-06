@@ -889,6 +889,8 @@ the version history records what it amounts to.
   level of detail predates these rules.
 - `doc/VERSIONS` carries these guidelines again at its foot, and an entry
   written into it follows the limit recorded there.
+- The first entry, at the lowest version `doc/VERSIONS` reaches, reads only
+  `Initial release.` and nothing else.
 
 ### 10.5 The historical record
 

@@ -166,7 +166,7 @@ v12.02.1 (2012-02-25)
 
 v12.02 (2012-02-18)
 -------------------
-- First release: the scratch of this script, with a plugin existing only for Hatena Bookmark.
+- Initial release.
 
 
 Notes on this record
@@ -208,3 +208,5 @@ Version History Guidelines
   a date.
 - This file records the history of the repository. A change that is not
   observable from outside does not need an entry here.
+- The first entry, at the lowest version this file reaches, reads only
+  "Initial release." and nothing else.
