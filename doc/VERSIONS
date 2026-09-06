@@ -192,10 +192,11 @@ Version History Guidelines
 - Omit development-time corrections and intermediate states that were reverted
   or superseded before release; Git history retains that detail.
 - Summarize related low-level changes under their substantive outcome.
-- Write one coherent change per physical line, as a rule.
-- Keep entries near 100 columns where practical. Necessary file names, module
-  names, plugin names, option names, and configuration names may extend an entry
-  to approximately 120 columns.
+- Write one coherent change per bullet, at most two physical lines.
+- A single line at or under 80 columns is preferred whenever practical.
+  Necessary file names, module names, plugin names, option names, and
+  configuration names may pass 80 columns on the bullet's one or two lines
+  when they cannot be shortened without losing meaning.
 - When a version history already exists, balance a new entry against the length
   of the existing lines, so that the whole file stays consistent.
 - When an entry becomes substantially longer, omit or abstract implementation

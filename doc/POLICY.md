@@ -860,21 +860,21 @@ the version history records what it amounts to.
 - Each entry opens with `vX.YY (YYYY-MM-DD)`, or `vX.YY (Release Date: TBD)`
   while unreleased, underlined with `-`, followed by one `-` bullet per change.
   Newest first. UTF-8.
-- **One coherent change is one bullet on one physical line.** The entry is a
-  list meant to be scanned, and a wrapped bullet costs it that: the eye no
-  longer finds the changes by counting lines, and a diff no longer shows one
-  added line per added change.
-- This is a deliberate exception to the wrapping the other plain text documents
-  follow. Do not rewrap `doc/VERSIONS` to 80 columns, and do not report a long
-  bullet there as a defect.
-- Aim for about 100 columns. A bullet carrying file names, module names, setting
-  names or plugin names may run to about 120, or past it when the names it needs
-  are that long. These figures prompt a reread, they are not a limit to enforce.
-  A bullet that is long because the change is long is correct.
-- **When a bullet runs long, abstract it; never break it across lines.** Drop
-  the implementation detail, the example, the reason and the secondary effect,
-  and state what the change is. Keep what a reader cannot reconstruct without
-  it: what changed, what is now observably different, what it does to
+- **One coherent change is one bullet, at most two physical lines.** A single
+  line at or under 80 columns is preferred whenever practical. This is an
+  explicit limit, not a prompt to reread: a bullet that runs past two lines,
+  or a single line that runs past 80 columns without necessity, must be
+  shortened. The entry is a list meant to be scanned, and a bullet that grows
+  past this limit costs it that: the eye no longer finds the changes by
+  counting lines, and a diff no longer shows a small, bounded edit.
+- A bullet carrying file names, module names, setting names or plugin names
+  may pass 80 columns on its one or two lines when those names cannot be
+  shortened without losing meaning. The two-line ceiling still applies.
+- **When a bullet runs long, abstract it first.** Drop the implementation
+  detail, the example, the reason and the secondary effect, and state what
+  the change is. Wrap onto the second line only when the abstracted bullet
+  still exceeds 80 columns. Keep what a reader cannot reconstruct without it:
+  what changed, what is now observably different, what it does to
   compatibility, what it does to security, and the identifiers someone would
   search for.
 - Changes serving one purpose are described together even when they touch
@@ -887,7 +887,8 @@ the version history records what it amounts to.
 - Order within a version serves the reader, not the commit history.
 - Released entries retain their substantive history even when their wording or
   level of detail predates these rules.
-- `doc/VERSIONS` carries these guidelines again at its foot.
+- `doc/VERSIONS` carries these guidelines again at its foot, and an entry
+  written into it follows the limit recorded there.
 
 ### 10.5 The historical record
 
