@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Sep  5, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../../spec_helper'))
@@ -100,6 +100,32 @@ describe Automatic::CLI do
 
       expect(run("inspect", "https://example.com/")).to eq Automatic::CLI::EXIT_SUCCESS
       expect(Automatic::FeedParser).to have_received(:get_url).with("https://example.com/first")
+    end
+  end
+
+  describe "the autodiscovery subcommand" do
+    # These stub Automatic.require_optional itself, rather than an actually
+    # missing or present feedbag, so the two cases below are exercised
+    # deterministically regardless of whether feedbag happens to be installed
+    # in the environment running the suite. What require_optional itself
+    # classifies as a direct missing dependency is covered in automatic_spec.rb.
+    it "reports a dedicated optional dependency error as a one-line diagnostic and fails" do
+      allow(Automatic).to receive(:require_optional)
+        .and_raise(Automatic::OptionalDependencyError,
+                    "The `feedbag` gem is not installed. It is needed by the " \
+                    'autodiscovery subcommand. Install it with `gem install feedbag`.')
+
+      expect(run("autodiscovery", "https://example.com/")).to eq Automatic::CLI::EXIT_FAILURE
+      expect(err.string).to match(/`feedbag` gem is not installed/)
+    end
+
+    it "propagates a LoadError raised from inside a feature's own load, unconverted" do
+      allow(Automatic).to receive(:require_optional)
+        .and_raise(LoadError, "cannot load such file -- automatic_inner_missing_feature")
+
+      expect {
+        run("autodiscovery", "https://example.com/")
+      }.to raise_error(LoadError, /automatic_inner_missing_feature/)
     end
   end
 
@@ -244,6 +270,22 @@ describe Automatic::CLI do
         expect(err.string).to match(/`automatic_no_such_gem` gem is not installed/)
         expect(err.string).to match(/FilterNeedsGem/)
         expect(err.string).to match(/gem install automatic_no_such_gem/)
+      end
+    end
+
+    # A LoadError raised from inside a plugin's own load -- for a file other
+    # than the optional gem it asked require_optional for -- is a broken
+    # plugin or a broken dependency, not an absent optional gem, and must not
+    # be hidden behind the same one-line diagnostic; see doc/PLUGINS.md
+    # section 2.7.
+    it "propagates a LoadError raised from inside a plugin's own load, unconverted" do
+      allow(Automatic).to receive(:run)
+        .and_raise(LoadError, "cannot load such file -- automatic_inner_missing_feature")
+
+      Dir.mktmpdir do |dir|
+        path = File.join(dir, "recipe.yml")
+        File.write(path, "plugins:\n  - module: FilterOne\n")
+        expect { run("-c", path) }.to raise_error(LoadError, /automatic_inner_missing_feature/)
       end
     end
 
