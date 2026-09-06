@@ -171,18 +171,14 @@ v12.02 (2012-02-18)
 
 Notes on this record
 ====================
-- Entries from v12.02 to v14.12.0 were moved here from doc/ChangeLog, which this
-  file replaces. No entry and no date was changed in the move; the wording was
-  brought to one bullet per change, and nothing was added or dropped.
-- v14.10.1, v14.12.1 and v14.12.2 were released and are recorded in the commit
-  log, but were never written into doc/ChangeLog. Their entries above were
-  reconstructed from the commits that bumped the version.
-- No Git tag exists for any release before v26.08. The version numbers above are
-  those recorded in the VERSION file at the time, and the commit log is the only
-  other record of them.
-- Between v14.12.2 and v26.08 the only committed change was the addition of the
-  integration recipe test/integration/test_pdf2local.yml in April 2015. It is
-  part of the v26.08 entry's repository state and took no version of its own.
+- Entries from v12.02 to v14.12.0 were moved here from doc/ChangeLog, which this file replaces. No entry and no date
+  was changed in the move; the wording was brought to one bullet per change, and nothing was added or dropped.
+- v14.10.1, v14.12.1 and v14.12.2 were released and are recorded in the commit log, but were never written
+  into doc/ChangeLog. Their entries above were reconstructed from the commits that bumped the version.
+- No Git tag exists for any release before v26.08. The version numbers above are those recorded
+  in the VERSION file at the time, and the commit log is the only other record of them.
+- Between v14.12.2 and v26.08 the only committed change was adding
+  test/integration/test_pdf2local.yml (April 2015), folded into v26.08.
 
 
 Version History Guidelines
