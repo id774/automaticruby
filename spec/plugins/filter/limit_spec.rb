@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 24, 2026
-# Updated::     Aug 24, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -65,6 +65,36 @@ describe Automatic::Plugin::FilterLimit do
     [nil, 0, -1, '', 'abc', '1.5'].each do |value|
       lambda { Automatic::Plugin::FilterLimit.new({ 'max_items' => value }, []) }.
         should raise_error(ArgumentError, 'FilterLimit needs max_items to be a positive integer')
+    end
+  end
+
+  # FilterLimit selects items by passing survivors through
+  # Automatic::FeedMaker.create_pipeline, same as every other filter built on
+  # it; this is an integration regression for that shared helper, not for
+  # FilterLimit's own selection logic, which the specs above already cover.
+  describe 'metadata preservation' do
+    it 'keeps content_encoded, source and enclosure on an item that survives the limit' do
+      item = pipeline[0].items[0]
+      item.content_encoded = '<p>The article body</p>'
+      item.source = RSS::Rss::Channel::Item::Source.new('https://example.com/feed.xml', 'Example Feed')
+      item.enclosure = RSS::Rss::Channel::Item::Enclosure.new('https://example.com/a.mp3', 123, 'audio/mpeg')
+
+      returned = limit({ 'max_items' => 1 }, pipeline)
+      survivor = returned[0].items[0]
+
+      survivor.link.should == 'https://example.com/a'
+      survivor.content_encoded.should == '<p>The article body</p>'
+      survivor.source.url.should == 'https://example.com/feed.xml'
+      survivor.enclosure.url.should == 'https://example.com/a.mp3'
+    end
+
+    it 'still limits to the configured count and keeps item ordering' do
+      pipeline[0].items[0].content_encoded = '<p>The article body</p>'
+
+      returned = limit({ 'max_items' => 3 }, pipeline)
+
+      links = returned.flat_map { |feeds| feeds.items.map(&:link) }
+      links.should == %w[https://example.com/a https://example.com/b https://example.com/c]
     end
   end
 end
