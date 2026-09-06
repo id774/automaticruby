@@ -5,11 +5,16 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 18, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Sep  6, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # Turns a Recipe file into something the pipeline can iterate. The format is
 # specified in doc/PLUGINS.md section 2.
+#
+# Each plugin entry's documented shape -- a mapping naming a module, with an
+# optional config mapping -- is validated here, at load time, rather than
+# left to surface as whatever internal exception a malformed entry happens to
+# raise once the pipeline reaches it.
 
 require 'date'
 require 'hashie'
@@ -45,6 +50,8 @@ module Automatic
               "recipe #{resolved} has no plugins sequence"
       end
 
+      validate_plugins(resolved)
+
       Automatic::Log.level(@procedure.global&.log&.level)
       Automatic::Log.puts('info', "Loading Recipe: #{resolved}")
       @procedure
@@ -71,6 +78,43 @@ module Automatic
         permitted_classes: PERMITTED_CLASSES,
         aliases: true
       )
+    end
+
+    # Only the shape doc/PLUGINS.md documents is checked here: a mapping
+    # naming a module, with an optional config mapping. What a plugin does
+    # with its own config is that plugin's concern, not this one's.
+    def validate_plugins(resolved)
+      @procedure.plugins.each_with_index do |plugin, index|
+        validate_plugin_entry(resolved, plugin, index)
+      end
+    end
+
+    def validate_plugin_entry(resolved, plugin, index)
+      unless plugin.is_a?(Hash)
+        raise InvalidRecipeError,
+              "recipe #{resolved} plugins[#{index}] is not a mapping"
+      end
+
+      validate_module_name(resolved, plugin, index)
+      validate_plugin_config(resolved, plugin, index)
+    end
+
+    def validate_module_name(resolved, plugin, index)
+      name = plugin['module']
+
+      return if name.is_a?(String) && !name.strip.empty?
+
+      raise InvalidRecipeError,
+            "recipe #{resolved} plugins[#{index}] has no module name"
+    end
+
+    def validate_plugin_config(resolved, plugin, index)
+      config = plugin['config']
+
+      return if config.nil? || config.is_a?(Hash)
+
+      raise InvalidRecipeError,
+            "recipe #{resolved} plugins[#{index}] has a config that is not a mapping"
     end
   end
 end
