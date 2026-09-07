@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 21, 2014
-# Updated::     Sep  6, 2026
+# Updated::     Sep  7, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic
@@ -16,8 +16,8 @@ module Automatic
     class FeedObject
       attr_accessor :title, :link, :description, :author, :comments
       def initialize
-        @link        = 'http://dummy'
-        @title       = 'dummy'
+        @link        = nil
+        @title       = nil
         @description = ''
         @author      = ''
         @comments    = ''
@@ -37,7 +37,7 @@ module Automatic
     # Plain-value standard fields, copied onto the rebuilt item as-is when the
     # item being rebuilt carries them. See doc/REQUIREMENTS.md and
     # doc/PLUGINS.md for the standard item field contract this preserves.
-    REBUILD_SIMPLE_FIELDS = %i[description author comments content_encoded].freeze
+    REBUILD_SIMPLE_FIELDS = %i[title link description author comments content_encoded].freeze
 
     # source and enclosure are RSS child elements. RSS::Maker exposes each of
     # them on a new item as a builder with its own sub-attributes rather than
@@ -58,12 +58,8 @@ module Automatic
 
         unless feeds.nil?
           feeds.each {|feed|
-            next if feed.link.nil?
-
             Automatic::Log.puts("info", "Create Pipeline: #{feed.link}")
             item = maker.items.new_item
-            item.title = feed.title
-            item.link = feed.link
             item.date = (feed.pubDate if feed.respond_to?(:pubDate)) || Time.now
 
             REBUILD_SIMPLE_FIELDS.each { |field| copy_rebuild_field(feed, item, field) }
