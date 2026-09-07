@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     May  6, 2013
-# Updated::     Feb 19, 2014
+# Updated::     Sep  7, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -33,6 +33,16 @@ describe Automatic::Plugin::SubscriptionText do
     its(:run) { should have(1).feed }
   end
 
+  it "builds a title-only item with no placeholder link" do
+    returned = Automatic::Plugin::SubscriptionText.new(
+      { "titles" => ["hugehuge"] }
+    ).run
+    item = returned.first.items.first
+
+    item.title.should == "hugehuge"
+    item.link.should be_nil
+  end
+
   context "with urls whose return feed" do
     subject {
       Automatic::Plugin::SubscriptionText.new(
@@ -43,6 +53,16 @@ describe Automatic::Plugin::SubscriptionText do
     its(:run) { should have(1).feed }
   end
 
+  it "builds a URL-only item with no placeholder title" do
+    returned = Automatic::Plugin::SubscriptionText.new(
+      { "urls" => ["http://hugehuge"] }
+    ).run
+    item = returned.first.items.first
+
+    item.title.should be_nil
+    item.link.should == "http://hugehuge"
+  end
+
   context "with feeds whose return feed" do
     subject {
       Automatic::Plugin::SubscriptionText.new(
@@ -51,6 +71,16 @@ describe Automatic::Plugin::SubscriptionText do
     }
 
     its(:run) { should have(1).feed }
+  end
+
+  it "keeps an explicitly supplied title and URL" do
+    returned = Automatic::Plugin::SubscriptionText.new(
+      { "feeds" => [{ "title" => "huge", "url" => "http://hugehuge" }] }
+    ).run
+    item = returned.first.items.first
+
+    item.title.should == "huge"
+    item.link.should == "http://hugehuge"
   end
 
   context "with feeds including full fields whose return feed" do

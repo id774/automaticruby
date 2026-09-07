@@ -313,9 +313,10 @@ Rules that follow from the shape:
 
 - **Return the shape, always.** Returning `nil`, a string or a bare array of
   items ends the pipeline for everything after it.
-- **`link` may be `nil`, and so may any other field.** Filters signal "not
-  applicable" by setting `link` to `nil`, so a plugin that dereferences a field
-  without checking will be handed `nil` sooner or later.
+- **`link` may be `nil`, and so may any other field.** A missing field is data,
+  not a framework-wide drop signal: `FeedMaker.create_pipeline` preserves an
+  item whose link is `nil`. A plugin that requires a link must check it itself;
+  a plugin that does not may keep processing the item.
 - **Guard the feed itself.** `@pipeline.each { |feeds| next if feeds.nil? }` is
   the prevailing idiom, because a subscription plugin that failed may have put a
   `nil` in the array.
@@ -950,9 +951,10 @@ plugin has done the work, so that later plugins publish nothing. No settings.
 
 #### FilterImage — **Supported**
 
-`filter/image.rb`. Sets `link` to `nil` unless it names an image. Note that it
-does not remove the items — it blanks their links, and the plugins after it
-skip items whose link is `nil`. No settings.
+`filter/image.rb`. Sets `link` to `nil` unless it names an image. It does not
+remove the item: a later plugin that requires a link skips it under that
+plugin's own rules, while a link-independent plugin may continue to use it. No
+settings.
 
 The extensions are `.jpg`, `.jpeg`, `.gif`, `.png`, `.tif`, `.tiff`, `.webp`
 and `.avif`, and the test is on the URL's **path**. Both of those changed:

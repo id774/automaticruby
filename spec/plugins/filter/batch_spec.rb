@@ -5,12 +5,13 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 24, 2026
-# Updated::     Aug 24, 2026
+# Updated::     Sep  7, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'filter/batch'
+require 'filter/limit'
 
 describe Automatic::Plugin::FilterBatch do
   def batch(config, pipeline)
@@ -79,6 +80,23 @@ describe Automatic::Plugin::FilterBatch do
       descriptions[1].index('ARTICLE 1').should < descriptions[1].index('ARTICLE 2')
       descriptions[1].should_not include('ARTICLE 4')
     end
+  end
+
+  it 'keeps a linkless batch item through FilterLimit' do
+    batched = batch({ 'batch_items' => 3 }, pipeline)
+    returned = Automatic::Plugin::FilterLimit.new(
+      { 'max_items' => 1 }, batched
+    ).run
+
+    returned.should have(1).feed
+    returned.first.items.should have(1).item
+
+    item = returned.first.items.first
+    item.title.should == 'Batch 1'
+    item.link.should be_nil
+    item.description.should include('Title: A')
+    item.description.should include('Title: B')
+    item.description.should include('Title: C')
   end
 
   it 'accepts batch_items as a numeric string' do

@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Sep  6, 2026
-# Updated::     Sep  6, 2026
+# Updated::     Sep  7, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # create_pipeline rebuilds each item it is given into a new RSS feed. This is
@@ -19,6 +19,22 @@ require File.expand_path(File.join(File.dirname(__FILE__), '../../spec_helper'))
 require 'automatic/feed_maker'
 
 describe Automatic::FeedMaker do
+  describe ".generate_feed" do
+    it "leaves link absent when only a title is given" do
+      item = Automatic::FeedMaker.generate_feed("title" => "A title")
+
+      item.title.should == "A title"
+      item.link.should be_nil
+    end
+
+    it "leaves title absent when only a URL is given" do
+      item = Automatic::FeedMaker.generate_feed("url" => "https://example.com/a")
+
+      item.title.should be_nil
+      item.link.should == "https://example.com/a"
+    end
+  end
+
   describe ".create_pipeline" do
     # Builds a pipeline item the way FeedParser or a previous create_pipeline
     # call would hand one on: a real RSS::Rss::Channel::Item, with real
@@ -154,14 +170,20 @@ describe Automatic::FeedMaker do
       item.content_encoded.should == "<p>Full body</p>"
     end
 
-    it "keeps the existing item-count behaviour, skipping an item with no link" do
-      linked = build_item(link: "https://example.com/a")
-      unlinked = build_item(link: nil)
+    it "preserves both linked and linkless items" do
+      linked = build_item(link: "https://example.com/a", title: "Linked")
+      unlinked = build_item(link: nil, title: "Unlinked",
+                            description: "A linkless description")
 
       rebuilt = Automatic::FeedMaker.create_pipeline([linked, unlinked])
 
-      rebuilt.items.size.should == 1
-      rebuilt.items.first.link.should == "https://example.com/a"
+      rebuilt.items.size.should == 2
+      rebuilt.items.map(&:title).should include("Linked", "Unlinked")
+
+      item = rebuilt.items.find { |candidate| candidate.title == "Unlinked" }
+      item.should_not be_nil
+      item.link.should be_nil
+      item.description.should == "A linkless description"
     end
   end
 end
