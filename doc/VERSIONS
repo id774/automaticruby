@@ -9,6 +9,7 @@ v26.09 (Release Date: TBD)
   dependency from load failures, and preflight-validate Recipe plugins.
 - Preserve nil-link pipeline items and remove SubscriptionText placeholder
   title and link values.
+- Preserve SubscriptionText TSV column positions and ignore empty input rows.
 
 v26.08 (2026-08-22)
 -------------------

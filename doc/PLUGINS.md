@@ -669,10 +669,13 @@ no network, which makes it the plugin to test a Recipe's later half with.
 | `titles` | sequence | One item per title, no link |
 | `urls` | sequence | One item per URL, no title |
 | `feeds` | sequence | Mappings of `title`, `url`, `description`, `author`, `comments` |
-| `files` | sequence | TSV paths; columns are title, url, description, author, comments |
+| `files` | sequence | UTF-8 TSV paths; positional columns are title, url, description, author, comments |
 
-The TSV separator is a tab, the file is read as UTF-8, and `~` is expanded. Any
-combination of the four keys may be given.
+The TSV separator is a tab and `~` is expanded. Empty columns supply no value
+for that field without shifting later columns; blank or all-empty rows produce
+no item. Only the first five columns are used. Line endings are removed before
+splitting, but other field whitespace is preserved. Any combination of the four
+keys may be given.
 
 #### SubscriptionTumblr — **Supported (external)**
 

@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     May  6, 2013
-# Updated::     Aug 15, 2026
+# Updated::     Sep  8, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
@@ -41,13 +41,22 @@ module Automatic::Plugin
       Array(@config['feeds']).map { |feed| Automatic::FeedMaker.generate_feed(feed) }
     end
 
-    # Tab separated, read as UTF-8, and `~` expanded.
+    # Tab separated, read as UTF-8, and `~` expanded. Empty columns stay in
+    # position and an all-empty row produces no item.
     def files
       Array(@config['files']).flat_map do |path|
-        File.foreach(File.expand_path(path), encoding: 'UTF-8').map do |line|
-          Automatic::FeedMaker.generate_feed(COLUMNS.zip(line.strip.split("\t")).to_h)
+        File.foreach(File.expand_path(path), encoding: 'UTF-8').filter_map do |line|
+          fields = tsv_fields(line)
+          Automatic::FeedMaker.generate_feed(fields) unless fields.nil?
         end
       end
+    end
+
+    def tsv_fields(line)
+      values = line.chomp.split("\t", -1).first(COLUMNS.length)
+      fields = COLUMNS.zip(values).to_h
+      fields.delete_if { |_field, value| value.nil? || value.empty? }
+      fields unless fields.empty?
     end
   end
 end

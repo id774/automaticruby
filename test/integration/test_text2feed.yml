@@ -24,8 +24,6 @@ plugins:
           author: 'ccc'
       files:
         - 'spec/fixtures/sampleFeeds.tsv'
-      files:
-        - 'spec/fixtures/sampleFeeds.tsv'
         - 'spec/fixtures/sampleFeeds2.tsv'
 
   - module: StorePermalink
