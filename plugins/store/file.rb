@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 28, 2012
-# Updated::     Aug 15, 2026
+# Updated::     Sep  9, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require 'fileutils'
@@ -17,6 +17,8 @@ module Automatic::Plugin
     # `s3n` is what Recipes written for this plugin use; `s3` is the spelling
     # everything else uses and is accepted as well.
     S3_SCHEMES = %w[s3 s3n].freeze
+
+    FILE_URI_ESCAPER = URI::RFC2396_Parser.new
 
     def initialize(config, pipeline = [])
       @config   = config || {}
@@ -69,7 +71,13 @@ module Automatic::Plugin
       uri = URI.parse(url)
       path = S3_SCHEMES.include?(uri.scheme) ? from_s3(uri) : download(url)
       Automatic::Log.puts('info', "Saved File: #{path}")
-      "file://#{path}"
+      file_uri(path)
+    end
+
+    def file_uri(path)
+      absolute_path = File.absolute_path(path.to_s)
+      escaped_path = FILE_URI_ESCAPER.escape(absolute_path)
+      URI::Generic.build(scheme: 'file', path: escaped_path).to_s
     end
 
     # Only HTTP and HTTPS are fetched: a link arrives from a feed, which is to

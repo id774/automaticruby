@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Mar  4, 2012
-# Updated::     Aug 14, 2026
+# Updated::     Sep  9, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -85,6 +85,30 @@ describe Automatic::Plugin::StoreFile do
       returned.should have(1).feed
       returned[0].items[0].link.should == "file://#{File.join(dir, 'photo.png')}"
       File.read(File.join(dir, 'photo.png')).should == 'a body'
+    end
+  end
+
+  it "rewrites a relative, space-containing path to an absolute, escaped file URI" do
+    relative_dir = "automatic-store-file-spec #{Process.pid}"
+    FileUtils.mkdir_p(relative_dir)
+    begin
+      Automatic::Http.stub(:read).and_return('a body')
+      instance = Automatic::Plugin::StoreFile.new(
+        { "path" => relative_dir },
+        AutomaticSpec.generate_pipeline { feed { item "https://example.com/a/photo.png" } }
+      )
+
+      returned = instance.run
+      saved_path = File.join(relative_dir, 'photo.png')
+      uri = URI.parse(returned[0].items[0].link)
+
+      uri.scheme.should == 'file'
+      uri.host.to_s.should be_empty
+      uri.to_s.should include('%20')
+      URI::RFC2396_Parser.new.unescape(uri.path).should == File.absolute_path(saved_path)
+      File.read(saved_path).should == 'a body'
+    ensure
+      FileUtils.rm_rf(relative_dir)
     end
   end
 
