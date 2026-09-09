@@ -5,12 +5,14 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 24, 2014
-# Updated::     Aug 15, 2026
+# Updated::     Sep  9, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 module Automatic::Plugin
   class PublishAmazonS3
     require 'uri'
+
+    FILE_URI_ESCAPER = URI::RFC2396_Parser.new
 
     def initialize(config, pipeline = [])
       @config   = config || {}
@@ -35,13 +37,17 @@ module Automatic::Plugin
 
       uri = URI.parse(feed.link)
       if uri.scheme == 'file'
-        upload(uri.path)
+        upload(file_path(uri))
       else
         Automatic::Log.puts('warn', 'Skip feed due to uri scheme is not file.')
       end
     rescue StandardError => e
       Automatic::Log.puts('error',
                           "Error detected with #{feed.link} in uploading AmazonS3: #{e.message}")
+    end
+
+    def file_path(uri)
+      FILE_URI_ESCAPER.unescape(uri.path.to_s)
     end
 
     def upload(path)

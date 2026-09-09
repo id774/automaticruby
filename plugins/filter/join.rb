@@ -87,11 +87,9 @@ module Automatic::Plugin
       item.public_send(name).to_s.strip
     end
 
-    # Built here rather than through FeedMaker.create_pipeline, which drops an
-    # item whose link is nil -- and this item's link is nil deliberately. It is
-    # several articles at once, so there is no page it points at, and putting
-    # the first article's URL there would name a source for text that is not
-    # only from it.
+    # This joined item deliberately has no link. It is several articles at once,
+    # so there is no single page it points at; using the first article's URL would
+    # name a source for text that is not only from it.
     def feed(item_title, item_description)
       RSS::Maker.make('2.0') { |maker|
         maker.channel.title = 'Automatic Ruby'

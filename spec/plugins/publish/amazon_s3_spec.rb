@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 25, 2014
-# Updated::     Aug 15, 2026
+# Updated::     Sep  9, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -59,6 +59,25 @@ describe Automatic::Plugin::PublishAmazonS3 do
         plugin.should_not_receive(:s3)
         plugin.run.should have(1).feed
         plugin.send(:target_key, path).should == 'test/tmp/photo.png'
+      end
+    end
+  end
+
+  context 'with a percent-encoded file URI' do
+    it 'decodes the URI path back to the local filesystem path before uploading' do
+      Dir.mktmpdir do |dir|
+        path = File.join(dir, 'a photo.png')
+        File.binwrite(path, 'x')
+
+        escaped_path = URI::RFC2396_Parser.new.escape(path)
+        link = URI::Generic.build(scheme: 'file', path: escaped_path).to_s
+
+        plugin = Automatic::Plugin::PublishAmazonS3.new(
+          settings,
+          AutomaticSpec.generate_pipeline { feed { item link } }
+        )
+        plugin.should_receive(:upload).with(path).and_call_original
+        plugin.run.should have(1).feed
       end
     end
   end

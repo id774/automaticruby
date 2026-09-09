@@ -1577,12 +1577,14 @@ headline edited between runs no longer republishes the article.
 
 #### StoreFile — **Supported**
 
-`store/file.rb`. Downloads what each link points at and rewrites the link to a
-`file://` URI, which is how `PublishAmazonS3` later knows it has a local file.
+`store/file.rb`. Downloads what each link points at and rewrites the link to an
+absolute `file:` URI for the saved file, which is how `PublishAmazonS3` later
+knows it has a local file. URI-reserved characters in the saved path are
+percent-encoded.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
-| `path` | string | Directory to save into; created if absent. Required. |
+| `path` | string | Directory to save into; relative paths use the process working directory; created if absent. Required. |
 | `retry` | integer | Attempts after the first. Default `0`. |
 | `interval` | integer | Seconds between downloads. Default `0`. |
 | `access_key` | string | S3 only. Omit to use the SDK's own credential chain. |
@@ -1881,8 +1883,9 @@ timeout, so an unanswered request ends rather than hanging a `cron` job.
 
 #### PublishAmazonS3 — **Supported (external)**
 
-`publish/amazon_s3.rb`. Uploads files whose link is a `file://` URI to S3,
-normally after `StoreFile`.
+`publish/amazon_s3.rb`. Uploads files whose link is a `file:` URI to S3,
+normally after `StoreFile`. A percent-encoded URI path is decoded back to the
+local filesystem path before upload.
 
 | Key | Type | Meaning |
 | --- | --- | --- |

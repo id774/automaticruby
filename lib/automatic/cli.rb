@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Sep  6, 2026
+# Updated::     Sep  9, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # Everything that belongs to being a command: option parsing, the subcommands,
@@ -208,7 +208,17 @@ module Automatic
       require 'automatic/feed_parser'
       require 'pp'
       url = argv.shift || missing_argument('feedparser')
+      validate_fetch_url(url)
       @stdout.puts Automatic::FeedParser.get_url(url).pretty_inspect
+    end
+
+    # Converts only the URL validation failure `Automatic::Http.uri` already
+    # applies into the CLI's ordinary failure path; an unexpected error from
+    # inside FeedParser itself is left to propagate.
+    def validate_fetch_url(url)
+      Automatic::Http.uri(url)
+    rescue ArgumentError, URI::InvalidURIError => e
+      raise Automatic::Error, e.message
     end
 
     def inspect_url(argv)

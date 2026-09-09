@@ -62,10 +62,11 @@ group :plugins, :autodiscovery, optional: true do
 end
 
 # The plugins below are Supported (external): each needs a service or a command
-# the operator provides, and their specs exercise it rather than a double. They
-# are deliberately outside the `plugins` group, so that installing that group
-# leaves the suite runnable with nothing else set up. Select one of these by
-# its own name when you have what it talks to.
+# the operator provides for real use. They are deliberately outside the
+# `plugins` group, because installing all of their client gems is not useful
+# without those external systems. Their specs verify the local side of each
+# integration with doubles where appropriate. Select one by its own name when
+# you have what it talks to.
 group :memcached, optional: true do
   gem 'dalli'             # PublishMemcached, with a memcached server
 end

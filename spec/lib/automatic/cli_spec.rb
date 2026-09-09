@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Aug 14, 2026
-# Updated::     Sep  6, 2026
+# Updated::     Sep  9, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../../spec_helper'))
@@ -77,6 +77,50 @@ describe Automatic::CLI do
       path = File.join(APP_ROOT, "test", "fixtures", "sampleOPML.xml")
       expect(run("opmlparser", path)).to eq Automatic::CLI::EXIT_SUCCESS
       expect(out.string).not_to be_empty
+    end
+  end
+
+  describe "the feedparser subcommand" do
+    it "parses a valid HTTP or HTTPS URL" do
+      allow(Automatic::FeedParser).to receive(:get_url).and_return("parsed")
+
+      expect(run("feedparser", "https://example.com/feed")).to eq Automatic::CLI::EXIT_SUCCESS
+      expect(Automatic::FeedParser).to have_received(:get_url).with("https://example.com/feed")
+      expect(out.string).to match(/parsed/)
+      expect(err.string).to be_empty
+    end
+
+    it "rejects a URL whose scheme is not HTTP or HTTPS" do
+      expect(Automatic::FeedParser).not_to receive(:get_url)
+
+      expect(run("feedparser", "file:///etc/passwd")).to eq Automatic::CLI::EXIT_FAILURE
+      expect(out.string).to be_empty
+      expect(err.string).to match(/automatic: not an HTTP or HTTPS URL:/)
+    end
+
+    it "rejects an HTTP or HTTPS URL with no host" do
+      expect(Automatic::FeedParser).not_to receive(:get_url)
+
+      expect(run("feedparser", "https:/feed")).to eq Automatic::CLI::EXIT_FAILURE
+      expect(out.string).to be_empty
+      expect(err.string).to match(/automatic: HTTP or HTTPS URL has no host:/)
+    end
+
+    it "rejects a URL that fails to parse as a URI syntax error" do
+      expect(Automatic::FeedParser).not_to receive(:get_url)
+
+      expect(run("feedparser", "http://[")).to eq Automatic::CLI::EXIT_FAILURE
+      expect(out.string).to be_empty
+      expect(err.string).to match(/\Aautomatic: /)
+    end
+
+    it "propagates an unexpected internal ArgumentError from FeedParser, unconverted" do
+      allow(Automatic::FeedParser).to receive(:get_url)
+        .and_raise(ArgumentError, 'internal feed parser defect')
+
+      expect {
+        run("feedparser", "https://example.com/feed")
+      }.to raise_error(ArgumentError, /internal feed parser defect/)
     end
   end
 
