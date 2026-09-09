@@ -212,6 +212,8 @@ Two statements, and they are not the same one:
 
 ### From RubyGems
 
+The released gem is available as [automatic on RubyGems](https://rubygems.org/gems/automatic).
+
 ```sh
 gem install automatic
 automatic --version
