@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Name::        Automatic::Plugin::Filter::Claude
 # Description:: Replace each item's description with what the Anthropic Claude API answers.
-# Author:       id774 (More info: http://id774.net)
+# Author:       id774 (More info: https://id774.net)
 # Source Code:: https://github.com/id774/automaticruby
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
