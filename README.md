@@ -718,5 +718,5 @@ See [`doc/LICENSE.md`](doc/LICENSE.md), [`doc/COPYING`](doc/COPYING) and
 
 Copyright (c) 2012-2026 Automatic Ruby Developers.
 
-Project created by [id774](http://id774.net). Contributors are listed in
+Project created by [id774](https://id774.net). Contributors are listed in
 [`doc/AUTHORS`](doc/AUTHORS).
