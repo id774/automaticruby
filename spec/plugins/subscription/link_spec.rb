@@ -36,7 +36,7 @@ describe Automatic::Plugin::SubscriptionLink do
     subject {
       Automatic::Plugin::SubscriptionLink.new(
         { 'urls' => [
-            "http://id774.net"],
+            "https://id774.net"],
           'interval' => 1
         }
       )
@@ -49,7 +49,7 @@ describe Automatic::Plugin::SubscriptionLink do
     subject {
       Automatic::Plugin::SubscriptionLink.new(
         { 'urls' => [
-            "http://id774.net"],
+            "https://id774.net"],
           'interval' => 2,
           'retry' => 3
         }

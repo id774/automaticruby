@@ -16,20 +16,20 @@ describe Automatic::Plugin::FilterAbsoluteURI do
   context "with feed contain link tag" do
     subject {
       Automatic::Plugin::FilterAbsoluteURI.new({
-        'url' => "http://id774.net/images/",
+        'url' => "https://id774.net/images/",
       },
         AutomaticSpec.generate_pipeline {
           feed {
-            item "http://id774.net/images/link_1.jpg"
+            item "https://id774.net/images/link_1.jpg"
             item "link_2.jpg"
             item "link_3.JPG"
-            item "http://id774.net/images/link_4.png"
+            item "https://id774.net/images/link_4.png"
             item "link_5.jpeg"
-            item "http://id774.net/images/link_6.PNG"
+            item "https://id774.net/images/link_6.PNG"
             item "link_8.gif"
-            item "http://id774.net/images/link_9.GIF"
+            item "https://id774.net/images/link_9.GIF"
             item "link_10.tiff"
-            item "http://id774.net/images/link_11.TIFF"
+            item "https://id774.net/images/link_11.TIFF"
           }})}
 
     describe "#run" do
@@ -38,25 +38,25 @@ describe Automatic::Plugin::FilterAbsoluteURI do
       specify {
         returned = subject.run
         returned[0].items[0].link.
-        should == "http://id774.net/images/link_1.jpg"
+        should == "https://id774.net/images/link_1.jpg"
         returned[0].items[1].link.
-        should == "http://id774.net/images/link_2.jpg"
+        should == "https://id774.net/images/link_2.jpg"
         returned[0].items[2].link.
-        should == "http://id774.net/images/link_3.JPG"
+        should == "https://id774.net/images/link_3.JPG"
         returned[0].items[3].link.
-        should == "http://id774.net/images/link_4.png"
+        should == "https://id774.net/images/link_4.png"
         returned[0].items[4].link.
-        should == "http://id774.net/images/link_5.jpeg"
+        should == "https://id774.net/images/link_5.jpeg"
         returned[0].items[5].link.
-        should == "http://id774.net/images/link_6.PNG"
+        should == "https://id774.net/images/link_6.PNG"
         returned[0].items[6].link.
-        should == "http://id774.net/images/link_8.gif"
+        should == "https://id774.net/images/link_8.gif"
         returned[0].items[7].link.
-        should == "http://id774.net/images/link_9.GIF"
+        should == "https://id774.net/images/link_9.GIF"
         returned[0].items[8].link.
-        should == "http://id774.net/images/link_10.tiff"
+        should == "https://id774.net/images/link_10.tiff"
         returned[0].items[9].link.
-        should == "http://id774.net/images/link_11.TIFF"
+        should == "https://id774.net/images/link_11.TIFF"
       }
     end
   end

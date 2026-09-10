@@ -24,7 +24,7 @@ describe Automatic::Plugin::ProvideFluentd do
   }
 
   let(:pipeline) {
-    [Automatic::FeedMaker.content_provide('http://id774.net/test/xml/data',
+    [Automatic::FeedMaker.content_provide('https://id774.net/test/xml/data',
                                           'test1' => 'test2', 'test3' => 'test4')]
   }
 
