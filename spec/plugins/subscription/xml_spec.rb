@@ -36,7 +36,7 @@ describe Automatic::Plugin::SubscriptionXml do
     subject {
       Automatic::Plugin::SubscriptionXml.new(
         { 'urls' => [
-            "http://id774.net"]
+            "https://id774.net"]
         }
       )
     }
@@ -48,7 +48,7 @@ describe Automatic::Plugin::SubscriptionXml do
     subject {
       Automatic::Plugin::SubscriptionXml.new(
         { 'urls' => [
-            "http://id774.net/test/xml/data"],
+            "https://id774.net/test/xml/data"],
           'interval' => 1
         }
       )
@@ -61,7 +61,7 @@ describe Automatic::Plugin::SubscriptionXml do
     subject {
       Automatic::Plugin::SubscriptionXml.new(
         { 'urls' => [
-            "http://id774.net/test/xml/data"],
+            "https://id774.net/test/xml/data"],
           'interval' => 2,
           'retry' => 3
         }

@@ -9,7 +9,7 @@ plugins:
   - module: SubscriptionXml
     config:
       urls:
-        - http://id774.net/test/xml/data
+        - https://id774.net/test/xml/data
 
   - module: ProvideFluentd
     config:

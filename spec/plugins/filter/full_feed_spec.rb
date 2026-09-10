@@ -363,7 +363,7 @@ describe Automatic::Plugin::FilterFullFeed do
         },
         AutomaticSpec.generate_pipeline {
           feed {
-            item "http://id774.net", "aaaaaa",
+            item "https://id774.net", "aaaaaa",
             "bbbbbb",
             "Mon, 07 Mar 2011 15:54:11 +0900"
           }})}
@@ -373,14 +373,14 @@ describe Automatic::Plugin::FilterFullFeed do
 
       specify {
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
-        should == "http://id774.net"
+        should == "https://id774.net"
         subject.instance_variable_get(:@pipeline)[0].items[0].description.
         should == "bbbbbb"
 
         subject.run
 
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
-        should == "http://id774.net"
+        should == "https://id774.net"
         subject.instance_variable_get(:@pipeline)[0].items[0].description.
         should == "bbbbbb"
       }
@@ -395,7 +395,7 @@ describe Automatic::Plugin::FilterFullFeed do
         },
         AutomaticSpec.generate_pipeline {
           feed {
-            item "http://id774.net", "cccc",
+            item "https://id774.net", "cccc",
             "ddddd",
             "Mon, 07 Mar 2011 15:54:11 +0900"
           }})}
@@ -420,14 +420,14 @@ describe Automatic::Plugin::FilterFullFeed do
 
       specify {
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
-        should == "http://id774.net"
+        should == "https://id774.net"
         subject.instance_variable_get(:@pipeline)[0].items[0].description.
         should == "ddddd"
 
         subject.run
 
         subject.instance_variable_get(:@pipeline)[0].items[0].link.
-        should == "http://id774.net"
+        should == "https://id774.net"
         subject.instance_variable_get(:@pipeline)[0].items[0].description.
         should == "ddddd"
       }

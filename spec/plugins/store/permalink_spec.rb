@@ -70,17 +70,17 @@ describe Automatic::Plugin::StorePermalink do
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_2.jpg"
-          item "http://id774.net/images/link_3.JPG"
-          item "http://id774.net/images/link_4.png"
-          item "http://id774.net/images/link_5.jpeg"
-          item "http://id774.net/images/link_6.PNG"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_2.jpg"
+          item "https://id774.net/images/link_3.JPG"
+          item "https://id774.net/images/link_4.png"
+          item "https://id774.net/images/link_5.jpeg"
+          item "https://id774.net/images/link_6.PNG"
           item nil
-          item "http://id774.net/images/link_8.gif"
-          item "http://id774.net/images/link_9.GIF"
-          item "http://id774.net/images/link_10.tiff"
-          item "http://id774.net/images/link_11.TIFF"
+          item "https://id774.net/images/link_8.gif"
+          item "https://id774.net/images/link_9.GIF"
+          item "https://id774.net/images/link_10.tiff"
+          item "https://id774.net/images/link_11.TIFF"
         }
       }
     )
@@ -97,17 +97,17 @@ describe Automatic::Plugin::StorePermalink do
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_3.JPG"
-          item "http://id774.net/images/link_4.png"
-          item "http://id774.net/images/link_5.jpeg"
-          item "http://id774.net/images/link_6.PNG"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_3.JPG"
+          item "https://id774.net/images/link_4.png"
+          item "https://id774.net/images/link_5.jpeg"
+          item "https://id774.net/images/link_6.PNG"
           item nil
-          item "http://id774.net/images/link_8.gif"
-          item "http://id774.net/images/link_9.GIF"
-          item "http://id774.net/images/link_10.tiff"
-          item "http://id774.net/images/link_11.TIFF"
+          item "https://id774.net/images/link_8.gif"
+          item "https://id774.net/images/link_9.GIF"
+          item "https://id774.net/images/link_10.tiff"
+          item "https://id774.net/images/link_11.TIFF"
         }
       }
     )
@@ -124,17 +124,17 @@ describe Automatic::Plugin::StorePermalink do
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_3.JPG"
-          item "http://id774.net/images/link_4.png"
-          item "http://id774.net/images/link_5.jpeg"
-          item "http://id774.net/images/link_6.PNG"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_3.JPG"
+          item "https://id774.net/images/link_4.png"
+          item "https://id774.net/images/link_5.jpeg"
+          item "https://id774.net/images/link_6.PNG"
           item nil
-          item "http://id774.net/images/link_8.gif"
-          item "http://id774.net/images/link_9.GIF"
-          item "http://id774.net/images/link_10.tiff"
-          item "http://id774.net/images/link_11.TIFF"
+          item "https://id774.net/images/link_8.gif"
+          item "https://id774.net/images/link_9.GIF"
+          item "https://id774.net/images/link_10.tiff"
+          item "https://id774.net/images/link_11.TIFF"
         }
       }
     )
@@ -147,17 +147,17 @@ describe Automatic::Plugin::StorePermalink do
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_3.JPG"
-          item "http://id774.net/images/link_4.png"
-          item "http://id774.net/images/link_5.jpeg"
-          item "http://id774.net/images/link_6.PNG"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_3.JPG"
+          item "https://id774.net/images/link_4.png"
+          item "https://id774.net/images/link_5.jpeg"
+          item "https://id774.net/images/link_6.PNG"
           item nil
-          item "http://id774.net/images/link_8.gif"
-          item "http://id774.net/images/link_9.GIF"
-          item "http://id774.net/images/link_10.tiff"
-          item "http://id774.net/images/link_11.TIFF"
+          item "https://id774.net/images/link_8.gif"
+          item "https://id774.net/images/link_9.GIF"
+          item "https://id774.net/images/link_10.tiff"
+          item "https://id774.net/images/link_11.TIFF"
         }
       }
     )
@@ -174,17 +174,17 @@ describe Automatic::Plugin::StorePermalink do
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_3.JPG"
-          item "http://id774.net/images/link_4.png"
-          item "http://id774.net/images/link_5.jpeg"
-          item "http://id774.net/images/link_6.PNG"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_3.JPG"
+          item "https://id774.net/images/link_4.png"
+          item "https://id774.net/images/link_5.jpeg"
+          item "https://id774.net/images/link_6.PNG"
           item nil
-          item "http://id774.net/images/link_8.gif"
-          item "http://id774.net/images/link_9.GIF"
-          item "http://id774.net/images/link_10.tiff"
-          item "http://id774.net/images/link_11.TIFF"
+          item "https://id774.net/images/link_8.gif"
+          item "https://id774.net/images/link_9.GIF"
+          item "https://id774.net/images/link_10.tiff"
+          item "https://id774.net/images/link_11.TIFF"
         }
       }
     )
@@ -197,17 +197,17 @@ describe Automatic::Plugin::StorePermalink do
     instance = Automatic::Plugin::StorePermalink.new({"db" => @db_filename},
       AutomaticSpec.generate_pipeline {
         feed {
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_1.jpg"
-          item "http://id774.net/images/link_3.JPG"
-          item "http://id774.net/images/link_4_2.png"
-          item "http://id774.net/images/link_5_2.jpeg"
-          item "http://id774.net/images/link_6.PNG"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_1.jpg"
+          item "https://id774.net/images/link_3.JPG"
+          item "https://id774.net/images/link_4_2.png"
+          item "https://id774.net/images/link_5_2.jpeg"
+          item "https://id774.net/images/link_6.PNG"
           item nil
-          item "http://id774.net/images/link_8.gif"
-          item "http://id774.net/images/link_9.GIF"
-          item "http://id774.net/images/link_10.tiff"
-          item "http://id774.net/images/link_11.TIFF"
+          item "https://id774.net/images/link_8.gif"
+          item "https://id774.net/images/link_9.GIF"
+          item "https://id774.net/images/link_10.tiff"
+          item "https://id774.net/images/link_11.TIFF"
         }
       }
     )

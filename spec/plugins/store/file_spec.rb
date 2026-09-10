@@ -20,7 +20,7 @@ describe Automatic::Plugin::StoreFile do
       instance = Automatic::Plugin::StoreFile.new(
         { "path" => dir },
         AutomaticSpec.generate_pipeline {
-          feed { item "http://id774.net/test/store/rss" }
+          feed { item "https://id774.net/test/store/rss" }
         }
       )
       instance.run.should have(1).feed
