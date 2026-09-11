@@ -3,6 +3,8 @@ automaticruby Repository Version History
 
 v26.09 (Release Date: TBD)
 --------------------------
+- Add FilterKimi for the Kimi API, using its OpenAI-compatible Chat Completions
+  interface.
 - Add FilterLimit, FilterBatch, FilterPresent, and per-fetch interval handling;
   make doc/PLUGINS.md section 6 the plugin catalogue's source of truth.
 - Harden the framework's execution boundary: fix CLI contract drift, distinguish

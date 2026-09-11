@@ -419,6 +419,17 @@ in a Recipe they are interchangeable at the same position:
       interval: 2
 ```
 
+```yaml
+  - module: FilterKimi
+    config:
+      token: YOUR_KIMI_API_KEY
+      model: kimi-k3
+      prompt: |
+        以下の記事群を一つのダイジェストとして日本語で要約してください。
+      retry: 2
+      interval: 2
+```
+
 Nothing before or after the swapped entry changes. `token`, `model` and
 `prompt` are shared required settings of the AI filters; `max_tokens` exists
 only for Claude because that API requires it. Model names move with the services, so take them from the provider
