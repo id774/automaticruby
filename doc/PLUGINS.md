@@ -1373,6 +1373,45 @@ Recipe that says where the text goes for a Recipe that does not.
       interval: 2
 ```
 
+#### FilterKimi — **Supported (external)**
+
+`filter/kimi.rb`. Sends each item's description to Moonshot AI's Kimi,
+`https://api.moonshot.ai/v1/chat/completions`, and replaces it with the
+answer. The token is a bearer token, and the request is the chat completions
+form: the prompt as a `system` message, the description as a `user` message.
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `token` | string | Kimi API key. Required. |
+| `model` | string | Model name, as Moonshot names it (e.g. `kimi-k3`). Required. |
+| `prompt` | string | The instruction, sent as the `system` message. Required. |
+| `retry` | integer | Attempts after a failure. Default `0`. |
+| `interval` | integer | Seconds between attempts. Default `0`. |
+
+**This interface is OpenAI-compatible, and this is still its own plugin.** It is
+a different service: a different endpoint, a different account, a different set
+of models, its own limits and its own errors, any of which may move without
+OpenAI moving. Folding it into `FilterOpenAI` behind a setting would trade a
+Recipe that says where the text goes for a Recipe that does not, the same
+reasoning that already keeps Sakura AI in a plugin of its own.
+
+Kimi may return a `reasoning_content` alongside the answer's `content`. That
+reasoning is never read, logged or written anywhere; only `content` is used,
+and only once `finish_reason` is `"stop"` -- any other value, or a missing or
+empty `content`, is an error rather than an empty description.
+
+```yaml
+  - module: FilterKimi
+    config:
+      token: YOUR_KIMI_API_KEY
+      model: kimi-k3
+      prompt: |
+        以下の記事群について、個別記事の要約を羅列するのではなく、
+        全体を一つのダイジェストとして日本語で要約してください。
+      retry: 2
+      interval: 2
+```
+
 A digest, end to end: find the articles, drop the ones already seen, fetch
 their bodies, strip the markup, join them, ask once, write the answer out.
 
@@ -1414,8 +1453,8 @@ plugins:
 ```
 
 Changing service is changing the one entry: `FilterSakuraAI` for
-`FilterOpenAI`, `FilterClaude` or `FilterGemini`, with that plugin's own
-settings. Nothing before or after it changes.
+`FilterOpenAI`, `FilterClaude`, `FilterGemini` or `FilterKimi`, with that
+plugin's own settings. Nothing before or after it changes.
 
 ### 6.4 Store
 

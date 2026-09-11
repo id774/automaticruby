@@ -475,7 +475,7 @@ bundle. `plugins` is every group in the first block at once.
 | `PublishInstapaper` | an Instapaper account; no gem | — | — |
 | `PublishEject` | the `eject` or `drutil` command | — | — |
 | `NotifyIkachan` | an `ikachan` gateway you run | — | — |
-| `FilterOpenAI`, `FilterClaude`, `FilterGemini`, `FilterSakuraAI` | an account and an API token with that one service; no gem | — | — |
+| `FilterOpenAI`, `FilterClaude`, `FilterGemini`, `FilterSakuraAI`, `FilterKimi` | an account and an API token with that one service; no gem | — | — |
 | `PublishHatenaBookmark` | the current Hatena API, which it does not speak | — | — |
 
 Membership of the aggregate `plugins` group is defined in `Gemfile`. It
