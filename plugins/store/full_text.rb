@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 26, 2012
-# Updated::     Aug 15, 2026
+# Updated::     Sep 12, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require_relative 'database'
@@ -46,18 +46,14 @@ module Automatic::Plugin
     # what is new.
     def run
       for_each_new_feed do |feed|
+        Blog.create!(
+          title: feed.title,
+          link: feed.link,
+          description: feed.description,
+          content: feed.content_encoded,
+          created_at: Time.now.strftime('%Y/%m/%d %X')
+        )
         Automatic::Log.puts('info', "Saving FullText: #{feed.link}")
-        begin
-          Blog.create(
-            title: feed.title,
-            link: feed.link,
-            description: feed.description,
-            content: feed.content_encoded,
-            created_at: Time.now.strftime('%Y/%m/%d %X')
-          )
-        rescue StandardError => e
-          Automatic::Log.puts('warn', "Skip feed due to fault in save: #{e.message}")
-        end
       end
     end
   end

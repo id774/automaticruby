@@ -5,7 +5,7 @@
 # License::     The GPL version 3, or LGPL version 3 (Dual License).
 # Contact::     idnanashi@gmail.com
 # Created::     Feb 26, 2012
-# Updated::     Oct 16, 2014
+# Updated::     Sep 12, 2026
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
@@ -132,6 +132,26 @@ describe Automatic::Plugin::StoreFullText do
     }.should change(Automatic::Plugin::Blog, :count).by(0)
     instance2.run.should have(0).feed
     Automatic::Plugin::Blog.count.should eq 1
+  end
+
+  it "should raise when storing a new blog entry fails" do
+    instance = Automatic::Plugin::StoreFullText.new({"db" => @db_filename},
+      AutomaticSpec.generate_pipeline {
+        feed {
+          item "http://blog.id774.net/blogs/feed/",
+          "dummy title",
+          "aaa bbb ccc http://test2.id774.net ddd eee",
+          "Mon, 07 Mar 2011 15:54:11 +0900"
+        }
+      }
+    )
+
+    Automatic::Plugin::Blog.should_receive(:create!).and_raise(
+      ActiveRecord::StatementInvalid.new("write failed")
+    )
+    lambda {
+      instance.run
+    }.should raise_error(ActiveRecord::StatementInvalid, /write failed/)
   end
 
   it "should store 2 records for the independent entries" do

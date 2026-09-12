@@ -1488,9 +1488,10 @@ look new again.
 #### StoreFullText — **Supported**
 
 `store/full_text.rb`. Records title, link, description and `content_encoded`,
-and passes on only what is new. Deduplicates on link **or** title, so a
-republished article with a new URL is not stored twice. Pair with
-`FilterFullFeed` to archive article bodies.
+and passes on only items whose new record was saved successfully. Deduplicates
+on link **or** title, so a republished article with a new URL is not stored
+twice. A database write failure ends the run; the unsaved item is not passed
+downstream. Pair with `FilterFullFeed` to archive article bodies.
 
 | Key | Type | Meaning |
 | --- | --- | --- |

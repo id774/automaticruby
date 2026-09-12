@@ -48,10 +48,14 @@ is the order of the work.
 
 The store plugin's position is not an aesthetic choice. `FilterJoin` produces
 one item with **no link** — it is several articles at once, so there is no page
-it points at — and the store plugins are keyed on the link and drop an item
-without one. `StorePermalink`, `StoreFullText` and `StoreDigest` therefore
-belong **before** `FilterJoin`, where there is still one item per article to
-record. Put one after it and the Recipe stores nothing and publishes nothing.
+it points at. `StorePermalink` and `StoreFullText` use the shared link-based
+store path and drop an item without a link, so both belong **before**
+`FilterJoin`. `StoreDigest` is different: it identifies content from the
+configured fields and can store an item whose link is nil. In this tutorial it
+still belongs before `FilterJoin`, because the job is to record each source
+article before they are joined and before later work is repeated. Putting
+`StoreDigest` after `FilterJoin` changes its meaning to de-duplicating the whole
+joined digest rather than the individual articles.
 
 ## 2. Build it without AI first
 
