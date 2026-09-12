@@ -8,7 +8,7 @@ name: CI
 # doc/POLICY.md section 11 and doc/REQUIREMENTS.md section 20.
 #
 # No credential is configured here and nothing reaches an external service: the
-# suite must need neither (doc/POLICY.md Invariant 6). Examples tagged :network
+# suite must need neither (doc/POLICY.md Invariant 7). Examples tagged :network
 # are excluded by default, and none of the Gemfile's optional groups is
 # installed, so no plugin's own gem is a condition of this workflow passing.
 #

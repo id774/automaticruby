@@ -56,7 +56,7 @@ RSpec.configure do |config|
 
   # Examples tagged :network reach real hosts. They are excluded from the
   # default suite and from CI, because the suite must need neither a network
-  # nor a credential (doc/POLICY.md Invariant 6). Several of them point at
+  # nor a credential (doc/POLICY.md Invariant 7). Several of them point at
   # hosts that no longer serve what they expect, which is a further reason not
   # to make them a gate. Run them deliberately with:
   #
@@ -99,12 +99,12 @@ module AutomaticSpec
   OPTIONAL_PLUGIN_GEMS = %w[activerecord feedbag nokogiri sanitize sqlite3].freeze
 
   class << self
-    # Load a plugin, or report that its dependency is absent.
+    # Load a plugin, or report that its own optional dependency is absent.
     #
-    # A plugin whose gem is not installed -- because the service it talks to no
-    # longer exists, and no currently published gem speaks to it -- is never
-    # stubbed into passing (doc/POLICY.md Invariant 7). Its spec is skipped
-    # instead, and the reason is printed, which is the honest signal.
+    # Supported (external) plugin specs use this when the plugin's declared
+    # optional gem is not installed in the current bundle. That absence is not
+    # simulated into success: the spec is skipped and names the missing
+    # dependency (doc/POLICY.md Invariant 8).
     #
     # Only Automatic::OptionalDependencyError, raised by require_optional for
     # the plugin's own missing gem, is skipped this way. A plain LoadError

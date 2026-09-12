@@ -68,7 +68,7 @@ describe Automatic::Plugin::FilterKimi do
 
   # Stands in for the network: records the connection and the request, answers
   # with what the example queued, and opens nothing. The default suite reaches
-  # no network (doc/POLICY.md Invariant 6).
+  # no network (doc/POLICY.md Invariant 7).
   def serve(*responses)
     requests = posted
     opened = connections

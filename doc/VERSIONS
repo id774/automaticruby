@@ -13,6 +13,7 @@ v26.09 (Release Date: TBD)
   title and link values.
 - Preserve SubscriptionText TSV column positions and ignore empty input rows.
 - Preserve local file paths when StoreFile hands file URIs to PublishAmazonS3.
+- Stop StoreFullText from passing items downstream when database writes fail.
 
 v26.08 (2026-08-22)
 -------------------
