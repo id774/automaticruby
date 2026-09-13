@@ -59,7 +59,8 @@ produce Markdown from the articles they list.
 15. [Documents](#15-documents)
 16. [Versioning](#16-versioning)
 17. [Name](#17-name)
-18. [License](#18-license)
+18. [Primary Branch](#18-primary-branch)
+19. [License](#19-license)
 
 ---
 
@@ -112,10 +113,6 @@ core, the Recipe format and the plugin contract are unchanged; what has changed
 is that it runs on a current Ruby, installs from a current RubyGems, and ships
 a plugin set every part of which still has somewhere to talk to. See
 [`doc/VERSIONS`](doc/VERSIONS).
-
-This repository uses `master` as its primary branch name.
-
-The name is used solely as a technical identifier, following the long-standing convention historically used by Git. It does not express or imply any association with racism, slavery, discrimination, or any political or social ideology.
 
 ## 2. Features
 
@@ -709,7 +706,13 @@ Plagger, and I wanted the name to put two things up front: **automatic**
 processing, and doing it in **Ruby** rather than Perl. *Automatic Ruby* said
 both, sounded natural enough, and was easy to remember. That was enough.
 
-## 18. License
+## 18. Primary Branch
+
+This repository uses `master` as its primary branch name.
+
+The name is used solely as a technical identifier, following the long-standing convention historically used by Git. It does not express or imply any association with racism, slavery, discrimination, or any political or social ideology.
+
+## 19. License
 
 Automatic Ruby is dual-licensed under the
 [GNU General Public License, Version 3](https://www.gnu.org/licenses/gpl-3.0.html)
