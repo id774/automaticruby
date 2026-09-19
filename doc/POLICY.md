@@ -247,6 +247,13 @@ Dependency points one way and there is no edge back up:
   and its backtrace is wanted.
 - **The library never calls `exit` or `abort`.** Exit status is decided at the
   process entry point, from the value `Automatic::CLI.run` returns.
+- The result of an operation, whether later work continues, and whether a
+  message is emitted are separate decisions. This does not change the
+  framework rule above: a plugin exception still ends the run, and plugin retry
+  behavior remains owned by the plugin.
+- A required condition whose absence makes correct completion impossible is a
+  failure, not a warning used to keep the run moving. A normal guard, no-op, or
+  inapplicable path is not a failure merely because it performs no work.
 
 ### 1.9 Logging and output
 
@@ -256,9 +263,14 @@ Dependency points one way and there is no edge back up:
   version, subcommand results — to standard output.
 - A plugin whose purpose is to write to the terminal holds its output object in
   an instance variable defaulting to `$stdout`, so that a test can substitute it.
-- `info` says what a step did, `warn` says what was skipped, `error` says what
-  failed. An error that was rescued is logged at `warn` or `error`, never at
-  `info`.
+- `info` records useful normal progress. `warn` is reserved for a degraded or
+  otherwise abnormal but recoverable condition the operator should know about;
+  a normal guard, no-op, or inapplicable path may be silent and is not a warning
+  merely because work was skipped. `error` says what failed. An error that was
+  rescued is logged at `warn` or `error`, never at `info`.
+- Do not emit a line merely to prove that a normal branch was taken, and do not
+  duplicate a failure message at multiple layers when one responsible layer
+  already reports it through the established interface.
 - No log line contains a credential. A plugin that logs its own settings
   wholesale is a defect.
 
