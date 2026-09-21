@@ -845,10 +845,19 @@ agree rather than asserting a literal.
   file is the record of released versions, not of the construction that precedes
   the first of them, and its first entry is written when that release is made.
 - **A series of changes made on one day is one version**, not several. Do not
-  split a day's work across version numbers.
-- **A version that actually existed is never merged into another**, even when it
-  shares a date with one. `14.10.0` and `14.10.1` were both released on
-  2014-10-23 and both stay.
+  split a day's work across version numbers. This rule has no exception:
+  separate commits, pull requests, independent features, bug fixes, security
+  fixes, compatibility changes, breaking changes, or release units do not
+  permit a second version number on the same calendar date. A same-date change
+  joins that day's single entry; independence decides bullet grouping only.
+- **If today's release has already been published, a correction may be
+  prepared but no second version, tag or package release may be published
+  until a later calendar date.** A published version is never overwritten,
+  reused or moved, and its correction is a later-dated version.
+- **Historical same-date versions remain recorded as historical facts.**
+  `14.10.0` and `14.10.1` were both released on 2014-10-23 and both stay in
+  `doc/VERSIONS`, but they violate the current one-version-per-day rule and
+  are not precedent for future releases.
 - A documentation-only change takes no entry unless its scale makes it worth one
   line saying so.
 - Git tags carry the release version, and are created only when a release is

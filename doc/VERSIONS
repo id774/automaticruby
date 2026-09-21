@@ -247,9 +247,12 @@ Version History Guidelines
   same file or feature.
 - Place closely related entries near each other.
 - Append an independent new change to the end of the current version entry.
+- Never create more than one repository version for the same calendar date.
+- Independent changes may use separate bullets, but they stay in that day's
+  single version entry.
 - Past entries and their dates are a record. Do not rewrite, renumber or merge
-  them, and do not merge two releases that actually existed because they share
-  a date.
+  them. Past releases that share a date stay recorded as they were made; they
+  do not conform to the rule above and are not precedent for new releases.
 - This file records the history of the repository. A change that is not
   observable from outside does not need an entry here.
 - The first entry, at the lowest version this file reaches, reads only

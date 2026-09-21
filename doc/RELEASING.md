@@ -86,6 +86,10 @@ X.YY        release in year X, month YY
 X.YY.PATCH  correction to an earlier release in the same month
 ```
 
+`PATCH` may correct an earlier release in the same month, but never on the same
+calendar date as that release. A versioned unit has one version number per
+calendar date, without exception.
+
 Section 10 of `POLICY.md` is authoritative. A release updates these release-metadata sources together in one
 release-metadata commit:
 
@@ -274,7 +278,9 @@ git push origin "v$version"
 The tag identifies the source used to build the gem. Do not move or force-update
 a release tag after publication. If the tag is wrong before publication, stop
 and correct it openly. If publication has happened, preserve the source history
-and make the correction in a new commit and version.
+and prepare the correction in a new commit. Publish the correction under a new
+version only on a later calendar date; do not create or publish a second
+version on the same date.
 
 The repository has no established requirement for a GitHub Release separate
 from its Git tag. If maintainers create one, create it from the same immutable
@@ -338,16 +344,22 @@ Stop on an error and diagnose it; do not bypass RubyGems security controls.
 - **Version already exists:** do not attempt to overwrite it. Determine whether
   it was already published correctly; otherwise fix the source, increment the
   version according to `POLICY.md`, rebuild and repeat every verification step.
+  The incremented version is published on a later calendar date than the
+  existing one, never on the same date.
 - **Malformed metadata or rejected gem:** fix the gemspec and release metadata,
   increment the version if that version reached RubyGems.org, then rebuild,
   inspect and test the new archive. Do not use `--force` to hide validation.
+  A version that reached RubyGems.org counts as that date's release, so the
+  incremented version waits for a later calendar date.
 
 `gem yank automatic -v X.Y.Z` removes a published version from normal index use.
 Yank only for an exceptional serious mispublication, such as exposed secrets or
 a release that must not be installed. It is not the normal correction process,
 does not make the version reusable, and does not erase every downloaded copy.
 The normal response is to correct the problem, bump the version and publish a
-new release. Rotate any exposed secret immediately as well as yanking.
+new release on a later calendar date. Yanking does not permit a second version
+on the date of the yanked release. Rotate any exposed secret immediately as
+well as yanking.
 
 Publication state and Git history are separate. Never rewrite a published
 commit, force-push the release branch, or move a release tag to simulate a
