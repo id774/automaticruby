@@ -854,10 +854,10 @@ agree rather than asserting a literal.
   prepared but no second version, tag or package release may be published
   until a later calendar date.** A published version is never overwritten,
   reused or moved, and its correction is a later-dated version.
-- **Historical same-date versions remain recorded as historical facts.**
-  `14.10.0` and `14.10.1` were both released on 2014-10-23 and both stay in
-  `doc/VERSIONS`, but they violate the current one-version-per-day rule and
-  are not precedent for future releases.
+- **Historical same-date entries in `doc/VERSIONS` are consolidated into the
+  final version number for that calendar date.** Published tags and packages
+  are not rewritten, but they do not permit duplicate same-date entries in
+  the repository version history.
 - A documentation-only change takes no entry unless its scale makes it worth one
   line saying so.
 - Git tags carry the release version, and are created only when a release is

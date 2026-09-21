@@ -68,10 +68,6 @@ v14.12.0 (2014-12-27)
 
 v14.10.1 (2014-10-23)
 ---------------------
-- Version-only release. No change beyond the version number is recorded for it.
-
-v14.10.0 (2014-10-23)
----------------------
 - Use Logger for log output.
 - Store::FullText ignores an entry whose title is already stored.
 - Add the plugins Filter::Clear, Filter::GoogleNews and Filter::DescriptionLink.
@@ -157,9 +153,6 @@ v12.10.0 (2012-10-16)
 v12.9.1 (2012-09-18)
 --------------------
 - Consider the case of a feed link including nil.
-
-v12.9.0 (2012-09-18)
---------------------
 - Unify the format of the pipeline to a feed object, an array of feeds; some
   plugins lost backward compatibility.
 - Add the plugins Subscription::Link, Subscription::Twitter, Filter::Image and
