@@ -683,6 +683,9 @@ February 2012.
 26.08.1    a release correcting 26.08 in the same month
 ```
 
+A patch release may correct an earlier release in the same month, but a
+versioned release is never made twice on the same calendar date.
+
 The number carries no compatibility meaning: a month is not a major version. A
 change that affects an existing Recipe is stated as such in its
 [`doc/VERSIONS`](doc/VERSIONS) entry.
