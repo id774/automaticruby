@@ -5,10 +5,17 @@ v26.09 (Release Date: TBD)
 --------------------------
 - Add FilterKimi for the Kimi API, using its OpenAI-compatible Chat Completions
   interface.
-- Add FilterLimit, FilterBatch, FilterPresent, and per-fetch interval handling;
-  make doc/PLUGINS.md section 6 the plugin catalogue's source of truth.
+- Add FilterLimit, FilterBatch, and FilterPresent for pipeline-wide limiting,
+  batching, and required-field filtering.
+- Add per-fetch interval handling to FilterFullFeed, FilterImageSource, and
+  FilterDescriptionLink.
+- Refresh the bundled LDRFullFeed siteinfo database from a newer upstream
+  snapshot.
+- Make doc/PLUGINS.md section 6 the plugin catalogue's source of truth.
 - Harden the framework's execution boundary: fix CLI contract drift, distinguish
   dependency from load failures, and preflight-validate Recipe plugins.
+- Preserve standard item metadata when FeedMaker rebuilds pipelines so filters
+  keep source, enclosure, and full content.
 - Preserve nil-link pipeline items and remove SubscriptionText placeholder
   title and link values.
 - Preserve SubscriptionText TSV column positions and ignore empty input rows.
