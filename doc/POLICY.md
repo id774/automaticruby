@@ -119,6 +119,14 @@ degree of conservatism.
   does not quietly undo it.
 - Old is not a defect. Neither is unfashionable. A defect is something that does
   not work, is not understood, or cannot be tested.
+- Use `must`, `always`, and `never` only for invariants that admit no
+  reasonable exception. Express preferences and situational decisions with
+  `prefer`, `should`, or other qualified wording. Do not apply a rule literally
+  where doing so would defeat the repository's stated purpose, intended
+  behavior, compatibility, safety, or approved change scope. Where the
+  applicable specifications and policy leave a legitimate choice open, an
+  explicit maintainer decision governs that choice; general conventions do not
+  override it.
 
 ### 1.4 Change discipline and maintenance boundary
 
@@ -349,6 +357,18 @@ Dependency points one way and there is no edge back up:
 - Does the change preserve the small linear composition model, and if not, has
   an explicit architecture change actually been chosen?
 
+### 1.14 Pull Request Scope and History
+
+A pull request carries one coherent higher-level purpose, which may require
+coordinated changes across several files or responsibilities. Do not split one
+approved purpose mechanically by individual finding, file, or review comment,
+and do not include unrelated cleanup, formatting, or feature work. Represent
+one coherent change as one commit and amend review corrections instead of
+accumulating follow-up commits; use `--force-with-lease` only on the branch
+under review when a safe history rewrite is required. Check the final branch
+against its base to remove abandoned intermediate wording and work. Merge only
+with explicit maintainer approval.
+
 ---
 
 ## 2. Ruby Policy
@@ -370,6 +390,15 @@ makes a diff harder to read than the style saves.
   choice.
 - Lines around 100 columns. Not enforced, and not a reason to reformat.
 - Prefer a guard clause to a wrapping `unless`, in new code.
+- Write English explanatory prose in clear, natural sentences. Do not replace a
+  sentence with a label and a colon, a status prefix such as `Implement:` or
+  `Incompatible:`, a symbol, or an unexplained abbreviation. Apply this to
+  English prose in comments, docstrings, documentation, version histories,
+  release notes, commit messages, and pull request descriptions. This rule does
+  not alter the established forms of headings, list labels, tables, code,
+  configuration syntax, machine-readable fields, literal interface strings, or
+  non-English content required by the repository's purpose. Do not rewrite
+  historical entries or unrelated text merely to align their style.
 
 ### 2.2 Scope of a change
 
