@@ -369,6 +369,11 @@ under review when a safe history rewrite is required. Check the final branch
 against its base to remove abandoned intermediate wording and work. Merge only
 with explicit maintainer approval.
 
+An automated agent must not commit or push directly to `master`.
+It must commit authorized changes to a work branch and submit them through
+a pull request targeting the approved base branch. This paragraph does not
+change a human maintainer's authority or the existing merge approval rule.
+
 ---
 
 ## 2. Ruby Policy
