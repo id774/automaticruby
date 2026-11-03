@@ -18,6 +18,14 @@ The Invariants below decide over the rest of it.
 
 ---
 
+## 0. Governing Principle
+
+**Simplicity is robustness.**
+
+This principle governs the following implementation and maintenance rules. It
+does not permit dropping required behavior, security, compatibility, or
+validation; satisfy those obligations without unnecessary complexity.
+
 ## 1. General Policy
 
 ### 1.1 Purpose and scope
@@ -57,9 +65,10 @@ general policy would otherwise ask for.
    repository cannot see: Recipes in `~/.automatic/config`, plugins in
    `~/.automatic/plugins`. A change that breaks either is deliberate, is
    justified, and is recorded in [`VERSIONS`](VERSIONS).
-2. **The pipeline value has one shape.** Every plugin takes and returns an array
-   of feed objects. Introducing a second representation would end composability,
-   which is the whole of what the framework provides.
+2. **Preserve the pipeline contract.** Its data representation and composition
+   semantics are defined in [`PLUGINS.md`](PLUGINS.md), not independently in
+   this policy. Do not change that contract as an incidental implementation
+   decision.
 3. **The plugin architecture is not replaced.** Recipes are not superseded by
    hard-coded procedures, the loader is not replaced by a registry that must be
    edited to add a plugin, and the framework does not become a single
@@ -84,9 +93,9 @@ general policy would otherwise ask for.
    and none is written to the log.
 10. **Historical release history is not rewritten.** Past versions and their
     dates in [`VERSIONS`](VERSIONS) are a record, not a thing to tidy.
-11. **The licence is GPL version 3 or LGPL version 3.** Automatic Ruby is
-    dual-licensed, and a user may choose either license at their discretion. New
-    files use the same dual license.
+11. **Follow the authoritative license documents.** Apply the terms defined
+    in [`LICENSE.md`](LICENSE.md) to new repository-owned files, and preserve
+    any separate terms governing third-party material.
 
 ### 1.3 Design philosophy
 
