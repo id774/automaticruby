@@ -16,7 +16,7 @@ require 'logger'
 module Automatic
   module Log
     # In increasing order of severity. 'none' is the threshold that admits
-    # nothing; it is never used as the level of a message.
+    # nothing, and it is never used as the level of a message.
     LOG_LEVELS = %w[info warn error none].freeze
 
     DEFAULT_LEVEL = 'info'
@@ -33,7 +33,7 @@ module Automatic
         @logger ||= Logger.new($stdout)
       end
 
-      # Replace the logger. Used by the specs; a plugin has no business
+      # Replace the logger. Used by the specs. A plugin has no business
       # calling this.
       attr_writer :logger
 

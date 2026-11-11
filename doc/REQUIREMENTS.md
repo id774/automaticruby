@@ -4,7 +4,7 @@
 
 This document states what Automatic Ruby is for, what it accepts, what it
 produces, and where its responsibility ends. It does not describe how any of it
-is built; that belongs to [`BASIC_DESIGN.md`](BASIC_DESIGN.md), and how a change
+is built. That belongs to [`BASIC_DESIGN.md`](BASIC_DESIGN.md), and how a change
 to it is carried out belongs to [`POLICY.md`](POLICY.md). The two public
 interfaces it names — the Recipe and the plugin contract — are specified in
 [`PLUGINS.md`](PLUGINS.md).
@@ -62,7 +62,7 @@ to a plugin, and plugins are expected to come and go.
   Automatic Ruby core.
 - **Not a daemon or a scheduler.** One invocation runs one Recipe once and
   exits. Repetition is `cron`'s job, and periodic running is deliberately left
-  outside; see section 15.
+  outside. See section 15.
 - **Not a web application.** It serves nothing and listens on nothing.
 - **Not a feed reader.** Feeds are the shape the pipeline value happens to take
   (section 8), not the purpose. A Recipe that never touches a feed is a normal
@@ -102,7 +102,7 @@ Two public contracts define how external Recipes and plugins compose with the
 framework, and they receive the strongest compatibility protection in this
 project. That protection is deliberately narrower than treating every
 implementation detail or every shipped plugin as permanent. The Recipe format
-and the plugin contract are stable composition contracts; framework internals
+and the plugin contract are stable composition contracts. Framework internals
 may improve within those contracts, and plugins remain replaceable components.
 
 ### 7.1 The Recipe
@@ -171,7 +171,7 @@ run produces. A plugin that writes the pipeline out in some other form — a
 Markdown document, a row in a database, a request body — serializes it at the
 moment it leaves the pipeline, and the value the next plugin receives is
 unchanged. An output format is therefore never a second pipeline
-representation, and shall not become one; see section 10.2.
+representation, and shall not become one. See section 10.2.
 
 ## 9. Input
 
@@ -225,13 +225,13 @@ requirement, not two.
 that it is what a Recipe publishes when it has no reason to publish to a
 particular service. Its properties are the reason, and they are technical ones:
 
-- a person reads it as it is, with no tool and no rendering step;
-- it diffs and merges, so a growing document belongs in Git;
-- `grep`, `sed` and the rest operate on it without a parser;
-- a program consumes it as text, which is the form a language model or an agent
-  takes its input in;
-- it needs no service, no account, no credential and no network;
-- it is plain text, so it stays readable for as long as the filesystem does.
+- A person reads it as it is, with no tool and no rendering step.
+- It diffs and merges, so a growing document belongs in Git.
+- `grep`, `sed` and the rest operate on it without a parser.
+- A program consumes it as text, which is the form a language model or an agent
+  takes its input in.
+- It needs no service, no account, no credential and no network.
+- It is plain text, so it stays readable for as long as the filesystem does.
 
 The requirements that follow:
 
@@ -253,7 +253,7 @@ The requirements that follow:
 - **RSS and Atom remain input formats.** `SubscriptionFeed` and the rest are
   unaffected by any of this: a feed is still one of the ordinary ways to acquire
   something, and none of it is deprecated. That the pipeline value has the shape
-  of a feed is an internal matter (section 8); it neither obliges a run to
+  of a feed is an internal matter (section 8). It neither obliges a run to
   publish a feed nor makes feeds less useful to read.
 
 ## 11. The command line
@@ -301,7 +301,7 @@ The requirements on failure:
 
 - **A pipeline is not partially rerunnable.** There is no checkpoint and no
   resume. A failed run is rerun from the start, so plugins that must not repeat
-  their effect are responsible for saying so; `StorePermalink` exists for this.
+  their effect are responsible for saying so. `StorePermalink` exists for this.
 - **A plugin that raises ends the run.** The framework does not catch exceptions
   from plugins. The Recipe is a sequence in which each step consumes the
   previous one's output, so continuing past a failed step would run the
@@ -319,7 +319,7 @@ These execution rules describe the straight-line composition model Automatic
 Ruby supports. They are not an incomplete version of a richer workflow engine.
 A use case that fundamentally requires branching, resume checkpoints,
 transactional coordination or cross-step state ownership should not cause the
-framework to grow those features by default; it should first be judged as a
+framework to grow those features by default. It should first be judged as a
 candidate for a purpose-built application.
 
 ## 13. The user directory
@@ -392,7 +392,7 @@ there. Three requirements follow:
 - **A shipped plugin shall be practically usable on the supported Ruby
   versions.** Shipping it is a statement that it does what its entry says,
   given what that entry says the operator must provide. A plugin for which that
-  statement can no longer be made shall be corrected or removed; it shall not
+  statement can no longer be made shall be corrected or removed. It shall not
   be carried indefinitely as a record of what once existed, which is what the
   version control history is for.
 - **A plugin that cannot work shall say so** — in the catalogue and, where it
@@ -400,7 +400,7 @@ there. Three requirements follow:
   runtime.
 - **A plugin shall never be made to pass a test by simulating a service that no
   longer exists.** Deleting the test, or marking it as requiring a service that
-  is gone, is correct; a stub that makes a dead integration look alive is not.
+  is gone, is correct. A stub that makes a dead integration look alive is not.
 
 ## 17. Trust and credentials
 
@@ -443,11 +443,11 @@ been seen so that the next run skips it: `StorePermalink` on the link,
 `StoreFullText` on the link and title with the article body. The database file
 is named in the Recipe and lives in `~/.automatic/db`, or in the installation's
 `db/` when there is no user directory. The table is created on first use from
-the plugin's own column definition; there are no migrations and no schema
+the plugin's own column definition. There are no migrations and no schema
 version.
 
 Requirements: ActiveRecord is used as a library and this is not a Rails
-application; nothing shall introduce one. Equally, ActiveRecord shall not be
+application, and nothing shall introduce one. Equally, ActiveRecord shall not be
 replaced by a hand-written database layer merely because it is a large
 dependency — it is what the existing databases were written by, and operators
 have those files. It is the store plugins' dependency and not the framework's:
@@ -467,7 +467,7 @@ plugin knows to upload a local file rather than a remote one.
   Nothing is vendored into this repository.
 - **The core install shall be small.** A dependency needed by one plugin shall
   not be required to install the framework or to run a Recipe that does not use
-  that plugin; see [`POLICY.md`](POLICY.md) section 9. Requiring an operator who
+  that plugin. See [`POLICY.md`](POLICY.md) section 9. Requiring an operator who
   publishes to a console to install an AWS SDK is a defect.
 - Gem sources shall be HTTPS and shall be currently operating.
 
@@ -481,7 +481,7 @@ Two statements are made here, and they are deliberately different.
   resolved and tested against. Nothing older is tested or supported.
 - The code shall be written against APIs the whole range shares. Where a Ruby
   release deprecates or removes one, the replacement that works on the whole
-  range is used, rather than a `RUBY_VERSION` branch; see
+  range is used, rather than a `RUBY_VERSION` branch. See
   [`POLICY.md`](POLICY.md) section 2.4.
 - The gemspec's `required_ruby_version` is a lower bound and not an upper one,
   so a Ruby newer than the range is permitted rather than refused. Refusing one
@@ -538,7 +538,7 @@ and refer to the matrix rather than duplicating its current membership.
 
 The framework is meant to remain the small fixed part that plugins are written
 against. Its responsibility boundary, rather than a duplicated current line
-count, is the maintained constraint; see
+count, is the maintained constraint. See
 [`BASIC_DESIGN.md`](BASIC_DESIGN.md).
 
 - A capability that can live in a plugin lives in a plugin.

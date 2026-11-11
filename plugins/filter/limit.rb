@@ -19,7 +19,7 @@ module Automatic::Plugin
 
     # Selects items in feed order, item order, up to max_items shared across the
     # whole pipeline rather than reset per feed. A feed that contributed no item
-    # is dropped from the output; the walk stops as soon as the limit is met.
+    # is dropped from the output. The walk stops as soon as the limit is met.
     def run
       remaining = @max_items
       returned  = []

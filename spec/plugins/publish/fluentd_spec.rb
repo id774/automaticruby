@@ -10,7 +10,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-# PublishFluentd needs the fluent-logger gem and a Fluentd instance;
+# PublishFluentd needs the fluent-logger gem and a Fluentd instance.
 # doc/PLUGINS.md section 6.7 classifies it as Supported (external). The gem is
 # an optional dependency in its own Gemfile group, so this spec is skipped
 # rather than stubbed where it is absent. See doc/POLICY.md section 4.

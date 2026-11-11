@@ -15,7 +15,7 @@ require 'publish/eject'
 # PublishEject needs an optical drive and the command that drives it, which is
 # the operator's machine rather than anything this suite can have. What is
 # verified here is which command it would run and that the pipeline is
-# returned unchanged; the drive itself is not opened.
+# returned unchanged. The drive itself is not opened.
 describe Automatic::Plugin::PublishEject do
   before do
     @pipeline = AutomaticSpec.generate_pipeline {

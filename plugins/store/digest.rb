@@ -16,7 +16,7 @@
 # under different content has not.
 #
 # It is exact matching, of the content the Recipe selected. Whitespace runs and
-# Unicode composition differences are absorbed; nothing else is. Two articles
+# Unicode composition differences are absorbed. Nothing else is. Two articles
 # that say the same thing in different words are two articles here, and making
 # them one is not this plugin's work -- see doc/PLUGINS.md section 6.4.
 
@@ -160,7 +160,7 @@ module Automatic::Plugin
     end
 
     # True when this run is the one that stored the digest. The read above
-    # answers this on its own for a single run; the rescue is for the run
+    # answers this on its own for a single run. The rescue is for the run
     # overlapping another, where the row appeared between the two statements.
     def store(digest, item)
       model_class.create!(digest: digest, created_at: Time.now.strftime('%Y/%m/%d %X'))

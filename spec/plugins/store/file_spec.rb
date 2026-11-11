@@ -59,7 +59,7 @@ describe Automatic::Plugin::StoreFile do
 end
 
 describe Automatic::Plugin::StoreFile do
-  # A link arrives from a feed, which is to say from outside; a store plugin
+  # A link arrives from a feed, which is to say from outside. A store plugin
   # that would read file:// on being asked to is a store plugin that can be
   # asked to read anything.
   it "refuses a link that is not HTTP or HTTPS" do
@@ -112,7 +112,7 @@ describe Automatic::Plugin::StoreFile do
     end
   end
 
-  # `s3n` is what Recipes written for this plugin use; `s3` is the spelling
+  # `s3n` is what Recipes written for this plugin use. `s3` is the spelling
   # everything else uses and is accepted as well. Both go to the SDK rather
   # than over HTTP.
   %w[s3 s3n].each do |scheme|

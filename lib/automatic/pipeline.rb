@@ -14,7 +14,7 @@
 #
 # Every module the Recipe names is discovered before any plugin runs, so that
 # an unknown module later in the Recipe is refused before an earlier plugin's
-# side effect, not after it. Discovery only registers an autoload; it does not
+# side effect, not after it. Discovery only registers an autoload. It does not
 # read a plugin's own source, which stays lazy until that plugin's turn to
 # run. See doc/PLUGINS.md on unknown plugin being refused before any plugin
 # runs.

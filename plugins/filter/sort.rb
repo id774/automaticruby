@@ -16,8 +16,8 @@ module Automatic::Plugin
       @ascending = @config['sort'].to_s == 'asc'
     end
 
-    # Sorts each feed's items by date. Items must carry one; a feed built from
-    # a source without dates fails here.
+    # Sorts each feed's items by date. Items must carry one, so a feed built
+    # from a source without dates fails here.
     def run
       @pipeline.each_with_object([]) do |feeds, returned|
         next if feeds.nil?

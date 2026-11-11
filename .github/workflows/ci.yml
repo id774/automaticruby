@@ -4,7 +4,7 @@ name: CI
 # Ruby versions this project validates continuously.
 #
 # The supported Ruby requirement lives in automatic.gemspec. The matrix
-# below is the authoritative set validated continuously; see
+# below is the authoritative set validated continuously. See
 # doc/POLICY.md section 11 and doc/REQUIREMENTS.md section 20.
 #
 # No credential is configured here and nothing reaches an external service: the
@@ -14,8 +14,8 @@ name: CI
 #
 # This is the required check, and it is deliberately the minimal configuration:
 # what it proves on every commit is that the framework needs only the
-# runtime dependencies declared in automatic.gemspec. The all-plugins configuration is a separate,
-# non-required workflow, plugins.yml.
+# runtime dependencies declared in automatic.gemspec. The all-plugins
+# configuration is a separate, non-required workflow, plugins.yml.
 
 on:
   push:
@@ -40,9 +40,9 @@ jobs:
       fail-fast: false
       matrix:
         # The continuously validated versions. This matrix is authoritative for
-        # that set; automatic.gemspec is authoritative for the supported Ruby
-        # requirement. Documentation refers to these sources rather than acting as
-        # a second matrix.
+        # that set, and automatic.gemspec is authoritative for the supported
+        # Ruby requirement. Documentation refers to these sources rather than
+        # acting as a second matrix.
         ruby: ['3.3', '3.4', '4.0']
 
     steps:

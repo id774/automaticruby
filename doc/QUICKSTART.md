@@ -26,7 +26,7 @@ automatic --version
 ```
 
 Working from a Git checkout instead is this same guide with one step done
-differently; "From a source checkout" at the end is that step.
+differently. "From a source checkout" at the end is that step.
 
 ## 2. Create the user directory
 
@@ -41,10 +41,10 @@ overwritten.
 ## 3. Write the Recipe
 
 A Recipe is one job: the plugins it runs, in order, with their settings. This
-one reads the public index pages listed under `sites` as HTML and makes a feed of the articles each
-lists — which is what to do for a page whose feed you do not have — keeps a
-record of what it has already seen, and appends the rest to a Markdown
-document.
+one reads the public index pages listed under `sites` as HTML and makes a feed
+of the articles each lists — which is what to do for a page whose feed you do
+not have — keeps a record of what it has already seen, and appends the rest to
+a Markdown document.
 
 Write it to `~/.automatic/config/web2markdown.yml`:
 
@@ -210,7 +210,7 @@ command -v automatic
 0 * * * * /usr/local/bin/automatic -c $HOME/.automatic/config/web2markdown.yml >> $HOME/.automatic/log/web2markdown.log 2>&1
 ```
 
-Automatic Ruby runs once and exits; `cron` supplies the schedule.
+Automatic Ruby runs once and exits, and `cron` supplies the schedule.
 
 ## From a source checkout
 
@@ -254,7 +254,7 @@ Taking this same pipeline further — the article bodies, one joined text, and a
 AI service asked one question about it — is
 [`AI_TUTORIAL.md`](AI_TUTORIAL.md).
 
-What each plugin does is [`PLUGINS.md`](PLUGINS.md) section 6; installing,
-scheduling and operating a Recipe is [`DEPLOYMENT.md`](DEPLOYMENT.md); writing a
+What each plugin does is [`PLUGINS.md`](PLUGINS.md) section 6. Installing,
+scheduling and operating a Recipe is [`DEPLOYMENT.md`](DEPLOYMENT.md). Writing a
 small plugin of your own is
 [`PLUGIN_DEVELOPMENT.md`](PLUGIN_DEVELOPMENT.md).

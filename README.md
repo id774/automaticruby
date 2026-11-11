@@ -76,7 +76,7 @@ every time.
 it collected as a Markdown document: a person reads it as it is, `grep` searches
 it, Git keeps its history, and a program — a language model or an agent among
 them — takes it as input without a parser or an API. That is the general case,
-and it needs no account anywhere; the plugins that publish to a service are for
+and it needs no account anywhere. The plugins that publish to a service are for
 when a particular service is the point.
 
 Automatic Ruby is neither host infrastructure nor a purpose-built
@@ -99,7 +99,7 @@ exactly three things:
   over,
 - **a loader** that finds a step by name, so that a Recipe can name it.
 
-Everything else is a plugin. The framework is intentionally kept small; its
+Everything else is a plugin. The framework is intentionally kept small. Its
 responsibilities and architectural boundary are defined in
 [`doc/BASIC_DESIGN.md`](doc/BASIC_DESIGN.md) and
 [`doc/POLICY.md`](doc/POLICY.md).
@@ -109,7 +109,7 @@ accounts and their own files. It is not a service, and there is no notion of a
 second user.
 
 The project began in February 2012 and this is the first release since 2015. The
-core, the Recipe format and the plugin contract are unchanged; what has changed
+core, the Recipe format and the plugin contract are unchanged. What has changed
 is that it runs on a current Ruby, installs from a current RubyGems, and ships
 a plugin set every part of which still has somewhere to talk to. See
 [`doc/VERSIONS`](doc/VERSIONS).
@@ -206,8 +206,8 @@ Two statements, and they are not the same one:
 - **Continuously validated versions.** The authoritative set is the matrix in
   [`.github/workflows/ci.yml`](.github/workflows/ci.yml), which represents the
   supported range rather than enumerating every intermediate release. A
-  version's absence from the matrix means it is not verified on every commit;
-  it does not mean it is expected to fail.
+  version's absence from the matrix means it is not verified on every commit.
+  It does not mean it is expected to fail.
 
 ## 5. Installation
 
@@ -229,7 +229,8 @@ that plugin, with `gem install nokogiri` or `gem install activerecord sqlite3`.
 ### From a checkout
 
 Use a checkout to try the current development version, change the source,
-develop a plugin or verify changes before a release. The supported checkout setups are shown below; start with the minimal setup.
+develop a plugin or verify changes before a release. The supported checkout
+setups are shown below. Start with the minimal setup.
 
 ```sh
 git clone https://github.com/id774/automaticruby.git
@@ -263,7 +264,7 @@ the checkout resolves its gems through the bundle — so a plugin's gem is added
 with a group rather than with `gem install`, and a Recipe using plugins from two
 groups selects both at once. The group names, which plugin needs which gem, and
 a Recipe taken step by step through choosing its groups are in
-[`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md); what each plugin does is in
+[`doc/DEPLOYMENT.md`](doc/DEPLOYMENT.md), and what each plugin does is in
 [`doc/PLUGINS.md`](doc/PLUGINS.md).
 
 ## 6. Quick start
@@ -420,7 +421,7 @@ self-contained contribution candidate.
 
 No plugin here is stubbed, mocked or simulated to make a test pass. Where a
 plugin's gem is not installed its spec is skipped and says which gem is
-missing; where the plugin still loads, its spec covers what does not need the
+missing. Where the plugin still loads, its spec covers what does not need the
 service. A dead integration is never made to look alive — it is removed.
 
 The contract, a worked example, and how to test a plugin are in
@@ -519,7 +520,7 @@ defence, not the boundary.)
 | `~/.automatic/db` | SQLite databases the store plugins write. |
 | `~/.automatic/assets` | Data files plugins read, such as the fulltext siteinfo. |
 
-Each part is optional; where one is absent, the corresponding directory inside
+Each part is optional. Where one is absent, the corresponding directory inside
 the installation is used instead. `automatic scaffold` creates and seeds them
 and overwrites nothing, so it is safe to run after an upgrade.
 
@@ -555,7 +556,7 @@ COVERAGE=on bundle exec rake spec
   ```
 
 - A spec whose plugin needs a gem that is not installed is skipped, and says
-  which gem is missing. That absence is the signal; a plugin whose service no
+  which gem is missing. That absence is the signal. A plugin whose service no
   longer exists is never stubbed into passing.
 - `test/integration/` holds Recipes for exercising plugins against real
   services. They are run by hand, are not part of the suite, and are never run
@@ -698,7 +699,7 @@ store databases — is listed in [`doc/POLICY.md`](doc/POLICY.md) section 7.
 
 The name **Automatic Ruby** was partly inspired by David Heinemeier Hansson's
 story of naming Ruby on Rails. He first chose *Rails* for the idea of putting
-development "on rails"; when the obvious Rails domain names were unavailable,
+development "on rails". When the obvious Rails domain names were unavailable,
 `rubyonrails.com` was free. He later said he liked the result because it put
 Ruby itself more prominently in the name and helped introduce Ruby to a wider
 audience. See [his account of the naming](https://tim.blog/2018/06/05/the-tim-ferriss-show-transcripts-david-dhh-heinemeier-hansson/).
@@ -713,7 +714,10 @@ both, sounded natural enough, and was easy to remember. That was enough.
 
 This repository uses `master` as its primary branch name.
 
-The name is used solely as a technical identifier, following the long-standing convention historically used by Git. It does not express or imply any association with racism, slavery, discrimination, or any political or social ideology.
+The name is used solely as a technical identifier, following the long-standing
+convention historically used by Git. It does not express or imply any
+association with racism, slavery, discrimination, or any political or social
+ideology.
 
 ## 19. License
 

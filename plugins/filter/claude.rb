@@ -38,14 +38,15 @@ module Automatic::Plugin
 
     # `max_tokens` is required by this API and by no other one this repository
     # speaks to, so it is a setting of this plugin alone. The default is a
-    # length a digest or a translation fits in; a Recipe that wants a longer
+    # length a digest or a translation fits in. A Recipe that wants a longer
     # answer says so.
     DEFAULT_MAX_TOKENS = 4096
 
     OPEN_TIMEOUT = 10
 
-    # Generous, and bounded. A model given several articles thinks for a while;
-    # an unattended run that waits forever is the failure this exists against.
+    # Generous, and bounded. A model given several articles thinks for a while,
+    # and an unattended run that waits forever is the failure this exists
+    # against.
     READ_TIMEOUT = 300
 
     # A failure that another attempt will not get past: a setting that is

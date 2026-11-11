@@ -14,7 +14,7 @@ require 'filter/gemini'
 require 'json'
 require 'net/http'
 
-# FilterGemini needs a Gemini API key; doc/PLUGINS.md section 6.3 classifies it
+# FilterGemini needs a Gemini API key. doc/PLUGINS.md section 6.3 classifies it
 # as Supported (external). Everything up to the request is verified here --
 # what is posted where, with which authentication, and what each answer means
 # -- and no example reaches the service. Only Gemini is exercised: the other AI

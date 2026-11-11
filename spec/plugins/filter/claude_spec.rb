@@ -14,7 +14,7 @@ require 'filter/claude'
 require 'json'
 require 'net/http'
 
-# FilterClaude needs an Anthropic API token; doc/PLUGINS.md section 6.3
+# FilterClaude needs an Anthropic API token. doc/PLUGINS.md section 6.3
 # classifies it as Supported (external). Everything up to the request is
 # verified here -- what is posted where, with which authentication, and what
 # each answer means -- and no example reaches the service. Only Anthropic is

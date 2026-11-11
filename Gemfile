@@ -4,8 +4,9 @@
 # here. See doc/POLICY.md section 9.
 #
 # `bundle install` with no configuration installs the framework's runtime
-# dependencies declared in automatic.gemspec and the development ones, and nothing below: a checkout is set
-# up to run and to test the framework, not to run every plugin.
+# dependencies declared in automatic.gemspec and the development ones, and
+# nothing below. A checkout is set up to run and to test the framework, not to
+# run every plugin.
 
 source 'https://rubygems.org'
 

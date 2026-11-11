@@ -59,7 +59,7 @@ module Automatic::Plugin
 
     # A theme's page carries the blog's own posts and a great deal else. A
     # link that leaves the blog's host is blanked rather than removed, which
-    # is the pipeline's way of saying "not applicable"; the plugins after this
+    # is the pipeline's way of saying "not applicable". The plugins after this
     # one skip an item whose link is nil.
     def drop_offsite_links(rss, blog_url)
       host = Automatic::Http.uri(blog_url).host.to_s

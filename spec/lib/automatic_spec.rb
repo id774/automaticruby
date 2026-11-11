@@ -107,7 +107,7 @@ describe Automatic do
   end
 
   # How a plugin requires a gem that only it needs. The framework's own
-  # dependencies are not required this way; these are the optional ones, which
+  # dependencies are not required this way. These are the optional ones, which
   # the operator who uses the plugin installs (doc/POLICY.md section 9.1).
   describe "#require_optional" do
     it "requires the library, as require does" do

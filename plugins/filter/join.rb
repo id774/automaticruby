@@ -15,7 +15,7 @@
 # plugin, or nothing at all.
 #
 # The whole pipeline becomes one item rather than one item per feed, because
-# the point of joining is to have a single text; a Recipe that wants one item
+# the point of joining is to have a single text. A Recipe that wants one item
 # per feed still has the feeds separate before this plugin runs.
 
 module Automatic::Plugin
@@ -23,7 +23,7 @@ module Automatic::Plugin
     require 'rss'
 
     # A title an operator has not set. Short and predictable, in the manner of
-    # PublishMarkdown's `(untitled)`; a Recipe that publishes this item names
+    # PublishMarkdown's `(untitled)`. A Recipe that publishes this item names
     # it in `title`.
     DEFAULT_TITLE = 'Joined items'.freeze
 
@@ -87,9 +87,9 @@ module Automatic::Plugin
       item.public_send(name).to_s.strip
     end
 
-    # This joined item deliberately has no link. It is several articles at once,
-    # so there is no single page it points at; using the first article's URL would
-    # name a source for text that is not only from it.
+    # This joined item deliberately has no link. It is several articles at
+    # once, so there is no single page it points at. Using the first article's
+    # URL would name a source for text that is not only from it.
     def feed(item_title, item_description)
       RSS::Maker.make('2.0') { |maker|
         maker.channel.title = 'Automatic Ruby'

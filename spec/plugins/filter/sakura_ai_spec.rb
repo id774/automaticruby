@@ -14,7 +14,7 @@ require 'filter/sakura_ai'
 require 'json'
 require 'net/http'
 
-# FilterSakuraAI needs a Sakura AI Engine token; doc/PLUGINS.md section 6.3
+# FilterSakuraAI needs a Sakura AI Engine token. doc/PLUGINS.md section 6.3
 # classifies it as Supported (external). Everything up to the request is
 # verified here -- what is posted where, with which authentication, and what
 # each answer means -- and no example reaches the service. Only the Sakura AI

@@ -56,7 +56,7 @@ unit_tests() {
 }
 
 # The integration recipes reach real services and are run deliberately.
-# Most need a credential or a service the operator runs; read the recipe
+# Most need a credential or a service the operator runs, so read the recipe
 # before running it.
 integration_tests() {
     for recipe in "$ROOT_DIR"/test/integration/test_*.yml

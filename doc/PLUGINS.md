@@ -8,8 +8,8 @@ contract**, which plugin authors implement. It also catalogues the plugins
 shipped in the gem, with what each one accepts and whether it still works.
 
 The system these two interfaces belong to is described in
-[`REQUIREMENTS.md`](REQUIREMENTS.md); the machinery that implements them is in
-[`BASIC_DESIGN.md`](BASIC_DESIGN.md); the rules for changing them are in
+[`REQUIREMENTS.md`](REQUIREMENTS.md). The machinery that implements them is in
+[`BASIC_DESIGN.md`](BASIC_DESIGN.md), and the rules for changing them are in
 [`POLICY.md`](POLICY.md).
 
 It stands on its own. Nothing in it is completed by a document kept in another
@@ -276,8 +276,8 @@ plugin's behaviour without editing the installation.
 
 Creating a new category is creating a directory. `~/.automatic/plugins/mine/`
 plus a class named `MineSomething` works with no change to the framework, though
-staying inside the established categories listed in section 3.2 is preferred, because their names tell a
-reader where in a pipeline the plugin belongs.
+staying inside the established categories listed in section 3.2 is preferred,
+because their names tell a reader where in a pipeline the plugin belongs.
 
 Loading is lazy: the loader registers an `autoload`, so the file is read when
 the constant is first used. A syntax error in a plugin therefore surfaces when
@@ -315,8 +315,8 @@ Rules that follow from the shape:
   items ends the pipeline for everything after it.
 - **`link` may be `nil`, and so may any other field.** A missing field is data,
   not a framework-wide drop signal: `FeedMaker.create_pipeline` preserves an
-  item whose link is `nil`. A plugin that requires a link must check it itself;
-  a plugin that does not may keep processing the item.
+  item whose link is `nil`. A plugin that requires a link must check it itself.
+  A plugin that does not may keep processing the item.
 - **Guard the feed itself.** `@pipeline.each { |feeds| next if feeds.nil? }` is
   the prevailing idiom, because a subscription plugin that failed may have put a
   `nil` in the array.
@@ -333,7 +333,7 @@ Rules that follow from the shape:
 - Assume nothing. `@config` itself may be `nil`, and any key may be missing.
 - Follow the established names: `retry` for an attempt count, `interval` for
   seconds between attempts, `db` for a database file, `path` for a directory.
-- Do not choose a setting name that is a method of `Hash` or `Enumerable`; see
+- Do not choose a setting name that is a method of `Hash` or `Enumerable`. See
   section 2.6.1.
 - Do not read the environment, and do not read a file other than one named in
   the settings. The `config` mapping is the plugin's entire input besides the
@@ -358,9 +358,9 @@ end
 
 - **A failure is logged.** Whatever the plugin decides to do about an error, the
   log is the only record an unattended run leaves. Swallowing an error silently
-  is a defect; so is logging it at `info`.
+  is a defect, and so is logging it at `info`.
 - **Raising is allowed, and it ends the run.** The framework does not catch
-  plugin exceptions. Raise when continuing would be wrong; rescue when the
+  plugin exceptions. Raise when continuing would be wrong, and rescue when the
   Recipe should carry on with less data.
 - **Log through `Automatic::Log`, not `puts`.** The exception is a plugin whose
   purpose is to write to the terminal, which holds an output object in an
@@ -371,16 +371,16 @@ end
 Credentials arrive as ordinary settings, which makes the Recipe holding them a
 secret file. A plugin therefore:
 
-- never logs a credential, and never logs `@config` wholesale;
-- never writes one into a pipeline item, where a later publishing plugin would
-  send it somewhere;
-- verifies TLS certificates. Disabling verification is not acceptable, whatever
+- Never logs a credential, and never logs `@config` wholesale.
+- Never writes one into a pipeline item, where a later publishing plugin would
+  send it somewhere.
+- Verifies TLS certificates. Disabling verification is not acceptable, whatever
   a service's certificate is doing.
 
 ### 3.8 Dependencies
 
 A plugin requires its own libraries at the top of its own file. A library that
-ships with Ruby is required plainly; a gem the operator has to install is
+ships with Ruby is required plainly. A gem the operator has to install is
 required through `Automatic.require_optional`, which names the gem, the plugin
 and the way to install it if it is absent:
 
@@ -401,7 +401,7 @@ Pass `gem_name:` where the gem's name differs from the path required, as
 
 That is what keeps a gem needed by one plugin out of everyone else's
 installation. A gem used by a single plugin is not added to the framework's
-runtime dependencies; it goes in an optional group of the `Gemfile` and the
+runtime dependencies. It goes in an optional group of the `Gemfile` and the
 operator who uses the plugin installs it. See [`POLICY.md`](POLICY.md)
 section 9.
 
@@ -433,7 +433,7 @@ charset comes back tagged UTF-8 because that is the fallback, not because the
 page said so. A plugin that hands the body to an HTML parser wants `open`
 instead, because a parser given the stream reads the `meta` charset for itself
 and a parser given the string believes the tag. `FilterFullFeed` is the worked
-example; the difference there was a whole article in mojibake.
+example. The difference there was a whole article in mojibake.
 
 It is a helper and not a client: it opens the URL through `open-uri` with the
 scheme restricted to HTTP and HTTPS, a connect and a read timeout, a bounded
@@ -466,7 +466,7 @@ describe Automatic::Plugin::FilterExample do
 end
 ```
 
-`AutomaticSpec.generate_pipeline` builds a pipeline; `feed` opens a feed object
+`AutomaticSpec.generate_pipeline` builds a pipeline. `feed` opens a feed object
 and `item url, title, description, date, author, source, enclosure` adds one
 item to it.
 
@@ -560,7 +560,7 @@ Section 6 lists every plugin shipped in the gem. Each carries a status:
 | **Needs rework** | The service and the capability still exist, but this plugin speaks an interface that has been replaced. It will not work as written, and restoring it is a self-contained piece of work. |
 
 No status is used for an integration whose service or capability is
-permanently unavailable. Such plugins are removed rather than retained; see
+permanently unavailable. Such plugins are removed rather than retained. See
 section 8.
 
 The rules that govern this table are the reason it exists at all:
@@ -569,7 +569,7 @@ The rules that govern this table are the reason it exists at all:
   test pass or a catalogue entry look better. Where a plugin's gem is absent
   its specs are excluded from the default suite, and that absence is the honest
   signal. A service that no longer answers is not given a fake endpoint to
-  answer with; the plugin goes.
+  answer with. The plugin goes.
 - **Nothing is kept for being old.** A plugin ships because it has a current
   practical use, not because it once did. Git history is where the previous
   implementations are, and it keeps them without their being installed on
@@ -581,14 +581,15 @@ that read HTML, `FilterSanitize`, `FilterDescriptionLink` — works, and is
 simply not part of what a green required build guarantees, because the default
 bundle does not install that gem. Its entry says so, and installing the gem runs
 its spec as part of the ordinary suite, which is also what the separate
-`plugins` workflow does. Nothing here is classified by what CI happens to run; a
+`plugins` workflow does. Nothing here is classified by what CI happens to run. A
 plugin is not demoted for needing a gem, and is not promoted by a test that CI
 never executes.
 
 **Statuses involving an outside service are snapshots of external state.**
-They can change without any commit here. Where a status was reached from published information rather than from a
-live check, the entry says so. To verify one yourself, run its Recipe from
-`test/integration` by hand; those are not part of CI and never will be.
+They can change without any commit here. Where a status was reached from
+published information rather than from a live check, the entry says so. To
+verify one yourself, run its Recipe from `test/integration` by hand. Those are
+not part of CI and never will be.
 
 Restoring a plugin classified as **Needs rework** is a self-contained piece
 of work and a good first contribution.
@@ -599,7 +600,7 @@ of work and a good first contribution.
 
 ### 6.1 Subscription
 
-Acquire from outside; produce a pipeline. Called first in a Recipe.
+Acquire from outside, and produce a pipeline. Called first in a Recipe.
 
 #### SubscriptionFeed — **Supported**
 
@@ -622,7 +623,7 @@ with.
 | `retry` | integer | Attempts after the first, per feed. Default `0`. |
 | `interval` | integer | Seconds between attempts. Default `0`. |
 
-A feed that fails after its retries is logged and skipped; the others still run.
+A feed that fails after its retries is logged and skipped. The others still run.
 
 `interval` is now waited. The line that was meant to wait it assigned to a
 local variable named `sleep` and returned at once, in this plugin and in every
@@ -669,10 +670,10 @@ no network, which makes it the plugin to test a Recipe's later half with.
 | `titles` | sequence | One item per title, no link |
 | `urls` | sequence | One item per URL, no title |
 | `feeds` | sequence | Mappings of `title`, `url`, `description`, `author`, `comments` |
-| `files` | sequence | UTF-8 TSV paths; positional columns are title, url, description, author, comments |
+| `files` | sequence | UTF-8 TSV paths. Positional columns are title, url, description, author, comments |
 
 The TSV separator is a tab and `~` is expanded. Empty columns supply no value
-for that field without shifting later columns; blank or all-empty rows produce
+for that field without shifting later columns. Blank or all-empty rows produce
 no item. Only the first five columns are used. Line endings are removed before
 splitting, but other field whitespace is preserved. Any combination of the four
 keys may be given.
@@ -745,9 +746,9 @@ kept working forever is a second format to support.
 | `description_selector` | string | The summary the page prints, taken as text. |
 | `date_selector` | string | The publication date, inside the article. |
 | `same_host` | boolean | Drop a URL whose host is not the page's. Default `true`. |
-| `include` | sequence | Regular expressions; a URL matching none of them is dropped. |
-| `exclude` | sequence | Regular expressions; a URL matching one of them is dropped. |
-| `fetch_items` | integer | Items per page, from the top. Default `100`; `0`, a negative value and an absent one all mean the default. |
+| `include` | sequence | Regular expressions. A URL matching none of them is dropped. |
+| `exclude` | sequence | Regular expressions. A URL matching one of them is dropped. |
+| `fetch_items` | integer | Items per page, from the top. Default `100`. `0`, a negative value and an absent one all mean the default. |
 
 There are three ways a page is read, and which one applies follows from the
 selectors given:
@@ -759,7 +760,7 @@ selectors given:
 - **`item_selector`.** Each node it selects is one article, and
   `link_selector`, `title_selector`, `description_selector` and
   `date_selector` are evaluated inside that node. Without `link_selector` the
-  article's first `a[href]` is the permalink; without `title_selector` the
+  article's first `a[href]` is the permalink. Without `title_selector` the
   link's own text is the title.
 
 `title_selector`, `description_selector` and `date_selector` are read inside an
@@ -772,11 +773,11 @@ then judged in this order: HTTP or HTTPS, not the page itself, `same_host`,
 `include`, `exclude`, already seen, and finally `fetch_items`. The fragment is
 removed, because two links differing only in their anchor are one article. The
 query string is kept, because `?id=42` is frequently the whole of what
-identifies one; no canonical form is guessed. `same_host` is an exact host
+identifies one. No canonical form is guessed. `same_host` is an exact host
 match, so `blog.example.com` is not `www.example.com`.
 
 The page's own order is kept. A list page's order is the only ordering
-information it carries, and nothing here sorts by date; `FilterSort` is where
+information it carries, and nothing here sorts by date. `FilterSort` is where
 a Recipe asks for that.
 
 `date_selector` prefers the `datetime` attribute of a `<time>` element and
@@ -865,7 +866,7 @@ kept, with a warning.
 
 `filter/accept.rb`. The complement of `FilterIgnore`: keeps only items that
 match. Same three keys, same substring rule. An item whose field is missing is
-not matched, and says so; it used to end the run with a `NoMethodError`, which
+not matched, and says so. It used to end the run with a `NoMethodError`, which
 is not what its complement does with the same item.
 
 #### FilterPresent — **Supported**
@@ -890,7 +891,7 @@ Recipe:
 The fields that may be checked are `title`, `link`, `description`, `author`,
 `comments`, `source` and `content_encoded`. A field the item has no accessor
 for, a `nil` value, an empty string and a whitespace-only string are all
-absent; an RSS field that responds to `#content` — a parsed source, for
+absent. An RSS field that responds to `#content` — a parsed source, for
 instance — is judged on that content rather than on the element itself. An
 item is kept only when every configured field is present. An unknown field or
 a field named twice is a settings error, raised when the plugin is
@@ -904,10 +905,11 @@ constructed. No network access, and no dependency on another plugin.
 | --- | --- | --- |
 | `sort` | string | `asc` sorts oldest first. Anything else, including absent, sorts newest first. |
 
-Items must carry a date; a feed built from a source without one will fail here.
+Items must carry a date, so a feed built from a source without one will fail
+here.
 
 `sort` collides with a `Hashie::Mash` built-in and logs a warning per run. The
-setting works; see section 2.6.1.
+setting works. See section 2.6.1.
 
 #### FilterOne — **Supported**
 
@@ -934,12 +936,12 @@ Recipe:
 | --- | --- | --- |
 | `max_items` | integer | Maximum items passed by the whole pipeline. Required; must be greater than zero. |
 
-Items are selected in feed order, then item order, up to `max_items`; the
+Items are selected in feed order, then item order, up to `max_items`. The
 grouping of the input feeds is kept in the output, and a feed that contributed
 no item under the limit is left out of it. Once the limit is reached, later
 feeds are not walked at all. Anything other than a positive integer —
 including zero, a negative number, and a non-numeric or fractional string — is
-a settings error, raised when the plugin is constructed; a numeric string such
+a settings error, raised when the plugin is constructed. A numeric string such
 as `"20"` is accepted. No network access, and no dependency on another plugin.
 
 #### FilterRand — **Supported**
@@ -999,7 +1001,7 @@ read is a warning and no images, rather than the end of the run.
 
 A link that already carries a scheme is left alone. That test matched `http://`
 only, so an `https://` link was treated as relative and had the base prepended
-to it; a Recipe that combined this filter with an HTTPS source was producing
+to it. A Recipe that combined this filter with an HTTPS source was producing
 links that went nowhere.
 
 #### FilterSanitize — **Supported**
@@ -1012,7 +1014,7 @@ links that went nowhere.
 
 Needs the `sanitize` gem, which is an optional plugin dependency and is not
 installed with the framework. Its spec is therefore outside the default suite
-and outside CI; installing the gem brings the spec back into the ordinary run.
+and outside CI. Installing the gem brings the spec back into the ordinary run.
 See [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 #### FilterTumblrResize — **Supported**
@@ -1041,7 +1043,7 @@ the body.
 | `get_title` | `1` | Fetch the new link and use its `<title>`. Any other value skips it. |
 | `interval` | integer | Seconds to wait after each title-page fetch attempt when `get_title` is `1`. Default `0`. |
 
-`get_title` makes one request per item; use `FilterOne` or a store plugin before
+`get_title` makes one request per item. Use `FilterOne` or a store plugin before
 it on a large feed. When `get_title` is not `1`, no title page is fetched and
 `interval` does not apply. A URL that is not fetchable is not read either, and
 does not wait. Where a title page is read, the wait follows the actual fetch
@@ -1082,7 +1084,7 @@ The shipped `assets/siteinfo/items_all.json` is a bundled LDRFullFeed-compatible
 siteinfo snapshot. Its coverage is a snapshot rather than a guarantee that a
 site is present or still uses the recorded layout. The bundled file may be
 replaced from a newer upstream snapshot, as recorded in
-[`VERSIONS`](VERSIONS); an operator can also supply a siteinfo file under
+[`VERSIONS`](VERSIONS). An operator can also supply a siteinfo file under
 `~/.automatic/assets/siteinfo/`.
 
 The plugin's behavior does not depend on the bundled snapshot having a
@@ -1096,13 +1098,14 @@ particular record count, date, scheme distribution, or encoding distribution:
   XPath no longer selects content, the existing description is preserved and
   the miss is logged at `warn`.
 - **The page's own encoding is believed before the record's.** Response or
-  document declarations take precedence; the record's `enc` is only a fallback,
+  document declarations take precedence. The record's `enc` is only a fallback,
   and an encoding Ruby does not recognize is ignored rather than raised. The
   selected body is normalized to UTF-8.
 
 A record with no URL pattern, no XPath, or a pattern that is not a regular
 expression is dropped when the file is loaded rather than being allowed to fail
-a match later; an empty pattern would otherwise match every link in the feed.
+a match later, because an empty pattern would otherwise match every link in the
+feed.
 The remaining patterns are compiled once, not once per item.
 
 #### FilterGithubFeed — **Supported**
@@ -1117,7 +1120,7 @@ been through another filter first is no longer a `NoMethodError`.
 #### FilterBatch — **Supported**
 
 `filter/batch.rb`. Groups all items in the pipeline into fixed-size batches.
-Feed boundaries are intentionally discarded; each batch becomes one item in one
+Feed boundaries are intentionally discarded. Each batch becomes one item in one
 output feed.
 
 Recipe:
@@ -1134,12 +1137,12 @@ Recipe:
 
 The whole pipeline is collected in feed order, then item order, and sliced
 into batches of `batch_items` source items. Each batch becomes one item titled
-`Batch N`; a batch item carries no link. Its description lists the source
+`Batch N`. A batch item carries no link. Its description lists the source
 items as `ARTICLE N`, `Title:`, `URL:` and the body, with the `ARTICLE`
 numbering starting over at 1 in every batch. An empty pipeline produces an
 empty pipeline. Anything other than a positive integer — including zero, a
 negative number, and a non-numeric or fractional string — is a settings error,
-raised when the plugin is constructed; a numeric string such as `"5"` is
+raised when the plugin is constructed. A numeric string such as `"5"` is
 accepted. It is independent of `FilterJoin` — it does not require it, call it,
 or depend on it in any way — and reaches no network and no external service.
 
@@ -1153,10 +1156,10 @@ nothing, and knows nothing about what reads the result.
 | --- | --- | --- |
 | `title` | string | The title of the joined item. Default `Joined items`. |
 
-**In**: the pipeline as it stands — any number of feeds, any number of items; a
+**In**: the pipeline as it stands — any number of feeds, any number of items. A
 feed that is `nil` is passed over. **Out**: one feed holding one item. The whole
 pipeline becomes one item rather than one item per feed, because the point of
-joining is to have a single text; a Recipe that wants one item per feed still
+joining is to have a single text. A Recipe that wants one item per feed still
 has its feeds separate before this plugin runs.
 
 The description is plain text, with a numbered heading per item so that
@@ -1203,9 +1206,9 @@ next.
 description to one AI service and put the answer back in its place. They are
 separate service-specific plugins rather than one plugin with a
 `provider` setting, and that is the design
-rather than an accident: the services differ in endpoint, authentication,
-request body, answer shape, error format and available models; each of those
-moves without asking the others; and a Recipe naming `FilterClaude` says on its
+rather than an accident. The services differ in endpoint, authentication,
+request body, answer shape, error format and available models. Each of those
+moves without asking the others. A Recipe naming `FilterClaude` also says on its
 face where the text is being sent.
 Changing service is changing that one line.
 
@@ -1213,8 +1216,10 @@ Changing service is changing that one line.
 the item's description is the text it applies to, so summarizing, translating,
 extracting, reformatting and classifying are the same plugin with a different
 prompt. There is no default prompt: a Recipe without one is refused with an
-`ArgumentError` rather than being given a purpose it did not ask for. The instruction and the item text are sent as separate fields — a system instruction and a user turn — so that
-what an article says is text to be worked on, never an instruction to obey.
+`ArgumentError` rather than being given a purpose it did not ask for. The
+instruction and the item text are sent as separate fields — a system
+instruction and a user turn — so that what an article says is text to be worked
+on, never an instruction to obey.
 
 What the AI filters have in common:
 
@@ -1224,7 +1229,7 @@ What the AI filters have in common:
 | `retry`, `interval` | Attempts after a failure, and seconds to wait between them. Both default to `0`. |
 | What is retried | The network, a `429`, a `5xx`. |
 | What is not | A refused request, an answer that is not JSON, an answer whose shape is not the one the service documents, and a setting that is missing or wrong. These raise and end the run, because the next attempt would fail the same way. |
-| Input and output | The pipeline's feeds and items, in the same number and the same order. Only `description` is replaced; `title`, `link`, `date` and the rest are untouched. |
+| Input and output | The pipeline's feeds and items, in the same number and the same order. Only `description` is replaced, and `title`, `link`, `date` and the rest are untouched. |
 | An item with no description | Logged and passed over. Nothing is sent, and nothing is emptied. |
 | A failure | Never leaves an empty description behind. A run that could not transform an item ends rather than publishing the article as a blank. |
 | The credential | A Recipe setting, which makes the Recipe a secret file. It is never logged, never in an exception message, and never written into an item. TLS certificates are verified. |
@@ -1237,7 +1242,7 @@ Recipe worth thinking about:
   everything, which is not the same as a list of separate summaries.
 - An AI filter → `FilterJoin`: each article is transformed **on its own**, and
   the answers are joined afterwards. Use `FilterOne` or a store plugin ahead of
-  it on a large feed; each item is a billed request.
+  it on a large feed, because each item is a billed request.
 
 #### FilterOpenAI — **Supported (external)**
 
@@ -1256,8 +1261,9 @@ for new integrations, and authenticates with the token as a bearer token.
 
 The endpoint is fixed by this plugin rather than exposed as a setting. An
 operator has no version of this plugin that talks to a different host, and a
-setting for the endpoint would provide a way to send the token somewhere else. The answer is read out of the typed `output`
-array, from the `output_text` of the assistant's message.
+setting for the endpoint would provide a way to send the token somewhere else.
+The answer is read out of the typed `output` array, from the `output_text` of
+the assistant's message.
 
 ```yaml
   - module: FilterOpenAI
@@ -1290,8 +1296,8 @@ addition to the shared settings.
 
 The `anthropic-version` header is a constant, not a setting: it is the version
 of the HTTP interface rather than of a model, and changing it is a change to
-this plugin. The answer is the `text` of the content blocks the API returns;
-blocks of other kinds are passed over.
+this plugin. The answer is the `text` of the content blocks the API returns.
+Blocks of other kinds are passed over.
 
 ```yaml
   - module: FilterClaude
@@ -1325,7 +1331,7 @@ URL and out of anything that logs one.
 
 The request is built of `contents` and `parts` as this API defines them, and is
 not bent into another service's shape. The answer is the text of the first
-candidate's parts; an answer carrying no candidate — which is what a request
+candidate's parts. An answer carrying no candidate — which is what a request
 stopped by a safety filter looks like — is an error rather than an empty
 description.
 
@@ -1396,7 +1402,7 @@ Recipe that says where the text goes for a Recipe that does not, the same
 reasoning that already keeps Sakura AI in a plugin of its own.
 
 Kimi may return a `reasoning_content` alongside the answer's `content`. That
-reasoning is never read, logged or written anywhere; only `content` is used,
+reasoning is never read, logged or written anywhere. Only `content` is used,
 and only once `finish_reason` is `"stop"` -- any other value, or a missing or
 empty `content`, is an error rather than an empty description.
 
@@ -1490,8 +1496,8 @@ look new again.
 `store/full_text.rb`. Records title, link, description and `content_encoded`,
 and passes on only items whose new record was saved successfully. Deduplicates
 on link **or** title, so a republished article with a new URL is not stored
-twice. A database write failure ends the run; the unsaved item is not passed
-downstream. Pair with `FilterFullFeed` to archive article bodies.
+twice. A database write failure ends the run, and the unsaved item is not
+passed downstream. Pair with `FilterFullFeed` to archive article bodies.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
@@ -1540,7 +1546,7 @@ unchanged carries a new date often enough to defeat the purpose — and neither 
 
 - The order is part of the fingerprint. `[title, description]` and
   `[description, title]` are two different specifications and produce different
-  digests; nothing is sorted behind the Recipe's back.
+  digests. Nothing is sorted behind the Recipe's back.
 - **The fields named are the fields used.** A Recipe that asks for
   `content_encoded` gets `content_encoded`, and an item whose body is empty is
   not quietly judged on its title instead. What the Recipe says two identical
@@ -1556,7 +1562,7 @@ invalid and undefined characters replaced, normalized to Unicode NFC, its runs
 of whitespace collapsed to one space and its ends trimmed. The values are joined
 with their field names into one canonical string — `title`, NUL, the title, NUL,
 `description`, NUL, the description — and that string is hashed with SHA-256.
-The algorithm is fixed; there is no setting for it and no column recording it.
+The algorithm is fixed. There is no setting for it and no column recording it.
 
 Two items are therefore the same item when their selected fields are **exactly**
 equal after that normalization, and not otherwise. A difference of case, of
@@ -1580,7 +1586,7 @@ rescued here, which is deliberate and is a difference from `StoreFullText`: an
 item passed on after its digest failed to store would be published again on the
 next run, and de-duplication that quietly stops de-duplicating is worse than a
 run that stops. The digest column carries a unique index, so two runs of one
-Recipe overlapping cannot both store one digest; the second write is rejected
+Recipe overlapping cannot both store one digest. The second write is rejected
 and its item is treated as seen.
 
 The digest is all that is stored — no title, no body, no URL. Recording what an
@@ -1624,7 +1630,7 @@ percent-encoded.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
-| `path` | string | Directory to save into; relative paths use the process working directory; created if absent. Required. |
+| `path` | string | Directory to save into. Relative paths use the process working directory. Created if absent. Required. |
 | `retry` | integer | Attempts after the first. Default `0`. |
 | `interval` | integer | Seconds between downloads. Default `0`. |
 | `access_key` | string | S3 only. Omit to use the SDK's own credential chain. |
@@ -1640,7 +1646,7 @@ A link whose scheme is `s3://` or `s3n://` is fetched from a bucket instead,
 through **AWS SDK for Ruby version 3** — `aws-sdk-s3`, the SDK AWS publishes
 today. This was written against version 1's `AWS::S3`, which no published gem
 provides any more. `s3n://` is what Recipes written for this plugin use and is
-still accepted; `s3://` is the spelling everything else uses and is accepted as
+still accepted. `s3://` is the spelling everything else uses and is accepted as
 well. The gem is required inside that branch, so the ordinary download path
 works without it installed: `gem install aws-sdk-s3`, or the `s3` group in a
 checkout.
@@ -1663,7 +1669,7 @@ gem and a Fluentd instance.
 | `tag` | string | Tag, for example `automatic.feed` |
 | `mode` | string | `test` builds no connection and sends nothing |
 
-`content_encoded` must be something Fluentd accepts as a record; a plain string
+`content_encoded` must be something Fluentd accepts as a record. A plain string
 is logged as an error and skipped.
 
 ### 6.6 Notify
@@ -1672,18 +1678,18 @@ is logged as an error and skipped.
 
 `notify/ikachan.rb`. Posts each item to an IRC channel through an `ikachan`
 HTTP-to-IRC gateway, joining the channel first. The gateway is software the
-operator runs; there is no service to be shut down.
+operator runs, so there is no service to be shut down.
 
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `url` | string | Gateway base URL. Required. |
 | `port` | integer | Gateway port. Default `4979`. |
-| `channels` | string | Comma-separated; a leading `#` is added if absent. Required. |
+| `channels` | string | Comma-separated. A leading `#` is added if absent. Required. |
 | `command` | string | `notice` or `privmsg`. Default `notice`. |
 | `interval` | integer | Seconds between posts. Default `0`. |
 
 Honours a `PROXY` environment variable, on port 8080. A gateway reached over
-`https` is spoken to over `https`; the connection used to be plain whatever the
+`https` is spoken to over `https`. The connection used to be plain whatever the
 URL said. The channel and the message are form-encoded rather than interpolated
 into the request body, so an item whose title carries an `&` or a space reaches
 the channel whole instead of splitting the request.
@@ -1721,7 +1727,7 @@ standard output.
 
 One section per item, in pipeline order — the feeds in the order they arrive,
 the items in the order their feed carries them. Nothing sorts, groups or
-de-duplicates here; `FilterSort` and the store plugins are where that belongs.
+de-duplicates here. `FilterSort` and the store plugins are where that belongs.
 
 ```markdown
 ## An item's title
@@ -1752,7 +1758,7 @@ The body of the item, as text.
   the zone that date carries. Nothing is converted to local time, because the
   same input then produces the same output on any machine.
 - **`source` and `enclosure` are elements rather than strings** in a parsed
-  feed. The source's text is used, and the enclosure's URL; where either is
+  feed. The source's text is used, and the enclosure's URL. Where either is
   already a plain string it is used as it stands.
 - **A section is followed by a blank line.** Appending a document to a document
   therefore stays valid Markdown, and a file always ends with a newline.
@@ -1790,13 +1796,13 @@ that size does not become a dependency for one plugin
 ([`POLICY.md`](POLICY.md) section 9.1). The result is defined by its two ends —
 the text survives, the markup does not — which is what both a reader and a
 program reading the file want from it. A link inside a body becomes its own
-text; the item's own link is in the metadata list, where nothing loses it.
+text. The item's own link is in the metadata list, where nothing loses it.
 
 **This plugin needs no gem of its own.** It uses `nokogiri` to reduce a body
 where `nokogiri` is installed, and reduces it with its own substitution where it
 is not, so that a Recipe ending here runs on a plain `gem install automatic` and
 no Recipe pays for an HTML parser it did not ask for. The two produce the same
-document for the bodies a feed carries; a parser is simply better at markup that
+document for the bodies a feed carries. A parser is simply better at markup that
 is badly malformed, which is the reason to install `nokogiri` if you publish
 from feeds that produce it. The specs hold both to the same output.
 
@@ -1843,7 +1849,7 @@ keeps standard output. Which to use is an operational choice and
 [`DEPLOYMENT.md`](DEPLOYMENT.md) says more about it.
 
 The plugin logs one line per run at `info`, naming the destination and the
-number of items written; it does not log a line per item, because that log is
+number of items written. It does not log a line per item, because that log is
 what would be interleaved with the document.
 
 #### PublishConsole — **Supported**
@@ -1882,7 +1888,7 @@ concatenating strings, so a Recipe that did not quote the port ended the run
 with a `TypeError`.
 
 It writes one key per run, replacing the previous value. `key` collides with a
-`Hashie::Mash` built-in and logs a warning per run; the setting works, see
+`Hashie::Mash` built-in and logs a warning per run. The setting works. See
 section 2.6.1.
 
 #### PublishFluentd — **Supported (external)**
@@ -1918,7 +1924,7 @@ documentation rather than on a live call with an account, so run
 Constructing the plugin authenticates, so a wrong credential fails the run
 before any item is posted rather than once per item. Nothing logs the account
 or the password. This plugin used to disable TLS certificate verification,
-which was corrected in the previous release; the connection now also has a
+which was corrected in the previous release. The connection now also has a
 timeout, so an unanswered request ends rather than hanging a `cron` job.
 
 #### PublishAmazonS3 — **Supported (external)**
@@ -1938,7 +1944,7 @@ local filesystem path before upload.
 
 Migrated from `AWS::S3`, which only AWS SDK for Ruby version 1 provided, to
 `Aws::S3::Client` from **version 3** — the `aws-sdk-s3` gem, which is the SDK
-AWS publishes and maintains. The Recipe keys are unchanged; `region` is new and
+AWS publishes and maintains. The Recipe keys are unchanged. `region` is new and
 optional. The gem is an optional plugin dependency and is required only when an
 upload is actually made, so `mode: test` needs neither the gem nor an account:
 `gem install aws-sdk-s3`, or the `s3` group in a checkout.
@@ -1952,7 +1958,7 @@ instance role, which keeps a long-lived secret out of the Recipe file.
 `publish/hatena_bookmark.rb`. Bookmarks each link to Hatena Bookmark by posting
 an Atom entry with WSSE authentication to `b.hatena.ne.jp/atom/post`.
 
-Hatena Bookmark is operating and has a current bookmarking API; the WSSE
+Hatena Bookmark is operating and has a current bookmarking API, but the WSSE
 AtomPub interface this speaks has been superseded by an OAuth one, and Hatena's
 own documentation no longer describes WSSE for this API. Restoring the plugin
 means the current endpoint and the current authentication, which is a
@@ -1978,8 +1984,8 @@ is a claim that the plugin works.
 
 Section 6 is the single source of truth for the set of plugins that ship and
 for each plugin's current status. Current plugin totals, per-status totals and
-duplicate current plugin-name lists are not maintained here or in `README.md`;
-adding or removing a plugin changes its implementation, its specification and
+duplicate current plugin-name lists are not maintained here or in `README.md`.
+Adding or removing a plugin changes its implementation, its specification and
 its Section 6 catalogue entry, not a second summary that has to be kept in
 sync.
 
@@ -1998,10 +2004,10 @@ withdrawn with no replacement that a plugin this size can reach:
 | --- | --- |
 | `SubscriptionTwitter`, `SubscriptionTwitterSearch`, `PublishTwitter` | Written against the `twitter` gem's version 4 interface and against `twitter.com` markup from 2014. The site is X, the gem's classes are gone, and the current API has no free tier — posting and searching are billed per call. |
 | `SubscriptionPocket`, `PublishPocket` | Pocket was shut down by Mozilla on 8 July 2025 and its API with it. |
-| `PublishHipchat` | Atlassian discontinued HipChat and shut the service down in February 2019; there is no endpoint. |
+| `PublishHipchat` | Atlassian discontinued HipChat and shut the service down in February 2019. There is no endpoint. |
 | `PublishGoogleCalendar` | Speaks the Calendar GData API version 2 with ClientLogin, shut down in November 2014 and April 2015, through a gem last published in 2009. |
 | `SubscriptionWeather` | livedoor Weather Hacks ended on 31 July 2020, through a gem last published in 2013. |
-| `SubscriptionGGuide`, `SubscriptionChanToru` | So-net's "Gガイド.テレビ王国 Chan-Toru" ended on 31 July 2020 and the business was transferred; the RSS endpoint is gone. |
+| `SubscriptionGGuide`, `SubscriptionChanToru` | So-net's "Gガイド.テレビ王国 Chan-Toru" ended on 31 July 2020 and the business was transferred. The RSS endpoint is gone. |
 | `FilterGoogleNews` | Unwrapped a Google News link by reading whatever followed `&url=`. Google News now emits opaque `/rss/articles/…` links whose destination is only obtainable from an undocumented internal endpoint. |
 
 The reason for removing rather than marking them is in section 5: a plugin ships

@@ -50,7 +50,7 @@ module Automatic::Plugin
     # The character references a feed body actually tends to carry: the five of
     # XML, and the punctuation and symbols that follow prose out of a web page.
     # A reference in neither this table nor the numeric form is left as it is
-    # written, which a reader can still make sense of; the full HTML set is two
+    # written, which a reader can still make sense of. The full HTML set is two
     # thousand entries and a parser's business.
     ENTITIES = {
       'amp' => '&', 'lt' => '<', 'gt' => '>', 'quot' => '"', 'apos' => "'",
@@ -176,7 +176,7 @@ module Automatic::Plugin
     # install automatic`: nokogiri is an optional dependency, and reducing a
     # feed body to text is not a good enough reason to make everyone install a
     # native extension.
-    # The two agree on what a body is reduced to; a parser is simply better at
+    # The two agree on what a body is reduced to. A parser is simply better at
     # markup that is malformed. See doc/PLUGINS.md section 6.7.
     def html_to_text(html)
       html_parser? ? parsed_text(html) : substituted_text(html)

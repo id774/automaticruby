@@ -36,7 +36,7 @@ module Automatic::Plugin
       entry
     end
 
-    # An Atom element carries its text in #content; a field that is already a
+    # An Atom element carries its text in #content. A field that is already a
     # string is used as it stands, so that a pipeline which has been through
     # another filter first is not a NoMethodError.
     def value(item, name)

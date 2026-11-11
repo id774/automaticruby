@@ -10,7 +10,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-# ProvideFluentd needs the fluent-logger gem and a Fluentd instance;
+# ProvideFluentd needs the fluent-logger gem and a Fluentd instance.
 # doc/PLUGINS.md section 6.5 classifies it as Supported (external). The gem is
 # an optional dependency in its own Gemfile group, so this spec is skipped
 # rather than stubbed where it is absent (doc/POLICY.md section 4). Where it is
@@ -59,7 +59,7 @@ describe Automatic::Plugin::ProvideFluentd do
       subject.run
     end
 
-    # content_encoded has to be something Fluentd accepts as a record; a plain
+    # content_encoded has to be something Fluentd accepts as a record. A plain
     # string is logged as an error and skipped rather than ending the run.
     it 'logs a record the logger rejects' do
       logger.stub(:post).and_raise(ArgumentError, 'not a hash')

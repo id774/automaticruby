@@ -12,7 +12,7 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'publish/instapaper'
 
-# PublishInstapaper needs an Instapaper account; doc/PLUGINS.md section 6.7
+# PublishInstapaper needs an Instapaper account. doc/PLUGINS.md section 6.7
 # classifies it as Supported (external). Everything up to the request is
 # verified here -- what is posted where, with which authentication, and what
 # each response code means -- and no example reaches the service. The
@@ -72,7 +72,7 @@ describe Automatic::Plugin::Instapaper do
   end
 
   describe 'the request it builds' do
-    # Unstubbed here, because the request itself is what is being checked;
+    # Unstubbed here, because the request itself is what is being checked.
     # Net::HTTP.start is stubbed, so nothing is sent.
     before { Automatic::Plugin::Instapaper.any_instance.unstub(:request) }
 
