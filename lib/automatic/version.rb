@@ -10,7 +10,7 @@
 
 module Automatic
   # The release version. The VERSION file at the repository root carries the
-  # same number and the gemspec reads it from there; a spec asserts that the
+  # same number and the gemspec reads it from there. A spec asserts that the
   # two agree. See doc/POLICY.md section 10.
   VERSION = '26.09'
 end

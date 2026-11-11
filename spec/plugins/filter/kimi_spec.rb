@@ -14,7 +14,7 @@ require 'filter/kimi'
 require 'json'
 require 'net/http'
 
-# FilterKimi needs a Kimi API token; doc/PLUGINS.md section 6.3 classifies it
+# FilterKimi needs a Kimi API token. doc/PLUGINS.md section 6.3 classifies it
 # as Supported (external). Everything up to the request is verified here --
 # what is posted where, with which authentication, and what each answer means
 # -- and no example reaches the service. Only Kimi is exercised: the other AI

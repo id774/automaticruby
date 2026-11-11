@@ -320,7 +320,7 @@ describe Automatic::CLI do
     # A LoadError raised from inside a plugin's own load -- for a file other
     # than the optional gem it asked require_optional for -- is a broken
     # plugin or a broken dependency, not an absent optional gem, and must not
-    # be hidden behind the same one-line diagnostic; see doc/PLUGINS.md
+    # be hidden behind the same one-line diagnostic. See doc/PLUGINS.md
     # section 2.7.
     it "propagates a LoadError raised from inside a plugin's own load, unconverted" do
       allow(Automatic).to receive(:run)

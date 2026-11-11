@@ -143,7 +143,7 @@ if AutomaticSpec.optional_dependency?('nokogiri')
     end
 
     # The framework hands a plugin a Hashie::Mash, not a Hash. This tested the
-    # mapping's class and so read neither setting in any real run; the spec
+    # mapping's class and so read neither setting in any real run. The spec
     # below is the one that would have caught it.
     context "with the mapping a Recipe actually produces" do
 

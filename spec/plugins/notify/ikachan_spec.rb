@@ -12,7 +12,7 @@ require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
 require 'notify/ikachan'
 
-# NotifyIkachan needs an ikachan gateway, which is software the operator runs;
+# NotifyIkachan needs an ikachan gateway, which is software the operator runs.
 # doc/PLUGINS.md section 6.6 classifies it as Supported (external). What is
 # verified here is the request the plugin builds, and no example reaches a
 # gateway.

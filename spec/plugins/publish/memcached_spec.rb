@@ -10,7 +10,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-# PublishMemcached needs the dalli gem and a memcached server; doc/PLUGINS.md
+# PublishMemcached needs the dalli gem and a memcached server. doc/PLUGINS.md
 # section 6.7 classifies it as Supported (external). The gem is an optional
 # dependency in its own Gemfile group, so this spec is skipped rather than
 # stubbed where it is absent (doc/POLICY.md section 4). Where it is present,

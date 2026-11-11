@@ -9,7 +9,7 @@ produces something a person can read.
 It assumes [`QUICKSTART.md`](QUICKSTART.md) has been followed once, so that
 `automatic` runs, `~/.automatic` exists, and the habit of asking "which plugins
 does this Recipe name, and what do they need" is already in place. What each
-plugin does in full is [`PLUGINS.md`](PLUGINS.md) section 6; this document is
+plugin does in full is [`PLUGINS.md`](PLUGINS.md) section 6. This document is
 the order they go in and why.
 
 One claim is worth stating before the first Recipe, because it is what the
@@ -236,7 +236,7 @@ It is worth being clear about why this is its own plugin rather than part of
 what comes next. Joining a day's release notes, log lines or notifications into
 one document is the same operation, and it is useful with no AI service
 anywhere in the Recipe. The plugin adds no prompt and knows nothing about what
-reads its result; what the joined text is *for* is decided entirely by the
+reads its result. What the joined text is *for* is decided entirely by the
 plugin the Recipe puts after it.
 
 Note also what the joined item lost: its link. This is the stage the ordering
@@ -371,12 +371,12 @@ pipeline the two arrangements differ:
 | AI filter → `FilterJoin` | 3 | Three separate texts, joined afterwards |
 
 Both are legitimate, and they answer different questions. A digest that draws a
-theme across the day's articles needs the first; a document of per-article
+theme across the day's articles needs the first, and a document of per-article
 summaries needs the second. The second is also the one that grows with the feed:
 a run that finds forty new articles makes forty requests, each of them billed
 and rate-limited. `StorePermalink` earlier in the Recipe is the main defence,
-because it means each article is sent once ever; `FilterOne` ahead of the filter
-is the blunt one, while a Recipe is being written.
+because it means each article is sent once ever. `FilterOne` ahead of the
+filter is the blunt one, while a Recipe is being written.
 
 The point is not which order is better. It is that the difference between "one
 digest" and "a list of summaries" is the position of one entry in a YAML list,
@@ -386,8 +386,9 @@ and that no plugin had to be changed or configured to express it.
 
 Automatic Ruby uses separate service-specific AI filters rather than one
 plugin with a `provider` setting. Their current catalogue and settings are
-maintained in [`PLUGINS.md`](PLUGINS.md) section 6.3. Each replaces an item's description with what its service answers, so
-in a Recipe they are interchangeable at the same position:
+maintained in [`PLUGINS.md`](PLUGINS.md) section 6.3. Each replaces an item's
+description with what its service answers, so in a Recipe they are
+interchangeable at the same position:
 
 ```yaml
   - module: FilterOpenAI
@@ -435,9 +436,10 @@ in a Recipe they are interchangeable at the same position:
 ```
 
 Nothing before or after the swapped entry changes. `token`, `model` and
-`prompt` are shared required settings of the AI filters; `max_tokens` exists
-only for Claude because that API requires it. Model names move with the services, so take them from the provider
-you are using rather than from this document, and see
+`prompt` are shared required settings of the AI filters. `max_tokens` exists
+only for Claude because that API requires it. Model names move with the
+services, so take them from the provider you are using rather than from this
+document, and see
 [`PLUGINS.md`](PLUGINS.md) section 6.3 for each plugin's endpoint,
 authentication and answer handling.
 
@@ -510,10 +512,11 @@ What that buys, concretely:
   articles, section 3 publishes a joined document, section 4 publishes an
   answer. When the last stage fails, the earlier ones still say what the run
   found.
-- **A failure has one address.** Nothing was fetched is `CustomFeedWeb`;
-  everything is a summary is `FilterFullFeed` and its siteinfo; the document is
-  one section is `FilterJoin`; the request was refused is the AI filter. A
-  single plugin that did all of it would have one log and one place to guess in.
+- **A failure has one address.** When nothing was fetched, it is
+  `CustomFeedWeb`. When everything is a summary, it is `FilterFullFeed` and its
+  siteinfo. When the document is one section, it is `FilterJoin`. When the
+  request was refused, it is the AI filter. A single plugin that did all of it
+  would have one log and one place to guess in.
 - **Changing behaviour is editing configuration, not code.** A different
   service, a different job, one digest instead of many summaries: three edits to
   one YAML file, each of them one line or one setting.

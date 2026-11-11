@@ -11,7 +11,7 @@
 # AutomaticSpec.plugin_available? itself, defined in spec_helper.rb. Every
 # plugin spec that guards itself with it relies on it skipping only a plugin's
 # own missing optional gem, and failing on anything else the plugin's load
-# raises; see doc/POLICY.md Invariant 7.
+# raises. See doc/POLICY.md Invariant 7.
 
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
 

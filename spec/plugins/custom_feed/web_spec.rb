@@ -502,7 +502,7 @@ describe Automatic::Plugin::CustomFeedWeb do
 end
 
 # Excluded from the default suite, which reaches no network. The examples
-# above are what says this plugin works; this one says the page it was written
+# above are what says this plugin works. This one says the page it was written
 # for is still a page. Run it deliberately with AUTOMATIC_NETWORK_SPECS=1.
 #
 # It selects by URL rather than by selector on purpose: a pattern outlives a

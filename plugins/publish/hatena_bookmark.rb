@@ -10,14 +10,14 @@
 #
 # STATUS: Needs rework. This speaks the WSSE AtomPub interface, which Hatena
 # has superseded with an OAuth one. The service and the bookmarking API are
-# both current; this client is not, and restoring it means the current
+# both current, but this client is not, and restoring it means the current
 # endpoint and the current authentication rather than a change of a few lines.
 # See doc/PLUGINS.md section 6.7.
 #
 # The transport was corrected in the meantime: the request is made over HTTPS,
 # so that an operator who runs this does not put a password digest on the wire
 # in the clear. That is a defect worth not shipping whatever the plugin's
-# status is; it is not a claim that the plugin works.
+# status is. It is not a claim that the plugin works.
 
 require 'digest/sha1'
 require 'net/http'

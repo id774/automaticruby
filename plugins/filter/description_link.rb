@@ -58,7 +58,7 @@ module Automatic::Plugin
       item.title = title unless title.nil? || title.empty?
     end
 
-    # One request per item; use FilterOne or a store plugin before this on a
+    # One request per item. Use FilterOne or a store plugin before this on a
     # large feed. A page that cannot be read leaves the item's own title.
     def fetch_title(url)
       return nil unless Automatic::Http.fetchable?(url)

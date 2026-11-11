@@ -18,7 +18,7 @@ describe Automatic::Plugin::FilterLimit do
   end
 
   # Automatic::FeedMaker.create_pipeline sorts each feed it builds by date,
-  # newest first; explicit, descending dates are what keep the output feeds'
+  # newest first. Explicit, descending dates are what keep the output feeds'
   # own item order predictable enough to assert on here.
   let(:pipeline) {
     AutomaticSpec.generate_pipeline {
@@ -70,7 +70,7 @@ describe Automatic::Plugin::FilterLimit do
 
   # FilterLimit selects items by passing survivors through
   # Automatic::FeedMaker.create_pipeline, same as every other filter built on
-  # it; this is an integration regression for that shared helper, not for
+  # it. This is an integration regression for that shared helper, not for
   # FilterLimit's own selection logic, which the specs above already cover.
   describe 'metadata preservation' do
     it 'keeps content_encoded, source and enclosure on an item that survives the limit' do

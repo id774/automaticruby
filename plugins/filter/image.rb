@@ -13,7 +13,8 @@ module Automatic::Plugin
     require 'uri'
 
     # webp and avif are here because they are what an image link on the
-    # current web frequently is; tif joins tiff for the same reason.
+    # current web frequently is. The tif extension joins tiff for the same
+    # reason.
     EXTENSIONS = /\.(jpe?g|gif|png|tiff?|webp|avif)\z/i
 
     def initialize(config, pipeline = [])

@@ -3,9 +3,9 @@
 How to install Automatic Ruby, set up a user directory, write and verify a
 Recipe, put it in `cron`, and operate it afterwards.
 
-What the system is belongs to [`REQUIREMENTS.md`](REQUIREMENTS.md); how a Recipe
-is written belongs to [`PLUGINS.md`](PLUGINS.md). This document assumes you have
-read neither and points at them where they are needed.
+What the system is belongs to [`REQUIREMENTS.md`](REQUIREMENTS.md), and how a
+Recipe is written belongs to [`PLUGINS.md`](PLUGINS.md). This document assumes
+you have read neither and points at them where they are needed.
 
 It stands on its own. Nothing in it is completed by a document kept in another
 repository.
@@ -26,22 +26,22 @@ nothing to stop.
 
 ## Before you begin
 
-- A Unix-like system. GNU/Linux and macOS are what this is used on; Windows is
+- A Unix-like system. GNU/Linux and macOS are what this is used on. Windows is
   not supported.
 - **Ruby 3.3 through 4.0.** Check with `ruby -v`. The continuously validated
-  versions are the matrix in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml);
-  a supported version absent from that matrix is simply not checked on every
+  versions are the matrix in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
+  A supported version absent from that matrix is simply not checked on every
   commit, and a Ruby newer than the matrix is permitted rather than refused.
   See [`REQUIREMENTS.md`](REQUIREMENTS.md) section 20.
 - Optional gems for particular plugins, listed in the table under
   "Optional plugin dependencies" below. None is needed to install Automatic
-  Ruby, or to run a Recipe that does not use the plugin; a Recipe that does
+  Ruby, or to run a Recipe that does not use the plugin. A Recipe that does
   name one installs it as a step of its own, which is what the "Install what
   the Recipe needs" section of [`QUICKSTART.md`](QUICKSTART.md) demonstrates.
 - A build environment may be needed for one of those optional gems — `nokogiri`
   and `sqlite3` build a native extension where no binary package matches your
   platform. The framework's own dependencies are pure Ruby, so the normal
-  installation needs no build tools; install them only if installing an
+  installation needs no build tools. Install them only if installing an
   optional gem reports that they are required.
 
 ## Install
@@ -55,9 +55,10 @@ automatic --version
 
 That installs the framework, the `automatic` command and the runtime
 dependencies declared in `automatic.gemspec`. That gemspec is the source of
-truth for the framework's runtime dependency set. No HTML parser, no database, no service client — a gem needed by
-one plugin is installed by the operator who uses that plugin, so installing
-Automatic Ruby does not install what your Recipes do not use.
+truth for the framework's runtime dependency set. No HTML parser, no database,
+no service client — a gem needed by one plugin is installed by the operator who
+uses that plugin, so installing Automatic Ruby does not install what your
+Recipes do not use.
 
 Add one when you use the plugin that needs it:
 
@@ -72,7 +73,7 @@ which, and is the list to check before adding anything.
 ### From a checkout
 
 For working on the framework, or for running a version that is not released.
-The supported checkout setups are shown below; start with the minimal setup.
+The supported checkout setups are shown below. Start with the minimal setup.
 
 **Minimal — the framework and its test suite.** What you want for running the
 checkout, and for developing the framework itself:
@@ -104,7 +105,7 @@ That installs the gems declared in the `plugins` group of `Gemfile`, and
 their specs then run as part of the ordinary suite. The
 [Optional plugin dependencies](#optional-plugin-dependencies) table maps
 those dependencies to the plugins and tools that use them. The setting
-is written to the checkout's own `.bundle/config`, which is not committed;
+is written to the checkout's own `.bundle/config`, which is not committed.
 `bundle config unset --local with` returns the checkout to the minimum, and
 `bundle install` afterwards.
 
@@ -118,8 +119,8 @@ bundle install
 ```
 
 Several at once are space-separated: `bundle config set --local with "store
-html"`, and a Recipe using plugins from multiple groups needs exactly that. The group
-names are in the table below, and "Working out what a Recipe needs, in a
+html"`, and a Recipe using plugins from multiple groups needs exactly that. The
+group names are in the table below, and "Working out what a Recipe needs, in a
 checkout" takes one Recipe through choosing them.
 
 In a checkout, `gem install <gem>` on its own is **not** enough: the checkout
@@ -172,7 +173,7 @@ from an optional-dependency failure:
   particular feed, not the installation.
 - A `LoadError` naming a gem means a plugin's optional dependency is not
   installed. `feed2console.yml` uses none, so at this point it means the
-  installation itself; a message naming a gem and a plugin means the plugin,
+  installation itself. A message naming a gem and a plugin means the plugin,
   and "Optional plugin dependencies" below says what to install.
 
 To check the framework without any network at all, write a Recipe that uses
@@ -298,7 +299,7 @@ unattended is below.
 **The output path.** `file` is expanded, so `~` works, and a relative path is
 resolved against the process's working directory — which under `cron` is your
 home directory and is not worth relying on. Use an absolute path or a `~` path.
-A missing parent directory is created; nothing else on the path is touched, and
+A missing parent directory is created. Nothing else on the path is touched, and
 the plugin writes to no other file.
 
 **Append or overwrite.** `mode: append`, the default, adds the run's items to
@@ -321,7 +322,8 @@ mkdir -p ~/notes && chmod 700 ~/notes
 
 **Keeping the document clean.** With no `file`, the document goes to standard
 output — and so does the log ([`REQUIREMENTS.md`](REQUIREMENTS.md) section 14),
-so a redirect that collects one collects the other. Either disable log output in the Recipe or give `PublishMarkdown` a `file`:
+so a redirect that collects one collects the other. Either disable log output
+in the Recipe or give `PublishMarkdown` a `file`:
 
 ```yaml
 global:
@@ -348,8 +350,8 @@ needs somewhere else to go:
   0 7 * * *  /usr/local/bin/automatic -c $HOME/.automatic/config/feeds.yml >> $HOME/notes/feeds.md 2>>$HOME/.automatic/log/feeds.log
 ```
 
-That entry is only clean if the Recipe sets `log.level: none`; otherwise the log
-lines land in the document. Setting the level in the Recipe is the supported
+That entry is only clean if the Recipe sets `log.level: none`. Otherwise, the
+log lines land in the document. Setting the level in the Recipe is the supported
 way to do this, and the framework has no separate switch for it.
 
 **Afterwards.** The file is ordinary text: read it, `grep` it, feed it to
@@ -375,7 +377,7 @@ Rules worth holding to:
   credential in a log, that is a defect worth reporting.
 
 This is a weakness inherited from the original design rather than a decision
-made now; it is recorded in [`REQUIREMENTS.md`](REQUIREMENTS.md) section 17.
+made now. It is recorded in [`REQUIREMENTS.md`](REQUIREMENTS.md) section 17.
 
 ## Schedule it
 
@@ -430,7 +432,7 @@ global:
 - `none` — nothing.
 
 Once a Recipe is settled, `warn` keeps the log to what needs reading. Rotate the
-file yourself; the framework does not.
+file yourself, because the framework does not.
 
 ## Upgrading
 
@@ -480,10 +482,10 @@ bundle. `plugins` is every group in the first block at once.
 
 Membership of the aggregate `plugins` group is defined in `Gemfile`. It
 contains the optional gems whose corresponding specs need no external
-service; the table above maps those dependencies to their consumers. The gems below it are in their own groups
-only, because each of those plugins also needs a service, a bucket or a
-command, and installing a gem alone would not make the plugin — or its spec —
-work.
+service. The table above maps those dependencies to their consumers. The gems
+below it are in their own groups only, because each of those plugins also needs
+a service, a bucket or a command, and installing a gem alone would not make the
+plugin — or its spec — work.
 
 Both S3 rows make their requirement lazily, so `StoreFile`'s ordinary HTTP
 download path and `PublishAmazonS3` in `mode: test` work with no AWS gem
@@ -677,9 +679,9 @@ prefix runs the specs, the diagnostic subcommands and the Recipe, and typing
 **What "is not installed" means in that message.** It is the framework
 reporting that **this process could not `require` the library**, which is wider
 than "no copy of the gem exists on this machine". A gem installed by `gem
-install` but outside the checkout's bundle produces it; so does a group selected
+install` but outside the checkout's bundle produces it. So does a group selected
 but not installed, and so does an installation under a different Ruby. The gem
-name and the plugin name in the message are what to act on; whether to act with
+name and the plugin name in the message are what to act on. Whether to act with
 a group or with `gem install` is decided by where you are running from, not by
 the message.
 
@@ -723,7 +725,7 @@ development and for a checkout you are developing in.
 Naming the groups is the right setting for **running** Recipes, and is what the
 design of the split asks for: a gem is installed by the operator who uses the
 plugin that needs it, and a checkout that runs this Recipe has no reason to
-build `sanitize` or to hold `feedbag`. Start there; `plugins` is not a shortcut
+build `sanitize` or to hold `feedbag`. Start there. `plugins` is not a shortcut
 for having read the table, and a checkout that has installed everything hides
 the group a Recipe of yours will need on the next machine.
 
@@ -743,8 +745,8 @@ bundle config unset --local with
 bundle install
 ```
 
-The gems stay on the machine; what changes is that the bundle no longer includes
-them, and the plugins that need them report them as missing again.
+The gems stay on the machine. What changes is that the bundle no longer
+includes them, and the plugins that need them report them as missing again.
 
 ## Your own plugins
 
@@ -757,7 +759,7 @@ installation is the intended use.
 $EDITOR ~/.automatic/plugins/filter/my_filter.rb
 ```
 
-The class is `Automatic::Plugin::FilterMyFilter`; the contract and a worked
+The class is `Automatic::Plugin::FilterMyFilter`. The contract and a worked
 example are in [`PLUGINS.md`](PLUGINS.md) sections 3 and 4. A gem upgrade does
 not touch this directory.
 
@@ -770,12 +772,12 @@ not touch this directory.
 dependency could not be required. The message names the gem, the plugin and the
 command to install it, and the table above says the same thing. In a checkout it
 also means a gem installed outside the bundle, or a group selected but not
-installed; "Why `bundle exec`, and why `gem install` is not enough here" above
+installed. "Why `bundle exec`, and why `gem install` is not enough here" above
 tells the cases apart.
 
 **`Automatic::NoPluginError: unknown plugin named ...`** — a Recipe names a
 plugin that does not ship. Check the spelling against
-[`PLUGINS.md`](PLUGINS.md) section 6; if the name is in section 8, the plugin
+[`PLUGINS.md`](PLUGINS.md) section 6. If the name is in section 8, the plugin
 was removed because the service behind it no longer exists, and the Recipe
 needs a different last step rather than a reinstall. Nothing has run when this
 is raised.
@@ -789,7 +791,7 @@ file in the wrong category directory is never found.
 `~/.automatic/config` only. Use a path with a `/` in it for anything else.
 
 **The run stops partway** — a plugin raised, and the framework does not catch
-plugin exceptions. Everything before it has already happened; there is no
+plugin exceptions. Everything before it has already happened, and there is no
 rollback. Rerun after fixing the cause. If the plugins after the failure must
 not repeat their effect, that is what a store plugin in front of them is for.
 

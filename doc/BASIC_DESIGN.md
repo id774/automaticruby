@@ -9,8 +9,8 @@ travels through a run.
 What the system is for belongs to [`REQUIREMENTS.md`](REQUIREMENTS.md). The
 rules a change is held to belong to [`POLICY.md`](POLICY.md). The two public
 contracts — the Recipe format and the plugin interface — are specified in
-[`PLUGINS.md`](PLUGINS.md); this document explains the machinery that implements
-them and does not restate them.
+[`PLUGINS.md`](PLUGINS.md). This document explains the machinery that
+implements them and does not restate them.
 
 It stands on its own. Nothing in it is completed by a document kept in another
 repository.
@@ -36,7 +36,7 @@ equally permanent.
   requires its own libraries, at the top of its own file, so that an absent gem
   is an error only for a Recipe that asked for that plugin.
 - **The library never exits and never prints.** Exit status is decided by the
-  entry point; user-facing text is written by the entry point or logged.
+  entry point, and user-facing text is written by the entry point or logged.
 
 Maintenance strength follows the architectural layer:
 
@@ -183,8 +183,8 @@ Turns a Recipe file into an object the pipeline can iterate.
 - Parses the YAML **safely** — the document may contain only the plain types a
   Recipe needs, so a Recipe cannot name a Ruby class to instantiate. Aliases are
   permitted, because they are a legitimate way to share a block of settings
-  between plugins. This is a second line of defence, not the trust boundary; see
-  [`REQUIREMENTS.md`](REQUIREMENTS.md) section 17.
+  between plugins. This is a second line of defence, not the trust boundary.
+  See [`REQUIREMENTS.md`](REQUIREMENTS.md) section 17.
 - Wraps the result in `Hashie::Mash`, which is why a plugin entry answers to
   `plugin.module` and `plugin.config`, and why an absent setting reads as `nil`
   rather than raising.
@@ -242,7 +242,7 @@ A `Logger` on standard output behind a level filter.
 - `Log.level(name)` sets the threshold, from `global.log.level`.
 - `Log.puts(level, message)` emits when `level` is at least the threshold.
 - Levels are `info`, `warn`, `error`, `none`, compared by their position in that
-  list; `none` is the threshold that admits nothing.
+  list. `none` is the threshold that admits nothing.
 - Both a `String` and a `Symbol` are accepted for a level, because plugins have
   always passed both, and an unknown level is treated as `info` rather than
   raising in the middle of an unattended run.
@@ -271,7 +271,7 @@ value has the shape it has.
 
 - `Http.read(url)` fetches a URL and returns the body and `Http.open(url)`
   yields the stream, for a caller — an HTML parser, which detects a page's
-  encoding for itself — that would rather not be handed a decoded string;
+  encoding for itself — that would rather not be handed a decoded string.
   `Http.uri(url)` returns a validated URI and `Http.fetchable?(url)` answers
   whether there is one.
 
@@ -288,7 +288,7 @@ article.
 
 Every plugin is a class in `Automatic::Plugin`, constructed with `(config,
 pipeline)` and answering `run`. The contract is specified in
-[`PLUGINS.md`](PLUGINS.md) section 3; what matters to this document is how the
+[`PLUGINS.md`](PLUGINS.md) section 3. What matters to this document is how the
 categories divide responsibility:
 
 | Category | Directory | Receives | Returns | Role |
@@ -307,7 +307,7 @@ that a `Filter` does not reach the network.
 
 Replaceability is part of this boundary. A plugin is not given the same
 permanence as the Recipe format or the plugin contract itself. The framework
-preserves the rules that let plugins compose; it does not preserve a plugin
+preserves the rules that let plugins compose. It does not preserve a plugin
 whose external purpose has disappeared, and it does not move a plugin's domain
 behaviour into the core merely to make that behaviour permanent.
 
@@ -337,7 +337,7 @@ or to a file. What matters to this document is where it is *not*:
   framework file mentions the format. A reference to it in `lib/` would be the
   same design error as a reference to any other plugin (section 3).
 - **Not a second pipeline value.** Markdown is produced *from* the pipeline at
-  the moment the pipeline ends; it is never passed along one. The plugin returns
+  the moment the pipeline ends. It is never passed along one. The plugin returns
   its input, so a plugin placed after it receives exactly what it would have
   received without it, and Invariant 2 of [`POLICY.md`](POLICY.md) is untouched.
 - **Not implicit.** Nothing appends it to a Recipe. `Pipeline.run` runs the
@@ -519,8 +519,9 @@ be the framework acquiring a plugin's problem. It is resolved where the choice
 already exists — in the Recipe:
 
 - `global.log.level: none` silences the log for that run, leaving standard
-  output carrying the document alone;
-- or the plugin writes to a file it is given, and the log keeps standard output.
+  output carrying the document alone.
+- Alternatively, the plugin writes to a file it is given, and the log keeps
+  standard output.
 
 Both are stated in [`PLUGINS.md`](PLUGINS.md) section 6.7 and in
 [`DEPLOYMENT.md`](DEPLOYMENT.md), which is where an operator looks.

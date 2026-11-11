@@ -14,7 +14,7 @@ require 'publish/amazon_s3'
 require 'tmpdir'
 
 # PublishAmazonS3 needs an S3 bucket and the aws-sdk-s3 gem, which is an
-# optional dependency in its own Gemfile group; doc/PLUGINS.md section 6.7
+# optional dependency in its own Gemfile group. doc/PLUGINS.md section 6.7
 # classifies it as Supported (external). What is verified here is everything
 # on this side of the bucket -- which items it selects, the key it computes,
 # what `mode: test` does -- and none of it needs the gem, the account or the

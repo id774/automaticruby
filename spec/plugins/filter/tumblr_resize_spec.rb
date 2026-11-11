@@ -112,7 +112,7 @@ describe Automatic::Plugin::FilterTumblrResize do
 end
 
 # Tumblr has served images under two URL schemes. The size suffix above is the
-# older one, which images uploaded before 2019 still carry; everything since
+# older one, which images uploaded before 2019 still carry. Everything since
 # carries the size as a path segment, and the plugin rewrites that as well.
 describe Automatic::Plugin::FilterTumblrResize do
   context "with the current media.tumblr.com URL scheme" do

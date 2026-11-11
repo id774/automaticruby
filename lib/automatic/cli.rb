@@ -109,7 +109,7 @@ module Automatic
     # the message rather than in a backtrace. A LoadError raised from inside a
     # plugin's own load -- for a different, unrelated missing file -- is not
     # this, and is left alone along with everything else the plugin itself
-    # raises; see doc/PLUGINS.md section 2.7.
+    # raises. See doc/PLUGINS.md section 2.7.
     def run_recipe(path)
       unless File.exist?(resolve_recipe(path))
         @stderr.puts "automatic: no such recipe: #{path}"
@@ -213,7 +213,7 @@ module Automatic
     end
 
     # Converts only the URL validation failure `Automatic::Http.uri` already
-    # applies into the CLI's ordinary failure path; an unexpected error from
+    # applies into the CLI's ordinary failure path. An unexpected error from
     # inside FeedParser itself is left to propagate.
     def validate_fetch_url(url)
       Automatic::Http.uri(url)

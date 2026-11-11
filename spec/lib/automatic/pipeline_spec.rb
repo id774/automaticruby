@@ -49,7 +49,7 @@ describe Automatic::Pipeline do
 
       # Every module a Recipe names is discovered before any plugin runs, so
       # that an unknown module later on is refused before an earlier plugin's
-      # side effect, not after it; doc/PLUGINS.md documents unknown plugin as
+      # side effect, not after it. doc/PLUGINS.md documents unknown plugin as
       # refused before any plugin runs, wherever in the Recipe it is.
       it "refuses an unknown module before running a plugin that precedes it" do
         good = double("plugin", :module => "FilterIgnore")
@@ -123,7 +123,7 @@ describe Automatic::Pipeline do
     end
 
     # FilterLoadMarker (spec/user_dir/plugins/filter/load_marker.rb) has no
-    # behaviour of its own; it exists only to be discoverable, so that its
+    # behaviour of its own. It exists only to be discoverable, so that its
     # presence in $LOADED_FEATURES tells these two examples whether its file
     # was actually read, as distinct from merely registered for autoload.
     # Referencing Automatic::Plugin::FilterLoadMarker directly would load it

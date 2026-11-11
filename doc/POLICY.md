@@ -9,10 +9,10 @@ It stands on its own. No rule here is completed by a document kept in another
 repository, and a subject it does not cover is a gap in this document, to be
 filled here rather than looked up elsewhere.
 
-What the system is for belongs to [`REQUIREMENTS.md`](REQUIREMENTS.md); how it
-is composed belongs to [`BASIC_DESIGN.md`](BASIC_DESIGN.md); the Recipe format
+What the system is for belongs to [`REQUIREMENTS.md`](REQUIREMENTS.md). How it
+is composed belongs to [`BASIC_DESIGN.md`](BASIC_DESIGN.md). The Recipe format
 and the plugin contract belong to [`PLUGINS.md`](PLUGINS.md). This document does
-not restate them; it decides how they are carried out.
+not restate them. It decides how they are carried out.
 
 The Invariants below decide over the rest of it.
 
@@ -24,7 +24,7 @@ The Invariants below decide over the rest of it.
 
 This principle governs the following implementation and maintenance rules. It
 does not permit dropping required behavior, security, compatibility, or
-validation; satisfy those obligations without unnecessary complexity.
+validation. Satisfy those obligations without unnecessary complexity.
 
 ## 1. General Policy
 
@@ -134,8 +134,8 @@ degree of conservatism.
   where doing so would defeat the repository's stated purpose, intended
   behavior, compatibility, safety, or approved change scope. Where the
   applicable specifications and policy leave a legitimate choice open, an
-  explicit maintainer decision governs that choice; general conventions do not
-  override it.
+  explicit maintainer decision governs that choice, and general conventions do
+  not override it.
 
 ### 1.4 Change discipline and maintenance boundary
 
@@ -159,7 +159,7 @@ Safety mechanisms are means, not goals. A guard, validation layer, sandbox,
 permission model, retry layer or other defensive mechanism is justified by the
 risk it materially reduces and by whether that benefit outweighs added
 complexity, new failure modes and maintenance cost. This project is trusted
-single-user tooling; controls appropriate to an untrusted multi-user service
+single-user tooling. Controls appropriate to an untrusted multi-user service
 are not added merely because they are generally considered safer.
 
 Long-running operational history is evidence, especially for Recipe semantics,
@@ -196,9 +196,9 @@ Dependency points one way and there is no edge back up:
 - **`bin/automatic` knows only the CLI.** It puts `lib` on the load path,
   requires `automatic/cli`, and exits with the status it is given. No option, no
   subcommand and no policy lives there.
-- **The CLI knows the framework; the framework does not know the CLI.** Nothing
-  under `lib/automatic/` other than `cli.rb` may reference it.
-- **`Pipeline` knows how to find and call a plugin; it knows no plugin.** A
+- **The CLI knows the framework, but the framework does not know the CLI.**
+  Nothing under `lib/automatic/` other than `cli.rb` may reference it.
+- **`Pipeline` knows how to find and call a plugin, but it knows no plugin.** A
   reference to a plugin class name in the framework is a design error.
 - **A plugin knows `Log`, `FeedMaker`, `FeedParser`, `Http` and its own
   libraries.** It does not know another plugin, does not know the CLI, and does
@@ -241,7 +241,7 @@ Dependency points one way and there is no edge back up:
   the mapping and for any key, and follows the established names: `retry`,
   `interval`, `db`, `path`.
 - Not every constant becomes a setting. A value the operator would plausibly
-  change is a setting; a value that is part of what the plugin means stays in
+  change is a setting. A value that is part of what the plugin means stays in
   the code.
 
 ### 1.8 Error handling
@@ -281,8 +281,8 @@ Dependency points one way and there is no edge back up:
 - A plugin whose purpose is to write to the terminal holds its output object in
   an instance variable defaulting to `$stdout`, so that a test can substitute it.
 - `info` records useful normal progress. `warn` is reserved for a degraded or
-  otherwise abnormal but recoverable condition the operator should know about;
-  a normal guard, no-op, or inapplicable path may be silent and is not a warning
+  otherwise abnormal but recoverable condition the operator should know about.
+  A normal guard, no-op, or inapplicable path may be silent and is not a warning
   merely because work was skipped. `error` says what failed. An error that was
   rescued is logged at `warn` or `error`, never at `info`.
 - Do not emit a line merely to prove that a normal branch was taken, and do not
@@ -302,7 +302,7 @@ Dependency points one way and there is no edge back up:
   Recipes, databases and assets alike. Where a part of it is absent, the
   installation's own directory is the fallback.
 - `scaffold` creates and never overwrites. `unscaffold` removes the whole user
-  directory and is the one destructive operation the framework offers; it is not
+  directory and is the one destructive operation the framework offers. It is not
   extended, and nothing else acquires the ability to delete an operator's data.
 - A plugin writes only where its settings tell it to.
 
@@ -336,7 +336,7 @@ Dependency points one way and there is no edge back up:
 - Even so, YAML is loaded safely, so that a Recipe cannot name a Ruby class to
   instantiate. This costs nothing, since no Recipe needs it, and it removes a
   second and avoidable path to code execution. **Do not present this as making
-  an untrusted Recipe safe**; the loader is not the boundary.
+  an untrusted Recipe safe.** The loader is not the boundary.
 - Credentials are Recipe settings. That makes a Recipe holding them a secret
   file, which the documentation says plainly rather than glossing over.
 - No credential in the repository: not in an example Recipe, not in a fixture,
@@ -373,7 +373,7 @@ coordinated changes across several files or responsibilities. Do not split one
 approved purpose mechanically by individual finding, file, or review comment,
 and do not include unrelated cleanup, formatting, or feature work. Represent
 one coherent change as one commit and amend review corrections instead of
-accumulating follow-up commits; use `--force-with-lease` only on the branch
+accumulating follow-up commits. Use `--force-with-lease` only on the branch
 under review when a safe history rewrite is required. Check the final branch
 against its base to remove abandoned intermediate wording and work. Merge only
 with explicit maintainer approval.
@@ -400,7 +400,7 @@ makes a diff harder to read than the style saves.
   SNAKE_CASE` for constants.
 - Braces for blocks are the established idiom here, including multi-line blocks,
   and were chosen to avoid stacked `end`s. Existing code is left as it is. New
-  code may use either; matching the surrounding file matters more than the
+  code may use either, and matching the surrounding file matters more than the
   choice.
 - Lines around 100 columns. Not enforced, and not a reason to reformat.
 - Prefer a guard clause to a wrapping `unless`, in new code.
@@ -449,7 +449,7 @@ appear in the order shown below. An executable uses this canonical form:
   plugins and specs omit the shebang and otherwise use the same form.
 - `Name` is the fully qualified name of what the file defines.
 - `Author` records the author or authors established by the file and its Git
-  history. The former name `774` is normalized to `id774`; third-party authors
+  history. The former name `774` is normalized to `id774`. Third-party authors
   are never removed or replaced, and multiple authors retain their recorded
   order. Names and URLs are not inferred when the history does not provide them.
 - The labels are exactly `Name::`, `Author:`, `Source Code::`, `License::`,
@@ -469,13 +469,13 @@ appear in the order shown below. An executable uses this canonical form:
   no benefit, and it is not required in a new file.
 
 Files do not carry a per-file version history. This repository versions at the
-repository level only; see section 10.
+repository level only. See section 10.
 
 ### 2.4 Ruby version compatibility
 
 - The supported range is stated in one place, `automatic.gemspec`
   (`required_ruby_version`), and the README and the documents agree with it. The
-  set CI validates is a narrower statement and lives in the matrix; section 11
+  set CI validates is a narrower statement and lives in the matrix. Section 11
   says how the two relate.
 - **Compatibility is written in the range's common API.** Where a Ruby release
   deprecates or removes something, the replacement chosen is the one that works
@@ -534,7 +534,7 @@ repository level only; see section 10.
 - A new plugin is added to the catalogue in `PLUGINS.md` section 6 in the same
   change, with its settings table and its status.
 - A new plugin comes with a spec that reaches no network.
-- A plugin's dependency is not added to the gemspec's runtime dependencies; see
+- A plugin's dependency is not added to the gemspec's runtime dependencies. See
   section 9.
 - A change to an existing plugin does not change what an existing Recipe means
   unless that is the point of the change.
@@ -550,7 +550,7 @@ Plugins outlive the services they talk to. The policy for what happens then:
   met once. Having been useful is not the test.
 - **A plugin is classified, in `PLUGINS.md` section 6**, as Supported, Supported
   (external) or Needs rework, with the reason. There is no status meaning
-  "does not work and never will"; a plugin in that position is removed.
+  "does not work and never will". A plugin in that position is removed.
 - **A dead integration is never faked into life.** No stub of a shut-down
   service, no mock that makes an integration look alive, no test that asserts
   against a simulation. This is Invariant 8 and it has no exceptions. If a
@@ -570,7 +570,7 @@ Plugins outlive the services they talk to. The policy for what happens then:
 - **Needs rework means restoration is realistic.** A capability the service
   still offers, reachable by a current API, with the work amounting to a
   migration rather than a new project. A plugin whose service is gone is not
-  Needs rework; it is removed.
+  Needs rework. It is removed.
 - **Restoring a plugin to a service's current API** is a separate change, one
   plugin at a time, with the catalogue entry updated in the same commit. Where
   the current API forces a credential format the old Recipe cannot express,
@@ -579,14 +579,14 @@ Plugins outlive the services they talk to. The policy for what happens then:
 - **Removing a plugin removes all of it**: implementation, specs, example and
   integration Recipes, catalogue entry, and any optional dependency nothing
   else needs. A class left behind to raise "this no longer works" is not a
-  courtesy; the loader's `NoPluginError` says the same thing earlier and
+  courtesy. The loader's `NoPluginError` says the same thing earlier and
   without shipping code.
 - **A removal is recorded in `VERSIONS`** in enough detail that an operator
   whose Recipe breaks can find out why, and the reasons are kept in
   `PLUGINS.md`. Removals are batched into a release rather than trickled, so
   that an upgrade has one list to read.
 - **A modernized plugin keeps its Recipe's meaning.** Class names, setting
-  names and defaults are not changed for tidiness; where a fix makes a plugin
+  names and defaults are not changed for tidiness. Where a fix makes a plugin
   behave as its documentation always said it did, that is still a behaviour
   change and the catalogue entry says so.
 - **A Supported plugin has deterministic local tests.** They cover this side of
@@ -602,7 +602,7 @@ Plugins outlive the services they talk to. The policy for what happens then:
 - **RSpec**, under `spec/`, mirroring the source tree: `spec/lib/` for the
   framework and `spec/plugins/<category>/` for plugins.
 - **The default suite reaches no network and needs no credential.** This is
-  Invariant 7. A spec that would is not written; the integration Recipes under
+  Invariant 7. A spec that would is not written. The integration Recipes under
   `test/integration/` are where that belongs, and they are run by hand.
 - A framework spec covers the loader, the Recipe, the pipeline, the log and the
   CLI's exit statuses.
@@ -613,7 +613,7 @@ Plugins outlive the services they talk to. The policy for what happens then:
   is the way to check a plugin against the service it talks to, and it is run
   deliberately with `AUTOMATIC_NETWORK_SPECS=1`. Several of these point at hosts
   that no longer serve what they expect, which is a further reason not to make
-  them a gate. A new example that reaches a host is tagged; one that does not is
+  them a gate. A new example that reaches a host is tagged. One that does not is
   never given the tag to make a failure go away.
 - **The default suite does not depend on an optional plugin gem.** A gem the
   `Gemfile` declares in an optional group is not installed by `bundle install`,
@@ -626,7 +626,7 @@ Plugins outlive the services they talk to. The policy for what happens then:
   `bundle config set --local with plugins` and installing runs those specs as
   part of the ordinary suite.
 - **A guard is a skip with a reason, not a `pending`.** A spec outside the
-  default suite prints why it is outside it and does not run; the default
+  default suite prints why it is outside it and does not run. The default
   suite's output is a list of what was verified rather than a list of what was
   not.
 - A spec whose plugin's gem is not installed is skipped by
@@ -645,10 +645,10 @@ Plugins outlive the services they talk to. The policy for what happens then:
   temporary directory rather than operating on the developer's real
   `~/.automatic`.
 - Coverage is measured with SimpleCov when `COVERAGE=on`, and is not a gate. The
-  historical `rcov` and `simplecov-rcov` tooling has been removed; it existed
+  historical `rcov` and `simplecov-rcov` tooling has been removed. It existed
   for Ruby 1.8 and for a CI server that no longer runs.
-- `rake spec` runs the suite; `rake spec:lib` and `rake spec:plugins` run the
-  halves. `rake` alone runs `spec`.
+- `rake spec` runs the suite, and `rake spec:lib` and `rake spec:plugins` run
+  the halves. `rake` alone runs `spec`.
 - CI runs `bundle install` and `rake spec` on every supported Ruby version, and
   nothing that needs a secret.
 
@@ -664,10 +664,11 @@ Plugins outlive the services they talk to. The policy for what happens then:
   failed or nothing was asked for, `2` the command line was rejected.
 - `--help` and `--version` exit `0` and print to standard output.
 - Option parsing uses `optparse` from the standard library. **No CLI framework
-  is introduced**; the interface is one option and seven subcommands, and a gem
+  is introduced.** The interface is one option and seven subcommands, and a gem
   for that would be a dependency for nothing.
 - The subcommands and the meaning of `-c` are part of the compatibility promise.
-  Adding a subcommand is fine; removing or renaming one is a breaking change.
+  Adding a subcommand is fine, but removing or renaming one is a breaking
+  change.
 - A subcommand prints its result to standard output, because printing is what it
   is for.
 
@@ -721,9 +722,9 @@ behaviour breaks nothing.
 - **Documents are in English**, as are code, comments and commit messages.
   Japanese appears only where it is data: a search keyword in an example, a
   broadcast station name in a plugin's settings.
-- Markdown documents may assume a renderer. `VERSIONS`, `COPYING`, `COPYING.LESSER` and `AUTHORS`
-  are plain text and keep their extensionless names, which are the names they
-  are published and linked under.
+- Markdown documents may assume a renderer. `VERSIONS`, `COPYING`,
+  `COPYING.LESSER` and `AUTHORS` are plain text and keep their extensionless
+  names, which are the names they are published and linked under.
 - Prose wraps near the width the document already uses. `VERSIONS` follows
   section 10.4 instead.
 - **A document is not deleted for being old.** It is deleted when its content
@@ -736,8 +737,8 @@ behaviour breaks nothing.
 
 ### 9.1 The split
 
-Install the core by default; install a plugin's dependencies only when they are
-needed. Dependencies fall into three groups, and which group a gem is in is a
+Install the core by default, and install a plugin's dependencies only when they
+are needed. Dependencies fall into three groups, and which group a gem is in is a
 decision, not an accident:
 
 **Runtime dependencies** — declared in `automatic.gemspec`, installed by `gem
@@ -763,14 +764,14 @@ The permanent rules of the split:
 
 - **A core dependency is one the framework itself has.** A plugin's dependency
   is never a framework runtime dependency, however useful, popular or
-  Supported that plugin is. How many Recipes happen to use it is not the test;
-  what `lib/` requires is.
+  Supported that plugin is. How many Recipes happen to use it is not the test.
+  What `lib/` requires is.
 - **The operator who uses the plugin installs its gem.** Not having it must
   never stop the framework from starting, and a Recipe that does not name the
   plugin must run without it.
 - **A new plugin does not increase the core dependencies.** Adding one to the
   runtime list needs an architectural justification — the framework itself
-  came to need the gem — recorded with the change; wanting the plugin to work
+  came to need the gem — recorded with the change. Wanting the plugin to work
   out of the box is not one.
 - **The default tests and required CI do not depend on an optional
   integration.** Being in this group has that intended consequence: those
@@ -798,7 +799,7 @@ manager, plugin manifest or resolver is introduced beyond it.
   not been checked against.
 - A gem no longer used by anything committed here is removed.
 - A gem whose service no longer exists is removed, along with the plugin that
-  needed it; see section 4. An optional group left with nothing to install is
+  needed it. See section 4. An optional group left with nothing to install is
   deleted from the `Gemfile` in the same change.
 - **Nothing is vendored.** Dependencies come from RubyGems, which keeps their
   licences theirs.
@@ -815,8 +816,8 @@ manager, plugin manifest or resolver is introduced beyond it.
 
 - The gemspec is **hand-maintained**. It was generated by Jeweler, which is no
   longer maintained and which required its own Rake tasks and a `VERSION` file
-  to regenerate a file that is easier to simply edit. The generator is gone; the
-  file is now source.
+  to regenerate a file that is easier to simply edit. The generator is gone, and
+  the file is now source.
 - The gemspec states `required_ruby_version`, the licence, the homepage, the
   source code URL and the metadata links, and its `files` list is derived from
   what Git tracks so that it cannot drift.
@@ -892,7 +893,7 @@ agree rather than asserting a literal.
   separate commits, pull requests, independent features, bug fixes, security
   fixes, compatibility changes, breaking changes, or release units do not
   permit a second version number on the same calendar date. A same-date change
-  joins that day's single entry; independence decides bullet grouping only.
+  joins that day's single entry. Independence decides bullet grouping only.
 - **If today's release has already been published, a correction may be
   prepared but no second version, tag or package release may be published
   until a later calendar date.** A published version is never overwritten,
@@ -962,7 +963,7 @@ the version history records what it amounts to.
   wording, not to renumber them, and not to make them consistent with this
   document's current rules. They are the record of what was released.
 - The release history was previously kept in `doc/ChangeLog`. It has been moved
-  into `doc/VERSIONS` in full, and `doc/ChangeLog` is gone; the two documents
+  into `doc/VERSIONS` in full, and `doc/ChangeLog` is gone. The two documents
   had the same responsibility and keeping both meant keeping two records that
   would diverge. No entry and no date was changed in the move.
 - Where the record is incomplete — releases with no tag, or a version bumped
@@ -972,7 +973,7 @@ the version history records what it amounts to.
 
 ## 11. Continuous integration
 
-- CI runs on GitHub Actions. `.github/workflows/ci.yml` is the required check;
+- CI runs on GitHub Actions. `.github/workflows/ci.yml` is the required check.
   `.github/workflows/plugins.yml` is a separate, non-required workflow that
   installs the optional `plugins` group and runs the same suite, so that the
   documented all-plugins setup is checked as well as described.
@@ -993,13 +994,14 @@ the version history records what it amounts to.
   dependency is a condition of the check that gates a change. The minimal
   configuration is what it runs, which is what keeps the split of section 9.1
   honest over time. Where an optional integration is worth testing at all, it is
-  tested separately from the required workflow; section 5 says how.
+  tested separately from the required workflow. Section 5 says how.
 - **A non-required workflow is held to the same standard as the required one.**
   It is separate so that an optional dependency cannot gate a change, not so
   that it may fail quietly.
 - **A failure is fixed, not silenced.** `|| true`, `continue-on-error` and a
   step that hides its exit status are not how a build is made green. Narrowing
-  what is guaranteed is a legitimate answer; pretending to guarantee it is not.
+  what is guaranteed is a legitimate answer, but pretending to guarantee it is
+  not.
 - The Jenkins instance the project used until 2015 is gone. References to it
   have been removed and are not to be reintroduced.
 - A red build is fixed or reverted. It is not left red.

@@ -2,7 +2,7 @@
 
 This is the maintainer runbook for building and publishing the `automatic` gem.
 It describes a manual release. Building and inspecting a gem does not publish
-it; `gem push` does, and must be run only for an explicitly approved release.
+it. `gem push` does, and must be run only for an explicitly approved release.
 
 The governing principles are:
 
@@ -19,11 +19,11 @@ directly from the gemspec.
 
 The releaser needs:
 
-- a supported Ruby, currently Ruby 3.3 through 4.0;
-- current Bundler and RubyGems versions compatible with that Ruby;
-- write access to the source repository and permission to create and push tags;
-- ownership of `automatic` on RubyGems.org, or an API key with push permission;
-- access to the RubyGems.org account and its required MFA method.
+- A supported Ruby, currently Ruby 3.3 through 4.0.
+- Current Bundler and RubyGems versions compatible with that Ruby.
+- Write access to the source repository and permission to create and push tags.
+- Ownership of `automatic` on RubyGems.org, or an API key with push permission.
+- Access to the RubyGems.org account and its required MFA method.
 
 Check the local tools before changing release metadata:
 
@@ -33,15 +33,16 @@ gem --version
 bundle --version
 ```
 
-The release Ruby need not reproduce the complete CI matrix locally. Required GitHub Actions checks must be green for every Ruby version in the
-current matrix of [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
-before publication.
+The release Ruby need not reproduce the complete CI matrix locally. Required
+GitHub Actions checks must be green for every Ruby version in the current
+matrix of [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) before
+publication.
 
 ## 2. Authentication and credentials
 
 RubyGems authenticates publishing operations with an API key. Confirm the
-account is an owner of the package before release; gem ownership grants the
-ability to push versions and yank releases. Use the least privilege needed for
+account is an owner of the package before release, because gem ownership grants
+the ability to push versions and yank releases. Use the least privilege needed for
 the release and follow the current RubyGems.org account and API-key guidance.
 
 The standard RubyGems sign-in command stores a key in the RubyGems credentials
@@ -51,7 +52,7 @@ file:
 gem signin
 ```
 
-RubyGems commonly uses `~/.gem/credentials`; with the XDG directory layout it
+RubyGems commonly uses `~/.gem/credentials`. With the XDG directory layout it
 may report another user-specific path. Use the path reported by the installed
 RubyGems. The file contains secrets and must be readable and writable only by
 its owner:
@@ -90,12 +91,12 @@ X.YY.PATCH  correction to an earlier release in the same month
 calendar date as that release. A versioned unit has one version number per
 calendar date, without exception.
 
-Section 10 of `POLICY.md` is authoritative. A release updates these release-metadata sources together in one
-release-metadata commit:
+Section 10 of `POLICY.md` is authoritative. A release updates these
+release-metadata sources together in one release-metadata commit:
 
-- `VERSION` contains the package version;
-- `lib/automatic/version.rb` defines `Automatic::VERSION` for the CLI;
-- the current heading in `doc/VERSIONS` contains the same version.
+- `VERSION` contains the package version.
+- `lib/automatic/version.rb` defines `Automatic::VERSION` for the CLI.
+- The current heading in `doc/VERSIONS` contains the same version.
 
 `automatic.gemspec` does not contain another version literal. It reads and
 strips the repository-root `VERSION` file. Confirm all three values agree:
@@ -141,7 +142,7 @@ gem build automatic.gemspec
 ```
 
 This creates `automatic-X.Y.Z.gem` in the current directory. Here and below,
-`X.Y.Z` means the exact value in `VERSION`; the project version may have two or
+`X.Y.Z` means the exact value in `VERSION`. The project version may have two or
 three components. The generated archive is ignored by Git and is not source.
 Never commit it.
 
@@ -171,21 +172,21 @@ find "$inspect_dir/automatic-$version" -type f | sort
 
 Confirm that the package contains, at minimum:
 
-- `lib/` and `lib/automatic/version.rb`;
-- `bin/automatic`, recorded as the `automatic` executable;
-- the maintained files under `plugins/`;
-- the shipped configuration and assets;
-- maintained documentation, including `README.md` and `doc/RELEASING.md`;
-- `doc/LICENSE.md`, `doc/COPYING` and `doc/COPYING.LESSER`;
+- `lib/` and `lib/automatic/version.rb`.
+- `bin/automatic`, recorded as the `automatic` executable.
+- The maintained files under `plugins/`.
+- The shipped configuration and assets.
+- Maintained documentation, including `README.md` and `doc/RELEASING.md`.
+- `doc/LICENSE.md`, `doc/COPYING` and `doc/COPYING.LESSER`.
 - `VERSION` and `automatic.gemspec`.
 
 Confirm that it does not contain:
 
-- a generated `.gem` archive or `pkg/` output;
-- `.git`, `.github`, `.bundle`, `Gemfile.lock` or local Bundler directories;
-- `Gemfile`, `Rakefile`, `script/`, `spec/`, `test/` or `vendor/`;
-- credentials, databases, editor files, temporary files or coverage output;
-- documents deleted or superseded in the maintained source tree.
+- A generated `.gem` archive or `pkg/` output.
+- `.git`, `.github`, `.bundle`, `Gemfile.lock` or local Bundler directories.
+- `Gemfile`, `Rakefile`, `script/`, `spec/`, `test/` or `vendor/`.
+- Credentials, databases, editor files, temporary files or coverage output.
+- Documents deleted or superseded in the maintained source tree.
 
 The gemspec deliberately derives its list from files visible to Git, then
 filters development and generated paths. Inspect every release archive anyway:
@@ -209,15 +210,15 @@ gem specification "$package" dependencies
 
 Confirm that:
 
-- the name is `automatic` and the version equals `VERSION`;
-- the summary and homepage describe this project;
-- `source_code_uri` is the Automatic Ruby repository;
-- the required Ruby version matches `automatic.gemspec`;
-- licenses contain both `GPL-3.0-only` and `LGPL-3.0-only`;
-- the authors are correct;
-- runtime and development dependencies match `automatic.gemspec`, and the
+- The name is `automatic` and the version equals `VERSION`.
+- The summary and homepage describe this project.
+- `source_code_uri` is the Automatic Ruby repository.
+- The required Ruby version matches `automatic.gemspec`.
+- Licenses contain both `GPL-3.0-only` and `LGPL-3.0-only`.
+- The authors are correct.
+- Runtime and development dependencies match `automatic.gemspec`, and the
   runtime ones are the framework's own — no gem that belongs to a plugin has
-  found its way in ([`POLICY.md`](POLICY.md) section 9.1);
+  found its way in ([`POLICY.md`](POLICY.md) section 9.1).
 - `rubygems_mfa_required` is `true`.
 
 ## 8. Test an isolated local installation
@@ -279,13 +280,13 @@ The tag identifies the source used to build the gem. Do not move or force-update
 a release tag after publication. If the tag is wrong before publication, stop
 and correct it openly. If publication has happened, preserve the source history
 and prepare the correction in a new commit. Publish the correction under a new
-version only on a later calendar date; do not create or publish a second
+version only on a later calendar date. Do not create or publish a second
 version on the same date.
 
 The repository has no established requirement for a GitHub Release separate
 from its Git tag. If maintainers create one, create it from the same immutable
 tag and use the finalized `doc/VERSIONS` entry as its notes. The tag records the
-source; the RubyGems version records the published package. Neither replaces
+source, and the RubyGems version records the published package. Neither replaces
 the other.
 
 ## 10. Publish to RubyGems.org
@@ -332,7 +333,7 @@ The installed version must equal the tag, `VERSION`, `Automatic::VERSION`, the
 
 ## 12. Publication failures and corrections
 
-Stop on an error and diagnose it; do not bypass RubyGems security controls.
+Stop on an error and diagnose it. Do not bypass RubyGems security controls.
 
 - **Authentication failure:** run `gem signin` for the correct account, check
   the credentials path and permissions, and verify that the key is active and
@@ -342,8 +343,9 @@ Stop on an error and diagnose it; do not bypass RubyGems security controls.
 - **Ownership failure:** have an existing owner grant the intended account
   ownership or an appropriately scoped key. Do not publish under another name.
 - **Version already exists:** do not attempt to overwrite it. Determine whether
-  it was already published correctly; otherwise fix the source, increment the
-  version according to `POLICY.md`, rebuild and repeat every verification step.
+  it was already published correctly. If it was not, fix the source, increment
+  the version according to `POLICY.md`, rebuild and repeat every verification
+  step.
   The incremented version is published on a later calendar date than the
   existing one, never on the same date.
 - **Malformed metadata or rejected gem:** fix the gemspec and release metadata,

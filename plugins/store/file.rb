@@ -14,7 +14,7 @@ require 'uri'
 module Automatic::Plugin
   class StoreFile
     # A link with either scheme is fetched from S3 rather than over HTTP.
-    # `s3n` is what Recipes written for this plugin use; `s3` is the spelling
+    # `s3n` is what Recipes written for this plugin use. `s3` is the spelling
     # everything else uses and is accepted as well.
     S3_SCHEMES = %w[s3 s3n].freeze
 

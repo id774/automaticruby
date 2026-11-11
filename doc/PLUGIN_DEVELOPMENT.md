@@ -62,7 +62,7 @@ from `FilterTitlePrefix` and loads it from the user plugin directory.
 - Put the class in `Automatic::Plugin`.
 - Choose one existing category: `Subscription`, `CustomFeed`, `Filter`, `Store`,
   `Provide`, `Notify` or `Publish`.
-- Accept `(config, pipeline)` in `initialize`; tolerate a missing config.
+- Accept `(config, pipeline)` in `initialize`, and tolerate a missing config.
 - Read config by string key, because it comes from YAML.
 - Implement `run` and return the shared pipeline value.
 - Use `Automatic::Log.puts('info', 'message')` for useful operational events.

@@ -9,7 +9,7 @@
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # The suite reaches no network and needs no credential. That is a rule, not a
-# coincidence; see doc/POLICY.md section 5.
+# coincidence. See doc/POLICY.md section 5.
 
 APP_ROOT = File.expand_path('..', __dir__)
 
@@ -44,7 +44,7 @@ Dir[File.join(__dir__, 'support', '**', '*.rb')].sort.each { |file| require file
 RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     # The plugin specs were written against RSpec 2 and use should_receive.
-    # Keeping both syntaxes is what lets them run unchanged; see
+    # Keeping both syntaxes is what lets them run unchanged. See
     # doc/POLICY.md section 2.2 on not rewriting what is not being changed.
     mocks.syntax = %i[should expect]
     mocks.verify_partial_doubles = false

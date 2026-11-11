@@ -9,7 +9,7 @@
 # Copyright::   Copyright (c) 2012-2026 Automatic Ruby Developers.
 #
 # Test tasks only. This is not a build system, and the Jeweler and rcov tasks
-# that used to live here have been removed; see doc/POLICY.md section 9.4.
+# that used to live here have been removed. See doc/POLICY.md section 9.4.
 
 require 'rspec/core'
 require 'rspec/core/rake_task'

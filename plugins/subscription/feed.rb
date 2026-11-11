@@ -25,7 +25,7 @@ module Automatic::Plugin
 
     private
 
-    # A feed that fails after its retries is logged and skipped; the others
+    # A feed that fails after its retries is logged and skipped. The others
     # still run.
     def fetch(url)
       retries   = 0

@@ -26,7 +26,8 @@ module Automatic
   module Http
     # A link in a pipeline item comes from a feed, which is to say from
     # outside. `URI.open` on such a string will happily read `file:///etc/passwd`
-    # or run an FTP session; a plugin fetching an article body wants neither.
+    # or run an FTP session, and a plugin fetching an article body wants
+    # neither.
     SCHEMES = %w[http https].freeze
 
     OPEN_TIMEOUT = 10

@@ -108,7 +108,7 @@ module Automatic::Plugin
     # A stored siteinfo pattern may name HTTP while a current feed supplies HTTPS,
     # or the reverse. A record describes a site's layout rather than its current
     # transport scheme, so matching tries both schemes. Only the candidate used
-    # for matching changes; the page is fetched from the original item link.
+    # for matching changes. The page is fetched from the original item link.
     def schemes(link)
       case link
       when %r{\Ahttps://} then [link, link.sub(%r{\Ahttps://}, 'http://')]
@@ -127,7 +127,7 @@ module Automatic::Plugin
       # Normalised to UTF-8, and scrubbed rather than raised on. The parser
       # returns a string in whatever encoding it settled on for the page, and
       # a page whose declared charset is not the one it is written in is
-      # common enough in a database this old; what leaves here goes on to a
+      # common enough in a database this old. What leaves here goes on to a
       # publish plugin, which has no way to recover from a string it cannot
       # encode. `invalid:` as well as `undef:`, because converting UTF-8 to
       # UTF-8 leaves invalid bytes alone unless they are named.

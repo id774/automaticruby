@@ -41,9 +41,9 @@ module Automatic
   # Raised by require_optional when, and only when, the exact feature it was
   # asked to require could not be found. A LoadError subtype rather than an
   # Error subtype, so that a caller already rescuing LoadError still catches
-  # it; distinct from plain LoadError so that a caller can tell "the optional
-  # gem itself is missing" apart from a LoadError raised from inside that
-  # gem's own load. See doc/POLICY.md section 9.1.
+  # it. It is distinct from plain LoadError so that a caller can tell "the
+  # optional gem itself is missing" apart from a LoadError raised from inside
+  # that gem's own load. See doc/POLICY.md section 9.1.
   class OptionalDependencyError < LoadError; end
 
   class << self
@@ -67,7 +67,7 @@ module Automatic
       # feature, this require itself is what failed, and the gem naming this
       # feature is what is missing. When it does not, the failure happened
       # somewhere inside feature's own load -- a different missing file -- and
-      # is not this gem's absence; it is re-raised unconverted.
+      # is not this gem's absence, so it is re-raised unconverted.
       raise e unless e.path == feature
 
       raise OptionalDependencyError,
@@ -77,7 +77,7 @@ module Automatic
             "doc/DEPLOYMENT.md. (#{e.message})"
     end
 
-    # Run one Recipe. root_dir is the installation root; user_dir is honoured
+    # Run one Recipe. root_dir is the installation root. user_dir is honoured
     # only under AUTOMATIC_RUBY_ENV=test, which is how the specs point the
     # plugin loader at a fixture directory.
     def run(args = {})

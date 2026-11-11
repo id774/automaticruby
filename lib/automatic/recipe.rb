@@ -25,7 +25,7 @@ module Automatic
     # A Recipe is trusted local configuration, but it is still loaded safely:
     # the document may name none of its own Ruby classes to instantiate. That
     # costs nothing, since no Recipe needs it. It is a second line of defence
-    # and not the trust boundary; see doc/REQUIREMENTS.md section 17.
+    # and not the trust boundary. See doc/REQUIREMENTS.md section 17.
     PERMITTED_CLASSES = [Date, Time, Symbol].freeze
 
     attr_reader :procedure
@@ -65,8 +65,8 @@ module Automatic
 
     private
 
-    # A bare filename is looked for in the user's config directory first;
-    # anything not found there is used as a path exactly as given.
+    # A bare filename is looked for in the user's config directory first.
+    # Anything not found there is used as a path exactly as given.
     def resolve_path(path)
       in_user_dir = File.join(Automatic.user_config_dir, path.to_s)
       File.exist?(in_user_dir) ? in_user_dir : path.to_s

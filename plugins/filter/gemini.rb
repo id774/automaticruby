@@ -38,8 +38,9 @@ module Automatic::Plugin
 
     OPEN_TIMEOUT = 10
 
-    # Generous, and bounded. A model given several articles thinks for a while;
-    # an unattended run that waits forever is the failure this exists against.
+    # Generous, and bounded. A model given several articles thinks for a while,
+    # and an unattended run that waits forever is the failure this exists
+    # against.
     READ_TIMEOUT = 300
 
     # A failure that another attempt will not get past: a setting that is

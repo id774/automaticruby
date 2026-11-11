@@ -74,7 +74,7 @@ module Automatic::Plugin
 
     # The images of an HTML fragment, as absolute URLs. This was a scan for
     # `<img src="` before, which found nothing in a document quoting its
-    # attributes with apostrophes or writing src after another attribute; the
+    # attributes with apostrophes or writing src after another attribute. The
     # parser this plugin already needs answers the question properly.
     def sources(html, base)
       Nokogiri::HTML.fragment(html).css('img').filter_map do |image|
