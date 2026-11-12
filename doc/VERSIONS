@@ -237,19 +237,22 @@ Version History Guidelines
 - Record externally meaningful or architecturally significant outcomes, not a
   diary of implementation work.
 - Omit development-time corrections and intermediate states that were reverted
-  or superseded before release; Git history retains that detail.
+  or superseded before release. Git history retains that detail.
 - Summarize related low-level changes under their substantive outcome.
 - Write one coherent change per bullet, at most two physical lines.
 - A single line at or under 80 columns is preferred whenever practical.
-  Necessary file names, module names, plugin names, option names, and
-  configuration names may pass 80 columns on the bullet's one or two lines
-  when they cannot be shortened without losing meaning.
-- When a version history already exists, balance a new entry against the length
-  of the existing lines, so that the whole file stays consistent.
+  Names and identifiers necessary to describe the change may pass 80 columns
+  on the bullet's one or two lines when they cannot be shortened without
+  losing meaning.
+- When a version history already exists, balance a new entry against the
+  length of the existing lines, so that the whole file stays consistent.
+  Holding to the form this file has settled on comes before the two-line,
+  80-column limit above, and leaves that limit standing wherever no such
+  form exists.
 - When an entry becomes substantially longer, omit or abstract implementation
   details, examples, reasons, and secondary effects where possible.
-- Preserve the changed target, externally observable behavior, compatibility
-  or security impact, and important option or configuration names.
+- Preserve the changed target, externally observable behavior, compatibility,
+  privacy and security impact, and important names and identifiers.
 - Combine related changes within the same version, especially changes to the
   same file or feature.
 - Place closely related entries near each other.
@@ -258,9 +261,21 @@ Version History Guidelines
 - Independent changes may use separate bullets, but they stay in that day's
   single version entry.
 - Past entries and their dates are a record. Do not rewrite, renumber or merge
-  them. Past releases that share a date stay recorded as they were made; they
+  them. Past releases that share a date stay recorded as they were made. They
   do not conform to the rule above and are not precedent for new releases.
-- This file records the history of the repository. A change that is not
-  observable from outside does not need an entry here.
 - The first entry, at the lowest version this file reaches, reads only
   "Initial release." and nothing else.
+- An unreleased entry carries (Release Date: TBD). Replacing TBD with the
+  actual date is the release itself, and is not a change to record here.
+- This file records the history of the repository. A change that is not
+  observable from outside does not need an entry here, and a documentation
+  only change takes none unless its scale makes it worth one line saying so.
+- Where individual source files carry their own Version History, that history
+  records changes to the file independently of the repository release history.
+  A repository release entry does not raise a source-file version, and a
+  source-file version change does not by itself require a repository release
+  entry. Record it here only when the change meets the repository-level
+  criteria above.
+- Recording a repository version here does not create or require a Git tag or
+  GitHub Release. Either is created only when the maintainer explicitly asks
+  for it.
